@@ -1,0 +1,31 @@
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   backend/gemini-live-proxy.js
+	modified:   backend/server.js
+	modified:   backend/simulation-server.js
+	modified:   cloud-functions/broadband-scraper/main.py
+	modified:   exoplanet-pioneer.css
+	modified:   exoplanet-pioneer.js
+	modified:   navigation.js
+	modified:   projects-experimental.js
+	modified:   projects.css
+	modified:   projects.html
+	modified:   starsector.html
+	modified:   starsector_browser.log
+	modified:   starsector_console_log.md
+	modified:   test-results/.last-run.json
+	modified:   token_server.py
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	__pycache__/token_server.cpython-312.pyc
+	run-smoke-tour.ps1
+	status_output.txt
+	test-results/tests-e2e-smoke-tour-Smoke-13a6b-rors-or-same-origin-4xx-5xx/
+	tests/e2e/smoke-tour.spec.js
+
+no changes added to commit (use "git add" and/or "git commit -a")

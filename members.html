@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Members - Adriano To The Star</title>
+    
+    <meta name="description" content="Explore Members on Adriano To The Star. Your portal to exoplanet discovery, space exploration, and AI-driven galactic analysis in the Kepler Archive.">
+    <meta name="keywords" content="Members, Exoplanet Discovery, Space Exploration, Kepler Archive, Adriano To The Star">
+    <link rel="canonical" href="https://adrianotothestar.com/members.html">
+    <!-- Open Graph -->
+    <meta property="og:title" content="Members - Adriano To The Star">
+    <meta property="og:description" content="Explore Members on Adriano To The Star. Your portal to exoplanet discovery, space exploration, and AI-driven galactic analysis in the Kepler Archive.">
+    <meta property="og:url" content="https://adrianotothestar.com/members.html">
+    <meta property="og:image" content="https://adrianotothestar.com/images/bg-large.jpg">
+    <meta property="og:type" content="website">
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Members - Adriano To The Star">
+    <meta name="twitter:description" content="Explore Members on Adriano To The Star. Your portal to exoplanet discovery, space exploration, and AI-driven galactic analysis in the Kepler Archive.">
+    <meta name="twitter:image" content="https://adrianotothestar.com/images/bg-large.jpg">
+    
+    <script type="application/ld+json">
+    [
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Adriano To The Star",
+        "url": "https://adrianotothestar.com",
+        "logo": { "@type": "ImageObject", "url": "https://adrianotothestar.com/images/ita_logo.png", "width": 112, "height": 112 },
+        "sameAs": [ "https://twitter.com/AdrianoToTheStar", "https://www.facebook.com/AdrianoToTheStar" ],
+        "contactPoint": { "@type": "ContactPoint", "contactType": "customer support", "email": "contact@adrianotothestar.com" }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Adriano To The Star",
+        "url": "https://adrianotothestar.com",
+        "potentialAction": { "@type": "SearchAction", "target": "https://adrianotothestar.com/database.html?q={search_term_string}", "query-input": "required name=search_term_string" }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://adrianotothestar.com/index.html" }
+          , { "@type": "ListItem", "position": 2, "name": "Members", "item": "https://adrianotothestar.com/members.html" }
+        ]
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Members - Adriano To The Star",
+        "speakable": { "@type": "SpeakableSpecification", "xpath": ["/html/head/title", "/html/head/meta[@name="description"]/@content"] },
+        "url": "https://adrianotothestar.com/members.html"
+      }
+    ]
+    </script>
+
+
+    <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="pages-styles.css"><link rel="stylesheet" href="loader-minimal.css"><link rel="stylesheet" href="groups-styles.css"><link rel="stylesheet" href="members-styles.css"><link rel="stylesheet" href="theme-styles.css"><link rel="stylesheet" href="accessibility-styles.css"><link rel="stylesheet" href="i18n-styles.css"><script src="loader.js"></script><script src="animations.js" defer></script>
+    <script src="navigation.js" defer></script>
+    <script src="universal-graphics.js" defer></script>
+    <script src="supabase-config.js"></script><script src="auth-supabase.js" defer></script>
+    <script src="csrf-protection.js" defer></script>
+    <script src="security-audit-logging.js" defer></script>
+    <script src="cosmic-music-player.js" defer></script>
+    <script src="i18n.js" defer></script>
+    <script src="theme-toggle.js" defer></script>
+    <script src="accessibility.js" defer></script>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="theme-styles.css">
+    <link rel="stylesheet" href="accessibility-styles.css">
+    <link rel="stylesheet" href="i18n-styles.css">
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+
+<body>
+    <!-- Menu Toggle Button -->
+    <button id="menu-toggle" class="menu-toggle" aria-label="Toggle menu">
+        <span class="menu-icon"></span>
+        <span class="menu-icon"></span>
+        <span class="menu-icon"></span>
+    </button>
+    <main>
+        <section class="page-hero" data-entrance="fadeIn">
+            <h1 class="page-title" data-scroll-animate>Members</h1>
+            <p class="page-subtitle">Exclusive Member Portal</p>
+        </section>
+
+        <section class="content-section" data-entrance="slideUp">
+            <div class="content-container">
+                <div class="section-header" style="margin-bottom: 2rem;">
+                    <h2>🌟 Member Portal</h2>
+                    <div class="user-info">
+                        <span class="user-display"></span>
+                        <button class="login-button" onclick="showModal('login-modal')">Login</button>
+                        <button class="logout-button" onclick="authManager.logout()"
+                            style="display: none;">Logout</button>
+                    </div>
+                </div>
+
+                <!-- Logged Out View -->
+                <div id="logged-out-view">
+                    <div class="login-container" data-entrance="fadeIn">
+                        <!-- Animated Background Graphics -->
+                        <div class="login-graphics">
+                            <div class="floating-star star-1"></div>
+                            <div class="floating-star star-2"></div>
+                            <div class="floating-star star-3"></div>
+                            <div class="floating-star star-4"></div>
+                            <div class="floating-star star-5"></div>
+                            <div class="cosmic-ring ring-1"></div>
+                            <div class="cosmic-ring ring-2"></div>
+                            <div class="particle-burst"></div>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="login-content">
+                            <div class="login-icon">
+                                <div class="icon-glow"></div>
+                                <span class="icon-emoji">🔐</span>
+                            </div>
+
+                            <h2 class="login-title">Member Portal</h2>
+                            <p class="login-subtitle">Access your exclusive member dashboard, view your celestial
+                                properties, and connect with the interstellar community.</p>
+
+                            <div class="login-button-wrapper">
+                                <button onclick="showModal('login-modal')" class="cosmic-login-button"
+                                    data-hover="lift">
+                                    <span class="button-glow"></span>
+                                    <span class="button-text">
+                                        <span class="button-icon">✨</span>
+                                        Log In
+                                        <span class="button-arrow">→</span>
+                                    </span>
+                                </button>
+                            </div>
+
+                            <div class="login-divider">
+                                <span class="divider-line"></span>
+                                <span class="divider-text">or</span>
+                                <span class="divider-line"></span>
+                            </div>
+
+                            <p class="login-footer">
+                                Don't have an account?
+                                <a href="#" onclick="showModal('register-modal')" class="register-link">
+                                    <span>Create one now</span>
+                                    <span class="link-underline"></span>
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Logged In View -->
+                <div id="logged-in-view" style="display: none;">
+                    <div class="section-header">
+                        <h2>🎖️ Member Dashboard</h2>
+                        <div class="user-info">
+                            <span class="user-display"></span>
+                            <button class="login-button" onclick="showModal('login-modal')"
+                                style="display: none;">Login</button>
+                            <button class="logout-button" onclick="authManager.logout()">Logout</button>
+                        </div>
+                    </div>
+
+                    <!-- Member Stats -->
+                    <div class="stats-grid"
+                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
+                        <div class="stat-card" data-entrance="fadeIn"
+                            style="background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(20, 20, 30, 0.8)); border: 2px solid rgba(186, 148, 79, 0.3); border-radius: 15px; padding: 1.5rem; text-align: center;">
+                            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🌟</div>
+                            <div style="font-size: 2rem; font-weight: bold; color: #ba944f;">0</div>
+                            <div style="opacity: 0.8; margin-top: 0.5rem;">Planets Claimed</div>
+                        </div>
+
+                        <div class="stat-card" data-entrance="fadeIn"
+                            style="background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(20, 20, 30, 0.8)); border: 2px solid rgba(186, 148, 79, 0.3); border-radius: 15px; padding: 1.5rem; text-align: center;">
+                            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">👥</div>
+                            <div style="font-size: 2rem; font-weight: bold; color: #ba944f;">0</div>
+                            <div style="opacity: 0.8; margin-top: 0.5rem;">Followers</div>
+                        </div>
+
+                        <div class="stat-card" data-entrance="fadeIn"
+                            style="background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(20, 20, 30, 0.8)); border: 2px solid rgba(186, 148, 79, 0.3); border-radius: 15px; padding: 1.5rem; text-align: center;">
+                            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📝</div>
+                            <div style="font-size: 2rem; font-weight: bold; color: #ba944f;">0</div>
+                            <div style="opacity: 0.8; margin-top: 0.5rem;">Posts</div>
+                        </div>
+
+                        <div class="stat-card" data-entrance="fadeIn"
+                            style="background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(20, 20, 30, 0.8)); border: 2px solid rgba(186, 148, 79, 0.3); border-radius: 15px; padding: 1.5rem; text-align: center;">
+                            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🎖️</div>
+                            <div style="font-size: 2rem; font-weight: bold; color: #ba944f;">New</div>
+                            <div style="opacity: 0.8; margin-top: 0.5rem;">Member Status</div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div style="margin-top: 3rem;">
+                        <h3 style="color: #ba944f; margin-bottom: 1.5rem;">Quick Actions</h3>
+                        <div
+                            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                            <a href="database.html"
+                                style="text-decoration: none; background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(20, 20, 30, 0.8)); border: 2px solid rgba(186, 148, 79, 0.3); border-radius: 15px; padding: 1.5rem; display: block; transition: all 0.3s ease;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🌍</div>
+                                <h4 style="color: #ba944f; margin: 0.5rem 0;">Browse Database</h4>
+                                <p style="opacity: 0.8; margin: 0;">Explore available exoplanets</p>
+                            </a>
+
+                            <a href="groups.html"
+                                style="text-decoration: none; background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(20, 20, 30, 0.8)); border: 2px solid rgba(186, 148, 79, 0.3); border-radius: 15px; padding: 1.5rem; display: block; transition: all 0.3s ease;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">👥</div>
+                                <h4 style="color: #ba944f; margin: 0.5rem 0;">Join Groups</h4>
+                                <p style="opacity: 0.8; margin: 0;">Connect with community</p>
+                            </a>
+
+                            <a href="followers.html"
+                                style="text-decoration: none; background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(20, 20, 30, 0.8)); border: 2px solid rgba(186, 148, 79, 0.3); border-radius: 15px; padding: 1.5rem; display: block; transition: all 0.3s ease;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🌟</div>
+                                <h4 style="color: #ba944f; margin: 0.5rem 0;">My Followers</h4>
+                                <p style="opacity: 0.8; margin: 0;">View your followers</p>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Coming Soon Notice -->
+                    <div
+                        style="margin-top: 3rem; padding: 2rem; background: rgba(186, 148, 79, 0.1); border-radius: 12px; border: 2px solid rgba(186, 148, 79, 0.3); text-align: center;">
+                        <h3 style="color: #ba944f; margin-bottom: 1rem;">📡 More Features Coming Q1 2025</h3>
+                        <p style="opacity: 0.9;">Full member dashboard, celestial property management, achievements, and
+                            more!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Login Modal -->
+        <div id="login-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>🔐 Member Login</h2>
+                    <button class="close-modal" onclick="hideModal('login-modal')">×</button>
+                </div>
+                <form id="login-form" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label>Username or Email</label>
+                        <input type="text" id="login-username" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="login-password" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Login</button>
+                </form>
+                <p class="form-footer">
+                    Don't have an account? <a href="#"
+                        onclick="hideModal('login-modal'); showModal('register-modal');">Register</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Register Modal -->
+        <div id="register-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>📝 Create Account</h2>
+                    <button class="close-modal" onclick="hideModal('register-modal')">×</button>
+                </div>
+                <form id="register-form" onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="register-username" required minlength="3">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="register-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="register-fullname">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="register-password" required minlength="8">
+                    </div>
+                    <button type="submit" class="submit-btn">Create Account</button>
+                </form>
+                <p class="form-footer">
+                    Already have an account? <a href="#"
+                        onclick="hideModal('register-modal'); showModal('login-modal');">Login</a>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Check auth status on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof authManager !== 'undefined') {
+                // Wait for auth manager to initialize
+                setTimeout(() => {
+                    const user = authManager.getCurrentUser();
+                    const loggedOutView = document.getElementById('logged-out-view');
+                    const loggedInView = document.getElementById('logged-in-view');
+                    const loginButton = document.querySelector('.login-button');
+                    const logoutButton = document.querySelector('.logout-button');
+
+                    if (user) {
+                        if (loggedOutView) loggedOutView.style.display = 'none';
+                        if (loggedInView) loggedInView.style.display = 'block';
+                        if (loginButton) loginButton.style.display = 'none';
+                        if (logoutButton) logoutButton.style.display = 'block';
+
+                        const userDisplay = document.querySelector('.user-display');
+                        if (userDisplay) {
+                            userDisplay.textContent = `Welcome, ${user.username || user.fullName || 'Explorer'}!`;
+                        }
+
+                        // Check if there's a redirect after login
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const redirect = urlParams.get('redirect');
+                        const claimKepid = urlParams.get('claim') || sessionStorage.getItem('pendingClaim');
+
+                        if (redirect === 'database' && claimKepid) {
+                            sessionStorage.removeItem('pendingClaim');
+                            // Redirect back to database with claim parameter
+                            window.location.href = 'database.html?claim=' + claimKepid;
+                        }
+                    } else {
+                        if (loggedOutView) loggedOutView.style.display = 'block';
+                        if (loggedInView) loggedInView.style.display = 'none';
+                        if (loginButton) loginButton.style.display = 'block';
+                        if (logoutButton) logoutButton.style.display = 'none';
+
+                        // Check if we need to show login modal for redirect
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const redirect = urlParams.get('redirect');
+                        const claimKepid = urlParams.get('claim');
+                        if (redirect === 'database' && claimKepid) {
+                            sessionStorage.setItem('pendingClaim', claimKepid);
+                            // Auto-show login modal after a short delay
+                            setTimeout(() => {
+                                if (typeof showModal === 'function') {
+                                    showModal('login-modal');
+                                }
+                            }, 500);
+                        }
+                    }
+                }, 100);
+            }
+        });
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+
+            if (!authManager) {
+                alert('Authentication system not loaded. Please refresh the page.');
+                return;
+            }
+
+            const result = await authManager.login(username, password);
+            if (result.success) {
+                hideModal('login-modal');
+
+                // Check for redirect after login
+                const urlParams = new URLSearchParams(window.location.search);
+                const redirect = urlParams.get('redirect');
+                const claimKepid = urlParams.get('claim') || sessionStorage.getItem('pendingClaim');
+
+                if (redirect === 'database' && claimKepid) {
+                    sessionStorage.removeItem('pendingClaim');
+                    window.location.href = 'database.html?claim=' + claimKepid;
+                } else {
+                    location.reload();
+                }
+            } else {
+                alert(result.error || 'Login failed. Please check your credentials.');
+            }
+        }
+
+        async function handleRegister(event) {
+            event.preventDefault();
+            const usernameEl = document.getElementById('register-username');
+            const emailEl = document.getElementById('register-email');
+            const fullNameEl = document.getElementById('register-fullname');
+            const passwordEl = document.getElementById('register-password');
+
+            if (!usernameEl || !emailEl || !passwordEl) {
+                alert('Registration form elements not found. Please refresh the page.');
+                return;
+            }
+
+            const username = usernameEl.value.trim();
+            const email = emailEl.value.trim();
+            const fullName = fullNameEl ? fullNameEl.value.trim() : '';
+            const password = passwordEl.value;
+
+            if (!username || !email || !password) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            if (!authManager) {
+                alert('Authentication system not loaded. Please refresh the page.');
+                return;
+            }
+
+            try {
+                const result = await authManager.register(username, email, password, fullName);
+                if (result.success) {
+                    hideModal('register-modal');
+
+                    // Check for redirect after registration
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const redirect = urlParams.get('redirect');
+                    const claimKepid = urlParams.get('claim') || sessionStorage.getItem('pendingClaim');
+
+                    if (redirect === 'database' && claimKepid) {
+                        sessionStorage.removeItem('pendingClaim');
+                        window.location.href = 'database.html?claim=' + claimKepid;
+                    } else {
+                        location.reload();
+                    }
+                } else {
+                    alert(result.error || 'Registration failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                alert('Registration failed. Please check your connection and try again.');
+            }
+        }
+    </script>
+
+    <footer class="site-footer">
+        <p>&copy; 2025 ADRIANO TO THE STAR</p>
+        <p><a href="index.html">Back to Home</a></p>
+    </footer>
+    <script src="pwa-loader.js"></script><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="manifest" href="manifest.json">
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+<body>
+<!-- Menu Toggle Button -->
+    <button id="menu-toggle" class="menu-toggle" aria-label="Toggle menu">
+        <span class="menu-icon"></span>
+        <span class="menu-icon"></span>
+        <span class="menu-icon"></span>
+    </button>
+    <main>
+        <section class="page-hero" data-entrance="fadeIn">
+            <h1 class="page-title" data-scroll-animate>Members</h1>
+            <p class="page-subtitle">Exclusive Member Portal</p>
+        </section>
+
+        <section class="content-section" data-entrance="slideUp">
+            <div class="content-container">
+                <div class="section-header" style="margin-bottom: 2rem;">
+                    <h2>🌟 Member Portal</h2>
+                    <div class="user-info">
+                        <span class="user-display"></span>
+                        <button class="login-button" onclick="showModal('login-modal')">Login</button>
+                        <button class="logout-button" onclick="authManager.logout()"
+                            style="display: none;">Logout</button>
+                    </div>
+                </div>
+
+                <!-- Logged Out View -->
+                <div id="logged-out-view">
+                    <div class="login-container" data-entrance="fadeIn">
+                        <!-- Animated Background Graphics -->
+                        <div class="login-graphics">
+                            <div class="floating-star star-1"></div>
+                            <div class="floating-star star-2"></div>
+                            <div class="floating-star star-3"></div>
+                            <div class="floating-star star-4"></div>
+                            <div class="floating-star star-5"></div>
+                            <div class="cosmic-ring ring-1"></div>
+                            <div class="cosmic-ring ring-2"></div>
+                            <div class="particle-burst"></div>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="login-content">
+                            <div class="login-icon">
+                                <div class="icon-glow"></div>
+                                <span class="icon-emoji">🔐</span>
+                            </div>
+
+                            <h2 class="login-title">Member Portal</h2>
+                            <p class="login-subtitle">Access your exclusive member dashboard, view your celestial
+                                properties, and connect with the interstellar community.</p>
+
+                            <div class="login-button-wrapper">
+                                <button onclick="showModal('login-modal')" class="cosmic-login-button"
+                                    data-hover="lift">
+                                    <span class="button-glow"></span>
+                                    <span class="button-text">
+                                        <span class="button-icon">✨</span>
+                                        Log In
+                                        <span class="button-arrow">→</span>
+                                    </span>
+                                </button>
+                            </div>
+
+                            <div class="login-divider">
+                                <span class="divider-line"></span>
+                                <span class="divider-text">or</span>
+                                <span class="divider-line"></span>
+                            </div>
+
+                            <p class="login-footer">
+                                Don't have an account?
+                                <a href="#" onclick="showModal('register-modal')" class="register-link">
+                                    <span>Create one now</span>
+                                    <span class="link-underline"></span>
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Logged In View -->
+                <div id="logged-in-view" style="display: none;">
+                    <div class="section-header">
+                        <h2>🎖️ Member Dashboard</h2>
+                        <div class="user-info">
+                            <span class="user-display"></span>
+                            <button class="login-button" onclick="showModal('login-modal')"
+                                style="display: none;">Login</button>
+                            <button class="logout-button" onclick="authManager.logout()">Logout</button>
+                        </div>
+                    </div>
+
+                    <!-- Member Stats -->
+                    <div class="stats-grid"
+                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
+                        <div class="stat-card" data-entrance="fadeIn"
+                            style="background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(20, 20, 30, 0.8)); border: 2px solid rgba(186, 148, 79, 0.3); border-radius: 15px; padding: 1.5rem; text-align: center;">
+                            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🌟</div>
+                            <div style="font-size: 2rem; font-weight: bold; color: #ba944f;">0</div>
+                            <div style="opacity: 0.8; margin-top: 0.5rem;">Planets Claimed</div>
+                        </div>
+
+                        <div class="stat-card" data-entrance="fadeIn"
+                            style="background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(20, 20, 30, 0.8)); border: 2px solid rgba(186, 148, 79, 0.3); border-radius: 15px; padding: 1.5rem; text-align: center;">
+                            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">👥</div>
+                            <div style="font-size: 2rem; font-weight: bold; color: #ba944f;">0</div>
+                            <div style="opacity: 0.8; margin-top: 0.5rem;">Followers</div>
+                        </div>
+
+                        <div class="stat-card" data-entrance="fadeIn"
+                            style="background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(20, 20, 30, 0.8)); border: 2px solid rgba(186, 148, 79, 0.3); border-radius: 15px; padding: 1.5rem; text-align: center;">
+                            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📝</div>
+                            <div style="font-size: 2rem; font-weight: bold; color: #ba944f;">0</div>
+                            <div style="opacity: 0.8; margin-top: 0.5rem;">Posts</div>
+                        </div>
+
+                        <div class="stat-card" data-entrance="fadeIn"
+                            style="background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(20, 20, 30, 0.8)); border: 2px solid rgba(186, 148, 79, 0.3); border-radius: 15px; padding: 1.5rem; text-align: center;">
+                            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🎖️</div>
+                            <div style="font-size: 2rem; font-weight: bold; color: #ba944f;">New</div>
+                            <div style="opacity: 0.8; margin-top: 0.5rem;">Member Status</div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div style="margin-top: 3rem;">
+                        <h3 style="color: #ba944f; margin-bottom: 1.5rem;">Quick Actions</h3>
+                        <div
+                            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                            <a href="database.html"
+                                style="text-decoration: none; background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(20, 20, 30, 0.8)); border: 2px solid rgba(186, 148, 79, 0.3); border-radius: 15px; padding: 1.5rem; display: block; transition: all 0.3s ease;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🌍</div>
+                                <h4 style="color: #ba944f; margin: 0.5rem 0;">Browse Database</h4>
+                                <p style="opacity: 0.8; margin: 0;">Explore available exoplanets</p>
+                            </a>
+
+                            <a href="groups.html"
+                                style="text-decoration: none; background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(20, 20, 30, 0.8)); border: 2px solid rgba(186, 148, 79, 0.3); border-radius: 15px; padding: 1.5rem; display: block; transition: all 0.3s ease;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">👥</div>
+                                <h4 style="color: #ba944f; margin: 0.5rem 0;">Join Groups</h4>
+                                <p style="opacity: 0.8; margin: 0;">Connect with community</p>
+                            </a>
+
+                            <a href="followers.html"
+                                style="text-decoration: none; background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(20, 20, 30, 0.8)); border: 2px solid rgba(186, 148, 79, 0.3); border-radius: 15px; padding: 1.5rem; display: block; transition: all 0.3s ease;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🌟</div>
+                                <h4 style="color: #ba944f; margin: 0.5rem 0;">My Followers</h4>
+                                <p style="opacity: 0.8; margin: 0;">View your followers</p>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Coming Soon Notice -->
+                    <div
+                        style="margin-top: 3rem; padding: 2rem; background: rgba(186, 148, 79, 0.1); border-radius: 12px; border: 2px solid rgba(186, 148, 79, 0.3); text-align: center;">
+                        <h3 style="color: #ba944f; margin-bottom: 1rem;">📡 More Features Coming Q1 2025</h3>
+                        <p style="opacity: 0.9;">Full member dashboard, celestial property management, achievements, and
+                            more!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Login Modal -->
+        <div id="login-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>🔐 Member Login</h2>
+                    <button class="close-modal" onclick="hideModal('login-modal')">×</button>
+                </div>
+                <form id="login-form" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label>Username or Email</label>
+                        <input type="text" id="login-username" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="login-password" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Login</button>
+                </form>
+                <p class="form-footer">
+                    Don't have an account? <a href="#"
+                        onclick="hideModal('login-modal'); showModal('register-modal');">Register</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Register Modal -->
+        <div id="register-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>📝 Create Account</h2>
+                    <button class="close-modal" onclick="hideModal('register-modal')">×</button>
+                </div>
+                <form id="register-form" onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="register-username" required minlength="3">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="register-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="register-fullname">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="register-password" required minlength="8">
+                    </div>
+                    <button type="submit" class="submit-btn">Create Account</button>
+                </form>
+                <p class="form-footer">
+                    Already have an account? <a href="#"
+                        onclick="hideModal('register-modal'); showModal('login-modal');">Login</a>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Check auth status on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof authManager !== 'undefined') {
+                // Wait for auth manager to initialize
+                setTimeout(() => {
+                    const user = authManager.getCurrentUser();
+                    const loggedOutView = document.getElementById('logged-out-view');
+                    const loggedInView = document.getElementById('logged-in-view');
+                    const loginButton = document.querySelector('.login-button');
+                    const logoutButton = document.querySelector('.logout-button');
+
+                    if (user) {
+                        if (loggedOutView) loggedOutView.style.display = 'none';
+                        if (loggedInView) loggedInView.style.display = 'block';
+                        if (loginButton) loginButton.style.display = 'none';
+                        if (logoutButton) logoutButton.style.display = 'block';
+
+                        const userDisplay = document.querySelector('.user-display');
+                        if (userDisplay) {
+                            userDisplay.textContent = `Welcome, ${user.username || user.fullName || 'Explorer'}!`;
+                        }
+
+                        // Check if there's a redirect after login
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const redirect = urlParams.get('redirect');
+                        const claimKepid = urlParams.get('claim') || sessionStorage.getItem('pendingClaim');
+
+                        if (redirect === 'database' && claimKepid) {
+                            sessionStorage.removeItem('pendingClaim');
+                            // Redirect back to database with claim parameter
+                            window.location.href = 'database.html?claim=' + claimKepid;
+                        }
+                    } else {
+                        if (loggedOutView) loggedOutView.style.display = 'block';
+                        if (loggedInView) loggedInView.style.display = 'none';
+                        if (loginButton) loginButton.style.display = 'block';
+                        if (logoutButton) logoutButton.style.display = 'none';
+
+                        // Check if we need to show login modal for redirect
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const redirect = urlParams.get('redirect');
+                        const claimKepid = urlParams.get('claim');
+                        if (redirect === 'database' && claimKepid) {
+                            sessionStorage.setItem('pendingClaim', claimKepid);
+                            // Auto-show login modal after a short delay
+                            setTimeout(() => {
+                                if (typeof showModal === 'function') {
+                                    showModal('login-modal');
+                                }
+                            }, 500);
+                        }
+                    }
+                }, 100);
+            }
+        });
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+
+            if (!authManager) {
+                alert('Authentication system not loaded. Please refresh the page.');
+                return;
+            }
+
+            const result = await authManager.login(username, password);
+            if (result.success) {
+                hideModal('login-modal');
+
+                // Check for redirect after login
+                const urlParams = new URLSearchParams(window.location.search);
+                const redirect = urlParams.get('redirect');
+                const claimKepid = urlParams.get('claim') || sessionStorage.getItem('pendingClaim');
+
+                if (redirect === 'database' && claimKepid) {
+                    sessionStorage.removeItem('pendingClaim');
+                    window.location.href = 'database.html?claim=' + claimKepid;
+                } else {
+                    location.reload();
+                }
+            } else {
+                alert(result.error || 'Login failed. Please check your credentials.');
+            }
+        }
+
+        async function handleRegister(event) {
+            event.preventDefault();
+            const usernameEl = document.getElementById('register-username');
+            const emailEl = document.getElementById('register-email');
+            const fullNameEl = document.getElementById('register-fullname');
+            const passwordEl = document.getElementById('register-password');
+
+            if (!usernameEl || !emailEl || !passwordEl) {
+                alert('Registration form elements not found. Please refresh the page.');
+                return;
+            }
+
+            const username = usernameEl.value.trim();
+            const email = emailEl.value.trim();
+            const fullName = fullNameEl ? fullNameEl.value.trim() : '';
+            const password = passwordEl.value;
+
+            if (!username || !email || !password) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            if (!authManager) {
+                alert('Authentication system not loaded. Please refresh the page.');
+                return;
+            }
+
+            try {
+                const result = await authManager.register(username, email, password, fullName);
+                if (result.success) {
+                    hideModal('register-modal');
+
+                    // Check for redirect after registration
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const redirect = urlParams.get('redirect');
+                    const claimKepid = urlParams.get('claim') || sessionStorage.getItem('pendingClaim');
+
+                    if (redirect === 'database' && claimKepid) {
+                        sessionStorage.removeItem('pendingClaim');
+                        window.location.href = 'database.html?claim=' + claimKepid;
+                    } else {
+                        location.reload();
+                    }
+                } else {
+                    alert(result.error || 'Registration failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                alert('Registration failed. Please check your connection and try again.');
+            }
+        }
+    </script>
+
+    <footer class="site-footer">
+        <p>&copy; 2025 ADRIANO TO THE STAR</p>
+        <p><a href="index.html">Back to Home</a></p>
+    </footer>
+    <script src="pwa-loader.js"></script>
+</body>
+</html>

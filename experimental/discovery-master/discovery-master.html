@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discovery & Analytics Master | Adriano to the Stars</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Fira+Code&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+        body { margin: 0; background: #000; overflow: hidden; color: #fff; font-family: 'Inter', sans-serif; }
+        canvas { width: 100vw; height: 100vh; display: block; }
+        .hud {
+            position: fixed; top: 2rem; left: 2rem;
+            background: rgba(10, 10, 30, 0.9); border: 1px solid #ba944f;
+            padding: 2rem; border-radius: 8px; backdrop-filter: blur(15px);
+            min-width: 300px; z-index: 100;
+        }
+        .discovery-stats { margin-top: 1.5rem; font-family: 'Fira Code', monospace; font-size: 0.8rem; }
+        .stat-line { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
+        .stat-val { color: #ba944f; font-weight: 900; }
+        .roadmap-grid {
+            position: fixed; bottom: 2rem; right: 2rem;
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem;
+        }
+        .chip {
+            background: rgba(186, 148, 79, 0.1); color: #ba944f; padding: 0.3rem 0.6rem;
+            border-radius: 4px; font-size: 0.65rem; border: 1px solid rgba(186, 148, 79, 0.2);
+        }
+    </style>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+
+<body>
+    <canvas id="discovery-canvas"></canvas>
+
+    <div class="hud">
+        <h2 style="margin: 0 0 1rem 0; font-family: 'Orbitron'; color: #ba944f;">OBSERVATION DECK</h2>
+        
+        <div class="discovery-stats">
+            <div class="stat-line"><span>Star Temp (#42)</span> <span class="stat-val" id="temp-val">5,778 K</span></div>
+            <div class="stat-line"><span>Albedo (#85)</span> <span class="stat-val" id="albedo-val">0.31</span></div>
+            <div class="stat-line"><span>Asteroid Density (#63)</span> <span class="stat-val">HIGH</span></div>
+            <div class="stat-line"><span>Diffraction (#133)</span> <span class="stat-val">ACTIVE</span></div>
+        </div>
+
+        <button onclick="window.toggleQuantum()" style="width: 100%; padding: 0.8rem; background: #ba944f; border: none; font-family: 'Orbitron'; font-weight: 900; margin-top: 1.5rem; cursor: pointer; border-radius: 4px;">QUANTUM VIEW (#81)</button>
+    </div>
+
+    <div class="roadmap-grid">
+        <div class="chip">#42 Kelvin</div>
+        <div class="chip">#54 Comets</div>
+        <div class="chip">#63 Asteroids</div>
+        <div class="chip">#64 Light-field</div>
+        <div class="chip">#72 Nebulas</div>
+        <div class="chip">#76 Ring Diffraction</div>
+        <div class="chip">#81 Quantum</div>
+        <div class="chip">#85 Albedo</div>
+        <div class="chip">#92 Prismatic</div>
+        <div class="chip">#98 Gravity</div>
+        <div class="chip">#133 Optical</div>
+    </div>
+
+    <script type="module" src="discovery-sim.js"></script>
+</body>
+
+</html>

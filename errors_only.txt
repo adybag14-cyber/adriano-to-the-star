@@ -1,0 +1,73 @@
+
+lint_log_final_v3.txt:980:C:\Users\adyba\adriano-to-the-star-clean\api-error-handling.js
+lint_log_final_v3.txt:1358:   6:11  error    'ServiceWorkerRegistration' is already defined as a built-in global variable  no-redeclare
+lint_log_final_v3.txt:1474:  128:14  error    'i' is already defined                                                                         no-redeclare
+lint_log_final_v3.txt:1533:  356:26  error    'i' is already defined                                                                         no-redeclare
+lint_log_final_v3.txt:1535:  364:26  error    'i' is already defined                                                                         no-redeclare
+lint_log_final_v3.txt:1811:  6:11  error  'AbortSignal' is already defined as a built-in global variable  no-redeclare
+lint_log_final_v3.txt:1839:C:\Users\adyba\adriano-to-the-star-clean\backend\error-handler.js
+lint_log_final_v3.txt:1840:    6:11  error    'AbortSignal' is already defined as a built-in global variable             no-redeclare
+lint_log_final_v3.txt:1863:   11:7   error    'WebSocket' is already defined as a built-in global variable                         no-redeclare
+lint_log_final_v3.txt:1963:   6:11  error    'ServiceWorkerRegistration' is already defined as a built-in global variable        no-redeclare
+lint_log_final_v3.txt:2582:  1:1  error  Parsing error: Unexpected token <
+lint_log_final_v3.txt:2585:  1:1  error  Parsing error: Unexpected token <
+lint_log_final_v3.txt:3047:C:\Users\adyba\adriano-to-the-star-clean\comprehensive-error-handling.js
+lint_log_final_v3.txt:3885:C:\Users\adyba\adriano-to-the-star-clean\data-import-validation-error-reporting.js
+lint_log_final_v3.txt:4197:    1:11  error    'Planet3DViewer' is already defined as a built-in global variable                       no-redeclare
+lint_log_final_v3.txt:4268:     1:11   error    'Planet3DViewer' is already defined as a built-in global variable                         no-redeclare
+lint_log_final_v3.txt:4413:    1:11  error    'Planet3DViewer' is already defined as a built-in global variable                    no-redeclare
+lint_log_final_v3.txt:4453:  450:5  error  Parsing error: Unexpected token
+lint_log_final_v3.txt:4960:C:\Users\adyba\adriano-to-the-star-clean\enhanced-error-handling.js
+lint_log_final_v3.txt:5011:C:\Users\adyba\adriano-to-the-star-clean\error-boundary-system.js
+lint_log_final_v3.txt:5017:C:\Users\adyba\adriano-to-the-star-clean\error-boundary-ui-components.js
+lint_log_final_v3.txt:5020:C:\Users\adyba\adriano-to-the-star-clean\error-boundary-ui.js
+lint_log_final_v3.txt:5023:C:\Users\adyba\adriano-to-the-star-clean\error-handler.js
+lint_log_final_v3.txt:5027:C:\Users\adyba\adriano-to-the-star-clean\error-recovery-system.js
+lint_log_final_v3.txt:5031:C:\Users\adyba\adriano-to-the-star-clean\error-tracking-reporting.js
+lint_log_final_v3.txt:5035:C:\Users\adyba\adriano-to-the-star-clean\error-tracking-system.js
+lint_log_final_v3.txt:5038:C:\Users\adyba\adriano-to-the-star-clean\error-tracking-v2.js
+lint_log_final_v3.txt:5041:C:\Users\adyba\adriano-to-the-star-clean\error-tracking.js
+lint_log_final_v3.txt:5738:  53:24  error    The Function constructor is eval                               no-new-func
+lint_log_final_v3.txt:6344:  19:5  error  Parsing error: Unexpected token trackEvent
+lint_log_final_v3.txt:6378:C:\Users\adyba\adriano-to-the-star-clean\integration-error-handling.js
+lint_log_final_v3.txt:6876:  1:1  error  Parsing error: Unexpected token <
+lint_log_final_v3.txt:7292:    1:11  error    'gtag' is already defined as a built-in global variable                          no-redeclare
+lint_log_final_v3.txt:7347:  1:11  error  'module' is already defined as a built-in global variable  no-redeclare
+lint_log_final_v3.txt:7350:  1:24  error  'module' is already defined as a built-in global variable  no-redeclare
+lint_log_final_v3.txt:7496:  28:38  error  Parsing error: Unexpected token {
+lint_log_final_v3.txt:7656:  218:35  error  Parsing error: Cannot use keyword 'await' outside an async function
+lint_log_final_v3.txt:7686:  62:37  error    Unsafe Regular Expression                                      security/detect-unsafe-regex
+lint_log_final_v3.txt:7732:  123:43  error    Unsafe Regular Expression                                                              security/detect-unsafe-regex
+lint_log_final_v3.txt:7733:  138:43  error    Unsafe Regular Expression                                                              security/detect-unsafe-regex
+lint_log_final_v3.txt:7734:  147:43  error    Unsafe Regular Expression                                                              security/detect-unsafe-regex
+lint_log_final_v3.txt:7921:  159:36  error    The Function constructor is eval                               no-new-func
+lint_log_final_v3.txt:8178:  141:15  error  Parsing error: The keyword 'interface' is reserved
+lint_log_final_v3.txt:8203:     1:11  error    'THREE' is already defined as a built-in global variable                                 no-redeclare
+lint_log_final_v3.txt:8352:C:\Users\adyba\adriano-to-the-star-clean\planet-discovery-error-boundary.js
+lint_log_final_v3.txt:8356:C:\Users\adyba\adriano-to-the-star-clean\planet-discovery-error-reporting.js
+lint_log_final_v3.txt:8395:  108:25  error    'computerVisionCapabilities' is not defined  no-undef
+lint_log_final_v3.txt:8396:  109:32  error    'computerVisionCapabilities' is not defined  no-undef
+lint_log_final_v3.txt:8397:  110:25  error    'computerVisionCapabilities' is not defined  no-undef
+lint_log_final_v3.txt:8432:  15:13  error  Parsing error: Missing catch or finally clause
+lint_log_final_v3.txt:8610:   19:18  error    'i' is already defined                                                                 no-redeclare
+lint_log_final_v3.txt:9015:   1:11  error    'navigator' is already defined as a built-in global variable   no-redeclare
+lint_log_final_v3.txt:9462:  151:34  error    'html2canvas' is not defined                                   no-undef
+lint_log_final_v3.txt:9463:  174:34  error    'html2canvas' is not defined                                   no-undef
+lint_log_final_v3.txt:9465:  220:21  error    'html2canvas' is not defined                                   no-undef
+lint_log_final_v3.txt:9552:   75:33  error    Unsafe Regular Expression                                      security/detect-unsafe-regex
+lint_log_final_v3.txt:9557:  218:34  error    Unsafe Regular Expression                                      security/detect-unsafe-regex
+lint_log_final_v3.txt:9816:  41:38  error  Parsing error: Unexpected token {
+lint_log_final_v3.txt:9963:   43:22  error    Unsafe Regular Expression                                               security/detect-unsafe-regex
+lint_log_final_v3.txt:9970:  134:36  error    's' is not defined                                                                   no-undef
+lint_log_final_v3.txt:10061:    18:5   error    'puter' is already defined as a built-in global variable                                  no-redeclare
+lint_log_final_v3.txt:10106:    1:11  error    'navigator' is already defined as a built-in global variable                                   no-redeclare
+lint_log_final_v3.txt:10112:     1:11   error    'SpeechSynthesisUtterance' is already defined as a built-in global variable               no-redeclare
+lint_log_final_v3.txt:10119:   183:13   error    Unreachable code                                                                          no-unreachable
+lint_log_final_v3.txt:10174:  3226:9    error    Unreachable code                                                                          no-unreachable
+lint_log_final_v3.txt:10538:  115:38  error    Unsafe Regular Expression                                                         security/detect-unsafe-regex
+lint_log_final_v3.txt:10992:  185:47  error    'spacerBottom' is not defined                                                         no-undef
+lint_log_final_v3.txt:11028:  24:38  error  Parsing error: Unexpected token {
+lint_log_final_v3.txt:11213:  319:30  error    The Function constructor is eval                               no-new-func
+lint_log_final_v3.txt:11214:  325:37  error    Unsafe Regular Expression                                      security/detect-unsafe-regex
+lint_log_final_v3.txt:11239:  79:22  error    Unsafe Regular Expression                                                                         security/detect-unsafe-regex
+

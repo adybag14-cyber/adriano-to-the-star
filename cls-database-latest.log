@@ -1,0 +1,88 @@
+
+> adriano-to-the-star@1.0.0 test:e2e
+> playwright test tests/e2e/cls-database.spec.js
+
+
+Running 1 test using 1 worker
+
+[CLS] root-database http://localhost:3000/database.html
+  visibilityState=visible hidden=false
+  clsSum=0.66654 sessionCls=0.63829 maxEntry=0.3511
+  sessionTopNodes=SECTION.content-section:0.63287 | DIV#3d-planet-widget.3d-planet-widget:0.00541 | DIV#cosmic-music-player:0.00541 | DIV#custom-dashboard-toolbar:0.00541
+  maxEntrySources=SECTION.content-section
+[CLS] public-database http://localhost:3000/public/database.html
+  visibilityState=visible hidden=false
+  clsSum=0.68618 sessionCls=0.61479 maxEntry=0.61479
+  sessionTopNodes=NODE:1.22958 | SECTION.content-section:0.61479 | DIV#cosmic-music-player:0.61479
+  maxEntrySources=NODE | NODE | SECTION.content-section | DIV#cosmic-music-player
+  Ô£ÿ  1 tests\e2e\cls-database.spec.js:53:1 ÔÇ║ CLS budget - database pages (16.3s)
+
+
+  1) tests\e2e\cls-database.spec.js:53:1 ÔÇ║ CLS budget - database pages ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ
+
+    Error: root-database sessionCls <= 0.1
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoBeLessThanOrEqual[2m([22m[32mexpected[39m[2m)[22m
+
+    Expected: <= [32m0.1[39m
+    Received:    [31m0.638285400390625[39m
+
+      223 |         expect.soft(r.hidden, `${r.page} document.hidden`).toBe(false);
+      224 |         expect.soft(typeof r.sessionCls === 'number', `${r.page} sessionCls is number`).toBe(true);
+    > 225 |         expect.soft(r.sessionCls, `${r.page} sessionCls <= ${CLS_BUDGET}`).toBeLessThanOrEqual(CLS_BUDGET);
+          |                                                                            ^
+      226 |         expect.soft(typeof r.maxEntryValue === 'number', `${r.page} maxEntry is number`).toBe(true);
+      227 |         expect.soft(r.maxEntryValue, `${r.page} maxEntry <= ${CLS_BUDGET}`).toBeLessThanOrEqual(CLS_BUDGET);
+      228 |     }
+        at C:\Users\adyba\adriano-to-the-star-clean\tests\e2e\cls-database.spec.js:225:76
+
+    Error: root-database maxEntry <= 0.1
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoBeLessThanOrEqual[2m([22m[32mexpected[39m[2m)[22m
+
+    Expected: <= [32m0.1[39m
+    Received:    [31m0.35110460069444444[39m
+
+      225 |         expect.soft(r.sessionCls, `${r.page} sessionCls <= ${CLS_BUDGET}`).toBeLessThanOrEqual(CLS_BUDGET);
+      226 |         expect.soft(typeof r.maxEntryValue === 'number', `${r.page} maxEntry is number`).toBe(true);
+    > 227 |         expect.soft(r.maxEntryValue, `${r.page} maxEntry <= ${CLS_BUDGET}`).toBeLessThanOrEqual(CLS_BUDGET);
+          |                                                                             ^
+      228 |     }
+      229 | });
+      230 |
+        at C:\Users\adyba\adriano-to-the-star-clean\tests\e2e\cls-database.spec.js:227:77
+
+    Error: public-database sessionCls <= 0.1
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoBeLessThanOrEqual[2m([22m[32mexpected[39m[2m)[22m
+
+    Expected: <= [32m0.1[39m
+    Received:    [31m0.6147894965277778[39m
+
+      223 |         expect.soft(r.hidden, `${r.page} document.hidden`).toBe(false);
+      224 |         expect.soft(typeof r.sessionCls === 'number', `${r.page} sessionCls is number`).toBe(true);
+    > 225 |         expect.soft(r.sessionCls, `${r.page} sessionCls <= ${CLS_BUDGET}`).toBeLessThanOrEqual(CLS_BUDGET);
+          |                                                                            ^
+      226 |         expect.soft(typeof r.maxEntryValue === 'number', `${r.page} maxEntry is number`).toBe(true);
+      227 |         expect.soft(r.maxEntryValue, `${r.page} maxEntry <= ${CLS_BUDGET}`).toBeLessThanOrEqual(CLS_BUDGET);
+      228 |     }
+        at C:\Users\adyba\adriano-to-the-star-clean\tests\e2e\cls-database.spec.js:225:76
+
+    Error: public-database maxEntry <= 0.1
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoBeLessThanOrEqual[2m([22m[32mexpected[39m[2m)[22m
+
+    Expected: <= [32m0.1[39m
+    Received:    [31m0.6147894965277778[39m
+
+      225 |         expect.soft(r.sessionCls, `${r.page} sessionCls <= ${CLS_BUDGET}`).toBeLessThanOrEqual(CLS_BUDGET);
+      226 |         expect.soft(typeof r.maxEntryValue === 'number', `${r.page} maxEntry is number`).toBe(true);
+    > 227 |         expect.soft(r.maxEntryValue, `${r.page} maxEntry <= ${CLS_BUDGET}`).toBeLessThanOrEqual(CLS_BUDGET);
+          |                                                                             ^
+      228 |     }
+      229 | });
+      230 |
+        at C:\Users\adyba\adriano-to-the-star-clean\tests\e2e\cls-database.spec.js:227:77
+
+  1 failed
+    tests\e2e\cls-database.spec.js:53:1 ÔÇ║ CLS budget - database pages ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ

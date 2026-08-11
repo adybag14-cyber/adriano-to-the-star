@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS audit_logs (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  path TEXT NOT NULL,
+  ip TEXT,
+  user_agent TEXT,
+  referer TEXT,
+  method TEXT,
+  status INTEGER,
+  timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+);

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ancient Ruins & Relics Master | Adriano to the Stars</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Fira+Code&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+        body { margin: 0; background: #000; overflow: hidden; color: #fff; font-family: 'Inter', sans-serif; }
+        canvas { width: 100vw; height: 100vh; display: block; }
+        .hud {
+            position: fixed; top: 2rem; left: 50%; transform: translateX(-50%);
+            background: rgba(30, 20, 10, 0.9); border: 1px solid #ba944f;
+            padding: 1.5rem 3rem; border-radius: 50px; backdrop-filter: blur(15px);
+            z-index: 100; box-shadow: 0 0 40px rgba(186, 148, 79, 0.3);
+            display: flex; gap: 3rem; align-items: center;
+        }
+        .stat-item { text-align: center; }
+        .stat-label { font-size: 0.6rem; opacity: 0.6; text-transform: uppercase; letter-spacing: 2px; }
+        .stat-value { font-family: 'Orbitron'; color: #ba944f; font-size: 1rem; }
+        .roadmap-grid {
+            position: fixed; bottom: 2rem; right: 2rem;
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem;
+        }
+        .chip {
+            background: rgba(186, 148, 79, 0.1); color: #ba944f;
+            padding: 0.4rem 0.8rem; border-radius: 4px; font-size: 0.7rem; border: 1px solid rgba(186, 148, 79, 0.2);
+        }
+    </style>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+
+<body>
+    <canvas id="ruins-canvas"></canvas>
+
+    <div class="hud">
+        <div class="stat-item">
+            <div class="stat-label">Grammar Logic (#86)</div>
+            <div class="stat-value">ACTIVE</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-label">Weathering (#220)</div>
+            <div class="stat-value" id="moss-val">14.5%</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-label">Hive State (#174)</div>
+            <div class="stat-value">STABLE</div>
+        </div>
+    </div>
+
+    <div class="roadmap-grid">
+        <div class="chip">#86 Grammar</div>
+        <div class="chip">#124 L-Systems</div>
+        <div class="chip">#174 Hive CA</div>
+        <div class="chip">#220 Moss/Erosion</div>
+        <div class="chip">#226 Crystals</div>
+        <div class="chip">#262 Diffuse</div>
+        <div class="chip">#286 Modular</div>
+    </div>
+
+    <script type="module" src="ruins-sim.js"></script>
+</body>
+
+</html>

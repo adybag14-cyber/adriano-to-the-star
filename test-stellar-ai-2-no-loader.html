@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test 2: Without Loader</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="pages-styles.css">
+    <link rel="stylesheet" href="stellar-ai-styles.css">
+    <style>
+        body { pointer-events: auto !important; overflow: auto !important; display: block !important; visibility: visible !important; }
+        .test-info { background: rgba(186, 148, 79, 0.2); padding: 1rem; margin: 2rem; border: 1px solid rgba(186, 148, 79, 0.5); border-radius: 8px; }
+    </style>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+<body>
+    <div class="test-info"><h1> Test 2: Without Loader.js</h1><p>All CSS but NO loader.js</p></div>
+    <section class="page-hero"><h1 class="page-title"> STELLAR AI TEST</h1></section>
+    <div class="chat-container">
+        <div class="chat-sidebar"><div class="sidebar-header"><h3> Chat History</h3><button id="new-chat-btn" class="new-chat-btn">+ New Chat</button></div></div>
+        <div class="chat-main">
+            <div class="chat-header"><div class="chat-title"><span>Stellar AI</span></div><div class="chat-actions"><button id="clear-chat-btn" class="action-btn"> Clear</button></div></div>
+            <div class="messages-container"><div class="welcome-message"><h2>Test Page - No Loader</h2></div></div>
+            <div class="input-container"><div class="input-wrapper"><button id="send-btn" class="send-btn"> Send</button><textarea id="message-input" class="message-input" placeholder="Type..."></textarea></div></div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('new-chat-btn')?.addEventListener('click', () => alert(' New Chat works!'));
+        document.getElementById('clear-chat-btn')?.addEventListener('click', () => alert(' Clear works!'));
+        document.getElementById('send-btn')?.addEventListener('click', () => alert(' Send works!'));
+        document.body.style.pointerEvents = 'auto';
+        console.log(' Test 2 loaded');
+    </script>
+</body>
+</html>

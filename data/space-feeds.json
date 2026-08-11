@@ -1,0 +1,110 @@
+{
+    "schemaVersion":  1,
+    "generatedAt":  "2026-08-06T12:14:47.5747811+00:00",
+    "buildSha":  "local",
+    "delivery":  "build-cached",
+    "refreshedSources":  3,
+    "sourceStatus":  {
+                         "exoplanets":  "refreshed",
+                         "apod":  "not-configured",
+                         "launches":  "refreshed",
+                         "news":  "refreshed"
+                     },
+    "feeds":  [
+                  {
+                      "type":  "exoplanet",
+                      "source":  "NASA Exoplanet Archive",
+                      "title":  "XO-2 S d",
+                      "desc":  "Discovered: 2024 | Host: XO-2 S | Dist: 151.4 pc",
+                      "link":  "https://exoplanetarchive.ipac.caltech.edu/",
+                      "meta":  {
+                                   "discoveryYear":  2024,
+                                   "host":  "XO-2 S",
+                                   "distancePc":  151.398
+                               }
+                  },
+                  {
+                      "type":  "exoplanet",
+                      "source":  "NASA Exoplanet Archive",
+                      "title":  "OGLE-2017-BLG-0364L b",
+                      "desc":  "Discovered: 2024 | Host: OGLE-2017-BLG-0364L | Dist: 7,860.0 pc",
+                      "link":  "https://exoplanetarchive.ipac.caltech.edu/",
+                      "meta":  {
+                                   "discoveryYear":  2024,
+                                   "host":  "OGLE-2017-BLG-0364L",
+                                   "distancePc":  7860
+                               }
+                  },
+                  {
+                      "type":  "exoplanet",
+                      "source":  "NASA Exoplanet Archive",
+                      "title":  "Kepler-1808 b",
+                      "desc":  "Discovered: 2021 | Host: Kepler-1808 | Dist: 1,022.0 pc",
+                      "link":  "https://exoplanetarchive.ipac.caltech.edu/",
+                      "meta":  {
+                                   "discoveryYear":  2021,
+                                   "host":  "Kepler-1808",
+                                   "distancePc":  1022.01
+                               }
+                  },
+                  {
+                      "type":  "exoplanet",
+                      "source":  "NASA Exoplanet Archive",
+                      "title":  "Kepler-249 d",
+                      "desc":  "Discovered: 2014 | Host: Kepler-249 | Dist: 190.4 pc",
+                      "link":  "https://exoplanetarchive.ipac.caltech.edu/",
+                      "meta":  {
+                                   "discoveryYear":  2014,
+                                   "host":  "Kepler-249",
+                                   "distancePc":  190.401
+                               }
+                  },
+                  {
+                      "type":  "exoplanet",
+                      "source":  "NASA Exoplanet Archive",
+                      "title":  "Kepler-418 b",
+                      "desc":  "Discovered: 2014 | Host: Kepler-418 | Dist: 1,002.5 pc",
+                      "link":  "https://exoplanetarchive.ipac.caltech.edu/",
+                      "meta":  {
+                                   "discoveryYear":  2014,
+                                   "host":  "Kepler-418",
+                                   "distancePc":  1002.53
+                               }
+                  },
+                  {
+                      "type":  "launch",
+                      "source":  "Launch Library 2",
+                      "title":  "Launch: Electron | The Grain Goddess Provides (iQPS Launch 7)",
+                      "desc":  "Window: 2026-08-06 09:00 UTC | Pad: Rocket Lab Launch Complex 1A",
+                      "link":  "https://ll.thespacedevs.com/2.2.0/launch/8b7e748c-6ed5-4681-a898-827b4a23b8d7/"
+                  },
+                  {
+                      "type":  "launch",
+                      "source":  "Launch Library 2",
+                      "title":  "Launch: Falcon 9 Block 5 | Starlink Group 17-38",
+                      "desc":  "Window: 2026-08-08 14:00 UTC | Pad: Space Launch Complex 4E",
+                      "link":  "https://ll.thespacedevs.com/2.2.0/launch/e4316d4c-9eb8-4a18-9b0d-4307c3970ef6/"
+                  },
+                  {
+                      "type":  "news",
+                      "source":  "Spaceflight News API",
+                      "title":  "A match made in cleanrooms",
+                      "desc":  "From the ESA Blogs.",
+                      "link":  "https://www.esa.int/ESA_Multimedia/Images/2026/08/A_match_made_in_cleanrooms"
+                  },
+                  {
+                      "type":  "news",
+                      "source":  "Spaceflight News API",
+                      "title":  "Three companies building the tech to grow crops on the moon",
+                      "desc":  "Rockets, rovers and landers have dominated the attention of the commercial space industry as the United States focuses on sending humans back to the moon, but aâ€¦",
+                      "link":  "https://spacenews.com/three-companies-building-the-tech-to-grow-crops-on-the-moon/"
+                  },
+                  {
+                      "type":  "news",
+                      "source":  "Spaceflight News API",
+                      "title":  "Rocket Lab launches 8th iQPS satellite",
+                      "desc":  "Rocket Lab launched a Japanese radar-imaging satellite Aug. 6, more than a month after the previous launch attempt was aborted. The post Rocket Lab launches 8thâ€¦",
+                      "link":  "https://spacenews.com/rocket-lab-launches-8th-iqps-satellite/"
+                  }
+              ]
+}

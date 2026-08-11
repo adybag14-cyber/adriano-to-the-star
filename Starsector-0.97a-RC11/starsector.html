@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Starsector - Browser Edition</title>
+    <link rel="icon" type="image/x-icon" href="images/ita_logo.png">
+
+    <!-- CheerpJ 4.2 Runtime (Java 17 support) -->
+    <!-- Load CheerpJ loader from worker URL -->
+    <script src="https://starisdons-swf-worker.adybag14.workers.dev/cheerpj/4.2/loader.js"></script>
+
+    <!-- LWJGL native bridge is loaded dynamically in initStarsector -->
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background: #000;
+            overflow: hidden;
+        }
+
+        /* Game Container */
+        #game-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(ellipse at center, #0d1b2a 0%, #000 100%);
+        }
+
+        /* Loading Screen */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a0a15 0%, #1a1a2e 50%, #0d1b2a 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease;
+        }
+
+        #loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-logo {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #64b5f6;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            text-shadow: 0 0 30px rgba(100, 181, 246, 0.5);
+        }
+
+        .loading-bar-container {
+            width: 400px;
+            max-width: 80%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .loading-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #1565c0, #42a5f5, #64b5f6);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .loading-status {
+            color: #90a4ae;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .loading-substatus {
+            color: #546e7a;
+            font-size: 0.8rem;
+            margin-top: 8px;
+        }
+
+        /* Top Bar */
+        #top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: rgba(10, 10, 20, 0.9);
+            border-bottom: 1px solid rgba(100, 150, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        #top-bar.visible {
+            opacity: 1;
+        }
+
+        .top-bar-title {
+            color: #64b5f6;
+            font-weight: 600;
+            letter-spacing: 2px;
+            font-size: 0.9rem;
+        }
+
+        .top-bar-controls {
+            display: flex;
+            gap: 15px;
+        }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #90a4ae;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .control-btn.danger:hover {
+            background: rgba(244, 67, 54, 0.3);
+            border-color: rgba(244, 67, 54, 0.5);
+            color: #ef5350;
+        }
+
+        /* Error Display */
+        #error-display {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(20, 20, 30, 0.95);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 500px;
+            text-align: center;
+            z-index: 2000;
+        }
+
+        #error-display.visible {
+            display: block;
+        }
+
+        #error-display h2 {
+            color: #ef5350;
+            margin-bottom: 15px;
+        }
+
+        #error-display p {
+            color: #90a4ae;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        #error-display pre {
+            background: rgba(0, 0, 0, 0.5);
+            color: #78909c;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            text-align: left;
+            overflow-x: auto;
+            max-height: 150px;
+        }
+
+        /* CheerpJ Canvas Styles */
+        .cheerpj-display {
+            width: 100% !important;
+            height: 100% !important;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loading-logo">Starsector</div>
+        <div class="loading-bar-container">
+            <div class="loading-bar" id="loading-bar"></div>
+        </div>
+        <div class="loading-status" id="loading-status">Initializing CheerpJ Runtime...</div>
+        <div class="loading-substatus" id="loading-substatus">This may take a moment on first load</div>
+    </div>
+
+    <!-- Top Control Bar -->
+    <div id="top-bar">
+        <div class="top-bar-title">STARSECTOR // BROWSER EDITION</div>
+        <div class="top-bar-controls">
+            <button class="control-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+            <button class="control-btn danger" onclick="logout()">⏻ Logout</button>
+        </div>
+    </div>
+
+    <!-- Game Container -->
+    <div id="game-container"></div>
+
+    <!-- Error Display -->
+    <div id="error-display">
+        <h2>Launch Failed</h2>
+        <p id="error-message">An error occurred while starting Starsector.</p>
+        <pre id="error-details"></pre>
+        <button class="control-btn" onclick="location.reload()" style="margin-top: 20px;">Retry</button>
+    </div>
+
+        <script>
+        if (!window.__starsectorConsolePatched) {
+            const logToServer = (level, args) => {
+                try {
+                    const payload = args
+                        .map((arg) => {
+                            if (typeof arg === 'string') return arg;
+                            try {
+                                return JSON.stringify(arg);
+                            } catch {
+                                return String(arg);
+                            }
+                        })
+                        .join(' ');
+                    fetch('/log', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'text/plain' },
+                        body: `[${level.toUpperCase()}] ${payload}`
+                    }).catch(() => {});
+                } catch {
+                    // ignore logging failures
+                }
+            };
+
+            const wrapConsole = (level) => {
+                const original = console[level]?.bind(console);
+                if (!original) return;
+                console[level] = (...args) => {
+                    original(...args);
+                    logToServer(level, args);
+                };
+            };
+            ['log', 'warn', 'error'].forEach(wrapConsole);
+            window.__starsectorConsolePatched = true;
+            console.log('Console logging active and mapped to overlay.');
+        }
+
+        const clearSiteData = async () => {
+            try {
+                const clearPromises = [];
+                if (window.caches?.keys) {
+                    const cacheKeys = await caches.keys();
+                    clearPromises.push(...cacheKeys.map((key) => caches.delete(key)));
+                }
+                if (window.indexedDB) {
+                    clearPromises.push(new Promise((resolve) => {
+                        const request = indexedDB.deleteDatabase('starsector_097a_rc11');
+                        request.onsuccess = () => resolve(true);
+                        request.onerror = () => resolve(false);
+                        request.onblocked = () => resolve(false);
+                    }));
+                }
+                if (window.localStorage) {
+                    window.localStorage.clear();
+                }
+                await Promise.all(clearPromises);
+                console.log('[Setup] Cleared site data (cache, IndexedDB, localStorage).');
+            } catch (error) {
+                console.warn('[Setup] Failed to clear site data:', error);
+            }
+        };
+
+        // Start loading Starsector immediately (no authentication required)
+        document.addEventListener('DOMContentLoaded', async () => {
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('clearCache')) {
+                await clearSiteData();
+            }
+            initStarsector();
+        });
+
+        function updateLoadingProgress(percent, status, substatus) {
+            document.getElementById('loading-bar').style.width = percent + '%';
+            if (status) document.getElementById('loading-status').textContent = status;
+            if (substatus) document.getElementById('loading-substatus').textContent = substatus;
+        }
+
+        function showError(message, details) {
+            document.getElementById('loading-screen').classList.add('hidden');
+            document.getElementById('error-message').textContent = message;
+            document.getElementById('error-details').textContent = details || '';
+            document.getElementById('error-display').classList.add('visible');
+        }
+
+        async function initStarsector() {
+            try {
+                updateLoadingProgress(5, 'Loading CheerpJ 4.2 Runtime...', 'Downloading WebAssembly runtime with Java 17 + LWJGL support');
+
+                // Create LWJGL canvas for WebGL rendering
+                const lwjglCanvas = document.createElement('canvas');
+                lwjglCanvas.id = 'lwjgl';
+                lwjglCanvas.width = 1280;
+                lwjglCanvas.height = 720;
+                lwjglCanvas.style.width = '100%';
+                lwjglCanvas.style.height = '100%';
+                lwjglCanvas.tabIndex = 0; // Make canvas focusable for keyboard input
+                document.getElementById('game-container').appendChild(lwjglCanvas);
+
+                // Set the canvas for LWJGL (required by cheerpj-natives/lwjgl.js)
+                window.lwjglCanvasElement = lwjglCanvas;
+                console.log('LWJGL canvas created:', lwjglCanvas);
+
+                // Debug: file accessibility check
+                fetch('/lwjgl-browsercraft/libraries/liblwjgl.so').then(r => {
+                    console.log(`[Debug] Fetch liblwjgl.so status: ${r.status}`);
+                }).catch(e => console.error('[Debug] Fetch liblwjgl.so failed:', e));
+
+                // Load LWJGL native stubs (cheerpjDef is unavailable in CheerpJ 8)
+                let lwjglNatives = null;
+                try {
+                    const module = await import('/cheerpj-natives/natives/lwjgl.js');
+                    lwjglNatives = module?.default || {};
+                    console.log('[Setup] Loaded LWJGL natives from /cheerpj-natives/natives/lwjgl.js');
+                } catch (error) {
+                    console.warn('[Setup] Failed to load /cheerpj-natives/natives/lwjgl.js', error);
+                }
+
+                if (!lwjglNatives || Object.keys(lwjglNatives).length === 0) {
+                    lwjglNatives = window.CheerpJ_LWJGL_Natives || window.LWJGL_Natives || {};
+                }
+
+                // Frame counter hooks for Playwright diagnostics (ensure stubs exist)
+                const ensureFrameHook = (fnName) => {
+                    const original = lwjglNatives?.[fnName];
+                    lwjglNatives[fnName] = async (...args) => {
+                        const result = typeof original === 'function' ? await original(...args) : undefined;
+                        window.LWJGL_FrameCounter = (window.LWJGL_FrameCounter || 0) + 1;
+                        window.LWJGL_LastSwapTime = performance.now();
+                        if (window.reportLwjglFrame && window.LWJGL_FrameCounter % 5 === 0) {
+                            window.reportLwjglFrame(window.LWJGL_FrameCounter);
+                        }
+                        return result;
+                    };
+                };
+
+                ensureFrameHook('Java_org_lwjgl_opengl_Display_nUpdate');
+                ensureFrameHook('Java_org_lwjgl_opengl_Display_nSwapBuffers');
+
+                // Force JVM_LoadLibrary globally
+                window.JVM_LoadLibrary = async function (lib, name) {
+                    console.log(`[Global Hook] JVM_LoadLibrary called: ${name}`);
+                    return { address: 1 };
+                };
+
+                // Initialize CheerpJ 17 with browsercraft configuration (for Starsector 0.97a-RC11)
+                console.log("Initializing CheerpJ 17 with browsercraft configuration...");
+                // Use Cloudflare Worker URL for Starsector assets hosted on R2
+                // Files are in R2 under "starsector/" path (without Starsector-0.97a-RC11/ prefix)
+                const workerUrl = "https://starisdons-swf-worker.adybag14.workers.dev";
+                const rootUrl = `${workerUrl}/`;
+                console.log(`[Setup] Loading assets from Cloudflare Worker: ${rootUrl}`);
+                const initResult = await cheerpjInit({
+                    version: 17,
+                    clipboardMode: "permission",
+                    enableX11: true,
+                    mounts: [
+                        // Mount entire worker URL at root - all assets will load from R2
+                        { type: "http", url: "https://starisdons-swf-worker.adybag14.workers.dev", mountPoint: "/" },
+                        { type: "memory", mountPoint: "/app/Starsector-0.97a-RC11/starsector/data/config" },
+                        { type: "memory", mountPoint: "/app/Starsector-0.97a-RC11/starsector/saves" },
+                        { type: "memory", mountPoint: "/app/Starsector-0.97a-RC11/starsector/screenshots" },
+                        { type: "memory", mountPoint: "/app/Starsector-0.97a-RC11/starsector/mods" },
+                        { type: "memory", mountPoint: "/app/Starsector-0.97a-RC11/starsector/.java" }
+                    ],
+                    beforeLoad: function () {
+                        const _realNow = performance.now.bind(performance);
+                        let _lastNow = _realNow();
+                        performance.now = function () {
+                            let now = _realNow();
+                            if (now <= _lastNow) {
+                                now = _lastNow + 0.01;
+                            }
+                            _lastNow = now;
+                            return now;
+                        };
+
+                        const _realDateNow = Date.now.bind(Date);
+                        let _lastDateNow = _realDateNow();
+                        Date.now = function () {
+                            let now = _realDateNow();
+                            if (now <= _lastDateNow) {
+                                now = _lastDateNow + 1;
+                            }
+                            _lastDateNow = now;
+                            return now;
+                        };
+
+                        console.log("[Polyfill] Monotonic performance.now() and Date.now installed.");
+                    },
+                    libraries: {
+                        'libGL.so.1': '/app/lwjgl-browsercraft/libraries/gl4es.wasm',
+                        'liblwjgl.so': '/app/lwjgl-browsercraft/libraries/liblwjgl.so',
+                        'liblwjgl64.so': '/app/lwjgl-browsercraft/libraries/liblwjgl.so'
+                    },
+                    natives: lwjglNatives || {},
+                    javaProperties: [
+                        "os.name=Linux",
+                        "os.arch=amd64",
+                        "os.version=5.0",
+                        "sun.desktop=gnome",
+                        "org.lwjgl.librarypath=/app/lwjgl-browsercraft/libraries",
+                        "java.library.path=/app/lwjgl-browsercraft/libraries",
+                        "user.dir=/app/Starsector-0.97a-RC11/starsector",
+                        "fs.game.dir=/app/Starsector-0.97a-RC11/starsector",
+                        "fs.mod.dir=/app/Starsector-0.97a-RC11/starsector/mods",
+                        "starsector.mods.dir=/app/Starsector-0.97a-RC11/starsector/mods",
+                        "com.fs.starfarer.settings.paths.mods=/app/Starsector-0.97a-RC11/starsector/mods",
+                        "com.fs.starfarer.settings.paths.saves=/app/Starsector-0.97a-RC11/starsector/saves",
+                        "com.fs.starfarer.settings.paths.screenshots=/app/Starsector-0.97a-RC11/starsector/screenshots",
+                        "com.fs.starfarer.settings.paths.logs=/app/Starsector-0.97a-RC11/starsector/logs",
+                        "starfarer.settings.paths.mods=/app/Starsector-0.97a-RC11/starsector/mods",
+                        "starfarer.settings.paths.saves=/app/Starsector-0.97a-RC11/starsector/saves",
+                        "starfarer.settings.paths.screenshots=/app/Starsector-0.97a-RC11/starsector/screenshots",
+                        "starfarer.settings.paths.logs=/app/Starsector-0.97a-RC11/starsector/logs",
+                        "$com.fs.starfarer.settings.paths.logs=/app/Starsector-0.97a-RC11/starsector/logs",
+                        "%com.fs.starfarer.settings.paths.saves=/app/Starsector-0.97a-RC11/starsector/saves",
+                        "+com.fs.starfarer.settings.paths.screenshots=/app/Starsector-0.97a-RC11/starsector/screenshots",
+                        "$com.fs.starfarer.settings.paths.mods=/app/Starsector-0.97a-RC11/starsector/mods",
+                        "com.fs.starfarer.settings.linux=true",
+                        "fs.home=/app/Starsector-0.97a-RC11/starsector",
+                        "starfarer.res.path=/app/Starsector-0.97a-RC11/starsector",
+                        "user.home=/app/Starsector-0.97a-RC11/starsector",
+                        "user.name=CheerpJUser",
+                        "legacyLauncher=true",
+                        "enableLauncherWarnings=false",
+                        "java.awt.headless=false"
+                    ]
+                });
+                if (initResult) {
+                    window.cjModule = initResult;
+                } else if (typeof cjModule !== "undefined" && !window.cjModule) {
+                    window.cjModule = cjModule;
+                } else if (window.cj3Module && !window.cjModule) {
+                    window.cjModule = window.cj3Module;
+                }
+
+                const resolveFromFrames = () => {
+                    const frames = Array.from(document.querySelectorAll("iframe"));
+                    for (const frame of frames) {
+                        try {
+                            const frameWindow = frame.contentWindow;
+                            if (frameWindow?.cjModule?.cjResolveClass) {
+                                window.cjModule = frameWindow.cjModule;
+                                return window.cjModule;
+                            }
+                            if (frameWindow?.cj3Module?.cjResolveClass) {
+                                window.cjModule = frameWindow.cj3Module;
+                                return window.cjModule;
+                            }
+                        } catch (error) {
+                            // Ignore cross-origin frames
+                        }
+                    }
+                    return null;
+                };
+
+                const waitForCjModule = async () => {
+                    for (let i = 0; i < 50; i += 1) {
+                        if (window.cjModule?.cjResolveClass) {
+                            return window.cjModule;
+                        }
+                        if (typeof cjModule !== "undefined" && cjModule?.cjResolveClass) {
+                            window.cjModule = cjModule;
+                            return window.cjModule;
+                        }
+                        if (window.cj3Module?.cjResolveClass) {
+                            window.cjModule = window.cj3Module;
+                            return window.cjModule;
+                        }
+                        const frameModule = resolveFromFrames();
+                        if (frameModule) {
+                            return frameModule;
+                        }
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                    }
+                    return window.cjModule || null;
+                };
+
+                const resolvedModule = await waitForCjModule();
+                window.__cjInteropModule = resolvedModule || window.cjModule || window.cj3Module || null;
+                if (!window.__cjInteropModule) {
+                    console.warn('[Setup] CheerpJ init did not expose cjModule yet.');
+                } else {
+                    console.log('[Setup] CheerpJ cjModule resolved.', {
+                        hasResolve: !!window.__cjInteropModule.cjResolveClass,
+                        keys: Object.keys(window.__cjInteropModule)
+                    });
+                }
+                const resolveInteropModule = async (classPath) => {
+                    if (window.__cjInteropModule?.cjResolveClass) {
+                        return window.__cjInteropModule;
+                    }
+                    if (classPath && typeof window.cheerpjRunLibrary === "function") {
+                        try {
+                            if (!window.__cjInteropLibrary) {
+                                console.log("[Setup] Initializing CJ3 library interop...");
+                                window.__cjInteropLibrary = await window.cheerpjRunLibrary(classPath);
+                                console.log("[Setup] CJ3 library loaded.", {
+                                    hasLibrary: !!window.__cjInteropLibrary
+                                });
+                            }
+                            if (window.__cjInteropLibrary) {
+                                const lookupClass = (name) => name.split(".").reduce((obj, part) => obj?.[part], window.__cjInteropLibrary);
+                                window.__cjInteropModule = {
+                                    library: window.__cjInteropLibrary,
+                                    cjResolveClass: async (name) => lookupClass(name)
+                                };
+                            }
+                        } catch (error) {
+                            console.warn("[Setup] Failed to initialize CJ3 library interop", error);
+                        }
+                    }
+                    return window.__cjInteropModule || null;
+                };
+                console.log('CheerpJ initialized (requested Java 17 runtime)');
+
+                try {
+                    if (window.CheerpJIndexedDBFolder && window.cheerpjFSMounts && Array.isArray(window.cheerpjFSMounts)) {
+                        const mountPoints = [
+                            "/app/Starsector-0.97a-RC11/starsector/data/config/",
+                            "/app/Starsector-0.97a-RC11/starsector/logs/",
+                            "/app/Starsector-0.97a-RC11/starsector/saves/",
+                            "/app/Starsector-0.97a-RC11/starsector/screenshots/",
+                            "/app/Starsector-0.97a-RC11/starsector/mods/",
+                            "/app/Starsector-0.97a-RC11/starsector/.java/"
+                        ];
+                        for (const mountPoint of mountPoints) {
+                            const existing = window.cheerpjFSMounts.find(m => m.mountPoint === mountPoint);
+                            if (!existing) {
+                                window.cheerpjFSMounts.unshift(new CheerpJIndexedDBFolder(mountPoint));
+                                console.log("[Setup] Added IndexedDB mount", mountPoint);
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.warn("[Setup] Failed to add IndexedDB mounts", error);
+                }
+
+                try {
+                    if (window.cheerpjFSMounts && Array.isArray(window.cheerpjFSMounts)) {
+                        console.log("[Setup] Mount order (pre-sort)", window.cheerpjFSMounts.map(m => m.mountPoint));
+                        window.cheerpjFSMounts.sort((a, b) => (b.mountPoint || "").length - (a.mountPoint || "").length);
+                        console.log("[Setup] Mount order (post-sort)", window.cheerpjFSMounts.map(m => m.mountPoint));
+                    }
+                } catch (error) {
+                    console.warn("[Setup] Failed to sort mounts", error);
+                }
+
+                try {
+                    const cjModule = await resolveInteropModule();
+                    if (cjModule?.cjResolveClass) {
+                        const System = await cjModule.cjResolveClass("java.lang.System");
+                        const props = [
+                            "user.dir",
+                            "user.home",
+                            "fs.home",
+                            "com.fs.starfarer.settings.paths.logs",
+                            "com.fs.starfarer.settings.paths.mods",
+                            "com.fs.starfarer.settings.paths.saves",
+                            "com.fs.starfarer.settings.paths.screenshots",
+                            "com.fs.starfarer.settings.linux"
+                        ];
+                        for (const prop of props) {
+                            const value = await System.getProperty(prop);
+                            console.log(`[Setup] System.getProperty ${prop} = ${value}`);
+                        }
+
+                        const File = await cjModule.cjResolveClass("java.io.File");
+                        const relFile = await new File("data/config/settings.json");
+                        const absFile = await new File("/app/Starsector-0.97a-RC11/starsector/data/config/settings.json");
+                        console.log(`[Setup] File exists data/config/settings.json = ${await relFile.exists()}`);
+                        console.log(`[Setup] File exists /app/.../settings.json = ${await absFile.exists()}`);
+
+                        try {
+                            const Paths = await cjModule.cjResolveClass("java.nio.file.Paths");
+                            const Files = await cjModule.cjResolveClass("java.nio.file.Files");
+                            const pathObj = await Paths.get("data/config/settings.json");
+                            const bytes = await Files.readAllBytes(pathObj);
+                            console.log(`[Setup] Java read settings.json bytes=${bytes.length}`);
+                        } catch (readError) {
+                            console.warn("[Setup] Java read settings.json failed", readError);
+                        }
+                    }
+                } catch (error) {
+                    console.warn("[Setup] Failed to log System properties", error);
+                }
+
+                // Log CheerpOS file access for config paths
+                try {
+                    const baseDir = "/app/Starsector-0.97a-RC11/starsector";
+                    const remapPrefixes = [
+                        { prefix: "data/", target: `${baseDir}/data/` },
+                        { prefix: "/data/", target: `${baseDir}/data/` },
+                        { prefix: "mods/", target: `${baseDir}/mods/` },
+                        { prefix: "/mods/", target: `${baseDir}/mods/` },
+                        { prefix: "logs/", target: `${baseDir}/logs/` },
+                        { prefix: "/logs/", target: `${baseDir}/logs/` },
+                        { prefix: "saves/", target: `${baseDir}/saves/` },
+                        { prefix: "/saves/", target: `${baseDir}/saves/` },
+                        { prefix: "screenshots/", target: `${baseDir}/screenshots/` },
+                        { prefix: "/screenshots/", target: `${baseDir}/screenshots/` },
+                        { prefix: ".java/", target: `${baseDir}/.java/` },
+                        { prefix: "/.java/", target: `${baseDir}/.java/` }
+                    ];
+                    const hookCheerpOS = (name, pathIndex) => {
+                        const original = window[name];
+                        if (!original || original.__starsectorHooked) return;
+                        const wrapped = function (...args) {
+                            try {
+                                const path = args[pathIndex];
+                                if (typeof path === "string" && !path.startsWith("/app/")) {
+                                    for (const rule of remapPrefixes) {
+                                        if (path.startsWith(rule.prefix)) {
+                                            const newPath = rule.target + path.slice(rule.prefix.length);
+                                            args[pathIndex] = newPath;
+                                            console.log(`[CheerpOS] ${name} remap ${path} -> ${newPath}`);
+                                            break;
+                                        }
+                                    }
+                                }
+                                const mode = name === "cheerpOSOpen" ? args[2] : undefined;
+                                const shouldLog = typeof path === "string" && (
+                                    path.includes("data/config") ||
+                                    path.includes("/logs") ||
+                                    path.includes("/saves") ||
+                                    path.includes("/screenshots") ||
+                                    path.includes("/mods") ||
+                                    path.includes("/.java")
+                                );
+                                if (shouldLog) {
+                                    console.log(`[CheerpOS] ${name} ${path}`, { mode, args });
+                                }
+                            } catch {
+                                // ignore
+                            }
+                            return original.apply(this, args);
+                        };
+                        wrapped.__starsectorHooked = true;
+                        window[name] = wrapped;
+                    };
+
+                    hookCheerpOS("cheerpOSOpen", 1);
+                    hookCheerpOS("cheerpOSStat", 0);
+                    hookCheerpOS("cheerpOSCreateDir", 0);
+
+                    if (window.cheerpOSOpen && !window.cheerpOSOpen.__starsectorTrack) {
+                        const originalOpen = window.cheerpOSOpen;
+                        window.__starsectorFdPaths = window.__starsectorFdPaths || {};
+                        window.cheerpOSOpen = function (fds, path, mode, cb) {
+                            return originalOpen(fds, path, mode, (fd) => {
+                                if (fd >= 0 && typeof path === "string") {
+                                    window.__starsectorFdPaths[fd] = path;
+                                }
+                                cb(fd);
+                            });
+                        };
+                        window.cheerpOSOpen.__starsectorTrack = true;
+                    }
+
+                    if (window.cheerpOSRead && !window.cheerpOSRead.__starsectorTrack) {
+                        const originalRead = window.cheerpOSRead;
+                        window.cheerpOSRead = function (fds, fd, buf, off, len, cb) {
+                            const path = window.__starsectorFdPaths?.[fd];
+                            return originalRead(fds, fd, buf, off, len, (bytesRead) => {
+                                if (path && path.includes("settings.json")) {
+                                    const preview = new TextDecoder().decode(buf.slice(off, off + Math.max(bytesRead, 0)));
+                                    console.log(`[CheerpOS] Read settings.json (${bytesRead} bytes)`, preview.replace(/\s+/g, " ").slice(0, 200));
+                                }
+                                cb(bytesRead);
+                            });
+                        };
+                        window.cheerpOSRead.__starsectorTrack = true;
+                    }
+                } catch (error) {
+                    console.warn("[Setup] Failed to hook CheerpOS logging", error);
+                }
+
+                try {
+                    const appMount = window.cheerpjFSMounts
+                        ? window.cheerpjFSMounts.find(m => m.mountPoint === "/app" || m.mountPoint === "/app/")
+                        : null;
+                    if (appMount) {
+                        console.log("[Setup] /app mount ops", {
+                            isSplit: appMount.isSplit,
+                            mountPoint: appMount.mountPoint,
+                            mountOps: appMount.mountOps ? Object.keys(appMount.mountOps) : null,
+                            inodeOps: appMount.inodeOps ? Object.keys(appMount.inodeOps) : null
+                        });
+                    }
+                } catch (error) {
+                    console.warn("[Setup] Failed to log /app mount", error);
+                }
+
+                // Patch /app mount listing to expose Starsector resources
+                try {
+                    const mounts = window.cheerpjFSMounts;
+                    const gameRoot = "Starsector-0.97a-RC11";
+                    const rootDir = `${gameRoot}/starsector`;
+                    const configFileList = window.starsectorConfigFiles || [
+                        "settings.json",
+                        "sounds.json",
+                        "battle_objectives.json",
+                        "contact_tag_data.json",
+                        "custom_entities.json",
+                        "engine_styles.json",
+                        "hull_styles.json",
+                        "planets.json",
+                        "tag_data.json",
+                        "title_screen_variants.csv"
+                    ];
+                    window.starsectorConfigFiles = configFileList;
+                    if (mounts) {
+                        for (const mount of mounts) {
+                            if (mount.mountPoint !== "/app" && mount.mountPoint !== "/app/") continue;
+
+                            const originalList = mount.mountOps.listAsync;
+                            mount.mountOps.listAsync = function (mp, path, fileRef, cb) {
+                                const p = path.replace(/^\/+/, '').replace(/\/+$/, '');
+                                if (p === "") {
+                                    fileRef.push(gameRoot);
+                                    return cb();
+                                }
+                                if (p === gameRoot) {
+                                    fileRef.push("starsector");
+                                    return cb();
+                                }
+                                if (p === rootDir) {
+                                    fileRef.push("data", "mods", "saves", "screenshots", "graphics", "sounds", "native", "logs", ".java");
+                                    return cb();
+                                }
+                                if (p === `${rootDir}/data`) {
+                                    fileRef.push("config");
+                                    return cb();
+                                }
+                                if (p === `${rootDir}/data/config`) {
+                                    for (const configFile of configFileList) {
+                                        fileRef.push(configFile);
+                                    }
+                                    return cb();
+                                }
+                                return originalList.call(this, mp, path, fileRef, cb);
+                            };
+
+                            const originalStat = mount.mountOps.statAsync;
+                            mount.mountOps.statAsync = function (mp, path, fileRef, cb) {
+                                const p = path.replace(/^\/+/, '').replace(/\/+$/, '');
+                                if (p.startsWith(`${rootDir}/data/config/`)) {
+                                    const fileName = p.substring(`${rootDir}/data/config/`.length);
+                                    const sizeMap = window.starsectorConfigSizes || {};
+                                    if (sizeMap[fileName]) {
+                                        fileRef.inodeId = 9100 + fileName.length;
+                                        const fileFlag = (typeof CheerpJFileData !== 'undefined' ? CheerpJFileData.S_IFREG : 32768);
+                                        fileRef.permType = fileFlag | 511;
+                                        fileRef.size = sizeMap[fileName];
+                                        return cb();
+                                    }
+                                }
+                                const dirs = new Set([
+                                    gameRoot,
+                                    rootDir,
+                                    `${rootDir}/data`,
+                                    `${rootDir}/data/config`,
+                                    `${rootDir}/mods`,
+                                    `${rootDir}/saves`,
+                                    `${rootDir}/screenshots`,
+                                    `${rootDir}/logs`,
+                                    `${rootDir}/.java`,
+                                    `${rootDir}/graphics`,
+                                    `${rootDir}/sounds`,
+                                    `${rootDir}/native`
+                                ]);
+                                if (dirs.has(p)) {
+                                    const dirFlag = (typeof CheerpJFileData !== 'undefined' ? CheerpJFileData.S_IFDIR : 16384);
+                                    fileRef.inodeId = 9000 + p.length;
+                                    fileRef.permType = dirFlag | 511;
+                                    return cb();
+                                }
+                                return originalStat.call(this, mp, path, fileRef, cb);
+                            };
+
+                            console.log('[Setup] Patched /app mount for Starsector resources.');
+                        }
+                    }
+                } catch (error) {
+                    console.warn('[Setup] Failed to patch /app mount:', error);
+                }
+
+                // Manual preload of settings.json into the overlay
+                try {
+                    const waitForApis = async () => {
+                        for (let i = 0; i < 50; i++) {
+                            const root = window.cheerpjFSMounts
+                                ? window.cheerpjFSMounts.find(m => m.mountPoint === "/")
+                                : null;
+                            if (window.cheerpOSCreateDir || window.cheerpOSMkdir || window.cheerpOSOpen || root?.mountOps?.createDirAsync) {
+                                return true;
+                            }
+                            await new Promise(r => setTimeout(r, 100));
+                        }
+                        return false;
+                    };
+
+                    if (await waitForApis()) {
+                        const mkdir = (path) => new Promise(resolve => {
+                            const timer = setTimeout(resolve, 1000);
+                            if (window.cheerpOSCreateDir) {
+                                try {
+                                    const fileRef = {};
+                                    window.cheerpOSCreateDir(path, fileRef, 0o777, () => {
+                                        clearTimeout(timer);
+                                        resolve();
+                                    });
+                                } catch {
+                                    clearTimeout(timer);
+                                    resolve();
+                                }
+                                return;
+                            }
+                            if (window.cheerpOSMkdir) {
+                                try {
+                                    window.cheerpOSMkdir(path, 0o777, () => {
+                                        clearTimeout(timer);
+                                        resolve();
+                                    });
+                                } catch {
+                                    clearTimeout(timer);
+                                    resolve();
+                                }
+                                return;
+                            }
+                            const root = window.cheerpjFSMounts
+                                ? window.cheerpjFSMounts.find(m => m.mountPoint === "/")
+                                : null;
+                            if (root?.mountOps?.createDirAsync) {
+                                const p = path.replace(/^\/+/, "");
+                                if (!p) {
+                                    clearTimeout(timer);
+                                    resolve();
+                                    return;
+                                }
+                                root.mountOps.createDirAsync(root, p, 511, () => {
+                                    clearTimeout(timer);
+                                    resolve();
+                                });
+                                return;
+                            }
+                            clearTimeout(timer);
+                            resolve();
+                        });
+
+                        const writeFile = (path, content) => new Promise(resolve => {
+                            const timer = setTimeout(resolve, 2000);
+                            if (window.cheerpOSOpen && window.cheerpOSWrite && window.cheerpOSClose) {
+                                try {
+                                    const encoder = new TextEncoder();
+                                    const data = encoder.encode(content);
+                                    const fds = window.__starsectorFds || (window.__starsectorFds = []);
+                                    window.cheerpOSOpen(fds, path, "w", (fd) => {
+                                        if (fd < 0 || fd === undefined) {
+                                            clearTimeout(timer);
+                                            console.warn(`[Setup] Failed to open overlay file: ${path}`, fd);
+                                            resolve(false);
+                                            return;
+                                        }
+                                        window.cheerpOSWrite(fds, fd, data, 0, data.length, () => {
+                                            window.cheerpOSClose(fds, fd, () => {});
+                                            clearTimeout(timer);
+                                            resolve(true);
+                                        });
+                                    });
+                                    return;
+                                } catch {
+                                    clearTimeout(timer);
+                                    resolve(false);
+                                    return;
+                                }
+                            }
+                            clearTimeout(timer);
+                            resolve(false);
+                        });
+
+                        const baseDir = "/app/Starsector-0.97a-RC11/starsector";
+                        const dirs = [
+                            "/app/Starsector-0.97a-RC11",
+                            baseDir,
+                            `${baseDir}/data`,
+                            `${baseDir}/data/config`,
+                            `${baseDir}/logs`,
+                            `${baseDir}/saves`,
+                            `${baseDir}/screenshots`,
+                            `${baseDir}/mods`,
+                            `${baseDir}/.java`
+                        ];
+                        for (const dir of dirs) {
+                            await mkdir(dir);
+                        }
+
+                        const configFiles = [
+                            "settings.json",
+                            "sounds.json",
+                            "battle_objectives.json",
+                            "contact_tag_data.json",
+                            "custom_entities.json",
+                            "engine_styles.json",
+                            "hull_styles.json",
+                            "planets.json",
+                            "tag_data.json",
+                            "title_screen_variants.csv"
+                        ];
+                        const encoder = new TextEncoder();
+                        const sizeMap = window.starsectorConfigSizes || (window.starsectorConfigSizes = {});
+
+                        for (const fileName of configFiles) {
+                            const configPath = `${baseDir}/data/config/${fileName}`;
+                            const configResp = await fetch(`/Starsector-0.97a-RC11/starsector/data/config/${fileName}`);
+                            if (!configResp.ok) {
+                                console.warn(`[Setup] Failed to fetch ${fileName} for overlay:`, configResp.status);
+                                continue;
+                            }
+                            const configText = await configResp.text();
+                            sizeMap[fileName] = encoder.encode(configText).length;
+                            const wrote = await writeFile(configPath, configText);
+                            console.log(`[Setup] Preloaded ${fileName} into overlay (bytes=${sizeMap[fileName]}, wrote=${wrote}).`);
+                        }
+
+                        if (window.cheerpOSOpen && window.cheerpOSRead && window.cheerpOSClose) {
+                            const previewPath = `${baseDir}/data/config/settings.json`;
+                            const fds = window.__starsectorFds || (window.__starsectorFds = []);
+                            window.cheerpOSOpen(fds, previewPath, "r", (fd) => {
+                                if (fd < 0 || fd === undefined) {
+                                    console.warn(`[Setup] Failed to open ${previewPath} for preview`, fd);
+                                    return;
+                                }
+                                const buf = new Uint8Array(256);
+                                window.cheerpOSRead(fds, fd, buf, 0, buf.length, (bytesRead) => {
+                                    const preview = new TextDecoder().decode(buf.slice(0, Math.max(bytesRead, 0)));
+                                    console.log(`[Setup] settings.json preview (${bytesRead} bytes):`, preview.replace(/\s+/g, " ").slice(0, 200));
+                                    window.cheerpOSClose(fds, fd, () => {});
+                                });
+                            });
+                        }
+                    } else {
+                        console.warn('[Setup] CheerpOS APIs unavailable; skipping overlay preload.');
+                    }
+                } catch (error) {
+                    console.warn('[Setup] Manual preload failed:', error);
+                }
+
+                // --- LWJGL Native JS Injection ---
+                if (lwjglNatives && Object.keys(lwjglNatives).length > 0) {
+                    console.log("[Setup] LWJGL native stubs registered via cheerpjInit.");
+                } else {
+                    console.warn("[Setup] LWJGL native stubs missing. Expected lwjgl-bridge.js exports.");
+                }
+                // -------------------------------
+
+                // DIAGNOSTIC: Check if lwjgl.jar is still haunting us (Cache/VFS)
+                try {
+                    const magicCheck = await fetch('/Starsector/starsector-core/lwjgl.jar');
+                    if (magicCheck.ok) {
+                        console.error("👻 FATAL: lwjgl.jar IS STILL LOADABLE! Browser Cache is active. Please Clear Site Data.");
+                    } else {
+                        console.log("✅ Good: lwjgl.jar is gone (404/Error). Mocks should take over.");
+                    }
+                } catch (e) {
+                    console.log(" Good: lwjgl.jar fetch failed:", e);
+                }
+
+                updateLoadingProgress(40, 'Loading LWJGL WebAssembly Modules...', 'Downloading OpenGL to WebGL translation layers');
+
+                // Extended classpath with all Starsector 0.97a-RC11 JARs and CORE DIRECTORY for resources
+                const classPath = [
+                    "/app/Starsector-0.97a-RC11/starsector/starfarer_obf.jar",
+                    "/app/Starsector-0.97a-RC11/starsector/starfarer.api.jar",
+                    "/app/Starsector-0.97a-RC11/starsector/fs.common_obf.jar",
+                    "/app/Starsector-0.97a-RC11/starsector/fs.sound_obf.jar",
+                    "/app/cheerpj-natives/lwjgl-fixed.jar",
+                    "/app/lwjgl-browsercraft/lwjgl-2.9.3.jar", // Use browsercraft LWJGL with native support
+                    "/app/lwjgl-browsercraft/lwjgl_util-2.9.3.jar",
+                    "/app/Starsector-0.97a-RC11/starsector/jinput.jar",
+                    "/app/Starsector-0.97a-RC11/starsector/json.jar",
+                    "/app/Starsector-0.97a-RC11/starsector/xstream-1.4.10.jar",
+                    "/app/Starsector-0.97a-RC11/starsector/log4j-1.2.9.jar",
+                    "/app/Starsector-0.97a-RC11/starsector/janino.jar",
+                    "/app/Starsector-0.97a-RC11/starsector/commons-compiler.jar",
+                    "/app/Starsector-0.97a-RC11/starsector/commons-compiler-jdk.jar",
+                    "/app/Starsector-0.97a-RC11/starsector/jogg-0.0.7.jar",
+                    "/app/Starsector-0.97a-RC11/starsector/jorbis-0.0.15.jar",
+                    "/app/Starsector-0.97a-RC11/starsector/",
+                    "/app/Starsector-0.97a-RC11/starsector"
+                ].join(':');
+
+                updateLoadingProgress(60, 'Creating Display...', 'Setting up WebGL canvas for OpenGL rendering');
+
+                // Create display element (explicit size to avoid zero-width AWT buffers)
+                cheerpjCreateDisplay(1280, 720, document.getElementById('game-container'));
+                lwjglCanvas.focus();
+
+                updateLoadingProgress(80, 'Starting Starsector...', 'Launching main class (this may take 30-60 seconds)');
+
+                const urlParams = new URLSearchParams(window.location.search);
+                const launchMode = urlParams.get('mode');
+                const mainClass = launchMode === 'combat'
+                    ? 'com.fs.starfarer.combat.CombatMain'
+                    : 'com.fs.starfarer.StarfarerLauncher';
+
+                // Logging for debugging
+                console.log('📦 Classpath:', classPath);
+                console.log(`🚀 Launching ${mainClass} (mode=${launchMode || 'launcher'})...`);
+                console.log('💾 Heap Size: 2GB');
+
+                // Ensure com.fs.util.C knows about the Starsector filesystem root
+                try {
+                    const interopModule = await resolveInteropModule(classPath);
+                    if (interopModule?.cjResolveClass) {
+                        const UtilC = await interopModule.cjResolveClass("com.fs.util.C");
+                        if (UtilC) {
+                            console.log("[Setup] UtilC keys", Object.keys(UtilC));
+                        }
+                        const utilClass = UtilC?.Object || UtilC;
+                        console.log("[Setup] UtilC.Object info", {
+                            hasObject: !!UtilC?.Object,
+                            objectType: typeof UtilC?.Object
+                        });
+                        const dumpProps = (label, obj) => {
+                            if (!obj) return;
+                            try {
+                                console.log(`[Setup] ${label} props`, Object.getOwnPropertyNames(obj));
+                                const symbols = Object.getOwnPropertySymbols(obj).map(sym => sym.toString());
+                                if (symbols.length) {
+                                    console.log(`[Setup] ${label} symbols`, symbols);
+                                }
+                            } catch (error) {
+                                console.warn(`[Setup] ${label} props failed`, error);
+                            }
+                        };
+                        dumpProps("UtilC", UtilC);
+                        if (UtilC?.Object) {
+                            dumpProps("UtilC.Object", UtilC.Object);
+                            dumpProps("UtilC.Object.prototype", UtilC.Object.prototype);
+                        }
+                        if (utilClass) {
+                            dumpProps("UtilC class", utilClass);
+                            dumpProps("UtilC class.prototype", utilClass.prototype);
+                        }
+                        const getInstance = utilClass?.["\u00cb00000"]
+                            || utilClass?.["\u00cb00000$"]
+                            || utilClass?.getInstance
+                            || utilClass?.getInstance$
+                            || utilClass?.o00000
+                            || UtilC?.o00000;
+                        let utilCInstance = null;
+                        if (typeof getInstance === "function") {
+                            utilCInstance = await getInstance();
+                        }
+                        if (!utilCInstance && typeof utilClass === "function") {
+                            try {
+                                utilCInstance = await new utilClass();
+                            } catch (error) {
+                                console.warn("[Setup] UtilC constructor failed", error);
+                            }
+                        }
+                        if (utilCInstance) {
+                            dumpProps("UtilC instance", utilCInstance);
+                            const proto = Object.getPrototypeOf(utilCInstance);
+                            if (proto) {
+                                dumpProps("UtilC instance.prototype", proto);
+                            }
+                        }
+                        const utilTarget = utilCInstance || utilClass;
+                        if (utilTarget) {
+                            console.log("[Setup] UtilC target keys", Object.keys(utilTarget));
+                            const basePath = "/app/Starsector-0.97a-RC11/starsector";
+                            const callMethod = async (obj, names, argSets = [[]]) => {
+                                for (const name of names) {
+                                    if (typeof obj?.[name] === "function") {
+                                        for (const args of argSets) {
+                                            try {
+                                                await obj[name](...args);
+                                                console.log(`[Setup] UtilC method ${name} ok`, { args });
+                                                return true;
+                                            } catch (error) {
+                                                console.warn(`[Setup] UtilC method ${name} failed`, error);
+                                            }
+                                        }
+                                    }
+                                }
+                                return false;
+                            };
+                            const initCandidates = ["class", "class$", "Object", "return", "Ô00000", "Ò00000", "Õ00000", "o00000"];
+                            const addBaseCandidates = ["class", "class$", "o00000", "Object", "return", "Ô00000", "Ò00000", "Õ00000"];
+                            const finalizeCandidates = ["new", "new$", "return", "Object", "Ô00000", "Ò00000", "Õ00000"];
+                            const didInit = await callMethod(utilTarget, initCandidates, [[]]);
+                            const didAddBase = await callMethod(utilTarget, addBaseCandidates, [[basePath], [basePath, false, null]]);
+                            const didFinalize = await callMethod(utilTarget, finalizeCandidates, [[]]);
+                            console.log("[Setup] UtilC registration", { didInit, didAddBase, didFinalize, basePath, usedInstance: !!utilCInstance });
+                            if (utilCInstance?.l) {
+                                const rootsList = utilCInstance.l;
+                                let rootsSize = null;
+                                try {
+                                    if (typeof rootsList.size === "function") {
+                                        rootsSize = await rootsList.size();
+                                    } else if (typeof rootsList.length === "number") {
+                                        rootsSize = rootsList.length;
+                                    }
+                                } catch (error) {
+                                    console.warn("[Setup] UtilC roots list size failed", error);
+                                }
+                                console.log("[Setup] UtilC roots list size", rootsSize);
+                                if (rootsSize && typeof rootsList.get === "function") {
+                                    try {
+                                        const first = await rootsList.get(0);
+                                        console.log("[Setup] UtilC roots[0]", first);
+                                    } catch (error) {
+                                        console.warn("[Setup] UtilC roots get(0) failed", error);
+                                    }
+                                }
+                            }
+                            if (typeof utilTarget?.["\u00c800000"] === "function") {
+                                const roots = await utilTarget["\u00c800000"]();
+                                console.log("[Setup] UtilC roots", roots);
+                            }
+                        } else {
+                            console.warn("[Setup] UtilC instance getter missing.");
+                        }
+                    } else {
+                        console.warn("[Setup] cjModule missing; skipping UtilC registration.");
+                    }
+                } catch (error) {
+                    console.warn("[Setup] Failed to configure resource roots", error);
+                }
+
+                // --- LWJGL Native JS Injection (late check) ---
+                if (lwjglNatives && Object.keys(lwjglNatives).length > 0) {
+                    console.log("[Setup] LWJGL native stubs available before launch.");
+                } else {
+                    console.warn("[Setup] LWJGL native stubs missing before launch.");
+                }
+                // ------------------------------------------------
+
+                console.log('⚠️ Note: This is experimental. LWJGL2 support depends on the WebAssembly modules.');
+
+                // Try to run Starsector's main launcher
+                const exitCode = await cheerpjRunMain(
+                    mainClass,
+                    classPath
+                );
+
+                if (exitCode !== 0) {
+                    console.warn('Starsector exited with code:', exitCode);
+                }
+
+                // Hide loading, show controls
+                updateLoadingProgress(100, 'Starsector Launched!', '');
+                setTimeout(() => {
+                    document.getElementById('loading-screen').classList.add('hidden');
+                    document.getElementById('top-bar').classList.add('visible');
+                }, 500);
+
+            } catch (error) {
+                console.error('Starsector launch error:', error);
+
+                // Detailed error analysis
+                const errorMsg = error?.message || String(error) || 'Unknown error';
+                let errorDetails = `Error: ${errorMsg}\n\n`;
+
+                if (errorMsg.includes('Range')) {
+                    errorDetails += `HTTP Server Issue:\n`;
+                    errorDetails += `Python's simple HTTP server doesn't support Range headers.\n`;
+                    errorDetails += `CheerpJ requires a server with Range support.\n\n`;
+                    errorDetails += `Solution: Use one of these servers instead:\n`;
+                    errorDetails += `1. npx http-server -p 5501 --cors\n`;
+                    errorDetails += `2. Live Server VS Code extension\n`;
+                    errorDetails += `3. Any production HTTP server (nginx, Apache)\n`;
+                } else if (errorMsg.includes('natives') || errorMsg.includes('wasm')) {
+                    errorDetails += `LWJGL WebAssembly Issue:\n`;
+                    errorDetails += `The LWJGL2 WebAssembly modules may not be compatible with Starsector.\n`;
+                } else if (errorMsg.includes('class') || errorMsg.includes('method') || errorMsg.includes('version')) {
+                    errorDetails += `Java Version Issue:\n`;
+                    errorDetails += `Starsector may need specific Java version configuration.\n`;
+                } else {
+                    errorDetails += `Possible causes:\n`;
+                    errorDetails += `1. HTTP server doesn't support Range headers\n`;
+                    errorDetails += `2. LWJGL2 OpenGL calls not fully translated\n`;
+                    errorDetails += `3. Missing native library implementations\n`;
+                }
+
+                errorDetails += `\n\n📋 Technical Details:\n`;
+                errorDetails += `Stack: ${error?.stack || 'N/A'}`;
+
+                showError(
+                    'Failed to launch Starsector in browser.',
+                    errorDetails
+                );
+            }
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(e => {
+                    console.warn('Fullscreen not supported:', e);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                StarsectorAuth.logout();
+            }
+        }
+    </script>
+</body>
+
+</html>

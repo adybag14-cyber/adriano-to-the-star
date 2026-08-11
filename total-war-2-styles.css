@@ -1,0 +1,491 @@
+/* Total War 2 Page Styles */
+
+.game-info-card {
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(186, 148, 79, 0.3);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.game-info-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgba(186, 148, 79, 0.2);
+}
+
+.game-info-header h2 {
+    font-family: 'Raleway', sans-serif;
+    font-size: 2rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0;
+}
+
+.game-version {
+    background: rgba(186, 148, 79, 0.2);
+    border: 1px solid rgba(186, 148, 79, 0.4);
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.9rem;
+    color: #ba944f;
+    font-weight: 500;
+}
+
+.game-description {
+    color: rgba(255, 255, 255, 0.9);
+    font-family: 'Raleway', sans-serif;
+    line-height: 1.8;
+}
+
+.game-description p {
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+}
+
+.game-notice {
+    background: rgba(186, 148, 79, 0.1);
+    border: 2px solid rgba(186, 148, 79, 0.4);
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.game-notice p {
+    margin: 0;
+    color: #ba944f;
+    font-family: 'Raleway', sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.game-notice strong {
+    color: #ffffff;
+}
+
+.game-features {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(186, 148, 79, 0.2);
+}
+
+.game-features h3 {
+    font-family: 'Raleway', sans-serif;
+    font-size: 1.3rem;
+    color: #ba944f;
+    margin-bottom: 1rem;
+}
+
+.game-features ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.game-features li {
+    padding: 0.5rem 0;
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Instructions Card */
+.instructions-card {
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(186, 148, 79, 0.3);
+    border-radius: 15px;
+    padding: 2rem;
+}
+
+.instructions-card h2 {
+    font-family: 'Raleway', sans-serif;
+    font-size: 1.8rem;
+    color: #ffffff;
+    margin-bottom: 2rem;
+}
+
+.instructions-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.instruction-step {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+}
+
+.step-number {
+    background: linear-gradient(135deg, rgba(186, 148, 79, 0.3), rgba(186, 148, 79, 0.1));
+    border: 2px solid rgba(186, 148, 79, 0.5);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Raleway', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #ffffff;
+    flex-shrink: 0;
+}
+
+.step-content {
+    flex: 1;
+}
+
+.step-content h3 {
+    font-family: 'Raleway', sans-serif;
+    font-size: 1.2rem;
+    color: #ba944f;
+    margin: 0 0 0.5rem 0;
+}
+
+.step-content p {
+    font-family: 'Raleway', sans-serif;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.step-content code {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    color: #ba944f;
+    font-size: 0.9rem;
+}
+
+/* Preview Section */
+.preview-section {
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(186, 148, 79, 0.3);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.preview-section h2 {
+    font-family: 'Raleway', sans-serif;
+    font-size: 1.8rem;
+    color: #ffffff;
+    margin-bottom: 1.5rem;
+}
+
+.preview-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.preview-note {
+    background: rgba(186, 148, 79, 0.1);
+    border: 2px solid rgba(186, 148, 79, 0.3);
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+}
+
+.preview-note p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.9);
+    font-family: 'Raleway', sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.preview-note strong {
+    color: #ba944f;
+}
+
+.preview-placeholder {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px dashed rgba(186, 148, 79, 0.3);
+    border-radius: 12px;
+}
+
+.preview-icon {
+    font-size: 5rem;
+    margin-bottom: 1rem;
+}
+
+.preview-placeholder h3 {
+    font-family: 'Raleway', sans-serif;
+    font-size: 2rem;
+    color: #ffffff;
+    margin: 0 0 0.5rem 0;
+}
+
+.preview-placeholder > p {
+    font-family: 'Raleway', sans-serif;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.1rem;
+    margin: 0 0 1.5rem 0;
+}
+
+.preview-subtitle {
+    font-family: 'Raleway', sans-serif;
+    color: #ba944f;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 1.5rem 0 1rem 0;
+}
+
+.preview-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: inline-block;
+    text-align: left;
+}
+
+.preview-features li {
+    padding: 0.5rem 0;
+    color: rgba(255, 255, 255, 0.8);
+    font-family: 'Raleway', sans-serif;
+    font-size: 1rem;
+}
+
+/* Download Section */
+.download-section {
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(186, 148, 79, 0.3);
+    border-radius: 15px;
+    padding: 2rem;
+}
+
+.download-section h2 {
+    font-family: 'Raleway', sans-serif;
+    font-size: 1.8rem;
+    color: #ffffff;
+    margin-bottom: 1rem;
+}
+
+.download-description {
+    color: rgba(255, 255, 255, 0.8);
+    font-family: 'Raleway', sans-serif;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+}
+
+.download-options {
+    margin-bottom: 2rem;
+}
+
+.download-category {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(186, 148, 79, 0.2);
+}
+
+.download-category:last-child {
+    border-bottom: none;
+}
+
+.download-category h3 {
+    font-family: 'Raleway', sans-serif;
+    font-size: 1.3rem;
+    color: #ba944f;
+    margin-bottom: 1rem;
+}
+
+.files-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.file-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(186, 148, 79, 0.2);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.file-item:hover {
+    background: rgba(0, 0, 0, 0.5);
+    border-color: rgba(186, 148, 79, 0.4);
+}
+
+.file-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1;
+}
+
+.file-name {
+    font-family: 'Raleway', sans-serif;
+    font-size: 1rem;
+    color: #ffffff;
+    font-weight: 500;
+}
+
+.file-size {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.download-file-btn {
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, rgba(186, 148, 79, 0.3), rgba(186, 148, 79, 0.1));
+    border: 2px solid rgba(186, 148, 79, 0.5);
+    border-radius: 8px;
+    color: #ffffff;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.download-file-btn:hover {
+    background: linear-gradient(135deg, rgba(186, 148, 79, 0.5), rgba(186, 148, 79, 0.3));
+    border-color: rgba(186, 148, 79, 0.8);
+    transform: translateY(-2px);
+}
+
+.directory-note {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+}
+
+.download-all-container {
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 2px solid rgba(186, 148, 79, 0.2);
+}
+
+.download-all-btn {
+    padding: 1.5rem 3rem;
+    background: linear-gradient(135deg, rgba(186, 148, 79, 0.4), rgba(186, 148, 79, 0.2));
+    border: 3px solid rgba(186, 148, 79, 0.6);
+    border-radius: 12px;
+    color: #ffffff;
+    font-family: 'Raleway', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.download-all-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, rgba(186, 148, 79, 0.6), rgba(186, 148, 79, 0.4));
+    border-color: rgba(186, 148, 79, 0.9);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(186, 148, 79, 0.3);
+}
+
+.download-all-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-icon {
+    font-size: 1.5rem;
+}
+
+.download-note {
+    margin-top: 1rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.9rem;
+}
+
+/* Requirements Card */
+.requirements-card {
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(186, 148, 79, 0.3);
+    border-radius: 15px;
+    padding: 2rem;
+}
+
+.requirements-card h2 {
+    font-family: 'Raleway', sans-serif;
+    font-size: 1.8rem;
+    color: #ffffff;
+    margin-bottom: 2rem;
+}
+
+.requirements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.requirement-item h3 {
+    font-family: 'Raleway', sans-serif;
+    font-size: 1.2rem;
+    color: #ba944f;
+    margin-bottom: 1rem;
+}
+
+.requirement-item ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.requirement-item li {
+    padding: 0.5rem 0;
+    color: rgba(255, 255, 255, 0.8);
+    font-family: 'Raleway', sans-serif;
+    border-bottom: 1px solid rgba(186, 148, 79, 0.1);
+}
+
+.requirement-item li:last-child {
+    border-bottom: none;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .game-info-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .instruction-step {
+        flex-direction: column;
+    }
+
+    .step-number {
+        align-self: flex-start;
+    }
+
+    .file-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .download-file-btn {
+        width: 100%;
+    }
+
+    .requirements-grid {
+        grid-template-columns: 1fr;
+    }
+}
+

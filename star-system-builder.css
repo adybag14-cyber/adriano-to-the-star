@@ -1,0 +1,198 @@
+/* Star System Builder - Modern UI */
+:root {
+    --ssb-primary: #ba944f;
+    --ssb-bg-glass: rgba(10, 10, 15, 0.75);
+    --ssb-text: #f0f0f0;
+    --ssb-border: rgba(255, 255, 255, 0.1);
+    --ssb-accent-success: #4ade80;
+    --ssb-accent-danger: #ef4444;
+}
+
+#ssb-ui {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    box-sizing: border-box;
+    font-family: 'Outfit', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.ssb-panel {
+    background: var(--ssb-bg-glass);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--ssb-border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    pointer-events: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease;
+}
+
+.ssb-panel:hover {
+    border-color: rgba(186, 148, 79, 0.3);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+}
+
+.ssb-header {
+    text-align: center;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.ssb-title {
+    color: var(--ssb-primary);
+    margin: 0 0 0.5rem 0;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.ssb-instructions {
+    color: var(--ssb-text);
+    margin: 0 0 1rem 0;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    opacity: 0.8;
+}
+
+.ssb-controls {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.ssb-select {
+    padding: 8px 16px;
+    background: rgba(0, 0, 0, 0.6);
+    color: var(--ssb-text);
+    border: 1px solid var(--ssb-border);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+    outline: none;
+}
+
+.ssb-select:hover {
+    border-color: var(--ssb-primary);
+}
+
+.ssb-btn {
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--ssb-border);
+    border-radius: 6px;
+    color: var(--ssb-text);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.ssb-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-1px);
+}
+
+.ssb-btn-danger {
+    border-color: rgba(239, 68, 68, 0.5);
+    color: var(--ssb-accent-danger);
+}
+
+.ssb-btn-danger:hover {
+    background: rgba(239, 68, 68, 0.1);
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+}
+
+.ssb-btn-action {
+    border-color: rgba(186, 148, 79, 0.5);
+    color: var(--ssb-primary);
+}
+
+.ssb-btn-action:hover {
+    background: rgba(186, 148, 79, 0.1);
+    box-shadow: 0 0 10px rgba(186, 148, 79, 0.2);
+}
+
+.ssb-stats-bar {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 200px;
+}
+
+.ssb-stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    color: var(--ssb-text);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 4px;
+}
+
+.ssb-stat-value {
+    font-family: monospace;
+    font-weight: bold;
+    color: var(--ssb-accent-success);
+}
+
+/* Tooltips or hints for 3D interactions */
+.ssb-hint {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+    pointer-events: none;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .ssb-header {
+        width: 100%;
+        max-width: none;
+        padding: 1rem;
+    }
+
+    .ssb-stats-bar {
+        bottom: 80px;
+        /* Above bottom controls if any */
+        left: 10px;
+        right: 10px;
+        min-width: auto;
+    }
+
+    .ssb-controls {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .ssb-select,
+    .ssb-btn {
+        width: 100%;
+        text-align: center;
+    }
+}

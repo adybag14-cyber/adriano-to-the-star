@@ -1,0 +1,37 @@
+                        # DYNAMIC BYTE PATCH
+                        # Search for '__syscall_pipe2' and verify context
+                        key = b'__syscall_pipe2'
+                        idx = body_bytes.find(key)
+                        
+                        if idx != -1:
+                            # Verify context: if(c==="...
+                            # We look backwards for 'if(c===' or 'if(c==="'
+                            # max lookback 10 chars
+                            start_check = max(0, idx - 10)
+                            prefix_area = body_bytes[start_check:idx]
+                            
+                            # Determine quote style
+                            quote = b'"'
+                            if b"'" in prefix_area:
+                                quote = b"'"
+                            
+                            # Construct expected pattern
+                            full_pattern = b'if(c===' + quote + key + quote + b')'
+                            
+                            if full_pattern in body_bytes:
+                                print(f"[cheerpj proxy] Found exact pattern: {full_pattern}")
+                                replacement = b'if(c==="JVM_LoadLibrary"||c==="JVM_FindLibraryEntry"){h=$.a24[c]=function(){console.log("HOOKED_JVM_ANCHOR "+c);return 1;}}else ' + full_pattern
+                                body_bytes = body_bytes.replace(full_pattern, replacement)
+                                CJ3_PATCH_APPLIED = True
+                                print(f"[cheerpj proxy] cj3.js DYNAMIC PATCH applied!")
+                            else:
+                                print(f"[cheerpj proxy] Pattern mismatch. Found key but not full context. Prefix: {prefix_area}")
+                        else:
+                            print(f"[cheerpj proxy] Key {key} not found in body.")
+                            
+                        # Debug logic failure
+                        if not CJ3_PATCH_APPLIED:
+                             try:
+                                with open('debug_patch_fail.txt', 'w') as f:
+                                    f.write(str(body_bytes[:1000]))
+                             except: pass

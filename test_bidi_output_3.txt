@@ -1,0 +1,27 @@
+C:\Users\adyba\adriano-to-the-star-clean\test-bidi-api.py:112: DeprecationWarning: websockets.exceptions.InvalidStatusCode is deprecated
+  except websockets.exceptions.InvalidStatusCode as e:
+Starting WebSocket Bidi API Test
+============================================================
+
+[TEST] Testing model: models/gemini-2.5-flash-native-audio-latest
+   Connecting to: wss://generativelanguage.googleapis.com/ws/google.cloud.aiplatform.v1beta1.LlmBidiService/BidiGenerateContent?key=GEMINI_API_KEY_2
+   [ERROR] Unexpected error: server rejected WebSocket connection: HTTP 404
+
+[TEST] Testing model: models/gemini-2.5-flash-native-audio-preview-09-2025
+   Connecting to: wss://generativelanguage.googleapis.com/ws/google.cloud.aiplatform.v1beta1.LlmBidiService/BidiGenerateContent?key=GEMINI_API_KEY_2
+   [ERROR] Unexpected error: server rejected WebSocket connection: HTTP 404
+
+[TEST] Testing model: models/gemini-2.5-flash-live-preview
+   Connecting to: wss://generativelanguage.googleapis.com/ws/google.cloud.aiplatform.v1beta1.LlmBidiService/BidiGenerateContent?key=GEMINI_API_KEY_2
+   [ERROR] Unexpected error: server rejected WebSocket connection: HTTP 404
+
+[TEST] Testing model: models/gemini-2.0-flash-exp
+   Connecting to: wss://generativelanguage.googleapis.com/ws/google.cloud.aiplatform.v1beta1.LlmBidiService/BidiGenerateContent?key=GEMINI_API_KEY_2
+   [ERROR] Unexpected error: server rejected WebSocket connection: HTTP 404
+
+============================================================
+TEST SUMMARY
+models/gemini-2.5-flash-native-audio-latest: FAILED
+models/gemini-2.5-flash-native-audio-preview-09-2025: FAILED
+models/gemini-2.5-flash-live-preview: FAILED
+models/gemini-2.0-flash-exp: FAILED

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faction Progression & XP | Adriano to the Stars</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Fira+Code&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+        body { background: #050505; color: #fff; font-family: 'Inter', sans-serif; padding: 2rem; }
+        .faction-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; }
+        .faction-card {
+            background: rgba(186, 148, 79, 0.05); border: 1px solid #ba944f;
+            padding: 2rem; border-radius: 12px; backdrop-filter: blur(15px);
+        }
+        .xp-bar { width: 100%; height: 12px; background: rgba(255,255,255,0.1); border-radius: 6px; margin: 1rem 0; overflow: hidden; }
+        .xp-fill { height: 100%; background: #ba944f; box-shadow: 0 0 15px #ba944f; width: 64%; }
+        .skill-node {
+            display: inline-block; width: 40px; height: 40px; border: 2px solid #ba944f;
+            border-radius: 50%; margin-right: 1rem; position: relative; cursor: pointer;
+        }
+        .skill-node.locked { opacity: 0.3; }
+        .skill-node::after { content: ''; position: absolute; top: 18px; left: 40px; width: 1rem; height: 2px; background: #ba944f; }
+        .roadmap-badge { background: #ba944f; color: #000; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 900; }
+    </style>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+
+<body>
+    <header style="margin-bottom: 3rem;">
+        <h1 style="font-family: 'Orbitron'; color: #ba944f; margin: 0;">FACTION PROGRESSION & MASTERY</h1>
+        <p style="opacity: 0.6;">Omniverse Roadmap Items #721 - #780</p>
+    </header>
+
+    <div class="faction-grid">
+        <!-- XP & Leveling (#736, #726) -->
+        <div class="faction-card">
+            <span class="roadmap-badge">LEVEL 42</span>
+            <h3 style="font-family: 'Orbitron';">Pilot Experience (#736)</h3>
+            <div class="xp-bar"><div class="xp-fill"></div></div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; opacity: 0.7;">
+                <span>12,400 XP</span>
+                <span>20,000 XP TO LEVEL 43</span>
+            </div>
+        </div>
+
+        <!-- Skill Trees (#737) -->
+        <div class="faction-card">
+            <h3 style="font-family: 'Orbitron';">Skill Trees (#737)</h3>
+            <div style="display: flex; align-items: center; margin-top: 1.5rem;">
+                <div class="skill-node"></div>
+                <div class="skill-node"></div>
+                <div class="skill-node locked"></div>
+                <div class="skill-node locked" style="border: none;"></div>
+            </div>
+            <p style="font-size: 0.8rem; opacity: 0.6; margin-top: 1rem;">Path: Interstellar Navigation Mastery</p>
+        </div>
+
+        <!-- Quest System (#731) -->
+        <div class="faction-card">
+            <span class="roadmap-badge">QUESTS ACTIVE</span>
+            <h3 style="font-family: 'Orbitron';">Mission Log (#731)</h3>
+            <div style="font-size: 0.85rem; border-left: 2px solid #ba944f; padding-left: 1rem; margin-top: 1rem;">
+                <strong>Kepler Scout:</strong> Survey 10 star systems (8/10)<br>
+                <strong>Trader Rank:</strong> Reach 1M credits (ACTIVE)
+            </div>
+        </div>
+    </div>
+
+    <script>
+        console.log("Faction Engine Online. Progress celebrator initialized (#740).");
+    </script>
+</body>
+
+</html>

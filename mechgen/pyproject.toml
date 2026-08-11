@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mechgen"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = [
+  "python-dotenv>=1.0.0,<2",
+  "Pillow>=10.0.0,<12",
+  "google-genai>=0.6.0",
+  "rdkit>=2024.3.1",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest",
+]
+
+[project.scripts]
+mechgen = "mechgen.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]

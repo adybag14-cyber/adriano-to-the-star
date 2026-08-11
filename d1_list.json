@@ -1,0 +1,20 @@
+[
+  {
+    "uuid": "cd07e612-6190-4921-b538-bc88c6774519",
+    "name": "exoplanet-pioneer-db",
+    "created_at": "2026-01-13T22:26:23.952Z",
+    "version": "production",
+    "num_tables": 0,
+    "file_size": 12288,
+    "jurisdiction": null
+  },
+  {
+    "uuid": "931ec530-153d-4bf7-a87a-02453af14c8b",
+    "name": "404_logs",
+    "created_at": "2026-01-08T20:51:53.272Z",
+    "version": "production",
+    "num_tables": 0,
+    "file_size": 1015808,
+    "jurisdiction": null
+  }
+]

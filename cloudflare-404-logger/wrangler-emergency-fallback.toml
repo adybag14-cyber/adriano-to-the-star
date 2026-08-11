@@ -1,0 +1,18 @@
+name = "adrianotothestar-emergency-fallback"
+main = "worker-emergency-fallback.js"
+compatibility_date = "2024-01-08"
+
+[vars]
+CLOUDFLARE_PAGES_URL = "https://exoplanet-pioneer.pages.dev"
+
+[[r2_buckets]]
+binding = "SWF_BUCKET"
+bucket_name = "starisdons-swf-files"
+
+[[routes]]
+pattern = "adrianotothestar.com/*"
+zone_name = "adrianotothestar.com"
+
+[[routes]]
+pattern = "www.adrianotothestar.com/*"
+zone_name = "adrianotothestar.com"

@@ -1,0 +1,5 @@
+function Start-Gemini {
+    node --max-old-space-size=10240 "C:\path\to\gemini.js" @args
+}
+
+Set-Alias gemini Start-Gemini

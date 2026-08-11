@@ -1,0 +1,1147 @@
+    21:08:03.932 DEBUG  asyncio          Using proactor: IocpProactor  
+    21:08:03.937 DEV    livekit.agents   Watching                              
+                                         C:\Users\adyba\adriano-to-the-star-c  
+                                         lean                                  
+    21:08:05.733 DEBUG  asyncio          Using proactor: IocpProactor  
+    21:08:05.741 ERROR  livekit.agents   worker failed                         
+                                         Traceback (most recent call last):    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\cli\cli.py", line 1288,    
+                                         in _worker_run                        
+                                             await                             
+                                         server.run(devmode=args.devmode,      
+                                         unregistered=jupyter)                 
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\worker.py", line 607, in   
+                                         run                                   
+                                             raise ValueError("ws_url is       
+                                         required, or add LIVEKIT_URL in your  
+                                         environment")                         
+                                         ValueError: ws_url is required, or    
+                                         add LIVEKIT_URL in your environment   
+Process SpawnProcess-1:
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\cli\cli.py", line 1311, in _run_worker
+    loop.run_until_complete(server.aclose())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\worker.py", line 858, in aclose
+    raise RuntimeError("cannot simulate job, the worker is closed")
+RuntimeError: cannot simulate job, the worker is closed
+    21:08:12.357 WARNIÔÇª watchfiles.main  process already dead, exit code: 1  
+    21:08:14.805 DEBUG  asyncio          Using proactor: IocpProactor  
+    21:08:14.814 ERROR  livekit.agents   worker failed                         
+                                         Traceback (most recent call last):    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\cli\cli.py", line 1288,    
+                                         in _worker_run                        
+                                             await                             
+                                         server.run(devmode=args.devmode,      
+                                         unregistered=jupyter)                 
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\worker.py", line 607, in   
+                                         run                                   
+                                             raise ValueError("ws_url is       
+                                         required, or add LIVEKIT_URL in your  
+                                         environment")                         
+                                         ValueError: ws_url is required, or    
+                                         add LIVEKIT_URL in your environment   
+Process SpawnProcess-2:
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\cli\cli.py", line 1311, in _run_worker
+    loop.run_until_complete(server.aclose())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\worker.py", line 858, in aclose
+    raise RuntimeError("cannot simulate job, the worker is closed")
+RuntimeError: cannot simulate job, the worker is closed
+    21:08:14.817 ERROR  livekit.agents   Error in _read_ipc_task               
+                                         Traceback (most recent call last):    
+                                           File "C:\Program                    
+                                         Files\WindowsApps\PythonSoftwareFoun  
+                                         dation.Python.3.12_3.12.2800.0_x64__  
+                                         qbz5n2kfra8p0\Lib\asyncio\windows_ev  
+                                         ents.py", line 462, in                
+                                         finish_socket_func                    
+                                             return ov.getresult()             
+                                                    ^^^^^^^^^^^^^^             
+                                         OSError: [WinError 64] The specified  
+                                         network name is no longer available   
+                                                                               
+                                         During handling of the above          
+                                         exception, another exception          
+                                         occurred:                             
+                                                                               
+                                         Traceback (most recent call last):    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\utils\aio\duplex_unix.py"  
+                                         , line 35, in recv_bytes              
+                                             len_bytes = await                 
+                                         self._reader.readexactly(4)           
+                                                         ^^^^^^^^^^^^^^^^^^^^  
+                                         ^^^^^^^^^^^^^                         
+                                           File "C:\Program                    
+                                         Files\WindowsApps\PythonSoftwareFoun  
+                                         dation.Python.3.12_3.12.2800.0_x64__  
+                                         qbz5n2kfra8p0\Lib\asyncio\streams.py  
+                                         ", line 752, in readexactly           
+                                             await                             
+                                         self._wait_for_data('readexactly')    
+                                           File "C:\Program                    
+                                         Files\WindowsApps\PythonSoftwareFoun  
+                                         dation.Python.3.12_3.12.2800.0_x64__  
+                                         qbz5n2kfra8p0\Lib\asyncio\streams.py  
+                                         ", line 545, in _wait_for_data        
+                                             await self._waiter                
+                                           File "C:\Program                    
+                                         Files\WindowsApps\PythonSoftwareFoun  
+                                         dation.Python.3.12_3.12.2800.0_x64__  
+                                         qbz5n2kfra8p0\Lib\asyncio\proactor_e  
+                                         vents.py", line 286, in               
+                                         _loop_reading                         
+                                             length = fut.result()             
+                                                      ^^^^^^^^^^^^             
+                                           File "C:\Program                    
+                                         Files\WindowsApps\PythonSoftwareFoun  
+                                         dation.Python.3.12_3.12.2800.0_x64__  
+                                         qbz5n2kfra8p0\Lib\asyncio\windows_ev  
+                                         ents.py", line 803, in _poll          
+                                             value = callback(transferred,     
+                                         key, ov)                              
+                                                     ^^^^^^^^^^^^^^^^^^^^^^^^  
+                                         ^^^^^^                                
+                                           File "C:\Program                    
+                                         Files\WindowsApps\PythonSoftwareFoun  
+                                         dation.Python.3.12_3.12.2800.0_x64__  
+                                         qbz5n2kfra8p0\Lib\asyncio\windows_ev  
+                                         ents.py", line 466, in                
+                                         finish_socket_func                    
+                                             raise                             
+                                         ConnectionResetError(*exc.args)       
+                                         ConnectionResetError: [WinError 64]   
+                                         The specified network name is no      
+                                         longer available                      
+                                                                               
+                                         The above exception was the direct    
+                                         cause of the following exception:     
+                                                                               
+                                         Traceback (most recent call last):    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\utils\log.py", line 16,    
+                                         in async_fn_logs                      
+                                             return await fn(*args, **kwargs)  
+                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^  
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\cli\watcher.py", line      
+                                         135, in _read_ipc_task                
+                                             msg = await                       
+                                         channel.arecv_message(self._pch,      
+                                         proto.IPC_MESSAGES)                   
+                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^  
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^      
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\ipc\channel.py", line 47,  
+                                         in arecv_message                      
+                                             return _read_message(await        
+                                         dplx.recv_bytes(), messages)          
+                                                                  ^^^^^^^^^^^  
+                                         ^^^^^^^^^^^^                          
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\utils\aio\duplex_unix.py"  
+                                         , line 43, in recv_bytes              
+                                             raise DuplexClosed() from e       
+                                         livekit.agents.utils.aio.duplex_unix  
+                                         .DuplexClosed                         
+    21:08:37.532 WARNIÔÇª watchfiles.main  process already dead, exit code: 1  
+    21:08:39.395 DEBUG  asyncio          Using proactor: IocpProactor  
+    21:08:39.402 ERROR  livekit.agents   worker failed                         
+                                         Traceback (most recent call last):    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\cli\cli.py", line 1288,    
+                                         in _worker_run                        
+                                             await                             
+                                         server.run(devmode=args.devmode,      
+                                         unregistered=jupyter)                 
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\worker.py", line 607, in   
+                                         run                                   
+                                             raise ValueError("ws_url is       
+                                         required, or add LIVEKIT_URL in your  
+                                         environment")                         
+                                         ValueError: ws_url is required, or    
+                                         add LIVEKIT_URL in your environment   
+Process SpawnProcess-3:
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\cli\cli.py", line 1311, in _run_worker
+    loop.run_until_complete(server.aclose())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\worker.py", line 858, in aclose
+    raise RuntimeError("cannot simulate job, the worker is closed")
+RuntimeError: cannot simulate job, the worker is closed
+    21:10:48.630 WARNIÔÇª watchfiles.main  process already dead, exit code: 1  
+    21:10:53.628 DEBUG  asyncio          Using proactor: IocpProactor  
+    21:10:53.636 ERROR  livekit.agents   worker failed                         
+                                         Traceback (most recent call last):    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\cli\cli.py", line 1288,    
+                                         in _worker_run                        
+                                             await                             
+                                         server.run(devmode=args.devmode,      
+                                         unregistered=jupyter)                 
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\worker.py", line 607, in   
+                                         run                                   
+                                             raise ValueError("ws_url is       
+                                         required, or add LIVEKIT_URL in your  
+                                         environment")                         
+                                         ValueError: ws_url is required, or    
+                                         add LIVEKIT_URL in your environment   
+Process SpawnProcess-5:
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\cli\cli.py", line 1311, in _run_worker
+    loop.run_until_complete(server.aclose())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\worker.py", line 858, in aclose
+    raise RuntimeError("cannot simulate job, the worker is closed")
+RuntimeError: cannot simulate job, the worker is closed
+    21:11:02.104 WARNIÔÇª watchfiles.main  process already dead, exit code: 1  
+    21:11:04.576 DEBUG  asyncio          Using proactor: IocpProactor  
+    21:11:04.586 ERROR  livekit.agents   worker failed                         
+                                         Traceback (most recent call last):    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\cli\cli.py", line 1288,    
+                                         in _worker_run                        
+                                             await                             
+                                         server.run(devmode=args.devmode,      
+                                         unregistered=jupyter)                 
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\worker.py", line 607, in   
+                                         run                                   
+                                             raise ValueError("ws_url is       
+                                         required, or add LIVEKIT_URL in your  
+                                         environment")                         
+                                         ValueError: ws_url is required, or    
+                                         add LIVEKIT_URL in your environment   
+Process SpawnProcess-6:
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\cli\cli.py", line 1311, in _run_worker
+    loop.run_until_complete(server.aclose())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\worker.py", line 858, in aclose
+    raise RuntimeError("cannot simulate job, the worker is closed")
+RuntimeError: cannot simulate job, the worker is closed
+    21:12:08.280 WARNIÔÇª watchfiles.main  process already dead, exit code: 1  
+    21:12:11.116 DEBUG  asyncio          Using proactor: IocpProactor  
+    21:12:11.125 ERROR  livekit.agents   worker failed                         
+                                         Traceback (most recent call last):    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\cli\cli.py", line 1288,    
+                                         in _worker_run                        
+                                             await                             
+                                         server.run(devmode=args.devmode,      
+                                         unregistered=jupyter)                 
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\worker.py", line 607, in   
+                                         run                                   
+                                             raise ValueError("ws_url is       
+                                         required, or add LIVEKIT_URL in your  
+                                         environment")                         
+                                         ValueError: ws_url is required, or    
+                                         add LIVEKIT_URL in your environment   
+Process SpawnProcess-8:
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\cli\cli.py", line 1311, in _run_worker
+    loop.run_until_complete(server.aclose())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\worker.py", line 858, in aclose
+    raise RuntimeError("cannot simulate job, the worker is closed")
+RuntimeError: cannot simulate job, the worker is closed
+    21:12:24.566 WARNIÔÇª watchfiles.main  process already dead, exit code: 1  
+    21:12:27.099 DEBUG  asyncio          Using proactor: IocpProactor  
+    21:12:27.110 ERROR  livekit.agents   worker failed                         
+                                         Traceback (most recent call last):    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\cli\cli.py", line 1288,    
+                                         in _worker_run                        
+                                             await                             
+                                         server.run(devmode=args.devmode,      
+                                         unregistered=jupyter)                 
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\worker.py", line 607, in   
+                                         run                                   
+                                             raise ValueError("ws_url is       
+                                         required, or add LIVEKIT_URL in your  
+                                         environment")                         
+                                         ValueError: ws_url is required, or    
+                                         add LIVEKIT_URL in your environment   
+Process SpawnProcess-10:
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\cli\cli.py", line 1311, in _run_worker
+    loop.run_until_complete(server.aclose())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\worker.py", line 858, in aclose
+    raise RuntimeError("cannot simulate job, the worker is closed")
+RuntimeError: cannot simulate job, the worker is closed
+    21:12:56.846 WARNIÔÇª watchfiles.main  process already dead, exit code: 1  
+    21:12:59.726 DEBUG  asyncio          Using proactor: IocpProactor  
+    21:12:59.735 ERROR  livekit.agents   worker failed                         
+                                         Traceback (most recent call last):    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\cli\cli.py", line 1288,    
+                                         in _worker_run                        
+                                             await                             
+                                         server.run(devmode=args.devmode,      
+                                         unregistered=jupyter)                 
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\worker.py", line 607, in   
+                                         run                                   
+                                             raise ValueError("ws_url is       
+                                         required, or add LIVEKIT_URL in your  
+                                         environment")                         
+                                         ValueError: ws_url is required, or    
+                                         add LIVEKIT_URL in your environment   
+Process SpawnProcess-12:
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\cli\cli.py", line 1311, in _run_worker
+    loop.run_until_complete(server.aclose())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\worker.py", line 858, in aclose
+    raise RuntimeError("cannot simulate job, the worker is closed")
+RuntimeError: cannot simulate job, the worker is closed
+    21:13:17.002 WARNIÔÇª watchfiles.main  process already dead, exit code: 1  
+    21:13:20.586 DEBUG  asyncio          Using proactor: IocpProactor  
+    21:13:20.595 ERROR  livekit.agents   worker failed                         
+                                         Traceback (most recent call last):    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\cli\cli.py", line 1288,    
+                                         in _worker_run                        
+                                             await                             
+                                         server.run(devmode=args.devmode,      
+                                         unregistered=jupyter)                 
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\worker.py", line 607, in   
+                                         run                                   
+                                             raise ValueError("ws_url is       
+                                         required, or add LIVEKIT_URL in your  
+                                         environment")                         
+                                         ValueError: ws_url is required, or    
+                                         add LIVEKIT_URL in your environment   
+Process SpawnProcess-14:
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\cli\cli.py", line 1311, in _run_worker
+    loop.run_until_complete(server.aclose())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\worker.py", line 858, in aclose
+    raise RuntimeError("cannot simulate job, the worker is closed")
+RuntimeError: cannot simulate job, the worker is closed
+    21:17:10.423 WARNIÔÇª watchfiles.main  process already dead, exit code: 1  
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\spawn.py", line 122, in spawn_main
+    exitcode = _main(fd, parent_sentinel)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\spawn.py", line 131, in _main
+    prepare(preparation_data)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\spawn.py", line 246, in prepare
+    _fixup_main_from_path(data['init_main_from_path'])
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\spawn.py", line 297, in _fixup_main_from_path
+    main_content = runpy.run_path(main_path,
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen runpy>", line 286, in run_path
+  File "<frozen runpy>", line 259, in _get_code_from_file
+  File "C:\Users\adyba\adriano-to-the-star-clean\livekit_agent.py", line 23
+    )
+    ^
+SyntaxError: unmatched ')'
+    21:17:22.869 WARNIÔÇª watchfiles.main  process already dead, exit code: 1  
+    21:17:24.710 DEBUG  asyncio          Using proactor: IocpProactor  
+    21:17:24.717 ERROR  livekit.agents   worker failed                         
+                                         Traceback (most recent call last):    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\cli\cli.py", line 1288,    
+                                         in _worker_run                        
+                                             await                             
+                                         server.run(devmode=args.devmode,      
+                                         unregistered=jupyter)                 
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\worker.py", line 607, in   
+                                         run                                   
+                                             raise ValueError("ws_url is       
+                                         required, or add LIVEKIT_URL in your  
+                                         environment")                         
+                                         ValueError: ws_url is required, or    
+                                         add LIVEKIT_URL in your environment   
+Process SpawnProcess-16:
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\cli\cli.py", line 1311, in _run_worker
+    loop.run_until_complete(server.aclose())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\worker.py", line 858, in aclose
+    raise RuntimeError("cannot simulate job, the worker is closed")
+RuntimeError: cannot simulate job, the worker is closed
+    21:17:39.042 WARNIÔÇª watchfiles.main  process already dead, exit code: 1  
+    21:17:40.931 DEBUG  asyncio          Using proactor: IocpProactor  
+    21:17:40.939 ERROR  livekit.agents   worker failed                         
+                                         Traceback (most recent call last):    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\cli\cli.py", line 1288,    
+                                         in _worker_run                        
+                                             await                             
+                                         server.run(devmode=args.devmode,      
+                                         unregistered=jupyter)                 
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\worker.py", line 607, in   
+                                         run                                   
+                                             raise ValueError("ws_url is       
+                                         required, or add LIVEKIT_URL in your  
+                                         environment")                         
+                                         ValueError: ws_url is required, or    
+                                         add LIVEKIT_URL in your environment   
+Process SpawnProcess-17:
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\cli\cli.py", line 1311, in _run_worker
+    loop.run_until_complete(server.aclose())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\worker.py", line 858, in aclose
+    raise RuntimeError("cannot simulate job, the worker is closed")
+RuntimeError: cannot simulate job, the worker is closed
+    21:18:04.874 WARNIÔÇª watchfiles.main  process already dead, exit code: 1  
+    21:18:06.885 DEBUG  asyncio          Using proactor: IocpProactor  
+    21:18:06.891 ERROR  livekit.agents   worker failed                         
+                                         Traceback (most recent call last):    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\cli\cli.py", line 1288,    
+                                         in _worker_run                        
+                                             await                             
+                                         server.run(devmode=args.devmode,      
+                                         unregistered=jupyter)                 
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\worker.py", line 607, in   
+                                         run                                   
+                                             raise ValueError("ws_url is       
+                                         required, or add LIVEKIT_URL in your  
+                                         environment")                         
+                                         ValueError: ws_url is required, or    
+                                         add LIVEKIT_URL in your environment   
+Process SpawnProcess-19:
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\cli\cli.py", line 1311, in _run_worker
+    loop.run_until_complete(server.aclose())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\worker.py", line 858, in aclose
+    raise RuntimeError("cannot simulate job, the worker is closed")
+RuntimeError: cannot simulate job, the worker is closed
+    21:18:55.626 WARNIÔÇª watchfiles.main  process already dead, exit code: 1  
+    21:18:58.185 DEBUG  asyncio          Using proactor: IocpProactor  
+    21:18:58.194 ERROR  livekit.agents   worker failed                         
+                                         Traceback (most recent call last):    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\cli\cli.py", line 1288,    
+                                         in _worker_run                        
+                                             await                             
+                                         server.run(devmode=args.devmode,      
+                                         unregistered=jupyter)                 
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\worker.py", line 607, in   
+                                         run                                   
+                                             raise ValueError("ws_url is       
+                                         required, or add LIVEKIT_URL in your  
+                                         environment")                         
+                                         ValueError: ws_url is required, or    
+                                         add LIVEKIT_URL in your environment   
+Process SpawnProcess-20:
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\cli\cli.py", line 1311, in _run_worker
+    loop.run_until_complete(server.aclose())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\worker.py", line 858, in aclose
+    raise RuntimeError("cannot simulate job, the worker is closed")
+RuntimeError: cannot simulate job, the worker is closed
+    21:19:38.777 WARNIÔÇª watchfiles.main  process already dead, exit code: 1  
+    21:19:41.568 DEBUG  asyncio          Using proactor: IocpProactor  
+    21:19:41.577 ERROR  livekit.agents   worker failed                         
+                                         Traceback (most recent call last):    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\cli\cli.py", line 1288,    
+                                         in _worker_run                        
+                                             await                             
+                                         server.run(devmode=args.devmode,      
+                                         unregistered=jupyter)                 
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\worker.py", line 607, in   
+                                         run                                   
+                                             raise ValueError("ws_url is       
+                                         required, or add LIVEKIT_URL in your  
+                                         environment")                         
+                                         ValueError: ws_url is required, or    
+                                         add LIVEKIT_URL in your environment   
+Process SpawnProcess-21:
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\cli\cli.py", line 1311, in _run_worker
+    loop.run_until_complete(server.aclose())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\worker.py", line 858, in aclose
+    raise RuntimeError("cannot simulate job, the worker is closed")
+RuntimeError: cannot simulate job, the worker is closed
+    21:24:03.691 WARNIÔÇª watchfiles.main  process already dead, exit code: 1  
+    21:24:06.328 DEBUG  asyncio          Using proactor: IocpProactor  
+    21:24:06.337 ERROR  livekit.agents   worker failed                         
+                                         Traceback (most recent call last):    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\cli\cli.py", line 1288,    
+                                         in _worker_run                        
+                                             await                             
+                                         server.run(devmode=args.devmode,      
+                                         unregistered=jupyter)                 
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\worker.py", line 607, in   
+                                         run                                   
+                                             raise ValueError("ws_url is       
+                                         required, or add LIVEKIT_URL in your  
+                                         environment")                         
+                                         ValueError: ws_url is required, or    
+                                         add LIVEKIT_URL in your environment   
+Process SpawnProcess-22:
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\cli\cli.py", line 1311, in _run_worker
+    loop.run_until_complete(server.aclose())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\worker.py", line 858, in aclose
+    raise RuntimeError("cannot simulate job, the worker is closed")
+RuntimeError: cannot simulate job, the worker is closed
+    21:24:12.920 WARNIÔÇª watchfiles.main  process already dead, exit code: 1  
+    21:24:15.502 DEBUG  asyncio          Using proactor: IocpProactor  
+    21:24:15.513 ERROR  livekit.agents   worker failed                         
+                                         Traceback (most recent call last):    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\cli\cli.py", line 1288,    
+                                         in _worker_run                        
+                                             await                             
+                                         server.run(devmode=args.devmode,      
+                                         unregistered=jupyter)                 
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\worker.py", line 607, in   
+                                         run                                   
+                                             raise ValueError("ws_url is       
+                                         required, or add LIVEKIT_URL in your  
+                                         environment")                         
+                                         ValueError: ws_url is required, or    
+                                         add LIVEKIT_URL in your environment   
+Process SpawnProcess-23:
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\cli\cli.py", line 1311, in _run_worker
+    loop.run_until_complete(server.aclose())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\worker.py", line 858, in aclose
+    raise RuntimeError("cannot simulate job, the worker is closed")
+RuntimeError: cannot simulate job, the worker is closed
+    21:31:35.409 WARNIÔÇª watchfiles.main  process already dead, exit code: 1  
+    21:31:38.060 DEBUG  asyncio          Using proactor: IocpProactor  
+    21:31:38.068 ERROR  livekit.agents   worker failed                         
+                                         Traceback (most recent call last):    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\cli\cli.py", line 1288,    
+                                         in _worker_run                        
+                                             await                             
+                                         server.run(devmode=args.devmode,      
+                                         unregistered=jupyter)                 
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\worker.py", line 607, in   
+                                         run                                   
+                                             raise ValueError("ws_url is       
+                                         required, or add LIVEKIT_URL in your  
+                                         environment")                         
+                                         ValueError: ws_url is required, or    
+                                         add LIVEKIT_URL in your environment   
+Process SpawnProcess-24:
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\cli\cli.py", line 1311, in _run_worker
+    loop.run_until_complete(server.aclose())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\worker.py", line 858, in aclose
+    raise RuntimeError("cannot simulate job, the worker is closed")
+RuntimeError: cannot simulate job, the worker is closed
+    21:32:46.640 WARNIÔÇª watchfiles.main  process already dead, exit code: 1  
+Set GOOGLE_API_KEY (len: 39)
+    21:32:49.291 DEBUG  asyncio          Using proactor: IocpProactor  
+    21:32:49.299 ERROR  livekit.agents   worker failed                         
+                                         Traceback (most recent call last):    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\cli\cli.py", line 1288,    
+                                         in _worker_run                        
+                                             await                             
+                                         server.run(devmode=args.devmode,      
+                                         unregistered=jupyter)                 
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\worker.py", line 607, in   
+                                         run                                   
+                                             raise ValueError("ws_url is       
+                                         required, or add LIVEKIT_URL in your  
+                                         environment")                         
+                                         ValueError: ws_url is required, or    
+                                         add LIVEKIT_URL in your environment   
+Process SpawnProcess-25:
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\cli\cli.py", line 1311, in _run_worker
+    loop.run_until_complete(server.aclose())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\worker.py", line 858, in aclose
+    raise RuntimeError("cannot simulate job, the worker is closed")
+RuntimeError: cannot simulate job, the worker is closed
+    21:37:48.142 WARNIÔÇª watchfiles.main  process already dead, exit code: 1  
+Set GOOGLE_API_KEY (len: 39)
+    21:37:51.899 DEBUG  asyncio          Using proactor: IocpProactor  
+    21:37:51.910 ERROR  livekit.agents   worker failed                         
+                                         Traceback (most recent call last):    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\cli\cli.py", line 1288,    
+                                         in _worker_run                        
+                                             await                             
+                                         server.run(devmode=args.devmode,      
+                                         unregistered=jupyter)                 
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\worker.py", line 607, in   
+                                         run                                   
+                                             raise ValueError("ws_url is       
+                                         required, or add LIVEKIT_URL in your  
+                                         environment")                         
+                                         ValueError: ws_url is required, or    
+                                         add LIVEKIT_URL in your environment   
+Process SpawnProcess-27:
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\cli\cli.py", line 1311, in _run_worker
+    loop.run_until_complete(server.aclose())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\worker.py", line 858, in aclose
+    raise RuntimeError("cannot simulate job, the worker is closed")
+RuntimeError: cannot simulate job, the worker is closed
+    22:12:17.907 WARNIÔÇª watchfiles.main  process already dead, exit code: 1  
+Set GOOGLE_API_KEY (len: 39)
+    22:12:20.005 DEBUG  asyncio          Using proactor: IocpProactor  
+    22:12:20.013 ERROR  livekit.agents   worker failed                         
+                                         Traceback (most recent call last):    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\cli\cli.py", line 1288,    
+                                         in _worker_run                        
+                                             await                             
+                                         server.run(devmode=args.devmode,      
+                                         unregistered=jupyter)                 
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\worker.py", line 607, in   
+                                         run                                   
+                                             raise ValueError("ws_url is       
+                                         required, or add LIVEKIT_URL in your  
+                                         environment")                         
+                                         ValueError: ws_url is required, or    
+                                         add LIVEKIT_URL in your environment   
+Process SpawnProcess-28:
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\cli\cli.py", line 1311, in _run_worker
+    loop.run_until_complete(server.aclose())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\worker.py", line 858, in aclose
+    raise RuntimeError("cannot simulate job, the worker is closed")
+RuntimeError: cannot simulate job, the worker is closed
+    22:59:23.756 WARNIÔÇª watchfiles.main  process already dead, exit code: 1  
+Set GOOGLE_API_KEY (len: 39)
+    22:59:27.341 DEBUG  asyncio          Using proactor: IocpProactor  
+    22:59:27.351 ERROR  livekit.agents   worker failed                         
+                                         Traceback (most recent call last):    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\cli\cli.py", line 1288,    
+                                         in _worker_run                        
+                                             await                             
+                                         server.run(devmode=args.devmode,      
+                                         unregistered=jupyter)                 
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\worker.py", line 607, in   
+                                         run                                   
+                                             raise ValueError("ws_url is       
+                                         required, or add LIVEKIT_URL in your  
+                                         environment")                         
+                                         ValueError: ws_url is required, or    
+                                         add LIVEKIT_URL in your environment   
+Process SpawnProcess-29:
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\cli\cli.py", line 1311, in _run_worker
+    loop.run_until_complete(server.aclose())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\worker.py", line 858, in aclose
+    raise RuntimeError("cannot simulate job, the worker is closed")
+RuntimeError: cannot simulate job, the worker is closed
+    23:11:37.447 WARNIÔÇª watchfiles.main  process already dead, exit code: 1  
+Set GOOGLE_API_KEY (len: 39)
+    23:11:40.170 DEBUG  asyncio          Using proactor: IocpProactor  
+    23:11:40.178 ERROR  livekit.agents   worker failed                         
+                                         Traceback (most recent call last):    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\cli\cli.py", line 1288,    
+                                         in _worker_run                        
+                                             await                             
+                                         server.run(devmode=args.devmode,      
+                                         unregistered=jupyter)                 
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\worker.py", line 607, in   
+                                         run                                   
+                                             raise ValueError("ws_url is       
+                                         required, or add LIVEKIT_URL in your  
+                                         environment")                         
+                                         ValueError: ws_url is required, or    
+                                         add LIVEKIT_URL in your environment   
+Process SpawnProcess-30:
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\cli\cli.py", line 1311, in _run_worker
+    loop.run_until_complete(server.aclose())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\worker.py", line 858, in aclose
+    raise RuntimeError("cannot simulate job, the worker is closed")
+RuntimeError: cannot simulate job, the worker is closed
+    23:14:35.004 WARNIÔÇª watchfiles.main  process already dead, exit code: 1  
+Set GOOGLE_API_KEY (len: 39)
+    23:14:37.595 DEBUG  asyncio          Using proactor: IocpProactor  
+    23:14:37.603 ERROR  livekit.agents   worker failed                         
+                                         Traceback (most recent call last):    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\cli\cli.py", line 1288,    
+                                         in _worker_run                        
+                                             await                             
+                                         server.run(devmode=args.devmode,      
+                                         unregistered=jupyter)                 
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\worker.py", line 607, in   
+                                         run                                   
+                                             raise ValueError("ws_url is       
+                                         required, or add LIVEKIT_URL in your  
+                                         environment")                         
+                                         ValueError: ws_url is required, or    
+                                         add LIVEKIT_URL in your environment   
+Process SpawnProcess-31:
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\cli\cli.py", line 1311, in _run_worker
+    loop.run_until_complete(server.aclose())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\worker.py", line 858, in aclose
+    raise RuntimeError("cannot simulate job, the worker is closed")
+RuntimeError: cannot simulate job, the worker is closed
+    01:32:34.615 WARNIÔÇª watchfiles.main  process already dead, exit code: 1  
+Set GOOGLE_API_KEY (len: 39)
+    01:32:39.878 DEBUG  asyncio          Using proactor: IocpProactor  
+    01:32:39.892 ERROR  livekit.agents   worker failed                         
+                                         Traceback (most recent call last):    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\cli\cli.py", line 1288,    
+                                         in _worker_run                        
+                                             await                             
+                                         server.run(devmode=args.devmode,      
+                                         unregistered=jupyter)                 
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\worker.py", line 607, in   
+                                         run                                   
+                                             raise ValueError("ws_url is       
+                                         required, or add LIVEKIT_URL in your  
+                                         environment")                         
+                                         ValueError: ws_url is required, or    
+                                         add LIVEKIT_URL in your environment   
+Process SpawnProcess-32:
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\cli\cli.py", line 1311, in _run_worker
+    loop.run_until_complete(server.aclose())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\worker.py", line 858, in aclose
+    raise RuntimeError("cannot simulate job, the worker is closed")
+RuntimeError: cannot simulate job, the worker is closed
+    01:34:58.181 WARNIÔÇª watchfiles.main  process already dead, exit code: 1  
+Set GOOGLE_API_KEY (len: 39)
+    01:35:00.483 DEBUG  asyncio          Using proactor: IocpProactor  
+    01:35:00.491 ERROR  livekit.agents   worker failed                         
+                                         Traceback (most recent call last):    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\cli\cli.py", line 1288,    
+                                         in _worker_run                        
+                                             await                             
+                                         server.run(devmode=args.devmode,      
+                                         unregistered=jupyter)                 
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\worker.py", line 607, in   
+                                         run                                   
+                                             raise ValueError("ws_url is       
+                                         required, or add LIVEKIT_URL in your  
+                                         environment")                         
+                                         ValueError: ws_url is required, or    
+                                         add LIVEKIT_URL in your environment   
+Process SpawnProcess-33:
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\cli\cli.py", line 1311, in _run_worker
+    loop.run_until_complete(server.aclose())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\worker.py", line 858, in aclose
+    raise RuntimeError("cannot simulate job, the worker is closed")
+RuntimeError: cannot simulate job, the worker is closed

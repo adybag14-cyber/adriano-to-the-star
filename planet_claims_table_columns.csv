@@ -1,0 +1,13 @@
+Column Name,Type,Default,Nullable,Description
+id,uuid,gen_random_uuid(),NOT NULL,Primary key
+user_id,uuid,,NOT NULL,Foreign key to auth.users
+username,text,,NULL,Username
+email,text,,NULL,User email
+kepid,bigint,,NOT NULL,Kepler planet ID
+planet_data,jsonb,,NULL,Planet information (JSON)
+status,text,'active',NOT NULL,Claim status
+claimed_at,timestamptz,now(),NOT NULL,When claimed
+certificate_number,text,,NULL,Certificate number
+created_at,timestamptz,now(),NOT NULL,Record creation time
+updated_at,timestamptz,now(),NOT NULL,Last update time
+

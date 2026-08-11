@@ -1,0 +1,260 @@
+     606: aload         18
+     608: invokeinterface #428,  2          // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+     613: pop
+     614: aload         17
+     616: getstatic     #22                 // Field super:Ljava/lang/String;
+     619: new           #75                 // class java/lang/StringBuilder
+     622: dup
+     623: aload         10
+     625: getfield      #387                // Field com/fs/util/C$Oo.Ë00000:Ljava/lang/String;
+     628: invokestatic  #131                // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+     631: invokespecial #79                 // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+     634: ldc_w         #429                // String /
+     637: invokevirtual #81                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     640: aload_1
+     641: invokevirtual #81                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     644: invokevirtual #87                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     647: invokevirtual #431                // Method org/json/JSONObject.put:(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+     650: pop
+     651: aload         6
+     653: iload         15
+     655: iinc          15, 1
+     658: aload         17
+     660: invokeinterface #435,  3          // InterfaceMethod java/util/List.add:(ILjava/lang/Object;)V
+     665: iinc          16, 1
+     668: iload         16
+     670: aload         14
+     672: invokevirtual #438                // Method org/json/JSONArray.length:()I
+     675: if_icmplt     390
+     678: aload         9
+     680: invokeinterface #366,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     685: ifne          223
+     688: new           #408                // class org/json/JSONArray
+     691: dup
+     692: invokespecial #439                // Method org/json/JSONArray."<init>":()V
+     695: astore        8
+     697: aload         6
+     699: invokeinterface #327,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     704: astore        10
+     706: goto          729
+     709: aload         10
+     711: invokeinterface #333,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     716: checkcast     #127                // class org/json/JSONObject
+     719: astore        9
+     721: aload         8
+     723: aload         9
+     725: invokevirtual #440                // Method org/json/JSONArray.put:(Ljava/lang/Object;)Lorg/json/JSONArray;
+     728: pop
+     729: aload         10
+     731: invokeinterface #366,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     736: ifne          709
+     739: aload         8
+     741: areturn
+
+  public static org.json.JSONObject Ë00000(java.lang.String) throws java.io.IOException, org.json.JSONException;
+    Code:
+       0: aload_0
+       1: aconst_null
+       2: invokestatic  #471                // Method super:(Ljava/lang/String;Ljava/util/Set;)Lorg/json/JSONObject;
+       5: areturn
+
+  public static org.json.JSONObject super(java.lang.String, java.util.Set<java.lang.String>) throws java.io.IOException, org.json.JSONException;
+    Code:
+       0: iconst_0
+       1: istore_2
+       2: iload_2
+       3: ifeq          38
+       6: getstatic     #18                 // Field Ê00000:Lorg/apache/log4j/Logger;
+       9: ldc_w         #475                // String JSON LOADING DEBUG
+      12: invokevirtual #91                 // Method org/apache/log4j/Logger.info:(Ljava/lang/Object;)V
+      15: getstatic     #18                 // Field Ê00000:Lorg/apache/log4j/Logger;
+      18: new           #75                 // class java/lang/StringBuilder
+      21: dup
+      22: ldc_w         #477                // String PATH:
+      25: invokespecial #79                 // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+      28: aload_0
+      29: invokevirtual #81                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      32: invokevirtual #87                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      35: invokevirtual #91                 // Method org/apache/log4j/Logger.info:(Ljava/lang/Object;)V
+      38: invokestatic  #38                 // Method com/fs/util/C.Ë00000:()Lcom/fs/util/C;
+      41: aload_0
+      42: invokevirtual #321                // Method com/fs/util/C.new:(Ljava/lang/String;)Ljava/util/List;
+      45: astore_3
+      46: aload_3
+      47: invokeinterface #327,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      52: astore        5
+      54: goto          274
+      57: aload         5
+      59: invokeinterface #333,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      64: checkcast     #339                // class com/fs/util/container/Pair
+      67: astore        4
+      69: aload         4
+      71: getfield      #341                // Field com/fs/util/container/Pair.one:Ljava/lang/Object;
+      74: checkcast     #345                // class com/fs/util/C$Oo
+      77: getfield      #347                // Field com/fs/util/C$Oo.String:Z
+      80: ifeq          274
+      83: aload         4
+      85: getfield      #341                // Field com/fs/util/container/Pair.one:Ljava/lang/Object;
+      88: checkcast     #345                // class com/fs/util/C$Oo
+      91: getfield      #350                // Field com/fs/util/C$Oo.Ê00000:Ljava/lang/Object;
+      94: ifnull        274
+      97: aload         4
+      99: getfield      #341                // Field com/fs/util/container/Pair.one:Ljava/lang/Object;
+     102: checkcast     #345                // class com/fs/util/C$Oo
+     105: getfield      #350                // Field com/fs/util/C$Oo.Ê00000:Ljava/lang/Object;
+     108: checkcast     #353                // class com/fs/starfarer/launcher/ModManager$ModSpec
+     111: astore        6
+     113: aload         6
+     115: invokevirtual #355                // Method com/fs/starfarer/launcher/ModManager$ModSpec.getFullOverrides:()Ljava/util/Set;
+     118: aload_0
+     119: invokeinterface #359,  2          // InterfaceMethod java/util/Set.contains:(Ljava/lang/Object;)Z
+     124: ifne          173
+     127: aload         6
+     129: invokevirtual #355                // Method com/fs/starfarer/launcher/ModManager$ModSpec.getFullOverrides:()Ljava/util/Set;
+     132: aload_0
+     133: ldc_w         #479                // String \\\\
+     136: ldc_w         #429                // String /
+     139: invokevirtual #266                // Method java/lang/String.replaceAll:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     142: invokeinterface #359,  2          // InterfaceMethod java/util/Set.contains:(Ljava/lang/Object;)Z
+     147: ifne          173
+     150: aload         6
+     152: invokevirtual #355                // Method com/fs/starfarer/launcher/ModManager$ModSpec.getFullOverrides:()Ljava/util/Set;
+     155: aload_0
+     156: ldc_w         #429                // String /
+     159: ldc_w         #479                // String \\\\
+     162: invokevirtual #266                // Method java/lang/String.replaceAll:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     165: invokeinterface #359,  2          // InterfaceMethod java/util/Set.contains:(Ljava/lang/Object;)Z
+     170: ifeq          274
+     173: new           #75                 // class java/lang/StringBuilder
+     176: dup
+     177: invokespecial #481                // Method java/lang/StringBuilder."<init>":()V
+     180: aload         4
+     182: getfield      #341                // Field com/fs/util/container/Pair.one:Ljava/lang/Object;
+     185: checkcast     #345                // class com/fs/util/C$Oo
+     188: getfield      #378                // Field com/fs/util/C$Oo.super:Lcom/fs/util/C$o;
+     191: invokevirtual #382                // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     194: ldc_w         #385                // String :
+     197: invokevirtual #81                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     200: aload         4
+     202: getfield      #341                // Field com/fs/util/container/Pair.one:Ljava/lang/Object;
+     205: checkcast     #345                // class com/fs/util/C$Oo
+     208: getfield      #387                // Field com/fs/util/C$Oo.Ë00000:Ljava/lang/String;
+     211: invokevirtual #81                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     214: ldc_w         #482                // String  (
+     217: invokevirtual #81                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     220: aload_0
+     221: invokevirtual #81                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     224: ldc_w         #484                // String )
+     227: invokevirtual #81                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     230: invokevirtual #87                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     233: aload         4
+     235: getfield      #363                // Field com/fs/util/container/Pair.two:Ljava/lang/Object;
+     238: checkcast     #256                // class java/io/InputStream
+     241: invokestatic  #486                // Method super:(Ljava/lang/String;Ljava/io/InputStream;)Lorg/json/JSONObject;
+     244: astore        7
+     246: iload_2
+     247: ifeq          271
+     250: getstatic     #18                 // Field Ê00000:Lorg/apache/log4j/Logger;
+     253: ldc_w         #488                // String Loaded override result:
+     256: invokevirtual #91                 // Method org/apache/log4j/Logger.info:(Ljava/lang/Object;)V
+     259: getstatic     #18                 // Field Ê00000:Lorg/apache/log4j/Logger;
+     262: aload         7
+     264: iconst_2
+     265: invokevirtual #490                // Method org/json/JSONObject.toString:(I)Ljava/lang/String;
+     268: invokevirtual #91                 // Method org/apache/log4j/Logger.info:(Ljava/lang/Object;)V
+     271: aload         7
+     273: areturn
+     274: aload         5
+     276: invokeinterface #366,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     281: ifne          57
+     284: new           #127                // class org/json/JSONObject
+     287: dup
+     288: invokespecial #493                // Method org/json/JSONObject."<init>":()V
+     291: astore        4
+     293: aload_3
+     294: invokeinterface #327,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     299: astore        6
+     301: goto          419
+     304: aload         6
+     306: invokeinterface #333,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     311: checkcast     #339                // class com/fs/util/container/Pair
+     314: astore        5
+     316: aload         5
+     318: getfield      #341                // Field com/fs/util/container/Pair.one:Ljava/lang/Object;
+     321: checkcast     #345                // class com/fs/util/C$Oo
+     324: getfield      #347                // Field com/fs/util/C$Oo.String:Z
+     327: ifne          419
+     330: aload_3
+     331: aload         5
+     333: invokeinterface #494,  2          // InterfaceMethod java/util/List.remove:(Ljava/lang/Object;)Z
+     338: pop
+     339: aload         5
+     341: getfield      #363                // Field com/fs/util/container/Pair.two:Ljava/lang/Object;
+     344: checkcast     #256                // class java/io/InputStream
+     347: astore        7
+     349: new           #75                 // class java/lang/StringBuilder
+     352: dup
+     353: invokespecial #481                // Method java/lang/StringBuilder."<init>":()V
+     356: aload         5
+     358: getfield      #341                // Field com/fs/util/container/Pair.one:Ljava/lang/Object;
+     361: checkcast     #345                // class com/fs/util/C$Oo
+     364: getfield      #378                // Field com/fs/util/C$Oo.super:Lcom/fs/util/C$o;
+     367: invokevirtual #382                // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     370: ldc_w         #385                // String :
+     373: invokevirtual #81                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     376: aload         5
+     378: getfield      #341                // Field com/fs/util/container/Pair.one:Ljava/lang/Object;
+     381: checkcast     #345                // class com/fs/util/C$Oo
+     384: getfield      #387                // Field com/fs/util/C$Oo.Ë00000:Ljava/lang/String;
+     387: invokevirtual #81                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     390: ldc_w         #482                // String  (
+     393: invokevirtual #81                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     396: aload_0
+     397: invokevirtual #81                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     400: ldc_w         #484                // String )
+     403: invokevirtual #81                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     406: invokevirtual #87                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     409: aload         7
+     411: invokestatic  #486                // Method super:(Ljava/lang/String;Ljava/io/InputStream;)Lorg/json/JSONObject;
+     414: astore        4
+     416: goto          429
+     419: aload         6
+     421: invokeinterface #366,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     426: ifne          304
+     429: iload_2
+     430: ifeq          454
+     433: getstatic     #18                 // Field Ê00000:Lorg/apache/log4j/Logger;
+     436: ldc_w         #497                // String Loaded master:
+     439: invokevirtual #91                 // Method org/apache/log4j/Logger.info:(Ljava/lang/Object;)V
+     442: getstatic     #18                 // Field Ê00000:Lorg/apache/log4j/Logger;
+     445: aload         4
+     447: iconst_2
+     448: invokevirtual #490                // Method org/json/JSONObject.toString:(I)Ljava/lang/String;
+     451: invokevirtual #91                 // Method org/apache/log4j/Logger.info:(Ljava/lang/Object;)V
+     454: aload_3
+     455: invokeinterface #327,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     460: astore        6
+     462: goto          689
+     465: aload         6
+     467: invokeinterface #333,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     472: checkcast     #339                // class com/fs/util/container/Pair
+     475: astore        5
+     477: aload         5
+     479: getfield      #341                // Field com/fs/util/container/Pair.one:Ljava/lang/Object;
+     482: checkcast     #345                // class com/fs/util/C$Oo
+     485: astore        7
+     487: aload         5
+     489: getfield      #363                // Field com/fs/util/container/Pair.two:Ljava/lang/Object;
+     492: checkcast     #256                // class java/io/InputStream
+     495: astore        8
+     497: new           #75                 // class java/lang/StringBuilder
+     500: dup
+     501: invokespecial #481                // Method java/lang/StringBuilder."<init>":()V
+     504: aload         5
+     506: getfield      #341                // Field com/fs/util/container/Pair.one:Ljava/lang/Object;
+     509: checkcast     #345                // class com/fs/util/C$Oo
+     512: getfield      #378                // Field com/fs/util/C$Oo.super:Lcom/fs/util/C$o;
+     515: invokevirtual #382                // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     518: ldc_w         #385                // String :
+     521: invokevirtual #81                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     524: aload         5

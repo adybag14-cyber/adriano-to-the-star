@@ -1,0 +1,263 @@
+/* Theme Toggle Styles */
+
+.theme-toggle-btn {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    z-index: 9998;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(186, 148, 79, 0.2);
+    border: 2px solid rgba(186, 148, 79, 0.4);
+    color: #ba944f;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+.theme-toggle-btn:hover {
+    background: rgba(186, 148, 79, 0.3);
+    border-color: rgba(186, 148, 79, 0.6);
+    transform: scale(1.1) rotate(15deg);
+    box-shadow: 0 8px 20px rgba(186, 148, 79, 0.4);
+}
+
+.theme-toggle-btn:active {
+    transform: scale(0.95);
+}
+
+/* Light Theme Overrides */
+[data-theme="light"] {
+    --bg-primary: #f5f5f5;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #e8e8e8;
+    --text-primary: #1a1a1a;
+    --text-secondary: #4a4a4a;
+    --text-muted: #888888;
+    --accent-color: #8b6914;
+    --accent-hover: #6b5010;
+    --border-color: #d0d0d0;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .page-hero {
+    background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .content-container {
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .content-section {
+    background: var(--bg-primary);
+}
+
+[data-theme="light"] h1,
+[data-theme="light"] h2,
+[data-theme="light"] h3 {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] a {
+    color: var(--accent-color);
+}
+
+[data-theme="light"] a:hover {
+    color: var(--accent-hover);
+}
+
+[data-theme="light"] .cta-button {
+    background: var(--accent-color);
+    color: #ffffff;
+    border-color: var(--accent-color);
+}
+
+[data-theme="light"] .cta-button:hover {
+    background: var(--accent-hover);
+    border-color: var(--accent-hover);
+}
+
+[data-theme="light"] .outline-btn {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+}
+
+[data-theme="light"] .outline-btn:hover {
+    background: var(--accent-color);
+    color: #ffffff;
+}
+
+/* Theme Selector Menu */
+.theme-toggle-container {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    z-index: 9998;
+}
+
+.theme-selector-menu {
+    position: absolute;
+    bottom: 60px;
+    right: 0;
+    background: rgba(0, 0, 0, 0.95);
+    border: 2px solid rgba(186, 148, 79, 0.5);
+    border-radius: 12px;
+    padding: 1rem;
+    min-width: 200px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    display: none;
+}
+
+.theme-selector-header h3 {
+    color: #ba944f;
+    margin: 0 0 1rem 0;
+    font-size: 1rem;
+    font-family: 'Raleway', sans-serif;
+    text-align: center;
+}
+
+.theme-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.theme-option {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: rgba(186, 148, 79, 0.1);
+    border: 1px solid rgba(186, 148, 79, 0.3);
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Raleway', sans-serif;
+    width: 100%;
+    text-align: left;
+    position: relative;
+}
+
+.theme-option:hover {
+    background: rgba(186, 148, 79, 0.2);
+    border-color: rgba(186, 148, 79, 0.5);
+    transform: translateX(5px);
+}
+
+.theme-option.active {
+    background: rgba(186, 148, 79, 0.3);
+    border-color: #ba944f;
+}
+
+.theme-icon {
+    font-size: 1.25rem;
+}
+
+.theme-name {
+    flex: 1;
+    font-weight: 500;
+}
+
+.checkmark {
+    color: #ba944f;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+/* Additional Theme Styles */
+[data-theme="cosmic"] {
+    --bg-primary: #0a0a1a;
+    --bg-secondary: #1a1a2e;
+    --bg-tertiary: #16213e;
+    --text-primary: #e0e0ff;
+    --text-secondary: #b8b8ff;
+    --text-muted: #8888aa;
+    --accent-color: #8b5cf6;
+    --accent-hover: #7c3aed;
+    --border-color: #2d2d4e;
+    --shadow-color: rgba(139, 92, 246, 0.3);
+}
+
+[data-theme="solar"] {
+    --bg-primary: #1a0f00;
+    --bg-secondary: #2d1a00;
+    --bg-tertiary: #3d2500;
+    --text-primary: #ffd4a3;
+    --text-secondary: #ffb870;
+    --text-muted: #cc8844;
+    --accent-color: #ff8c00;
+    --accent-hover: #ff7700;
+    --border-color: #4d3300;
+    --shadow-color: rgba(255, 140, 0, 0.3);
+}
+    color: #ffffff;
+}
+
+/* Dark Theme (default - already styled, but ensure consistency) */
+[data-theme="dark"] {
+    --bg-primary: #0a0a14;
+    --bg-secondary: rgba(8, 10, 25, 0.85);
+    --bg-tertiary: rgba(18, 22, 40, 0.95);
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.8);
+    --text-muted: rgba(255, 255, 255, 0.6);
+    --accent-color: #ba944f;
+    --accent-hover: #d4b86a;
+    --border-color: rgba(186, 148, 79, 0.3);
+    --shadow-color: rgba(0, 0, 0, 0.45);
+}
+
+/* Ensure dark theme is default if no theme set */
+body:not([data-theme]) {
+    --bg-primary: #0a0a14;
+    --bg-secondary: rgba(8, 10, 25, 0.85);
+    --bg-tertiary: rgba(18, 22, 40, 0.95);
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.8);
+    --text-muted: rgba(255, 255, 255, 0.6);
+    --accent-color: #ba944f;
+    --accent-hover: #d4b86a;
+    --border-color: rgba(186, 148, 79, 0.3);
+    --shadow-color: rgba(0, 0, 0, 0.45);
+}
+
+/* Smooth transitions for theme changes */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Exclude certain elements from transitions for performance */
+img,
+video,
+canvas,
+svg {
+    transition: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .theme-toggle-btn {
+        bottom: 70px;
+        right: 15px;
+        width: 45px;
+        height: 45px;
+        font-size: 1.3rem;
+    }
+}
+

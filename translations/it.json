@@ -1,0 +1,222 @@
+{
+  "common": {
+    "home": "Home",
+    "database": "Database",
+    "games": "Giochi",
+    "shop": "Negozio",
+    "about": "Chi Siamo",
+    "blog": "Blog",
+    "contact": "Contatti",
+    "login": "Accedi",
+    "logout": "Esci",
+    "register": "Registrati",
+    "search": "Cerca",
+    "filter": "Filtra",
+    "submit": "Invia",
+    "cancel": "Annulla",
+    "save": "Salva",
+    "delete": "Elimina",
+    "edit": "Modifica",
+    "close": "Chiudi",
+    "loading": "Caricamento...",
+    "error": "Errore",
+    "success": "Successo",
+    "back": "Indietro",
+    "next": "Successivo",
+    "previous": "Precedente"
+  },
+  "home": {
+    "title": "Adriano To The Star",
+    "subtitle": "Agenzia di Viaggi Interstellari",
+    "sponsored": "SPONSORIZZATO DA ELON MUSK E DONALD TRUMP",
+    "releasingSoon": "IN USCITA PRESTO*",
+    "releasingNote": "*Le chiavi crittografiche su cui lavorerò e calcolerò dalla disposizione dell'oggetto scelto dal database sono programmate per il rilascio più avanti nel Q1 2025.",
+    "about": "CHI SIAMO",
+    "mission": "La Nostra Missione",
+    "missionText": "ADRIANO TO THE STAR offre un'opportunità rivoluzionaria per gli individui di possedere corpi celesti all'interno della galassia di Andromeda. La nostra piattaforma, ispirata alle meraviglie del cosmo, consente l'acquisto e la vendita di licenze per stelle, pianeti e grandi oggetti Kepler. Miriamo a ridefinire l'industria spaziale offrendo un'esperienza unica e personalizzata per tutti gli appassionati dello spazio.",
+    "learnMore": "Scopri di Più",
+    "gallery": "GALLERIA",
+    "follow": "SEGUICI"
+  },
+  "database": {
+    "title": "DATABASE DI ESOPIANETI",
+    "subtitle": "Esplora oltre 9,564 Corpi Celesti dall'Archivio Kepler",
+    "searchPlaceholder": "Cerca pianeti...",
+    "filterBy": "Filtra per",
+    "planetType": "Tipo di Pianeta",
+    "discoveryMethod": "Metodo di Scoperta",
+    "status": "Stato",
+    "claimed": "Reclamato",
+    "available": "Disponibile",
+    "claimPlanet": "Reclama Pianeta",
+    "alreadyClaimed": "Già Reclamato",
+    "planetDetails": "Dettagli del Pianeta",
+    "discoveryYear": "Anno di Scoperta",
+    "distance": "Distanza",
+    "temperature": "Temperatura",
+    "aboutDatabase": "Informazioni sul Database",
+    "dataSource": "Fonte Dati",
+    "nasaExoplanetArchive": "API dell'Archivio Esopianeti della NASA"
+  },
+  "stellarAI": {
+    "title": "STELLAR AI",
+    "subtitle": "Il Tuo Compagno Cosmico Intelligente",
+    "chatHistory": "Cronologia Chat",
+    "newChat": "Nuova Chat",
+    "clearChat": "Pulisci Chat",
+    "exportChat": "Esporta Chat",
+    "selectModel": "Seleziona Modello IA",
+    "askAnything": "Chiedi a Stellar AI qualsiasi cosa...",
+    "send": "Invia",
+    "welcome": "Benvenuto su Stellar AI",
+    "welcomeText": "Il tuo compagno cosmico intelligente alimentato da IA avanzata",
+    "features": {
+      "conversations": "Conversazioni Naturali",
+      "imageAnalysis": "Analisi Immagini",
+      "knowledgeBase": "Base di Conoscenze",
+      "saveHistory": "Salva Cronologia"
+    }
+  },
+  "marketplace": {
+    "title": "MERCATO DEI PIANETI",
+    "subtitle": "Compra, Vendi e Scambia Reclami di Esopianeti",
+    "buy": "Compra",
+    "sell": "Vendi",
+    "trade": "Scambia",
+    "price": "Prezzo",
+    "seller": "Venditore",
+    "buyer": "Acquirente",
+    "createListing": "Crea Annuncio",
+    "myListings": "I Miei Annunci"
+  },
+  "messaging": {
+    "title": "MESSAGGI DIRETTI",
+    "subtitle": "Conversazioni private con altri membri",
+    "loginRequired": "Accesso Richiesto",
+    "loginPrompt": "Effettua l'accesso per inviare e ricevere messaggi diretti.",
+    "conversations": "Conversazioni",
+    "newMessage": "Nuovo Messaggio",
+    "selectConversation": "Seleziona una conversazione",
+    "selectConversationText": "Scegli una conversazione dalla barra laterale o iniziane una nuova",
+    "typeMessage": "Scrivi un messaggio...",
+    "send": "Invia"
+  },
+  "badges": {
+    "title": "BADGE E RISULTATI",
+    "subtitle": "Sblocca risultati e mostra il tuo viaggio cosmico",
+    "reputation": "Reputazione",
+    "points": "Punti",
+    "level": "Livello",
+    "unlocked": "Sbloccato",
+    "locked": "Bloccato"
+  },
+  "analytics": {
+    "title": "CRUSCOTTO ANALISI",
+    "subtitle": "Traccia il tuo viaggio cosmico e le statistiche della piattaforma",
+    "totalClaims": "Totale Reclami",
+    "totalUsers": "Totale Utenti",
+    "totalPlanets": "Totale Pianeti",
+    "recentActivity": "Attività Recente"
+  },
+  "newsletter": {
+    "title": "NEWSLETTER",
+    "subtitle": "Resta aggiornato con le ultime notizie e funzionalità cosmiche",
+    "subscribe": "Iscriviti",
+    "email": "Indirizzo Email",
+    "subscribeButton": "Iscriviti alla Newsletter",
+    "unsubscribe": "Annulla Iscrizione",
+    "subscribed": "Iscritto",
+    "subscriptionSuccess": "Ti sei iscritto con successo alla newsletter!"
+  },
+  "calendar": {
+    "title": "CALENDARIO EVENTI SPAZIALI",
+    "subtitle": "Traccia lanci, scoperte ed eventi cosmici",
+    "upcoming": "Prossimi",
+    "past": "Passati",
+    "today": "Oggi",
+    "thisWeek": "Questa Settimana",
+    "thisMonth": "Questo Mese"
+  },
+  "education": {
+    "title": "EDUCAZIONE SPAZIALE",
+    "subtitle": "Impara su esopianeti, astronomia ed esplorazione spaziale",
+    "courses": "Corsi",
+    "tutorials": "Tutorial",
+    "simulations": "Simulazioni",
+    "games": "Giochi"
+  },
+  "nav": {
+    "routes": "Rotte",
+    "database": "Database dei mondi",
+    "maps": "Mappe stellari",
+    "projects": "Progetti",
+    "begin": "Inizia l’esplorazione"
+  },
+  "hero": {
+    "eyebrow": "Agenzia di Viaggi Interstellari · Sistemi di volo online",
+    "line1": "L’UNIVERSO È",
+    "line2": "ORA UNA DESTINAZIONE.",
+    "lead": "Entra in un atlante vivo di mondi lontani. Confronta esopianeti, traccia rotte future ed esplora i sistemi di ricerca che potrebbero guidare l’umanità oltre la Terra.",
+    "primary": "Entra nel database dei mondi",
+    "soundtrack": "Avvia la colonna sonora",
+    "scroll": "Scorri per attraversare"
+  },
+  "stats": {
+    "worlds": "oggetti catalogati",
+    "soundtracks": "paesaggi sonori di missione",
+    "horizon": "orizzonti possibili"
+  },
+  "stage": {
+    "window": "Finestra di partenza aperta",
+    "distance": "Distanza",
+    "status": "Stato",
+    "simulated": "SIMULATO",
+    "caption": "Visualizzazione concettuale della rotta"
+  },
+  "routes": {
+    "title": "Ogni viaggio inizia con un sistema.",
+    "lead": "I.T.A collega dati scientifici, intelligenza di rotta e immaginazione umana in un’esperienza interstellare navigabile.",
+    "databaseKicker": "INTELLIGENZA DEI MONDI",
+    "databaseTitle": "Database degli esopianeti",
+    "databaseText": "Filtra migliaia di record celesti, confronta le condizioni planetarie e individua i mondi da osservare più da vicino.",
+    "openDatabase": "Apri database",
+    "mapsKicker": "CARTOGRAFIA SPAZIALE",
+    "mapsTitle": "Mappe stellari interattive",
+    "mapsText": "Muoviti tra sistemi collegati e scopri come distanza, vicinato e contesto stellare modellano una rotta.",
+    "openMaps": "Traccia una rotta",
+    "aiKicker": "INTELLIGENZA DI MISSIONE",
+    "aiTitle": "IA Stellare",
+    "aiText": "Fai domande, interpreta dati astronomici e trasforma un vasto catalogo in un briefing di missione mirato.",
+    "openAi": "Apri IA di missione"
+  },
+  "passage": {
+    "line1": "Non una lista di pianeti.",
+    "line2": "Una sensazione di arrivo.",
+    "text": "Il futuro del viaggio spaziale sarà misurato in più della velocità: orientamento, fiducia, meraviglia e la sensazione che una distanza impossibile sia diventata comprensibile.",
+    "discovery": "Scoperta",
+    "clarity": "Chiarezza",
+    "immersion": "Immersione"
+  },
+  "mission": {
+    "title": "Dal segnale alla destinazione.",
+    "step1Title": "Scopri",
+    "step1Text": "Cerca in un catalogo scientifico costruito attorno alle domande che i viaggiatori fanno davvero.",
+    "step2Title": "Comprendi",
+    "step2Text": "Trasforma misure grezze in clima, scala, rischio e possibilità.",
+    "step3Title": "Attraversa",
+    "step3Text": "Segui una rotta coerente tra mappe, simulazioni e progetti orientati al futuro."
+  },
+  "manifesto": {
+    "quote": "Il primo viaggio interstellare inizia molto prima del lancio. Inizia quando l’universo diventa leggibile."
+  },
+  "final": {
+    "title": "Scegli il tuo primo mondo.",
+    "text": "Il catalogo è aperto. La tua rotta inizia con una domanda, un segnale e una destinazione.",
+    "cta": "Inizia la spedizione"
+  },
+  "footer": {
+    "tagline": "Un concetto indipendente di viaggio interstellare, una piattaforma di ricerca e un invito a guardare più lontano.",
+    "privacy": "Privacy",
+    "online": "Sistemi dell’agenzia online"
+  }
+}

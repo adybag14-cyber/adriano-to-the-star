@@ -1,0 +1,21 @@
+
+arc-dataset\apps\js\testing_interface.js:15:function resetTask() {
+arc-dataset\apps\js\testing_interface.js:23:function refreshEditionGrid(jqGrid, dataGrid) {
+arc-dataset\apps\js\testing_interface.js:30:function syncFromEditionGridToDataGrid() {
+arc-dataset\apps\js\testing_interface.js:34:function syncFromDataGridToEditionGrid() {
+arc-dataset\apps\js\testing_interface.js:38:function getSelectedSymbol() {
+arc-dataset\apps\js\testing_interface.js:43:function setUpEditionGridListeners(jqGrid) {
+arc-dataset\apps\js\testing_interface.js:63:function resizeOutputGrid() {
+arc-dataset\apps\js\testing_interface.js:76:function resetOutputGrid() {
+arc-dataset\apps\js\testing_interface.js:83:function copyFromInput() {
+arc-dataset\apps\js\testing_interface.js:90:function fillPairPreview(pairId, inputGrid, outputGrid) {
+arc-dataset\apps\js\testing_interface.js:114:function loadJSONTask(train, test) {
+arc-dataset\apps\js\testing_interface.js:140:function display_task_name(task_name, task_index, number_of_tasks) {
+arc-dataset\apps\js\testing_interface.js:150:function loadTaskFromFile(e) {
+arc-dataset\apps\js\testing_interface.js:176:function randomTask() {
+arc-dataset\apps\js\testing_interface.js:203:function nextTestInput() {
+arc-dataset\apps\js\testing_interface.js:216:function submitSolution() {
+arc-dataset\apps\js\testing_interface.js:237:function fillTestInput(inputGrid) {
+arc-dataset\apps\js\testing_interface.js:243:function copyToOutput() {
+arc-dataset\apps\js\testing_interface.js:250:function initializeSelectable() {
+

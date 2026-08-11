@@ -1,0 +1,120 @@
+  public static void class(boolean);
+    Code:
+       0: iload_0
+       1: putstatic     #228                // Field while:Z
+       4: return
+
+  public static boolean while();
+    Code:
+       0: getstatic     #234                // Field Ï¶0000:Z
+       3: ireturn
+
+  public static void new(boolean);
+    Code:
+       0: iload_0
+       1: putstatic     #234                // Field Ï¶0000:Z
+       4: return
+
+  public static boolean §Í0000();
+    Code:
+       0: getstatic     #232                // Field ÷00000:Z
+       3: ireturn
+
+  public static void float(boolean);
+    Code:
+       0: iload_0
+       1: putstatic     #232                // Field ÷00000:Z
+       4: return
+
+  public static boolean OO0000();
+    Code:
+       0: getstatic     #287                // Field "null.class":Z
+       3: ireturn
+
+  public static boolean ÷Í0000();
+    Code:
+       0: getstatic     #291                // Field O10000:Z
+       3: ireturn
+
+  public static boolean Ï10000();
+    Code:
+       0: ldc_w         #823                // String launchDirect
+       3: invokestatic  #281                // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+       6: ifnull        11
+       9: iconst_1
+      10: ireturn
+      11: iconst_0
+      12: ireturn
+
+  public static java.lang.String ÍÊ0000();
+    Code:
+       0: ldc_w         #827                // String com.fs.starfarer.settings.paths.logs
+       3: invokestatic  #281                // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+       6: areturn
+
+  public static java.lang.String oË0000();
+    Code:
+       0: ldc_w         #830                // String com.fs.starfarer.settings.paths.saves
+       3: invokestatic  #281                // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+       6: areturn
+
+  public static java.lang.String OÏ0000();
+    Code:
+       0: ldc_w         #833                // String com.fs.starfarer.settings.paths.screenshots
+       3: invokestatic  #281                // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+       6: areturn
+
+  public static java.lang.String o¶0000();
+    Code:
+       0: ldc_w         #836                // String com.fs.starfarer.settings.paths.mods
+       3: invokestatic  #281                // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+       6: areturn
+
+  public static void o00000(com.fs.starfarer.loading.ResourceLoaderState) throws org.json.JSONException;
+    Code:
+       0: getstatic     #483                // Field §Ë0000:Lorg/json/JSONObject;
+       3: invokestatic  #840                // Method org/json/JSONObject.getNames:(Lorg/json/JSONObject;)[Ljava/lang/String;
+       6: ifnull        257
+       9: getstatic     #483                // Field §Ë0000:Lorg/json/JSONObject;
+      12: invokestatic  #840                // Method org/json/JSONObject.getNames:(Lorg/json/JSONObject;)[Ljava/lang/String;
+      15: dup
+      16: astore        4
+      18: arraylength
+      19: istore_3
+      20: iconst_0
+      21: istore_2
+      22: goto          252
+      25: aload         4
+      27: iload_2
+      28: aaload
+      29: astore_1
+      30: getstatic     #483                // Field §Ë0000:Lorg/json/JSONObject;
+      33: aload_1
+      34: invokevirtual #477                // Method org/json/JSONObject.getJSONObject:(Ljava/lang/String;)Lorg/json/JSONObject;
+      37: astore        5
+      39: aload         5
+      41: invokestatic  #840                // Method org/json/JSONObject.getNames:(Lorg/json/JSONObject;)[Ljava/lang/String;
+      44: ifnull        249
+      47: aload         5
+      49: invokestatic  #840                // Method org/json/JSONObject.getNames:(Lorg/json/JSONObject;)[Ljava/lang/String;
+      52: dup
+      53: astore        9
+      55: arraylength
+      56: istore        8
+      58: iconst_0
+      59: istore        7
+      61: goto          242
+      64: aload         9
+      66: iload         7
+      68: aaload
+      69: astore        6
+      71: new           #844                // class java/util/ArrayList
+      74: dup
+      75: invokespecial #846                // Method java/util/ArrayList."<init>":()V
+      78: astore        10
+      80: aload         5
+      82: aload         6
+      84: invokevirtual #847                // Method org/json/JSONObject.optJSONArray:(Ljava/lang/String;)Lorg/json/JSONArray;
+      87: astore        11
+      89: aload         11
+      91: ifnull        131

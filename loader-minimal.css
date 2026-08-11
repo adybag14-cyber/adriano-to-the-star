@@ -1,0 +1,62 @@
+/* ========================================
+   MINIMAL LOADER CSS - NO OVERLAY RISK
+   ======================================== */
+
+/* CRITICAL: Only hide loader, never create overlays */
+#space-loader,
+#space-loader *,
+#space-loader::before,
+#space-loader::after,
+.loader-flash,
+.energy-ring,
+.loader-planet,
+.loader-planet::before,
+.loader-planet::after,
+.loader-moon,
+.shooting-star,
+.shooting-star::before,
+.loader-particle,
+#nebula-bg,
+#stars-layer,
+.space-bg-layer,
+.skip-loading-btn {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    top: -9999px !important;
+    left: -9999px !important;
+    width: 0 !important;
+    height: 0 !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    max-width: 0 !important;
+    max-height: 0 !important;
+    z-index: -99999 !important;
+    clip: rect(0,0,0,0) !important;
+    clip-path: inset(100%) !important;
+    contain: strict !important;
+    isolation: isolate !important;
+}
+
+/* Ensure body is always clickable */
+html,
+html.loaded,
+body,
+body.loaded {
+    pointer-events: auto !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    position: relative !important;
+    z-index: 0 !important;
+}
+
+/* Ensure main content is always visible and clickable */
+body.loaded #main,
+body.loaded main,
+body.loaded section {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+}

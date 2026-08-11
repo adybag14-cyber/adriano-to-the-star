@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supabase Integration Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Raleway', sans-serif;
+            background: linear-gradient(135deg, #000011, #1a1a2e);
+            color: white;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #ba944f;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .test-section {
+            background: rgba(0, 0, 17, 0.8);
+            border: 2px solid rgba(186, 148, 79, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .test-section h2 {
+            color: #ba944f;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .test-result {
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .test-result.success {
+            background: rgba(68, 255, 68, 0.2);
+            border: 1px solid rgba(68, 255, 68, 0.5);
+            color: #44ff44;
+        }
+
+        .test-result.error {
+            background: rgba(220, 53, 69, 0.2);
+            border: 1px solid rgba(220, 53, 69, 0.5);
+            color: #ff6b6b;
+        }
+
+        .test-result.info {
+            background: rgba(100, 150, 255, 0.2);
+            border: 1px solid rgba(100, 150, 255, 0.5);
+            color: #6496ff;
+        }
+
+        .test-button {
+            background: rgba(186, 148, 79, 0.2);
+            border: 2px solid rgba(186, 148, 79, 0.5);
+            color: #ba944f;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Raleway', sans-serif;
+            font-size: 1rem;
+            margin: 0.5rem 0.5rem 0.5rem 0;
+            transition: all 0.2s;
+        }
+
+        .test-button:hover {
+            background: rgba(186, 148, 79, 0.3);
+            border-color: rgba(186, 148, 79, 0.7);
+        }
+
+        .test-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .summary {
+            background: rgba(186, 148, 79, 0.1);
+            border: 2px solid rgba(186, 148, 79, 0.5);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .summary h2 {
+            color: #ba944f;
+            margin-bottom: 1rem;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ba944f;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 0.5rem;
+        }
+    </style>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>🔬 Supabase Integration Test Suite</h1>
+
+        <div class="test-section">
+            <h2>Configuration</h2>
+            <div id="config-status" class="test-result info">Checking configuration...</div>
+            <button class="test-button" onclick="testConfiguration()">Test Configuration</button>
+        </div>
+
+        <div class="test-section">
+            <h2>Authentication</h2>
+            <div id="auth-status" class="test-result info">Not tested</div>
+            <button class="test-button" onclick="testAuthentication()">Test Authentication</button>
+        </div>
+
+        <div class="test-section">
+            <h2>Planet Claims Table</h2>
+            <div id="claims-status" class="test-result info">Not tested</div>
+            <button class="test-button" onclick="testPlanetClaims()">Test Planet Claims</button>
+        </div>
+
+        <div class="test-section">
+            <h2>Planet Favorites Table</h2>
+            <div id="favorites-status" class="test-result info">Not tested</div>
+            <button class="test-button" onclick="testPlanetFavorites()">Test Planet Favorites</button>
+        </div>
+
+        <div class="test-section">
+            <h2>Newsletter Subscriptions Table</h2>
+            <div id="newsletter-status" class="test-result info">Not tested</div>
+            <button class="test-button" onclick="testNewsletter()">Test Newsletter</button>
+        </div>
+
+        <div class="test-section">
+            <h2>User 2FA Table</h2>
+            <div id="2fa-status" class="test-result info">Not tested</div>
+            <button class="test-button" onclick="test2FA()">Test 2FA</button>
+        </div>
+
+        <div class="test-section">
+            <h2>Reputation Table</h2>
+            <div id="reputation-status" class="test-result info">Not tested</div>
+            <button class="test-button" onclick="testReputation()">Test Reputation</button>
+        </div>
+
+        <div class="test-section">
+            <h2>Badges Table</h2>
+            <div id="badges-status" class="test-result info">Not tested</div>
+            <button class="test-button" onclick="testBadges()">Test Badges</button>
+        </div>
+
+        <div class="test-section">
+            <h2>Marketplace Table</h2>
+            <div id="marketplace-status" class="test-result info">Not tested</div>
+            <button class="test-button" onclick="testMarketplace()">Test Marketplace</button>
+        </div>
+
+        <div class="test-section">
+            <h2>Dashboard Layouts Table</h2>
+            <div id="dashboard-status" class="test-result info">Not tested</div>
+            <button class="test-button" onclick="testDashboardLayouts()">Test Dashboard Layouts</button>
+        </div>
+
+        <div class="test-section">
+            <h2>Run All Tests</h2>
+            <button class="test-button" onclick="runAllTests()" style="background: rgba(68, 255, 68, 0.2); border-color: rgba(68, 255, 68, 0.5); color: #44ff44;">Run All Tests</button>
+            <button class="test-button" onclick="clearResults()" style="background: rgba(220, 53, 69, 0.2); border-color: rgba(220, 53, 69, 0.5); color: #ff6b6b;">Clear Results</button>
+        </div>
+
+        <div class="summary">
+            <h2>Test Summary</h2>
+            <div class="summary-stats">
+                <div class="stat">
+                    <div class="stat-value" id="total-tests">0</div>
+                    <div class="stat-label">Total Tests</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="passed-tests">0</div>
+                    <div class="stat-label">Passed</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="failed-tests">0</div>
+                    <div class="stat-label">Failed</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="success-rate">0%</div>
+                    <div class="stat-label">Success Rate</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+
+    <script>
+        let testResults = {
+            total: 0,
+            passed: 0,
+            failed: 0
+        };
+
+        // Initialize Supabase client
+        let supabaseClient = null;
+        if (typeof window.supabaseClient !== 'undefined') {
+            supabaseClient = window.supabaseClient;
+        } else if (typeof SUPABASE_CONFIG !== 'undefined' && SUPABASE_CONFIG.enabled) {
+            supabaseClient = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+        }
+
+        function updateStatus(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.textContent = message;
+                element.className = `test-result ${type}`;
+            }
+        }
+
+        function updateSummary() {
+            document.getElementById('total-tests').textContent = testResults.total;
+            document.getElementById('passed-tests').textContent = testResults.passed;
+            document.getElementById('failed-tests').textContent = testResults.failed;
+            const rate = testResults.total > 0 ? Math.round((testResults.passed / testResults.total) * 100) : 0;
+            document.getElementById('success-rate').textContent = rate + '%';
+        }
+
+        function recordTest(passed, message) {
+            testResults.total++;
+            if (passed) {
+                testResults.passed++;
+            } else {
+                testResults.failed++;
+            }
+            updateSummary();
+            return passed;
+        }
+
+        async function testConfiguration() {
+            updateStatus('config-status', 'Testing configuration...', 'info');
+            
+            try {
+                if (!supabaseClient) {
+                    throw new Error('Supabase client not initialized');
+                }
+
+                if (!SUPABASE_CONFIG || !SUPABASE_CONFIG.enabled) {
+                    throw new Error('Supabase is not enabled in configuration');
+                }
+
+                // Test connection
+                const { data, error } = await supabaseClient.from('planet_claims').select('count').limit(0);
+                
+                if (error && error.code !== 'PGRST116') { // PGRST116 is "relation does not exist" which is OK for connection test
+                    throw error;
+                }
+
+                const passed = recordTest(true, 'Configuration OK');
+                updateStatus('config-status', `✅ Configuration test passed!\nURL: ${SUPABASE_CONFIG.url}\nEnabled: ${SUPABASE_CONFIG.enabled}`, 'success');
+                return passed;
+            } catch (error) {
+                const passed = recordTest(false, error.message);
+                updateStatus('config-status', `❌ Configuration test failed: ${error.message}`, 'error');
+                return passed;
+            }
+        }
+
+        async function testAuthentication() {
+            updateStatus('auth-status', 'Testing authentication...', 'info');
+            
+            try {
+                if (!supabaseClient) {
+                    throw new Error('Supabase client not initialized');
+                }
+
+                // Test getting current session
+                const { data: { session }, error } = await supabaseClient.auth.getSession();
+                
+                if (error) {
+                    throw error;
+                }
+
+                const passed = recordTest(true, 'Authentication OK');
+                updateStatus('auth-status', `✅ Authentication test passed!\nSession: ${session ? 'Active' : 'No active session'}\nUser: ${session?.user?.email || 'Not logged in'}`, 'success');
+                return passed;
+            } catch (error) {
+                const passed = recordTest(false, error.message);
+                updateStatus('auth-status', `❌ Authentication test failed: ${error.message}`, 'error');
+                return passed;
+            }
+        }
+
+        async function testPlanetClaims() {
+            updateStatus('claims-status', 'Testing planet claims table...', 'info');
+            
+            try {
+                if (!supabaseClient) {
+                    throw new Error('Supabase client not initialized');
+                }
+
+                // Test insert
+                const testData = {
+                    user_id: '00000000-0000-0000-0000-000000000000', // Test UUID
+                    username: 'test_user',
+                    email: 'test@example.com',
+                    kepid: 999999999,
+                    planet_data: { name: 'Test Planet', type: 'Test' },
+                    status: 'active',
+                    certificate_number: 'TEST-' + Date.now()
+                };
+
+                const { data: insertData, error: insertError } = await supabaseClient
+                    .from('planet_claims')
+                    .insert(testData)
+                    .select();
+
+                if (insertError) {
+                    throw insertError;
+                }
+
+                // Test select
+                const { data: selectData, error: selectError } = await supabaseClient
+                    .from('planet_claims')
+                    .select('*')
+                    .eq('kepid', testData.kepid)
+                    .limit(1);
+
+                if (selectError) {
+                    throw selectError;
+                }
+
+                // Cleanup - delete test data
+                if (insertData && insertData[0]) {
+                    await supabaseClient
+                        .from('planet_claims')
+                        .delete()
+                        .eq('id', insertData[0].id);
+                }
+
+                const passed = recordTest(true, 'Planet Claims OK');
+                updateStatus('claims-status', `✅ Planet Claims test passed!\nInserted: ${insertData ? 'Yes' : 'No'}\nSelected: ${selectData ? selectData.length + ' records' : 'No'}`, 'success');
+                return passed;
+            } catch (error) {
+                const passed = recordTest(false, error.message);
+                updateStatus('claims-status', `❌ Planet Claims test failed: ${error.message}\nCode: ${error.code || 'N/A'}`, 'error');
+                return passed;
+            }
+        }
+
+        async function testPlanetFavorites() {
+            updateStatus('favorites-status', 'Testing planet favorites table...', 'info');
+            
+            try {
+                if (!supabaseClient) {
+                    throw new Error('Supabase client not initialized');
+                }
+
+                // Test insert
+                const testData = {
+                    user_id: '00000000-0000-0000-0000-000000000000',
+                    kepid: 888888888
+                };
+
+                const { data: insertData, error: insertError } = await supabaseClient
+                    .from('planet_favorites')
+                    .insert(testData)
+                    .select();
+
+                if (insertError) {
+                    throw insertError;
+                }
+
+                // Test select
+                const { data: selectData, error: selectError } = await supabaseClient
+                    .from('planet_favorites')
+                    .select('*')
+                    .eq('kepid', testData.kepid)
+                    .limit(1);
+
+                if (selectError) {
+                    throw selectError;
+                }
+
+                // Cleanup
+                if (insertData && insertData[0]) {
+                    await supabaseClient
+                        .from('planet_favorites')
+                        .delete()
+                        .eq('id', insertData[0].id);
+                }
+
+                const passed = recordTest(true, 'Planet Favorites OK');
+                updateStatus('favorites-status', `✅ Planet Favorites test passed!\nInserted: ${insertData ? 'Yes' : 'No'}\nSelected: ${selectData ? selectData.length + ' records' : 'No'}`, 'success');
+                return passed;
+            } catch (error) {
+                const passed = recordTest(false, error.message);
+                updateStatus('favorites-status', `❌ Planet Favorites test failed: ${error.message}\nCode: ${error.code || 'N/A'}`, 'error');
+                return passed;
+            }
+        }
+
+        async function testNewsletter() {
+            updateStatus('newsletter-status', 'Testing newsletter subscriptions table...', 'info');
+            
+            try {
+                if (!supabaseClient) {
+                    throw new Error('Supabase client not initialized');
+                }
+
+                const testEmail = 'test-newsletter-' + Date.now() + '@example.com';
+                const testData = {
+                    email: testEmail,
+                    categories: ['features', 'discoveries'],
+                    frequency: 'weekly',
+                    status: 'active'
+                };
+
+                const { data: insertData, error: insertError } = await supabaseClient
+                    .from('newsletter_subscriptions')
+                    .insert(testData)
+                    .select();
+
+                if (insertError) {
+                    throw insertError;
+                }
+
+                // Test select
+                const { data: selectData, error: selectError } = await supabaseClient
+                    .from('newsletter_subscriptions')
+                    .select('*')
+                    .eq('email', testEmail)
+                    .limit(1);
+
+                if (selectError) {
+                    throw selectError;
+                }
+
+                // Cleanup
+                if (insertData && insertData[0]) {
+                    await supabaseClient
+                        .from('newsletter_subscriptions')
+                        .delete()
+                        .eq('id', insertData[0].id);
+                }
+
+                const passed = recordTest(true, 'Newsletter OK');
+                updateStatus('newsletter-status', `✅ Newsletter test passed!\nInserted: ${insertData ? 'Yes' : 'No'}\nSelected: ${selectData ? selectData.length + ' records' : 'No'}`, 'success');
+                return passed;
+            } catch (error) {
+                const passed = recordTest(false, error.message);
+                updateStatus('newsletter-status', `❌ Newsletter test failed: ${error.message}\nCode: ${error.code || 'N/A'}`, 'error');
+                return passed;
+            }
+        }
+
+        async function test2FA() {
+            updateStatus('2fa-status', 'Testing user 2FA table...', 'info');
+            
+            try {
+                if (!supabaseClient) {
+                    throw new Error('Supabase client not initialized');
+                }
+
+                const testData = {
+                    user_id: '00000000-0000-0000-0000-000000000000',
+                    secret: 'TEST_SECRET_' + Date.now(),
+                    backup_codes: ['code1', 'code2', 'code3'],
+                    enabled: false
+                };
+
+                const { data: insertData, error: insertError } = await supabaseClient
+                    .from('user_2fa')
+                    .insert(testData)
+                    .select();
+
+                if (insertError) {
+                    throw insertError;
+                }
+
+                // Test select
+                const { data: selectData, error: selectError } = await supabaseClient
+                    .from('user_2fa')
+                    .select('*')
+                    .eq('user_id', testData.user_id)
+                    .limit(1);
+
+                if (selectError) {
+                    throw selectError;
+                }
+
+                // Cleanup
+                if (insertData && insertData[0]) {
+                    await supabaseClient
+                        .from('user_2fa')
+                        .delete()
+                        .eq('id', insertData[0].id);
+                }
+
+                const passed = recordTest(true, '2FA OK');
+                updateStatus('2fa-status', `✅ 2FA test passed!\nInserted: ${insertData ? 'Yes' : 'No'}\nSelected: ${selectData ? selectData.length + ' records' : 'No'}`, 'success');
+                return passed;
+            } catch (error) {
+                const passed = recordTest(false, error.message);
+                updateStatus('2fa-status', `❌ 2FA test failed: ${error.message}\nCode: ${error.code || 'N/A'}`, 'error');
+                return passed;
+            }
+        }
+
+        async function testReputation() {
+            updateStatus('reputation-status', 'Testing reputation table...', 'info');
+            
+            try {
+                if (!supabaseClient) {
+                    throw new Error('Supabase client not initialized');
+                }
+
+                const testData = {
+                    user_id: '00000000-0000-0000-0000-000000000000',
+                    username: 'test_user',
+                    email: 'test@example.com',
+                    total_points: 100,
+                    reputation_level: 'novice',
+                    rating: 4.5,
+                    total_ratings: 10
+                };
+
+                const { data: insertData, error: insertError } = await supabaseClient
+                    .from('user_reputation')
+                    .insert(testData)
+                    .select();
+
+                if (insertError) {
+                    throw insertError;
+                }
+
+                // Test select
+                const { data: selectData, error: selectError } = await supabaseClient
+                    .from('user_reputation')
+                    .select('*')
+                    .eq('user_id', testData.user_id)
+                    .limit(1);
+
+                if (selectError) {
+                    throw selectError;
+                }
+
+                // Cleanup
+                if (insertData && insertData[0]) {
+                    await supabaseClient
+                        .from('user_reputation')
+                        .delete()
+                        .eq('id', insertData[0].id);
+                }
+
+                const passed = recordTest(true, 'Reputation OK');
+                updateStatus('reputation-status', `✅ Reputation test passed!\nInserted: ${insertData ? 'Yes' : 'No'}\nSelected: ${selectData ? selectData.length + ' records' : 'No'}`, 'success');
+                return passed;
+            } catch (error) {
+                const passed = recordTest(false, error.message);
+                updateStatus('reputation-status', `❌ Reputation test failed: ${error.message}\nCode: ${error.code || 'N/A'}`, 'error');
+                return passed;
+            }
+        }
+
+        async function testBadges() {
+            updateStatus('badges-status', 'Testing badges table...', 'info');
+            
+            try {
+                if (!supabaseClient) {
+                    throw new Error('Supabase client not initialized');
+                }
+
+                // First check if badge exists in catalog
+                const { data: badgeCatalog } = await supabaseClient
+                    .from('badges_catalog')
+                    .select('badge_id')
+                    .limit(1)
+                    .single();
+
+                if (!badgeCatalog) {
+                    throw new Error('No badges in catalog. Please run create_badges_table.sql first.');
+                }
+
+                const testData = {
+                    user_id: '00000000-0000-0000-0000-000000000000',
+                    badge_id: badgeCatalog.badge_id
+                };
+
+                const { data: insertData, error: insertError } = await supabaseClient
+                    .from('user_badges')
+                    .insert(testData)
+                    .select();
+
+                if (insertError) {
+                    throw insertError;
+                }
+
+                // Test select
+                const { data: selectData, error: selectError } = await supabaseClient
+                    .from('user_badges')
+                    .select('*')
+                    .eq('user_id', testData.user_id)
+                    .limit(1);
+
+                if (selectError) {
+                    throw selectError;
+                }
+
+                // Cleanup
+                if (insertData && insertData[0]) {
+                    await supabaseClient
+                        .from('user_badges')
+                        .delete()
+                        .eq('id', insertData[0].id);
+                }
+
+                const passed = recordTest(true, 'Badges OK');
+                updateStatus('badges-status', `✅ Badges test passed!\nInserted: ${insertData ? 'Yes' : 'No'}\nSelected: ${selectData ? selectData.length + ' records' : 'No'}`, 'success');
+                return passed;
+            } catch (error) {
+                const passed = recordTest(false, error.message);
+                updateStatus('badges-status', `❌ Badges test failed: ${error.message}\nCode: ${error.code || 'N/A'}`, 'error');
+                return passed;
+            }
+        }
+
+        async function testMarketplace() {
+            updateStatus('marketplace-status', 'Testing marketplace table...', 'info');
+            
+            try {
+                if (!supabaseClient) {
+                    throw new Error('Supabase client not initialized');
+                }
+
+                const testData = {
+                    seller_id: '00000000-0000-0000-0000-000000000000',
+                    seller_username: 'test_seller',
+                    claim_id: '00000000-0000-0000-0000-000000000001',
+                    kepid: 777777777,
+                    planet_data: { name: 'Test Marketplace Planet' },
+                    listing_type: 'sell',
+                    price: 100.00,
+                    currency: 'USD',
+                    status: 'active'
+                };
+
+                const { data: insertData, error: insertError } = await supabaseClient
+                    .from('marketplace_listings')
+                    .insert(testData)
+                    .select();
+
+                if (insertError) {
+                    throw insertError;
+                }
+
+                // Test select
+                const { data: selectData, error: selectError } = await supabaseClient
+                    .from('marketplace_listings')
+                    .select('*')
+                    .eq('kepid', testData.kepid)
+                    .limit(1);
+
+                if (selectError) {
+                    throw selectError;
+                }
+
+                // Cleanup
+                if (insertData && insertData[0]) {
+                    await supabaseClient
+                        .from('marketplace_listings')
+                        .delete()
+                        .eq('id', insertData[0].id);
+                }
+
+                const passed = recordTest(true, 'Marketplace OK');
+                updateStatus('marketplace-status', `✅ Marketplace test passed!\nInserted: ${insertData ? 'Yes' : 'No'}\nSelected: ${selectData ? selectData.length + ' records' : 'No'}`, 'success');
+                return passed;
+            } catch (error) {
+                const passed = recordTest(false, error.message);
+                updateStatus('marketplace-status', `❌ Marketplace test failed: ${error.message}\nCode: ${error.code || 'N/A'}`, 'error');
+                return passed;
+            }
+        }
+
+        async function testDashboardLayouts() {
+            updateStatus('dashboard-status', 'Testing dashboard layouts table...', 'info');
+            
+            try {
+                if (!supabaseClient) {
+                    throw new Error('Supabase client not initialized');
+                }
+
+                const testData = {
+                    user_id: '00000000-0000-0000-0000-000000000000',
+                    layout: { widgets: ['test1', 'test2'], config: { test: true } }
+                };
+
+                const { data: insertData, error: insertError } = await supabaseClient
+                    .from('user_dashboard_layouts')
+                    .insert(testData)
+                    .select();
+
+                if (insertError) {
+                    throw insertError;
+                }
+
+                // Test select
+                const { data: selectData, error: selectError } = await supabaseClient
+                    .from('user_dashboard_layouts')
+                    .select('*')
+                    .eq('user_id', testData.user_id)
+                    .limit(1);
+
+                if (selectError) {
+                    throw selectError;
+                }
+
+                // Cleanup
+                if (insertData && insertData[0]) {
+                    await supabaseClient
+                        .from('user_dashboard_layouts')
+                        .delete()
+                        .eq('id', insertData[0].id);
+                }
+
+                const passed = recordTest(true, 'Dashboard Layouts OK');
+                updateStatus('dashboard-status', `✅ Dashboard Layouts test passed!\nInserted: ${insertData ? 'Yes' : 'No'}\nSelected: ${selectData ? selectData.length + ' records' : 'No'}`, 'success');
+                return passed;
+            } catch (error) {
+                const passed = recordTest(false, error.message);
+                updateStatus('dashboard-status', `❌ Dashboard Layouts test failed: ${error.message}\nCode: ${error.code || 'N/A'}`, 'error');
+                return passed;
+            }
+        }
+
+        async function runAllTests() {
+            testResults = { total: 0, passed: 0, failed: 0 };
+            updateSummary();
+
+            await testConfiguration();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testAuthentication();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testPlanetClaims();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testPlanetFavorites();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testNewsletter();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await test2FA();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testReputation();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testBadges();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testMarketplace();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testDashboardLayouts();
+        }
+
+        function clearResults() {
+            testResults = { total: 0, passed: 0, failed: 0 };
+            updateSummary();
+            const statusElements = document.querySelectorAll('.test-result');
+            statusElements.forEach(el => {
+                el.textContent = 'Not tested';
+                el.className = 'test-result info';
+            });
+        }
+
+        // Auto-test configuration on load
+        window.addEventListener('load', () => {
+            setTimeout(testConfiguration, 500);
+        });
+    </script>
+</body>
+</html>
+
+

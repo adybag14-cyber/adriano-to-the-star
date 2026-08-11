@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agent 6 - Root Integration Test</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .container {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 40px;
+      border: 1px solid rgba(255,255,255,0.2);
+      max-width: 800px;
+      width: 100%;
+      text-align: center;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    .status {
+      margin: 20px 0;
+      padding: 15px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+      font-size: 1.1rem;
+    }
+    
+    .controls {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin: 30px 0;
+      flex-wrap: wrap;
+    }
+    
+    .btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 25px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .results {
+      background: rgba(255,255,255,0.1);
+      border-radius: 15px;
+      padding: 20px;
+      margin: 20px 0;
+      min-height: 100px;
+      text-align: left;
+    }
+    
+    .result-item {
+      background: rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 10px;
+      margin: 8px 0;
+      border-left: 4px solid #667eea;
+    }
+    
+    .success { border-left-color: #2ecc71; }
+    .error { border-left-color: #e74c3c; }
+    .warning { border-left-color: #f39c12; }
+    
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>🚀 Agent 6 Root Integration Test</h1>
+    <p>Testing Agent 6 modules from the main root folder</p>
+    
+    <div class="status" id="status">Initializing Agent 6 integration...</div>
+    
+    <div class="controls">
+      <button class="btn" onclick="testBasicIntegration()" id="test-basic">Test Basic Integration</button>
+      <button class="btn" onclick="testAdvancedModules()" id="test-advanced">Test Advanced Modules</button>
+      <button class="btn" onclick="testPerformance()" id="test-performance">Test Performance</button>
+      <button class="btn" onclick="clearResults()" id="clear-results">Clear Results</button>
+    </div>
+    
+    <div class="results" id="results">
+      <p>Click a button to start testing Agent 6 modules...</p>
+    </div>
+  </div>
+
+  <!-- Load Agent 6 Root Integration -->
+  <script src="ROOT-INTEGRATION.js?cb=feat-audit-agent6-rootintegration2"></script>
+
+  <script>
+    let testResults = [];
+
+    function updateStatus(message, type = 'info') {
+      const status = document.getElementById('status');
+      status.textContent = message;
+      status.className = `status ${type}`;
+    }
+
+    function addResult(message, type = 'info') {
+      const results = document.getElementById('results');
+      const item = document.createElement('div');
+      item.className = `result-item ${type}`;
+      item.textContent = message;
+      results.appendChild(item);
+      testResults.push({ message, type, timestamp: Date.now() });
+    }
+
+    function clearResults() {
+      const results = document.getElementById('results');
+      results.innerHTML = '<p>Click a button to start testing Agent 6 modules...</p>';
+      testResults = [];
+      updateStatus('Ready for testing', 'info');
+    }
+
+    function disableButtons(disabled = true) {
+      const buttons = document.querySelectorAll('.btn');
+      buttons.forEach(btn => btn.disabled = disabled);
+    }
+
+    async function testBasicIntegration() {
+      clearResults();
+      disableButtons(true);
+      updateStatus('Testing basic Agent 6 integration...', 'loading');
+      
+      try {
+        addResult('🧪 Starting basic integration test', 'info');
+        
+        // Test 1: Lead Scoring
+        addResult('Testing Lead Scoring module...', 'info');
+        const leadScoring = await Agent6.getLeadScoring();
+        const score = leadScoring.score({ activity: 0.8, fit: 0.7, intent: 0.9 });
+        addResult(`✅ Lead Scoring: Score = ${score.toFixed(3)}`, 'success');
+        
+        // Test 2: IAM System
+        addResult('Testing IAM System module...', 'info');
+        const iam = await Agent6.getIAM();
+        iam.addPermission('read');
+        iam.addPermission('write');
+        iam.addRole('editor', ['read', 'write']);
+        iam.addUser('test_user', ['editor']);
+        const canWrite = iam.can('test_user', 'write');
+        addResult(`✅ IAM System: User can write = ${canWrite}`, 'success');
+        
+        // Test 3: Blockchain Wallet
+        addResult('Testing Blockchain Wallet module...', 'info');
+        const wallet = await Agent6.getBlockchainWallet();
+        await wallet.generate();
+        const address = wallet.getAddress();
+        addResult(`✅ Blockchain Wallet: Address = ${address.substring(0, 10)}...`, 'success');
+        
+        // Test 4: Data Profiling
+        addResult('Testing Data Profiling module...', 'info');
+        const profiling = await Agent6.getModule('DataProfiling');
+        const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        const summary = profiling.numericSummary(data);
+        addResult(`✅ Data Profiling: Mean = ${summary.mean.toFixed(2)}, Std Dev = ${summary.std.toFixed(2)}`, 'success');
+        
+        // Test 5: Modal UI
+        addResult('Testing Modal UI component...', 'info');
+        const modal = await Agent6.getModal();
+        modal.open('Test Modal', 'This is a test modal from Agent 6!');
+        setTimeout(() => modal.close(), 2000);
+        addResult('✅ Modal UI: Modal opened and closed successfully', 'success');
+        
+        addResult('🎉 Basic integration test completed successfully!', 'success');
+        updateStatus('Basic integration test completed!', 'success');
+        
+      } catch (error) {
+        addResult(`❌ Basic integration test failed: ${error.message}`, 'error');
+        updateStatus('Basic integration test failed', 'error');
+        console.error('Basic integration test error:', error);
+      } finally {
+        disableButtons(false);
+      }
+    }
+
+    async function testAdvancedModules() {
+      clearResults();
+      disableButtons(true);
+      updateStatus('Testing advanced Agent 6 modules...', 'loading');
+      
+      try {
+        addResult('🚀 Starting advanced module test', 'info');
+        
+        // Test 1: Computer Vision
+        addResult('Testing Computer Vision module...', 'info');
+        const cv = await Agent6.getModule('ComputerVision');
+        const objects = cv.detectObjects('test-image');
+        addResult(`✅ Computer Vision: Detected ${objects.length} objects`, 'success');
+        
+        // Test 2: Natural Language Processing
+        addResult('Testing NLP module...', 'info');
+        const nlp = await Agent6.getModule('NaturalLanguageProcessing');
+        const sentiment = nlp.sentiment('I love this product!');
+        addResult(`✅ NLP: Sentiment = ${sentiment.label} (score: ${sentiment.score.toFixed(2)})`, 'success');
+        
+        // Test 3: Transfer Learning
+        addResult('Testing Transfer Learning module...', 'info');
+        const tl = await Agent6.getModule('TransferLearning');
+        await tl.loadBase('imagenet');
+        const tuned = await tl.fineTune([1, 2, 3], 5);
+        addResult(`✅ Transfer Learning: Fine-tuned with accuracy ${tuned.accuracy.toFixed(2)}`, 'success');
+        
+        // Test 4: Security Audit Log
+        addResult('Testing Security Audit Log module...', 'info');
+        const audit = await Agent6.getModule('SecurityAuditLog');
+        audit.log('test_event', 'system', { test: true });
+        const logs = audit.query({ severity: 'info' });
+        addResult(`✅ Security Audit: Found ${logs.length} log entries`, 'success');
+        
+        // Test 5: Vulnerability Scanner
+        addResult('Testing Vulnerability Scanner module...', 'info');
+        const scanner = await Agent6.getModule('VulnerabilityScanner');
+        const scan = await scanner.scan('localhost');
+        addResult(`✅ Vulnerability Scanner: Found ${scan.findings.length} findings`, 'success');
+        
+        addResult('🎉 Advanced module test completed successfully!', 'success');
+        updateStatus('Advanced module test completed!', 'success');
+        
+      } catch (error) {
+        addResult(`❌ Advanced module test failed: ${error.message}`, 'error');
+        updateStatus('Advanced module test failed', 'error');
+        console.error('Advanced module test error:', error);
+      } finally {
+        disableButtons(false);
+      }
+    }
+
+    async function testPerformance() {
+      clearResults();
+      disableButtons(true);
+      updateStatus('Testing Agent 6 performance...', 'loading');
+      
+      try {
+        addResult('⚡ Starting performance test', 'info');
+        const iterations = 1000;
+        
+        // Test 1: Lead Scoring Performance
+        addResult('Testing Lead Scoring performance...', 'info');
+        const leadScoring = await Agent6.getLeadScoring();
+        const start1 = performance.now();
+        
+        for (let i = 0; i < iterations; i++) {
+          leadScoring.score({
+            activity: Math.random(),
+            fit: Math.random(),
+            intent: Math.random()
+          });
+        }
+        
+        const time1 = performance.now() - start1;
+        addResult(`✅ Lead Scoring: ${iterations} operations in ${time1.toFixed(2)}ms (${(time1/iterations).toFixed(3)}ms avg)`, 'success');
+        
+        // Test 2: IAM System Performance
+        addResult('Testing IAM System performance...', 'info');
+        const iam = await Agent6.getIAM();
+        const start2 = performance.now();
+        
+        for (let i = 0; i < iterations; i++) {
+          iam.addPermission(`perm_${i}`);
+          iam.addRole(`role_${i}`, [`perm_${i}`]);
+          iam.addUser(`user_${i}`, [`role_${i}`]);
+          iam.can(`user_${i}`, `perm_${i}`);
+        }
+        
+        const time2 = performance.now() - start2;
+        addResult(`✅ IAM System: ${iterations * 4} operations in ${time2.toFixed(2)}ms (${(time2/(iterations*4)).toFixed(3)}ms avg)`, 'success');
+        
+        // Test 3: Modal Performance
+        addResult('Testing Modal UI performance...', 'info');
+        const modal = await Agent6.getModal();
+        const start3 = performance.now();
+        
+        for (let i = 0; i < 100; i++) {
+          modal.open(`Test ${i}`, `Content ${i}`);
+          modal.close();
+        }
+        
+        const time3 = performance.now() - start3;
+        addResult(`✅ Modal UI: 100 open/close cycles in ${time3.toFixed(2)}ms (${(time3/100).toFixed(3)}ms avg)`, 'success');
+        
+        addResult('🎉 Performance test completed successfully!', 'success');
+        updateStatus('Performance test completed!', 'success');
+        
+      } catch (error) {
+        addResult(`❌ Performance test failed: ${error.message}`, 'error');
+        updateStatus('Performance test failed', 'error');
+        console.error('Performance test error:', error);
+      } finally {
+        disableButtons(false);
+      }
+    }
+
+    // Initialize Agent 6 on page load
+    window.addEventListener('load', async () => {
+      try {
+        updateStatus('Loading Agent 6 integration...', 'loading');
+        
+        // Wait for Agent 6 to be available
+        let attempts = 0;
+        while (!window.Agent6 && attempts < 50) {
+          await new Promise(resolve => setTimeout(resolve, 100));
+          attempts++;
+        }
+        
+        if (!window.Agent6) {
+          throw new Error('Agent 6 failed to load');
+        }
+        
+        // Quick start with essential modules
+        await Agent6.quickStart();
+        
+        updateStatus('✅ Agent 6 integration loaded successfully!', 'success');
+        addResult('🚀 Agent 6 Root Integration is ready for testing!', 'success');
+        
+      } catch (error) {
+        updateStatus(`❌ Failed to load Agent 6: ${error.message}`, 'error');
+        addResult(`Error: ${error.message}`, 'error');
+        console.error('Agent 6 initialization error:', error);
+      }
+    });
+  </script>
+</body>
+</html>

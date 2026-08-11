@@ -1,0 +1,188 @@
+﻿public class com.fs.starfarer.settings.StarfarerSettings {
+  public static java.util.Map<java.lang.String, java.lang.String> ÍÈ0000;
+
+  public static float ÷O0000;
+
+  public static int ÷Ï0000;
+
+  public static float ÷Í0000;
+
+  private static org.apache.log4j.Logger Í00000;
+
+  public static final java.lang.String o00000;
+
+  public static final java.lang.String Ëo0000;
+
+  public static final java.lang.String ÏÊ0000;
+
+  public static final java.lang.String O¶0000;
+
+  public static final java.lang.String while.String;
+
+  public static final java.lang.String Ïı0000;
+
+  public static final java.lang.String while.Object;
+
+  public static final java.lang.String ÈË0000;
+
+  public static final java.lang.String ËÍ0000;
+
+  public static final java.lang.String while.class;
+
+  public static final java.lang.String interface.super;
+
+  public static final java.lang.String null.new;
+
+  public static final java.lang.String class.String;
+
+  public static final java.lang.String Ëı0000;
+
+  public static final java.lang.String new.String;
+
+  public static final java.lang.String ÷È0000;
+
+  public static final java.lang.String ÷Ë0000;
+
+  public static final java.lang.String oË0000;
+
+  public static final java.lang.String §O0000;
+
+  public static java.lang.String float.new;
+
+  public static final java.lang.String oÊ0000;
+
+  public static final java.lang.String Èı0000;
+
+  public static final java.lang.String ÷o0000;
+
+  public static final java.lang.String Íı0000;
+
+  public static final java.lang.String null.super;
+
+  public static final java.lang.String oı0000;
+
+  public static boolean oO0000;
+
+  private static float §Ê0000;
+
+  private static float new.return;
+
+  private static boolean float.return;
+
+  private static boolean §o0000;
+
+  private static boolean OÊ0000;
+
+  private static int new.super;
+
+  private static volatile com.fs.starfarer.settings.A ÈO0000;
+
+  private static org.json.JSONObject §Ï0000;
+
+  private static org.json.JSONObject §Ë0000;
+
+  private static org.json.JSONObject oÏ0000;
+
+  private static boolean null.class;
+
+  private static boolean Oı0000;
+
+  private static boolean OÏ0000;
+
+  private static boolean while;
+
+  private static boolean null.return;
+
+  private static boolean ÷00000;
+
+  private static boolean Ï¶0000;
+
+  private static boolean OÈ0000;
+
+  private static boolean class.class;
+
+  private static boolean §00000;
+
+  private static boolean o¶0000;
+
+  private static boolean new;
+
+  private static boolean class;
+
+  private static boolean ÷Ê0000;
+
+  private static float Ë00000;
+
+  private static java.lang.String interface.class;
+
+  public static boolean ÍÊ0000;
+
+  private static volatile float §È0000;
+
+  private static volatile float È¶0000;
+
+  private static volatile boolean oÈ0000;
+
+  private static int interface;
+
+  private static float ÈÏ0000;
+
+  private static float ÍË0000;
+
+  private static float ËO0000;
+
+  private static float §ı0000;
+
+  private static float ÍÏ0000;
+
+  private static float class.super;
+
+  private static float ÏË0000;
+
+  public static float float.Object;
+
+  private static float null;
+
+  private static float oÍ0000;
+
+  private static float ÏO0000;
+
+  private static float Oo0000;
+
+  private static float ÈÊ0000;
+
+  private static float null.String;
+
+  private static float ÈÍ0000;
+
+  private static float §Í0000;
+
+  private static float new.class;
+
+  private static float Ïo0000;
+
+  private static float ÏÍ0000;
+
+  private static float ËÈ0000;
+
+  private static float ÍO0000;
+
+  private static float interface.Object;
+
+  private static float float.super;
+
+  private static float while.super;
+
+  private static float class.return;
+
+  private static float new.new;
+
+  private static float interface.String;
+
+  private static float float.class;
+
+  private static float float.String;
+
+  private static float Ë¶0000;
+
+  private static float 

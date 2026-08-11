@@ -1,0 +1,3247 @@
+{
+    "metadata": {
+        "ParamSize": 296,
+        "ParamBytes": 403235840.0,
+        "BitsPerParam": 4.104028611167694
+    },
+    "records": [
+        {
+            "dataPath": "params_shard_0.bin",
+            "format": "raw-shard",
+            "nbytes": 33216000,
+            "records": [
+                {
+                    "name": "decoder.layers.0.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 0
+                },
+                {
+                    "name": "decoder.layers.0.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 655360
+                },
+                {
+                    "name": "decoder.layers.0.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 737280
+                },
+                {
+                    "name": "decoder.layers.0.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 1392640
+                },
+                {
+                    "name": "decoder.layers.0.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 1474560
+                },
+                {
+                    "name": "decoder.layers.0.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 2129920
+                },
+                {
+                    "name": "decoder.layers.0.ln3.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 2211840
+                },
+                {
+                    "name": "decoder.layers.0.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 2213120
+                },
+                {
+                    "name": "decoder.layers.1.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 2214400
+                },
+                {
+                    "name": "decoder.layers.1.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 2869760
+                },
+                {
+                    "name": "decoder.layers.1.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 2951680
+                },
+                {
+                    "name": "decoder.layers.1.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 3607040
+                },
+                {
+                    "name": "decoder.layers.1.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 3688960
+                },
+                {
+                    "name": "decoder.layers.1.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 4344320
+                },
+                {
+                    "name": "decoder.layers.1.ln3.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 4426240
+                },
+                {
+                    "name": "decoder.layers.1.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 4427520
+                },
+                {
+                    "name": "decoder.layers.10.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 4428800
+                },
+                {
+                    "name": "decoder.layers.10.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 5084160
+                },
+                {
+                    "name": "decoder.layers.10.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 5166080
+                },
+                {
+                    "name": "decoder.layers.10.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 5821440
+                },
+                {
+                    "name": "decoder.layers.10.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 5903360
+                },
+                {
+                    "name": "decoder.layers.10.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 6558720
+                },
+                {
+                    "name": "decoder.layers.10.ln3.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 6640640
+                },
+                {
+                    "name": "decoder.layers.10.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 6641920
+                },
+                {
+                    "name": "decoder.layers.11.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 6643200
+                },
+                {
+                    "name": "decoder.layers.11.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 7298560
+                },
+                {
+                    "name": "decoder.layers.11.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 7380480
+                },
+                {
+                    "name": "decoder.layers.11.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 8035840
+                },
+                {
+                    "name": "decoder.layers.11.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 8117760
+                },
+                {
+                    "name": "decoder.layers.11.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 8773120
+                },
+                {
+                    "name": "decoder.layers.11.ln3.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 8855040
+                },
+                {
+                    "name": "decoder.layers.11.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 8856320
+                },
+                {
+                    "name": "decoder.layers.12.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 8857600
+                },
+                {
+                    "name": "decoder.layers.12.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 9512960
+                },
+                {
+                    "name": "decoder.layers.12.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 9594880
+                },
+                {
+                    "name": "decoder.layers.12.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 10250240
+                },
+                {
+                    "name": "decoder.layers.12.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 10332160
+                },
+                {
+                    "name": "decoder.layers.12.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 10987520
+                },
+                {
+                    "name": "decoder.layers.12.ln3.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 11069440
+                },
+                {
+                    "name": "decoder.layers.12.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 11070720
+                },
+                {
+                    "name": "decoder.layers.13.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 11072000
+                },
+                {
+                    "name": "decoder.layers.13.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 11727360
+                },
+                {
+                    "name": "decoder.layers.13.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 11809280
+                },
+                {
+                    "name": "decoder.layers.13.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 12464640
+                },
+                {
+                    "name": "decoder.layers.13.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 12546560
+                },
+                {
+                    "name": "decoder.layers.13.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 13201920
+                },
+                {
+                    "name": "decoder.layers.13.ln3.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 13283840
+                },
+                {
+                    "name": "decoder.layers.13.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 13285120
+                },
+                {
+                    "name": "decoder.layers.14.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 13286400
+                },
+                {
+                    "name": "decoder.layers.14.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 13941760
+                },
+                {
+                    "name": "decoder.layers.14.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 14023680
+                },
+                {
+                    "name": "decoder.layers.14.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 14679040
+                },
+                {
+                    "name": "decoder.layers.14.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 14760960
+                },
+                {
+                    "name": "decoder.layers.14.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 15416320
+                },
+                {
+                    "name": "decoder.layers.14.ln3.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 15498240
+                },
+                {
+                    "name": "decoder.layers.14.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 15499520
+                },
+                {
+                    "name": "decoder.layers.15.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 15500800
+                },
+                {
+                    "name": "decoder.layers.15.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 16156160
+                },
+                {
+                    "name": "decoder.layers.15.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 16238080
+                },
+                {
+                    "name": "decoder.layers.15.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 16893440
+                },
+                {
+                    "name": "decoder.layers.15.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 16975360
+                },
+                {
+                    "name": "decoder.layers.15.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 17630720
+                },
+                {
+                    "name": "decoder.layers.15.ln3.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 17712640
+                },
+                {
+                    "name": "decoder.layers.15.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 17713920
+                },
+                {
+                    "name": "decoder.layers.16.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 17715200
+                },
+                {
+                    "name": "decoder.layers.16.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 18370560
+                },
+                {
+                    "name": "decoder.layers.16.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 18452480
+                },
+                {
+                    "name": "decoder.layers.16.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 19107840
+                },
+                {
+                    "name": "decoder.layers.16.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 19189760
+                },
+                {
+                    "name": "decoder.layers.16.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 19845120
+                },
+                {
+                    "name": "decoder.layers.16.ln3.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 19927040
+                },
+                {
+                    "name": "decoder.layers.16.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 19928320
+                },
+                {
+                    "name": "decoder.layers.17.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 19929600
+                },
+                {
+                    "name": "decoder.layers.17.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 20584960
+                },
+                {
+                    "name": "decoder.layers.17.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 20666880
+                },
+                {
+                    "name": "decoder.layers.17.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 21322240
+                },
+                {
+                    "name": "decoder.layers.17.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 21404160
+                },
+                {
+                    "name": "decoder.layers.17.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 22059520
+                },
+                {
+                    "name": "decoder.layers.17.ln3.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 22141440
+                },
+                {
+                    "name": "decoder.layers.17.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 22142720
+                },
+                {
+                    "name": "decoder.layers.2.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 22144000
+                },
+                {
+                    "name": "decoder.layers.2.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 22799360
+                },
+                {
+                    "name": "decoder.layers.2.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 22881280
+                },
+                {
+                    "name": "decoder.layers.2.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 23536640
+                },
+                {
+                    "name": "decoder.layers.2.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 23618560
+                },
+                {
+                    "name": "decoder.layers.2.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 24273920
+                },
+                {
+                    "name": "decoder.layers.2.ln3.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 24355840
+                },
+                {
+                    "name": "decoder.layers.2.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 24357120
+                },
+                {
+                    "name": "decoder.layers.3.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 24358400
+                },
+                {
+                    "name": "decoder.layers.3.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 25013760
+                },
+                {
+                    "name": "decoder.layers.3.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 25095680
+                },
+                {
+                    "name": "decoder.layers.3.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 25751040
+                },
+                {
+                    "name": "decoder.layers.3.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 25832960
+                },
+                {
+                    "name": "decoder.layers.3.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 26488320
+                },
+                {
+                    "name": "decoder.layers.3.ln3.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 26570240
+                },
+                {
+                    "name": "decoder.layers.3.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 26571520
+                },
+                {
+                    "name": "decoder.layers.4.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 26572800
+                },
+                {
+                    "name": "decoder.layers.4.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 27228160
+                },
+                {
+                    "name": "decoder.layers.4.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 27310080
+                },
+                {
+                    "name": "decoder.layers.4.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 27965440
+                },
+                {
+                    "name": "decoder.layers.4.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 28047360
+                },
+                {
+                    "name": "decoder.layers.4.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 28702720
+                },
+                {
+                    "name": "decoder.layers.4.ln3.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 28784640
+                },
+                {
+                    "name": "decoder.layers.4.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 28785920
+                },
+                {
+                    "name": "decoder.layers.5.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 28787200
+                },
+                {
+                    "name": "decoder.layers.5.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 29442560
+                },
+                {
+                    "name": "decoder.layers.5.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 29524480
+                },
+                {
+                    "name": "decoder.layers.5.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 30179840
+                },
+                {
+                    "name": "decoder.layers.5.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 30261760
+                },
+                {
+                    "name": "decoder.layers.5.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 30917120
+                },
+                {
+                    "name": "decoder.layers.5.ln3.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 30999040
+                },
+                {
+                    "name": "decoder.layers.5.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 31000320
+                },
+                {
+                    "name": "decoder.layers.6.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 31001600
+                },
+                {
+                    "name": "decoder.layers.6.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 31656960
+                },
+                {
+                    "name": "decoder.layers.6.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 31738880
+                },
+                {
+                    "name": "decoder.layers.6.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 32394240
+                },
+                {
+                    "name": "decoder.layers.6.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 32476160
+                },
+                {
+                    "name": "decoder.layers.6.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 33131520
+                },
+                {
+                    "name": "decoder.layers.6.ln3.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 33213440
+                },
+                {
+                    "name": "decoder.layers.6.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 33214720
+                }
+            ],
+            "md5sum": "b93d1ba1a27a593d98773ba54fb92426"
+        },
+        {
+            "dataPath": "params_shard_1.bin",
+            "format": "raw-shard",
+            "nbytes": 83886080,
+            "records": [
+                {
+                    "name": "encoder.embed.q_weight",
+                    "shape": [
+                        262144,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 83886080,
+                    "byteOffset": 0
+                }
+            ],
+            "md5sum": "e6a8f11985cdf487c10e390db275cc38"
+        },
+        {
+            "dataPath": "params_shard_2.bin",
+            "format": "raw-shard",
+            "nbytes": 83886080,
+            "records": [
+                {
+                    "name": "decoder.embed.q_weight",
+                    "shape": [
+                        262144,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 83886080,
+                    "byteOffset": 0
+                }
+            ],
+            "md5sum": "e6a8f11985cdf487c10e390db275cc38"
+        },
+        {
+            "dataPath": "params_shard_3.bin",
+            "format": "raw-shard",
+            "nbytes": 83886080,
+            "records": [
+                {
+                    "name": "lm_head.q_weight",
+                    "shape": [
+                        262144,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 83886080,
+                    "byteOffset": 0
+                }
+            ],
+            "md5sum": "e6a8f11985cdf487c10e390db275cc38"
+        },
+        {
+            "dataPath": "params_shard_4.bin",
+            "format": "raw-shard",
+            "nbytes": 27616000,
+            "records": [
+                {
+                    "name": "decoder.layers.7.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 0
+                },
+                {
+                    "name": "decoder.layers.7.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 655360
+                },
+                {
+                    "name": "decoder.layers.7.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 737280
+                },
+                {
+                    "name": "decoder.layers.7.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 1392640
+                },
+                {
+                    "name": "decoder.layers.7.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 1474560
+                },
+                {
+                    "name": "decoder.layers.7.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 2129920
+                },
+                {
+                    "name": "decoder.layers.7.ln3.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 2211840
+                },
+                {
+                    "name": "decoder.layers.7.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 2213120
+                },
+                {
+                    "name": "decoder.layers.8.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 2214400
+                },
+                {
+                    "name": "decoder.layers.8.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 2869760
+                },
+                {
+                    "name": "decoder.layers.8.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 2951680
+                },
+                {
+                    "name": "decoder.layers.8.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 3607040
+                },
+                {
+                    "name": "decoder.layers.8.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 3688960
+                },
+                {
+                    "name": "decoder.layers.8.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 4344320
+                },
+                {
+                    "name": "decoder.layers.8.ln3.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 4426240
+                },
+                {
+                    "name": "decoder.layers.8.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 4427520
+                },
+                {
+                    "name": "decoder.layers.9.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 4428800
+                },
+                {
+                    "name": "decoder.layers.9.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 5084160
+                },
+                {
+                    "name": "decoder.layers.9.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 5166080
+                },
+                {
+                    "name": "decoder.layers.9.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 5821440
+                },
+                {
+                    "name": "decoder.layers.9.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 5903360
+                },
+                {
+                    "name": "decoder.layers.9.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 6558720
+                },
+                {
+                    "name": "decoder.layers.9.ln3.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 6640640
+                },
+                {
+                    "name": "decoder.layers.9.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 6641920
+                },
+                {
+                    "name": "decoder.ln_out.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 6643200
+                },
+                {
+                    "name": "encoder.embed.q_scale",
+                    "shape": [
+                        262144,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 10485760,
+                    "byteOffset": 6644480
+                },
+                {
+                    "name": "decoder.embed.q_scale",
+                    "shape": [
+                        262144,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 10485760,
+                    "byteOffset": 17130240
+                }
+            ],
+            "md5sum": "b8125c19dbd4ebf3252aa3044ad9951c"
+        },
+        {
+            "dataPath": "params_shard_5.bin",
+            "format": "raw-shard",
+            "nbytes": 33367040,
+            "records": [
+                {
+                    "name": "lm_head.q_scale",
+                    "shape": [
+                        262144,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 10485760,
+                    "byteOffset": 0
+                },
+                {
+                    "name": "encoder.layers.0.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 10485760
+                },
+                {
+                    "name": "encoder.layers.0.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 11141120
+                },
+                {
+                    "name": "encoder.layers.0.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 11223040
+                },
+                {
+                    "name": "encoder.layers.0.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 11878400
+                },
+                {
+                    "name": "encoder.layers.0.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 11960320
+                },
+                {
+                    "name": "encoder.layers.0.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 12615680
+                },
+                {
+                    "name": "encoder.layers.0.ln2.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 12697600
+                },
+                {
+                    "name": "encoder.layers.0.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 12698880
+                },
+                {
+                    "name": "encoder.layers.1.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 12700160
+                },
+                {
+                    "name": "encoder.layers.1.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 13355520
+                },
+                {
+                    "name": "encoder.layers.1.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 13437440
+                },
+                {
+                    "name": "encoder.layers.1.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 14092800
+                },
+                {
+                    "name": "encoder.layers.1.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 14174720
+                },
+                {
+                    "name": "encoder.layers.1.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 14830080
+                },
+                {
+                    "name": "encoder.layers.1.ln2.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 14912000
+                },
+                {
+                    "name": "encoder.layers.1.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 14913280
+                },
+                {
+                    "name": "encoder.layers.10.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 14914560
+                },
+                {
+                    "name": "encoder.layers.10.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 15569920
+                },
+                {
+                    "name": "encoder.layers.10.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 15651840
+                },
+                {
+                    "name": "encoder.layers.10.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 16307200
+                },
+                {
+                    "name": "encoder.layers.10.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 16389120
+                },
+                {
+                    "name": "encoder.layers.10.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 17044480
+                },
+                {
+                    "name": "encoder.layers.10.ln2.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 17126400
+                },
+                {
+                    "name": "encoder.layers.10.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 17127680
+                },
+                {
+                    "name": "encoder.layers.11.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 17128960
+                },
+                {
+                    "name": "encoder.layers.11.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 17784320
+                },
+                {
+                    "name": "encoder.layers.11.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 17866240
+                },
+                {
+                    "name": "encoder.layers.11.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 18521600
+                },
+                {
+                    "name": "encoder.layers.11.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 18603520
+                },
+                {
+                    "name": "encoder.layers.11.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 19258880
+                },
+                {
+                    "name": "encoder.layers.11.ln2.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 19340800
+                },
+                {
+                    "name": "encoder.layers.11.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 19342080
+                },
+                {
+                    "name": "encoder.layers.12.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 19343360
+                },
+                {
+                    "name": "encoder.layers.12.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 19998720
+                },
+                {
+                    "name": "encoder.layers.12.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 20080640
+                },
+                {
+                    "name": "encoder.layers.12.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 20736000
+                },
+                {
+                    "name": "encoder.layers.12.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 20817920
+                },
+                {
+                    "name": "encoder.layers.12.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 21473280
+                },
+                {
+                    "name": "encoder.layers.12.ln2.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 21555200
+                },
+                {
+                    "name": "encoder.layers.12.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 21556480
+                },
+                {
+                    "name": "encoder.layers.13.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 21557760
+                },
+                {
+                    "name": "encoder.layers.13.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 22213120
+                },
+                {
+                    "name": "encoder.layers.13.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 22295040
+                },
+                {
+                    "name": "encoder.layers.13.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 22950400
+                },
+                {
+                    "name": "encoder.layers.13.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 23032320
+                },
+                {
+                    "name": "encoder.layers.13.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 23687680
+                },
+                {
+                    "name": "encoder.layers.13.ln2.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 23769600
+                },
+                {
+                    "name": "encoder.layers.13.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 23770880
+                },
+                {
+                    "name": "encoder.layers.14.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 23772160
+                },
+                {
+                    "name": "encoder.layers.14.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 24427520
+                },
+                {
+                    "name": "encoder.layers.14.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 24509440
+                },
+                {
+                    "name": "encoder.layers.14.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 25164800
+                },
+                {
+                    "name": "encoder.layers.14.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 25246720
+                },
+                {
+                    "name": "encoder.layers.14.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 25902080
+                },
+                {
+                    "name": "encoder.layers.14.ln2.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 25984000
+                },
+                {
+                    "name": "encoder.layers.14.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 25985280
+                },
+                {
+                    "name": "encoder.layers.15.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 25986560
+                },
+                {
+                    "name": "encoder.layers.15.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 26641920
+                },
+                {
+                    "name": "encoder.layers.15.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 26723840
+                },
+                {
+                    "name": "encoder.layers.15.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 27379200
+                },
+                {
+                    "name": "encoder.layers.15.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 27461120
+                },
+                {
+                    "name": "encoder.layers.15.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 28116480
+                },
+                {
+                    "name": "encoder.layers.15.ln2.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 28198400
+                },
+                {
+                    "name": "encoder.layers.15.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 28199680
+                },
+                {
+                    "name": "encoder.layers.16.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 28200960
+                },
+                {
+                    "name": "encoder.layers.16.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 28856320
+                },
+                {
+                    "name": "encoder.layers.16.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 28938240
+                },
+                {
+                    "name": "encoder.layers.16.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 29593600
+                },
+                {
+                    "name": "encoder.layers.16.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 29675520
+                },
+                {
+                    "name": "encoder.layers.16.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 30330880
+                },
+                {
+                    "name": "encoder.layers.16.ln2.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 30412800
+                },
+                {
+                    "name": "encoder.layers.16.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 30414080
+                },
+                {
+                    "name": "encoder.layers.17.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 30415360
+                },
+                {
+                    "name": "encoder.layers.17.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 31070720
+                },
+                {
+                    "name": "encoder.layers.17.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 31152640
+                },
+                {
+                    "name": "encoder.layers.17.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 31808000
+                },
+                {
+                    "name": "encoder.layers.17.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 31889920
+                },
+                {
+                    "name": "encoder.layers.17.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 32545280
+                },
+                {
+                    "name": "encoder.layers.17.ln2.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 32627200
+                },
+                {
+                    "name": "encoder.layers.17.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 32628480
+                },
+                {
+                    "name": "encoder.layers.2.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 32629760
+                },
+                {
+                    "name": "encoder.layers.2.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 33285120
+                }
+            ],
+            "md5sum": "f6a6927524d986e7b8b6354bdce7a33e"
+        },
+        {
+            "dataPath": "params_shard_6.bin",
+            "format": "raw-shard",
+            "nbytes": 16979200,
+            "records": [
+                {
+                    "name": "encoder.layers.2.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 0
+                },
+                {
+                    "name": "encoder.layers.2.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 655360
+                },
+                {
+                    "name": "encoder.layers.2.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 737280
+                },
+                {
+                    "name": "encoder.layers.2.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 1392640
+                },
+                {
+                    "name": "encoder.layers.2.ln2.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 1474560
+                },
+                {
+                    "name": "encoder.layers.2.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 1475840
+                },
+                {
+                    "name": "encoder.layers.3.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 1477120
+                },
+                {
+                    "name": "encoder.layers.3.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 2132480
+                },
+                {
+                    "name": "encoder.layers.3.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 2214400
+                },
+                {
+                    "name": "encoder.layers.3.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 2869760
+                },
+                {
+                    "name": "encoder.layers.3.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 2951680
+                },
+                {
+                    "name": "encoder.layers.3.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 3607040
+                },
+                {
+                    "name": "encoder.layers.3.ln2.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 3688960
+                },
+                {
+                    "name": "encoder.layers.3.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 3690240
+                },
+                {
+                    "name": "encoder.layers.4.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 3691520
+                },
+                {
+                    "name": "encoder.layers.4.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 4346880
+                },
+                {
+                    "name": "encoder.layers.4.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 4428800
+                },
+                {
+                    "name": "encoder.layers.4.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 5084160
+                },
+                {
+                    "name": "encoder.layers.4.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 5166080
+                },
+                {
+                    "name": "encoder.layers.4.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 5821440
+                },
+                {
+                    "name": "encoder.layers.4.ln2.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 5903360
+                },
+                {
+                    "name": "encoder.layers.4.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 5904640
+                },
+                {
+                    "name": "encoder.layers.5.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 5905920
+                },
+                {
+                    "name": "encoder.layers.5.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 6561280
+                },
+                {
+                    "name": "encoder.layers.5.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 6643200
+                },
+                {
+                    "name": "encoder.layers.5.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 7298560
+                },
+                {
+                    "name": "encoder.layers.5.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 7380480
+                },
+                {
+                    "name": "encoder.layers.5.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 8035840
+                },
+                {
+                    "name": "encoder.layers.5.ln2.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 8117760
+                },
+                {
+                    "name": "encoder.layers.5.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 8119040
+                },
+                {
+                    "name": "encoder.layers.6.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 8120320
+                },
+                {
+                    "name": "encoder.layers.6.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 8775680
+                },
+                {
+                    "name": "encoder.layers.6.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 8857600
+                },
+                {
+                    "name": "encoder.layers.6.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 9512960
+                },
+                {
+                    "name": "encoder.layers.6.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 9594880
+                },
+                {
+                    "name": "encoder.layers.6.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 10250240
+                },
+                {
+                    "name": "encoder.layers.6.ln2.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 10332160
+                },
+                {
+                    "name": "encoder.layers.6.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 10333440
+                },
+                {
+                    "name": "encoder.layers.7.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 10334720
+                },
+                {
+                    "name": "encoder.layers.7.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 10990080
+                },
+                {
+                    "name": "encoder.layers.7.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 11072000
+                },
+                {
+                    "name": "encoder.layers.7.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 11727360
+                },
+                {
+                    "name": "encoder.layers.7.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 11809280
+                },
+                {
+                    "name": "encoder.layers.7.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 12464640
+                },
+                {
+                    "name": "encoder.layers.7.ln2.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 12546560
+                },
+                {
+                    "name": "encoder.layers.7.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 12547840
+                },
+                {
+                    "name": "encoder.layers.8.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 12549120
+                },
+                {
+                    "name": "encoder.layers.8.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 13204480
+                },
+                {
+                    "name": "encoder.layers.8.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 13286400
+                },
+                {
+                    "name": "encoder.layers.8.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 13941760
+                },
+                {
+                    "name": "encoder.layers.8.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 14023680
+                },
+                {
+                    "name": "encoder.layers.8.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 14679040
+                },
+                {
+                    "name": "encoder.layers.8.ln2.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 14760960
+                },
+                {
+                    "name": "encoder.layers.8.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 14762240
+                },
+                {
+                    "name": "encoder.layers.9.ff_down.q_weight",
+                    "shape": [
+                        640,
+                        256
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 14763520
+                },
+                {
+                    "name": "encoder.layers.9.ff_down.q_scale",
+                    "shape": [
+                        640,
+                        64
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 15418880
+                },
+                {
+                    "name": "encoder.layers.9.ff_gate.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 15500800
+                },
+                {
+                    "name": "encoder.layers.9.ff_gate.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 16156160
+                },
+                {
+                    "name": "encoder.layers.9.ff_up.q_weight",
+                    "shape": [
+                        2048,
+                        80
+                    ],
+                    "dtype": "uint32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 655360,
+                    "byteOffset": 16238080
+                },
+                {
+                    "name": "encoder.layers.9.ff_up.q_scale",
+                    "shape": [
+                        2048,
+                        20
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 81920,
+                    "byteOffset": 16893440
+                },
+                {
+                    "name": "encoder.layers.9.ln2.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 16975360
+                },
+                {
+                    "name": "encoder.layers.9.ln1.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 16976640
+                },
+                {
+                    "name": "encoder.ln_out.weight",
+                    "shape": [
+                        640
+                    ],
+                    "dtype": "float32",
+                    "format": "f32-to-bf16",
+                    "nbytes": 1280,
+                    "byteOffset": 16977920
+                }
+            ],
+            "md5sum": "81c119cd1b232d92c58a71e714b2a374"
+        }
+    ]
+}

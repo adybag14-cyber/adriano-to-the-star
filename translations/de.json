@@ -1,0 +1,154 @@
+{
+  "common": {
+    "home": "Startseite",
+    "database": "Datenbank",
+    "games": "Spiele",
+    "shop": "Shop",
+    "about": "Über uns",
+    "blog": "Blog",
+    "contact": "Kontakt",
+    "login": "Anmelden",
+    "logout": "Abmelden",
+    "register": "Registrieren",
+    "search": "Suchen",
+    "filter": "Filtern",
+    "submit": "Absenden",
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "close": "Schließen",
+    "loading": "Lädt...",
+    "error": "Fehler",
+    "success": "Erfolg",
+    "back": "Zurück",
+    "next": "Weiter",
+    "previous": "Vorherige"
+  },
+  "home": {
+    "title": "Adriano To The Star",
+    "subtitle": "Interstellare Reiseagentur",
+    "sponsored": "GESPONSERT VON ELON MUSK UND DONALD TRUMP",
+    "releasingSoon": "BALD ERHÄLTLICH*",
+    "releasingNote": "*Die kryptografischen Schlüssel, an denen ich arbeiten und die ich aus der gewählten Objektanordnung aus der Datenbank berechnen werde, sind für die Veröffentlichung später im Q1 2025 geplant.",
+    "about": "ÜBER UNS",
+    "mission": "Unsere Mission",
+    "missionText": "ADRIANO TO THE STAR bietet eine revolutionäre Möglichkeit für Einzelpersonen, Himmelskörper in der Andromeda-Galaxie zu besitzen. Unsere Plattform, inspiriert von den Wundern des Kosmos, ermöglicht den Kauf und Verkauf von Lizenzen für Sterne, Planeten und große Kepler-Objekte. Wir zielen darauf ab, die Raumfahrtindustrie neu zu definieren, indem wir ein einzigartiges und personalisiertes Erlebnis für alle Raumfahrt-Enthusiasten bieten.",
+    "learnMore": "Mehr Erfahren",
+    "gallery": "GALERIE",
+    "follow": "FOLGEN SIE UNS"
+  },
+  "database": {
+    "title": "EXOPLANETEN-DATENBANK",
+    "subtitle": "Erkunden Sie über 9,564 Himmelskörper aus dem Kepler-Archiv",
+    "searchPlaceholder": "Planeten suchen...",
+    "filterBy": "Filtern nach",
+    "planetType": "Planetentyp",
+    "discoveryMethod": "Entdeckungsmethode",
+    "status": "Status",
+    "claimed": "Beansprucht",
+    "available": "Verfügbar",
+    "claimPlanet": "Planet Beanspruchen",
+    "alreadyClaimed": "Bereits Beansprucht",
+    "planetDetails": "Planetendetails",
+    "discoveryYear": "Entdeckungsjahr",
+    "distance": "Entfernung",
+    "temperature": "Temperatur",
+    "aboutDatabase": "Über die Datenbank",
+    "dataSource": "Datenquelle",
+    "nasaExoplanetArchive": "NASA Exoplaneten-Archiv API"
+  },
+  "stellarAI": {
+    "title": "STELLAR AI",
+    "subtitle": "Ihr Intelligenter Kosmischer Begleiter",
+    "chatHistory": "Chat-Verlauf",
+    "newChat": "Neuer Chat",
+    "clearChat": "Chat Löschen",
+    "exportChat": "Chat Exportieren",
+    "selectModel": "KI-Modell Auswählen",
+    "askAnything": "Fragen Sie Stellar AI alles...",
+    "send": "Senden",
+    "welcome": "Willkommen bei Stellar AI",
+    "welcomeText": "Ihr intelligenter kosmischer Begleiter, angetrieben von fortgeschrittener KI",
+    "features": {
+      "conversations": "Natürliche Gespräche",
+      "imageAnalysis": "Bildanalyse",
+      "knowledgeBase": "Wissensbasis",
+      "saveHistory": "Verlauf Speichern"
+    }
+  },
+  "nav": {
+    "routes": "Routen",
+    "database": "Weltdatenbank",
+    "maps": "Sternkarten",
+    "projects": "Projekte",
+    "begin": "Erkundung starten"
+  },
+  "hero": {
+    "eyebrow": "Interstellare Reiseagentur · Flugsysteme online",
+    "line1": "DAS UNIVERSUM IST",
+    "line2": "JETZT EIN REISEZIEL.",
+    "lead": "Betritt einen lebendigen Atlas ferner Welten. Vergleiche Exoplaneten, plane künftige Routen und erlebe Forschungssysteme, die die Menschheit über die Erde hinaus führen könnten.",
+    "primary": "Weltdatenbank öffnen",
+    "soundtrack": "Soundtrack starten",
+    "scroll": "Scrollen zum Weiterreisen"
+  },
+  "stats": {
+    "worlds": "katalogisierte Objekte",
+    "soundtracks": "Missionsklangwelten",
+    "horizon": "mögliche Horizonte"
+  },
+  "stage": {
+    "window": "Abflugfenster offen",
+    "distance": "Entfernung",
+    "status": "Status",
+    "simulated": "SIMULIERT",
+    "caption": "Konzeptuelle Routenvisualisierung"
+  },
+  "routes": {
+    "title": "Jede Reise beginnt mit einem System.",
+    "lead": "I.T.A verbindet wissenschaftliche Daten, Routenintelligenz und menschliche Vorstellungskraft zu einer navigierbaren interstellaren Erfahrung.",
+    "databaseKicker": "WELTINTELLIGENZ",
+    "databaseTitle": "Exoplaneten-Datenbank",
+    "databaseText": "Filtere Tausende Himmelsobjekte, vergleiche planetare Bedingungen und finde Welten, die einen genaueren Blick verdienen.",
+    "openDatabase": "Datenbank öffnen",
+    "mapsKicker": "RÄUMLICHE KARTOGRAFIE",
+    "mapsTitle": "Interaktive Sternkarten",
+    "mapsText": "Bewege dich durch verbundene Systeme und erkenne, wie Entfernung, Nachbarschaft und stellarer Kontext eine Route formen.",
+    "openMaps": "Route planen",
+    "aiKicker": "MISSIONSINTELLIGENZ",
+    "aiTitle": "Stellar AI",
+    "aiText": "Stelle Fragen, interpretiere astronomische Daten und verwandle einen riesigen Katalog in ein fokussiertes Missionsbriefing.",
+    "openAi": "Missions-KI öffnen"
+  },
+  "passage": {
+    "line1": "Keine Liste von Planeten.",
+    "line2": "Ein Gefühl der Ankunft.",
+    "text": "Die Zukunft der Raumfahrt wird an mehr als Geschwindigkeit gemessen: Orientierung, Vertrauen, Staunen und dem Gefühl, dass eine unmögliche Entfernung verständlich geworden ist.",
+    "discovery": "Entdeckung",
+    "clarity": "Klarheit",
+    "immersion": "Immersion"
+  },
+  "mission": {
+    "title": "Vom Signal zum Ziel.",
+    "step1Title": "Entdecken",
+    "step1Text": "Durchsuche einen wissenschaftlichen Katalog, der auf den Fragen echter Reisender aufbaut.",
+    "step2Title": "Verstehen",
+    "step2Text": "Übersetze Rohmessungen in Klima, Maßstab, Risiko und Möglichkeit.",
+    "step3Title": "Durchqueren",
+    "step3Text": "Folge einer klaren Route durch Karten, Simulationen und zukunftsgerichtete Projekte."
+  },
+  "manifesto": {
+    "quote": "Die erste interstellare Reise beginnt lange vor dem Start. Sie beginnt, wenn das Universum lesbar wird."
+  },
+  "final": {
+    "title": "Wähle deine erste Welt.",
+    "text": "Der Katalog ist offen. Deine Route beginnt mit einer Frage, einem Signal und einem Ziel.",
+    "cta": "Expedition starten"
+  },
+  "footer": {
+    "tagline": "Ein unabhängiges Konzept für interstellares Reisen, Forschungsplattform und Einladung, weiter zu blicken.",
+    "privacy": "Datenschutz",
+    "online": "Agentursysteme online"
+  }
+}

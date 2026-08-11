@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Gemini WebSocket</title>
+    <style>
+        body { font-family: monospace; background: #000; color: #0f0; padding: 20px; }
+        .log { margin: 5px 0; padding: 5px; background: #111; }
+        .error { color: #f00; }
+        .success { color: #0f0; }
+        .info { color: #ff0; }
+        button { background: #0f0; color: #000; padding: 10px 20px; border: none; cursor: pointer; margin: 5px; }
+    </style>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+<body>
+    <h1>🔍 Debug Gemini WebSocket</h1>
+    <button onclick="test()">Test WebSocket</button>
+    <div id="log"></div>
+
+    <script>
+        const API_KEY = new URLSearchParams(window.location.search).get('key') || localStorage.getItem('GOOGLE_API_KEY') || '';
+        const TEST_PROMPT = 'Say hello';
+
+        function log(msg, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `log ${type}`;
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            document.getElementById('log').appendChild(div);
+            console.log(msg);
+        }
+
+        function test() {
+            document.getElementById('log').innerHTML = '';
+            log('🚀 Starting WebSocket test...', 'info');
+            
+            // Try different WebSocket URL formats
+            // Format 1: With API key in query parameter
+            const wsUrl1 = `wss://generativelanguage.googleapis.com/ws/google.cloud.aiplatform.v1beta1.LlmBidiService/BidiGenerateContent?key=${API_KEY}`;
+            // Format 2: Alternative endpoint (if exists)
+            const wsUrl2 = `wss://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-live:bidiGenerateContent?key=${API_KEY}`;
+            
+            log(`📡 Trying URL format 1: ${wsUrl1.replace(API_KEY, 'API_KEY')}`, 'info');
+            const wsUrl = wsUrl1;
+            
+            const ws = new WebSocket(wsUrl);
+            let responseText = '';
+            let setupComplete = false;
+            
+            ws.onopen = () => {
+                log('✅ WebSocket connected', 'success');
+                
+                // Try gemini-live-2.5-flash-preview (official WebSocket model name)
+                const setupMessage = {
+                    setup: {
+                        model: 'models/gemini-live-2.5-flash-preview',
+                        generationConfig: {
+                            temperature: 0.7,
+                            maxOutputTokens: 1024,
+                            responseModalities: ["TEXT"]
+                        }
+                    }
+                };
+                
+                log(`📤 Sending setup: ${JSON.stringify(setupMessage, null, 2)}`, 'info');
+                ws.send(JSON.stringify(setupMessage));
+            };
+
+            ws.onmessage = (event) => {
+                log(`📥 Received message: ${event.data.substring(0, 200)}...`, 'info');
+                
+                try {
+                    const data = JSON.parse(event.data);
+                    log(`📋 Parsed data keys: ${Object.keys(data).join(', ')}`, 'info');
+                    log(`📋 Full data: ${JSON.stringify(data, null, 2)}`, 'info');
+                    
+                    if (data.setupComplete || data.BidiGenerateContentSetupComplete) {
+                        log('✅ Setup complete!', 'success');
+                        setupComplete = true;
+                        
+                        const clientMessage = {
+                            clientContent: {
+                                parts: [{ text: TEST_PROMPT }]
+                            }
+                        };
+                        log(`📤 Sending client message: ${JSON.stringify(clientMessage, null, 2)}`, 'info');
+                        ws.send(JSON.stringify(clientMessage));
+                    } else if (data.error) {
+                        log(`❌ Error: ${JSON.stringify(data.error, null, 2)}`, 'error');
+                    } else if (data.serverContent) {
+                        log(`📦 ServerContent keys: ${Object.keys(data.serverContent).join(', ')}`, 'info');
+                        
+                        if (data.serverContent.parts) {
+                            log(`✅ Found serverContent.parts: ${JSON.stringify(data.serverContent.parts, null, 2)}`, 'success');
+                            data.serverContent.parts.forEach(part => {
+                                if (part.text) {
+                                    responseText += part.text;
+                                    log(`📝 Text chunk: "${part.text}"`, 'success');
+                                }
+                            });
+                        }
+                        if (data.serverContent.modelTurn) {
+                            log(`✅ Found serverContent.modelTurn: ${JSON.stringify(data.serverContent.modelTurn, null, 2)}`, 'info');
+                            if (data.serverContent.modelTurn.parts) {
+                                data.serverContent.modelTurn.parts.forEach(part => {
+                                    if (part.text) {
+                                        responseText += part.text;
+                                        log(`📝 ModelTurn text: "${part.text}"`, 'success');
+                                    }
+                                });
+                            }
+                        }
+                    }
+                } catch (error) {
+                    log(`❌ Parse error: ${error.message}`, 'error');
+                }
+            };
+
+            ws.onerror = (error) => {
+                log(`❌ WebSocket error: ${error.message || 'Unknown error'}`, 'error');
+                log(`❌ Error type: ${error.type || 'N/A'}`, 'error');
+                log(`❌ ReadyState: ${ws.readyState} (0=CONNECTING, 1=OPEN, 2=CLOSING, 3=CLOSED)`, 'error');
+                console.error('WebSocket error:', error);
+                console.error('WebSocket readyState:', ws.readyState);
+                console.error('WebSocket URL:', wsUrl.replace(API_KEY, 'API_KEY'));
+            };
+
+            ws.onclose = (event) => {
+                log(`🔌 WebSocket closed. Code: ${event.code}, Reason: ${event.reason || 'None'}, WasClean: ${event.wasClean}`, 'info');
+                if (responseText) {
+                    log(`✅ Final response: "${responseText}"`, 'success');
+                } else if (!setupComplete) {
+                    log('❌ Closed before setup complete', 'error');
+                } else {
+                    log('⚠️ No response text received', 'error');
+                }
+            };
+
+            setTimeout(() => {
+                if (ws.readyState === WebSocket.OPEN) {
+                    log('⏱️ 30 second timeout - closing', 'info');
+                    ws.close();
+                }
+            }, 30000);
+        }
+    </script>
+</body>
+</html>
+
+

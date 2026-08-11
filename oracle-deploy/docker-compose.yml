@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  starsector:
+    build: .
+    container_name: starsector-webswing
+    ports:
+      - "8080:8080"
+    volumes:
+      # Mount your Starsector game files
+      - ./starsector:/opt/starsector:ro
+      # Persist save games
+      - starsector-saves:/opt/starsector/saves
+    environment:
+      - DISPLAY=:99
+      - JAVA_OPTS=-Xmx4g
+    restart: unless-stopped
+    # Resource limits for Oracle Free Tier
+    deploy:
+      resources:
+        limits:
+          cpus: '3.5'
+          memory: 20G
+        reservations:
+          cpus: '2'
+          memory: 8G
+
+volumes:
+  starsector-saves:
+    driver: local

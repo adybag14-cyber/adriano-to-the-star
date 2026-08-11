@@ -1,0 +1,9 @@
+# LiveKit Agents dependencies
+# Install with: pip install -r requirements.txt
+# 
+# Based on official documentation: https://docs.livekit.io/agents/models/google/gemini-live-api
+# For Google plugin support, install with extras:
+# pip install "livekit-agents[google]~=1.2"
+
+livekit-agents[google]~=1.2
+

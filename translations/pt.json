@@ -1,0 +1,222 @@
+{
+  "common": {
+    "home": "Início",
+    "database": "Base de Dados",
+    "games": "Jogos",
+    "shop": "Loja",
+    "about": "Sobre",
+    "blog": "Blog",
+    "contact": "Contato",
+    "login": "Entrar",
+    "logout": "Sair",
+    "register": "Registrar",
+    "search": "Pesquisar",
+    "filter": "Filtrar",
+    "submit": "Enviar",
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "close": "Fechar",
+    "loading": "Carregando...",
+    "error": "Erro",
+    "success": "Sucesso",
+    "back": "Voltar",
+    "next": "Próximo",
+    "previous": "Anterior"
+  },
+  "home": {
+    "title": "Adriano To The Star",
+    "subtitle": "Agência de Viagens Interestelares",
+    "sponsored": "PATROCINADO POR ELON MUSK E DONALD TRUMP",
+    "releasingSoon": "EM BREVE*",
+    "releasingNote": "*As chaves criptográficas nas quais trabalharei e calcularei a partir da disposição do objeto escolhido do banco de dados estão programadas para lançamento posterior no Q1 2025.",
+    "about": "SOBRE",
+    "mission": "Nossa Missão",
+    "missionText": "ADRIANO TO THE STAR oferece uma oportunidade revolucionária para indivíduos possuírem corpos celestes dentro da galáxia de Andrômeda. Nossa plataforma, inspirada nas maravilhas do cosmos, permite a compra e venda de licenças para estrelas, planetas e grandes objetos Kepler. Nosso objetivo é redefinir a indústria espacial oferecendo uma experiência única e personalizada para todos os entusiastas do espaço.",
+    "learnMore": "Saiba Mais",
+    "gallery": "GALERIA",
+    "follow": "SIGA-NOS"
+  },
+  "database": {
+    "title": "BASE DE DADOS DE EXOPLANETAS",
+    "subtitle": "Explore mais de 9,564 Corpos Celestes do Arquivo Kepler",
+    "searchPlaceholder": "Pesquisar planetas...",
+    "filterBy": "Filtrar por",
+    "planetType": "Tipo de Planeta",
+    "discoveryMethod": "Método de Descoberta",
+    "status": "Status",
+    "claimed": "Reivindicado",
+    "available": "Disponível",
+    "claimPlanet": "Reivindicar Planeta",
+    "alreadyClaimed": "Já Reivindicado",
+    "planetDetails": "Detalhes do Planeta",
+    "discoveryYear": "Ano de Descoberta",
+    "distance": "Distância",
+    "temperature": "Temperatura",
+    "aboutDatabase": "Sobre a Base de Dados",
+    "dataSource": "Fonte de Dados",
+    "nasaExoplanetArchive": "API do Arquivo de Exoplanetas da NASA"
+  },
+  "stellarAI": {
+    "title": "STELLAR AI",
+    "subtitle": "Seu Companheiro Cósmico Inteligente",
+    "chatHistory": "Histórico de Chat",
+    "newChat": "Novo Chat",
+    "clearChat": "Limpar Chat",
+    "exportChat": "Exportar Chat",
+    "selectModel": "Selecionar Modelo de IA",
+    "askAnything": "Pergunte ao Stellar AI qualquer coisa...",
+    "send": "Enviar",
+    "welcome": "Bem-vindo ao Stellar AI",
+    "welcomeText": "Seu companheiro cósmico inteligente alimentado por IA avançada",
+    "features": {
+      "conversations": "Conversas Naturais",
+      "imageAnalysis": "Análise de Imagens",
+      "knowledgeBase": "Base de Conhecimento",
+      "saveHistory": "Salvar Histórico"
+    }
+  },
+  "marketplace": {
+    "title": "MERCADO DE PLANETAS",
+    "subtitle": "Compre, Venda e Negocie Reivindicações de Exoplanetas",
+    "buy": "Comprar",
+    "sell": "Vender",
+    "trade": "Negociar",
+    "price": "Preço",
+    "seller": "Vendedor",
+    "buyer": "Comprador",
+    "createListing": "Criar Anúncio",
+    "myListings": "Meus Anúncios"
+  },
+  "messaging": {
+    "title": "MENSAGENS DIRETAS",
+    "subtitle": "Conversas privadas com outros membros",
+    "loginRequired": "Login Necessário",
+    "loginPrompt": "Por favor, faça login para enviar e receber mensagens diretas.",
+    "conversations": "Conversas",
+    "newMessage": "Nova Mensagem",
+    "selectConversation": "Selecione uma conversa",
+    "selectConversationText": "Escolha uma conversa da barra lateral ou inicie uma nova",
+    "typeMessage": "Digite uma mensagem...",
+    "send": "Enviar"
+  },
+  "badges": {
+    "title": "INSÍGNIAS E CONQUISTAS",
+    "subtitle": "Desbloqueie conquistas e mostre sua jornada cósmica",
+    "reputation": "Reputação",
+    "points": "Pontos",
+    "level": "Nível",
+    "unlocked": "Desbloqueado",
+    "locked": "Bloqueado"
+  },
+  "analytics": {
+    "title": "PAINEL DE ANÁLISES",
+    "subtitle": "Rastreie sua jornada cósmica e estatísticas da plataforma",
+    "totalClaims": "Total de Reivindicações",
+    "totalUsers": "Total de Usuários",
+    "totalPlanets": "Total de Planetas",
+    "recentActivity": "Atividade Recente"
+  },
+  "newsletter": {
+    "title": "NEWSLETTER",
+    "subtitle": "Mantenha-se atualizado com as últimas notícias e recursos cósmicos",
+    "subscribe": "Inscrever-se",
+    "email": "Endereço de Email",
+    "subscribeButton": "Inscrever-se na Newsletter",
+    "unsubscribe": "Cancelar Inscrição",
+    "subscribed": "Inscrito",
+    "subscriptionSuccess": "Você se inscreveu com sucesso na newsletter!"
+  },
+  "calendar": {
+    "title": "CALENDÁRIO DE EVENTOS ESPACIAIS",
+    "subtitle": "Rastreie lançamentos, descobertas e eventos cósmicos",
+    "upcoming": "Próximos",
+    "past": "Passados",
+    "today": "Hoje",
+    "thisWeek": "Esta Semana",
+    "thisMonth": "Este Mês"
+  },
+  "education": {
+    "title": "EDUCAÇÃO ESPACIAL",
+    "subtitle": "Aprenda sobre exoplanetas, astronomia e exploração espacial",
+    "courses": "Cursos",
+    "tutorials": "Tutoriais",
+    "simulations": "Simulações",
+    "games": "Jogos"
+  },
+  "nav": {
+    "routes": "Rotas",
+    "database": "Base de mundos",
+    "maps": "Mapas estelares",
+    "projects": "Projetos",
+    "begin": "Iniciar exploração"
+  },
+  "hero": {
+    "eyebrow": "Agência de Viagens Interestelares · Sistemas de voo online",
+    "line1": "O UNIVERSO É",
+    "line2": "AGORA UM DESTINO.",
+    "lead": "Entre num atlas vivo de mundos distantes. Compare exoplanetas, trace rotas futuras e explore os sistemas de investigação que poderão guiar a humanidade para além da Terra.",
+    "primary": "Entrar na base de mundos",
+    "soundtrack": "Iniciar banda sonora",
+    "scroll": "Deslize para atravessar"
+  },
+  "stats": {
+    "worlds": "objetos catalogados",
+    "soundtracks": "paisagens sonoras de missão",
+    "horizon": "horizontes possíveis"
+  },
+  "stage": {
+    "window": "Janela de partida aberta",
+    "distance": "Distância",
+    "status": "Estado",
+    "simulated": "SIMULADO",
+    "caption": "Visualização conceptual de rota"
+  },
+  "routes": {
+    "title": "Toda viagem começa com um sistema.",
+    "lead": "A I.T.A liga dados científicos, inteligência de rotas e imaginação humana numa experiência interestelar navegável.",
+    "databaseKicker": "INTELIGÊNCIA DE MUNDOS",
+    "databaseTitle": "Base de dados de exoplanetas",
+    "databaseText": "Filtre milhares de registos celestes, compare condições planetárias e identifique mundos que merecem uma análise mais próxima.",
+    "openDatabase": "Abrir base de dados",
+    "mapsKicker": "CARTOGRAFIA ESPACIAL",
+    "mapsTitle": "Mapas estelares interativos",
+    "mapsText": "Percorra sistemas ligados e veja como distância, vizinhança e contexto estelar moldam uma rota.",
+    "openMaps": "Traçar uma rota",
+    "aiKicker": "INTELIGÊNCIA DE MISSÃO",
+    "aiTitle": "IA Estelar",
+    "aiText": "Faça perguntas, interprete dados astronómicos e transforme um vasto catálogo num briefing de missão focado.",
+    "openAi": "Abrir IA de missão"
+  },
+  "passage": {
+    "line1": "Não é uma lista de planetas.",
+    "line2": "É uma sensação de chegada.",
+    "text": "O futuro das viagens espaciais será medido em mais do que velocidade: orientação, confiança, admiração e a sensação de que uma distância impossível se tornou compreensível.",
+    "discovery": "Descoberta",
+    "clarity": "Clareza",
+    "immersion": "Imersão"
+  },
+  "mission": {
+    "title": "Do sinal ao destino.",
+    "step1Title": "Descobrir",
+    "step1Text": "Pesquise um catálogo científico construído em torno das perguntas que os viajantes realmente fazem.",
+    "step2Title": "Compreender",
+    "step2Text": "Transforme medições brutas em clima, escala, risco e possibilidade.",
+    "step3Title": "Atravessar",
+    "step3Text": "Siga uma rota coerente através de mapas, simulações e projetos voltados para o futuro."
+  },
+  "manifesto": {
+    "quote": "A primeira viagem interestelar começa muito antes do lançamento. Começa quando o universo se torna legível."
+  },
+  "final": {
+    "title": "Escolha o seu primeiro mundo.",
+    "text": "O catálogo está aberto. A sua rota começa com uma pergunta, um sinal e um destino.",
+    "cta": "Iniciar a expedição"
+  },
+  "footer": {
+    "tagline": "Um conceito independente de viagem interestelar, plataforma de investigação e convite para olhar mais longe.",
+    "privacy": "Privacidade",
+    "online": "Sistemas da agência online"
+  }
+}

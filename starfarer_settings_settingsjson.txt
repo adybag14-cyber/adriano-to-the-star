@@ -1,0 +1,110 @@
+     188: invokevirtual #345                // Method java/util/HashSet.add:(Ljava/lang/Object;)Z
+     191: pop
+     192: aload_0
+     193: ldc_w         #393                // String baseMemoryRequired
+     196: invokevirtual #345                // Method java/util/HashSet.add:(Ljava/lang/Object;)Z
+     199: pop
+     200: aload_0
+     201: ldc_w         #395                // String maxMemoryFractionOfTotal
+     204: invokevirtual #345                // Method java/util/HashSet.add:(Ljava/lang/Object;)Z
+     207: pop
+     208: aload_0
+     209: ldc_w         #397                // String minMemoryMB
+     212: invokevirtual #345                // Method java/util/HashSet.add:(Ljava/lang/Object;)Z
+     215: pop
+     216: aload_0
+     217: ldc_w         #399                // String maxMemoryMB
+     220: invokevirtual #345                // Method java/util/HashSet.add:(Ljava/lang/Object;)Z
+     223: pop
+     224: aload_0
+     225: ldc_w         #401                // String allowJVMRestartFromLauncher
+     228: invokevirtual #345                // Method java/util/HashSet.add:(Ljava/lang/Object;)Z
+     231: pop
+     232: aload_0
+     233: ldc_w         #403                // String allowJVMRestartFromLauncherInDevMode
+     236: invokevirtual #345                // Method java/util/HashSet.add:(Ljava/lang/Object;)Z
+     239: pop
+     240: aload_0
+     241: ldc_w         #405                // String requireTypingDeleteToDeleteSave
+     244: invokevirtual #345                // Method java/util/HashSet.add:(Ljava/lang/Object;)Z
+     247: pop
+     248: ldc_w         #407                // String data/config/settings.json
+     251: aload_0
+     252: invokestatic  #409                // Method com/fs/starfarer/loading/LoadingUtils.super:(Ljava/lang/String;Ljava/util/Set;)Lorg/json/JSONObject;
+     255: areturn
+
+  public static boolean interface.String();
+    Code:
+       0: ldc_w         #421                // String os.name
+       3: invokestatic  #281                // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+       6: ldc_w         #423                // String Windows
+       9: invokevirtual #425                // Method java/lang/String.contains:(Ljava/lang/CharSequence;)Z
+      12: ifeq          28
+      15: ldc_w         #431                // String ProgramFiles(x86)
+      18: invokestatic  #433                // Method java/lang/System.getenv:(Ljava/lang/String;)Ljava/lang/String;
+      21: ifnonnull     26
+      24: iconst_1
+      25: ireturn
+      26: iconst_0
+      27: ireturn
+      28: iconst_0
+      29: ireturn
+
+  public static boolean ËO0000();
+    Code:
+       0: getstatic     #248                // Field ÷Ê0000:Z
+       3: ireturn
+
+  public static void OO0000(boolean);
+    Code:
+       0: iload_0
+       1: putstatic     #248                // Field ÷Ê0000:Z
+       4: return
+
+  public static float È00000();
+    Code:
+       0: getstatic     #251                // Field Ë00000:F
+       3: freturn
+
+  public static void Ë00000(float);
+    Code:
+       0: fload_0
+       1: putstatic     #251                // Field Ë00000:F
+       4: return
+
+  public static boolean class.class();
+    Code:
+       0: ldc_w         #379                // String allowForceQuitInIronMode
+       3: invokestatic  #443                // Method class:(Ljava/lang/String;)Z
+       6: ireturn
+
+  public static boolean while.super();
+    Code:
+       0: getstatic     #275                // Field OÍ0000:Z
+       3: ireturn
+
+  public static com.fs.starfarer.loading.O0oO o00000();
+    Code:
+       0: ldc_w         #450                // class com/fs/starfarer/loading/O0oO
+       3: ldc_w         #452                // String player
+       6: invokestatic  #454                // Method com/fs/starfarer/loading/SpecStore.o00000:(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Object;
+       9: checkcast     #450                // class com/fs/starfarer/loading/O0oO
+      12: areturn
+
+  public static void interface(boolean);
+    Code:
+       0: iload_0
+       1: putstatic     #275                // Field OÍ0000:Z
+       4: return
+
+  public static boolean new();
+    Code:
+       0: getstatic     #264                // Field oÈ0000:Z
+       3: ireturn
+
+  public static float new.return();
+    Code:
+       0: getstatic     #271                // Field ÏÍ0000:F
+       3: freturn
+
+  public static void o00000(float);

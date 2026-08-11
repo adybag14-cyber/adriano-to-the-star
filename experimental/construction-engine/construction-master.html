@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Construction & Automation Master | Adriano to the Stars</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+        body { margin: 0; background: #000; overflow: hidden; color: #fff; font-family: 'Inter', sans-serif; }
+        canvas { width: 100vw; height: 100vh; display: block; }
+        .hud {
+            position: fixed; top: 2rem; right: 2rem;
+            background: rgba(10, 20, 15, 0.95); border: 1px solid #ba944f;
+            padding: 2rem; border-radius: 8px; backdrop-filter: blur(15px);
+            min-width: 350px; z-index: 100; box-shadow: 0 0 30px rgba(186, 148, 79, 0.2);
+        }
+        .item-row { display: flex; justify-content: space-between; margin-bottom: 0.8rem; font-family: 'Fira Code', monospace; font-size: 0.8rem; }
+        .item-label { opacity: 0.6; }
+        .item-value { color: #ba944f; font-weight: 900; }
+        .roadmap-footer {
+            position: fixed; bottom: 2rem; left: 2rem;
+            display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.5rem;
+        }
+        .chip {
+            background: rgba(186, 148, 79, 0.1); color: #ba944f; padding: 0.3rem 0.6rem;
+            border-radius: 4px; font-size: 0.65rem; border: 1px solid rgba(186, 148, 79, 0.2);
+        }
+    </style>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+
+<body>
+    <canvas id="construction-canvas"></canvas>
+
+    <div class="hud">
+        <h2 style="margin: 0 0 1.5rem 0; font-family: 'Orbitron'; letter-spacing: 2px; color: #ba944f;">AUTOMATION STATION</h2>
+        
+        <div class="item-row"><span class="item-label">WFC Layouts (#28)</span> <span class="item-value">OPTIMIZED</span></div>
+        <div class="item-row"><span class="item-label">Material Wear (#34)</span> <span class="item-value" id="wear-val">12.4%</span></div>
+        <div class="item-row"><span class="item-label">Crustal Stress (#61)</span> <span class="item-value" id="stress-val">LOW</span></div>
+        <div class="item-row"><span class="item-label">MDI Batching (#101)</span> <span class="item-value">100k+ Units</span></div>
+
+        <button onclick="window.triggerDebris()" style="width: 100%; padding: 0.8rem; background: #ba944f; border: none; font-family: 'Orbitron'; font-weight: 900; margin-top: 1rem; cursor: pointer; border-radius: 4px;">DESTROY MODULE (#51)</button>
+    </div>
+
+    <div class="roadmap-footer">
+        <div class="chip">#28 WFC</div>
+        <div class="chip">#34 Wear</div>
+        <div class="chip">#43 Flows</div>
+        <div class="chip">#51 Debris</div>
+        <div class="chip">#55 Thermal</div>
+        <div class="chip">#58 Eclipses</div>
+        <div class="chip">#61 Stress</div>
+        <div class="chip">#68 Dust</div>
+        <div class="chip">#73 Lights</div>
+        <div class="chip">#82 Elevators</div>
+        <div class="chip">#83 Beams</div>
+        <div class="chip">#101 MDI</div>
+    </div>
+
+    <script type="module" src="construction-sim.js"></script>
+</body>
+
+</html>

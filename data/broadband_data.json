@@ -1,0 +1,2857 @@
+{
+  "last_updated": "2025-11-24T23:17:16.175885",
+  "statistics": {
+    "total": 316,
+    "active": 115,
+    "offline": 130,
+    "ceased": 10,
+    "with_price": 36,
+    "with_speed": 56
+  },
+  "providers": [
+    {
+      "name": "1310 LTD",
+      "website": "https://www.1310.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:31.975170"
+    },
+    {
+      "name": "1pBroadband",
+      "website": "https://www.1pbroadband.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:31.975170"
+    },
+    {
+      "name": "3DK (Scotland) Ltd",
+      "website": "https://www.3dkscotland.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:31.976169"
+    },
+    {
+      "name": "6G internet Ltd",
+      "website": null,
+      "status": "ceased",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:31.976169"
+    },
+    {
+      "name": "Acerola Telecom",
+      "website": "https://www.acerola.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:31.976169"
+    },
+    {
+      "name": "Acorn Broadband",
+      "website": "https://www.acornbroadband.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:31.976169"
+    },
+    {
+      "name": "Advanced Connectivity Ltd",
+      "website": "https://www.advancedconnectivity.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": "essential",
+      "last_checked": "2025-11-24T23:13:31.976169"
+    },
+    {
+      "name": "Airband Community Internet",
+      "website": "https://www.airband.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:31.976746"
+    },
+    {
+      "name": "AirFast",
+      "website": "https://www.airfast.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:31.976746"
+    },
+    {
+      "name": "Alncom",
+      "website": "https://www.alncom.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:31.976746"
+    },
+    {
+      "name": "AMG",
+      "website": "https://www.amg.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:31.976746"
+    },
+    {
+      "name": "Andrews & Arnold Ltd",
+      "website": "https://www.aa.net.uk",
+      "status": "active",
+      "price": null,
+      "speed": "1000Mbps",
+      "deal_name": "gig",
+      "last_checked": "2025-11-24T23:13:31.976746"
+    },
+    {
+      "name": "Anglia Computer Solutions",
+      "website": "https://www.angliacomputer.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:31.977750"
+    },
+    {
+      "name": "Any Leads Ltd",
+      "website": "https://www.anyleads.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:31.977750"
+    },
+    {
+      "name": "ASL",
+      "website": null,
+      "status": "ceased",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:31.977750"
+    },
+    {
+      "name": "Avita Group",
+      "website": "https://www.avita.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:31.977750"
+    },
+    {
+      "name": "B4RK",
+      "website": "https://b4rk.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:31.979751"
+    },
+    {
+      "name": "Be Fibre Limited",
+      "website": "https://www.be.co.uk",
+      "status": "timeout",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:33.773992"
+    },
+    {
+      "name": "BeeBu Broadband",
+      "website": null,
+      "status": "ceased",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:33.797089"
+    },
+    {
+      "name": "Bink Broadband Ltd",
+      "website": null,
+      "status": "ceased",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:33.797089"
+    },
+    {
+      "name": "Bogons Ltd",
+      "website": "https://www.bogons.net",
+      "status": "active",
+      "price": null,
+      "speed": "10Gbps",
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:33.797089"
+    },
+    {
+      "name": "Borders Online Ltd",
+      "website": "https://www.bordersonline.co.uk",
+      "status": "active",
+      "price": "100.00",
+      "speed": "100Mbps",
+      "deal_name": "Superfast ",
+      "last_checked": "2025-11-24T23:13:33.804654"
+    },
+    {
+      "name": "BrawBand",
+      "website": "https://www.brawband.com",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:34.800709"
+    },
+    {
+      "name": "Briant Broadband Limited",
+      "website": null,
+      "status": "ceased",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:33.853384"
+    },
+    {
+      "name": "Brighton Fibre",
+      "website": "https://www.brightonfibre.com",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:33.853384"
+    },
+    {
+      "name": "Brillband",
+      "website": "https://www.brillband.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:33.918551"
+    },
+    {
+      "name": "Broadband For Surrey Hills (B4SH)",
+      "website": "https://b4sh.org.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:33.924568"
+    },
+    {
+      "name": "Broadband for the Rural North Limited (B4RN)",
+      "website": "https://b4rn.org.uk",
+      "status": "active",
+      "price": "33",
+      "speed": "1Gbps",
+      "deal_name": "m000",
+      "last_checked": "2025-11-24T23:13:34.724755"
+    },
+    {
+      "name": "Brsk",
+      "website": "https://www.brsk.co.uk",
+      "status": "active",
+      "price": "55",
+      "speed": "2Gbps",
+      "deal_name": "m791",
+      "last_checked": "2025-11-24T23:13:34.975031"
+    },
+    {
+      "name": "BT",
+      "website": "https://www.bt.com/broadband",
+      "status": "active",
+      "price": "24.99",
+      "speed": "1.6Gbps",
+      "deal_name": "superfast ",
+      "last_checked": "2025-11-24T23:13:35.695990"
+    },
+    {
+      "name": "Bunch",
+      "website": null,
+      "status": "ceased",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:35.840967"
+    },
+    {
+      "name": "Callflow",
+      "website": "https://www.callflow.co.uk",
+      "status": "active_blocked",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:35.840967"
+    },
+    {
+      "name": "Cambridge Fibre",
+      "website": "https://www.cambridge.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": "gIG",
+      "last_checked": "2025-11-24T23:13:36.261466"
+    },
+    {
+      "name": "Cargen Data Systems",
+      "website": null,
+      "status": "ceased",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:36.498663"
+    },
+    {
+      "name": "Carnival Internet",
+      "website": "https://www.carnival.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:36.499171"
+    },
+    {
+      "name": "Caspertech",
+      "website": null,
+      "status": "ceased",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:36.551078"
+    },
+    {
+      "name": "CeltriiX Telecommunications",
+      "website": null,
+      "status": "ceased",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:36.551078"
+    },
+    {
+      "name": "Cerberus Networks Ltd",
+      "website": "https://www.cerberusnetworks.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": "1000Mbps",
+      "deal_name": "ultrafast ",
+      "last_checked": "2025-11-24T23:13:36.551078"
+    },
+    {
+      "name": "CIS Ltd",
+      "website": "https://www.cis.co.uk",
+      "status": "timeout",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:36.728170"
+    },
+    {
+      "name": "CIX",
+      "website": "https://www.cix.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": "Unlimited Fibre",
+      "last_checked": "2025-11-24T23:13:36.770660"
+    },
+    {
+      "name": "ClearFibre",
+      "website": "https://www.clearfibre.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:37.501159"
+    },
+    {
+      "name": "ClearSkyIT",
+      "website": "https://www.clearskyit.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:37.603563"
+    },
+    {
+      "name": "CloudNet",
+      "website": "https://www.cloudnet.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:37.633618"
+    },
+    {
+      "name": "Comms West",
+      "website": "https://www.commswest.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:37.851780"
+    },
+    {
+      "name": "Community Fibre Ltd",
+      "website": "https://www.communityfibre.co.uk",
+      "status": "active",
+      "price": "25.00",
+      "speed": "1000Mbps",
+      "deal_name": "m373",
+      "last_checked": "2025-11-24T23:13:38.387672"
+    },
+    {
+      "name": "Compucare trading as Pulse8",
+      "website": "https://www.compucaretradingaspulse8.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:38.479163"
+    },
+    {
+      "name": "Comwales (Nonprofit it)",
+      "website": "https://www.comwalesnonprofitit.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:38.490543"
+    },
+    {
+      "name": "Connexin Limited",
+      "website": "https://www.connexin.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": "M108",
+      "last_checked": "2025-11-24T23:13:38.565633"
+    },
+    {
+      "name": "Converged Communication Solutions",
+      "website": "https://www.convergedcommunication.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:38.566136"
+    },
+    {
+      "name": "Converged Rural Broadband",
+      "website": null,
+      "status": "ceased",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:38.568567"
+    },
+    {
+      "name": "Corn on the Comms",
+      "website": "https://www.cornonthecomms.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:38.568567"
+    },
+    {
+      "name": "Countrifi Networks",
+      "website": "https://www.countrifis.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:38.632498"
+    },
+    {
+      "name": "Country Connect",
+      "website": "https://www.countryconnect.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:39.177968"
+    },
+    {
+      "name": "Countryside Broadband",
+      "website": "https://www.countryside.co.uk",
+      "status": "active",
+      "price": "40",
+      "speed": null,
+      "deal_name": "essential ",
+      "last_checked": "2025-11-24T23:13:39.698189"
+    },
+    {
+      "name": "County Broadband",
+      "website": "https://www.countybroadband.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:39.893463"
+    },
+    {
+      "name": "CritchCorp",
+      "website": "https://www.critchcorp.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": "essential ",
+      "last_checked": "2025-11-24T23:13:40.100742"
+    },
+    {
+      "name": "Cromarty Firth Wireless Networks",
+      "website": "https://www.cromartyfirthwirelesss.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:40.102844"
+    },
+    {
+      "name": "CTR Services Uk",
+      "website": "https://www.ctr.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:40.151473"
+    },
+    {
+      "name": "Cuckoo Fibre Limited",
+      "website": "https://www.cuckoo.co",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:40.713007"
+    },
+    {
+      "name": "Digita1 Ltd",
+      "website": "https://www.digita1.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:41.016605"
+    },
+    {
+      "name": "Digital Fibre",
+      "website": "https://www.digital.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": "m410",
+      "last_checked": "2025-11-24T23:13:41.343490"
+    },
+    {
+      "name": "Direct Save Telecom",
+      "website": "https://www.directsavetelecom.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": "1Gbps",
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:41.910947"
+    },
+    {
+      "name": "DJG Technical Services LTD",
+      "website": "https://www.djgtechnical.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:42.233632"
+    },
+    {
+      "name": "Drimnin Community Broadband",
+      "website": "https://www.drimnincommunity.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:42.565534"
+    },
+    {
+      "name": "Duplia",
+      "website": "https://www.duplia.co.uk",
+      "status": "timeout",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:42.739158"
+    },
+    {
+      "name": "e-volve Solutions",
+      "website": "https://www.evolve.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": "30Mbps",
+      "deal_name": "m062",
+      "last_checked": "2025-11-24T23:13:45.616252"
+    },
+    {
+      "name": "EasyPC Ltd",
+      "website": "https://www.easypc.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:42.945949"
+    },
+    {
+      "name": "Eclipse Home Broadband",
+      "website": "https://www.eclipsehome.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:45.089424"
+    },
+    {
+      "name": "EE",
+      "website": "https://ee.co.uk/broadband",
+      "status": "active",
+      "price": "44.00",
+      "speed": "900Mbps",
+      "deal_name": "Full Fibre Max",
+      "last_checked": "2025-11-24T23:13:45.091396"
+    },
+    {
+      "name": "Elite Limited",
+      "website": "https://www.elite.co.uk",
+      "status": "timeout",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:45.166442"
+    },
+    {
+      "name": "ElpaTech",
+      "website": "https://www.elpatech.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:45.239568"
+    },
+    {
+      "name": "Exascale",
+      "website": "https://www.exascale.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:46.012439"
+    },
+    {
+      "name": "Eze Talk Broadband",
+      "website": "https://www.ezetalk.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:46.477417"
+    },
+    {
+      "name": "FAELIX",
+      "website": "https://www.faelix.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:46.710167"
+    },
+    {
+      "name": "Fiber Zone",
+      "website": "https://www.fiberzone.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:46.714136"
+    },
+    {
+      "name": "Fibrecast Ltd",
+      "website": "https://www.fibrecast.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:46.766142"
+    },
+    {
+      "name": "Fibrehop",
+      "website": "https://www.fibrehop.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:46.783333"
+    },
+    {
+      "name": "Fibrely",
+      "website": "https://www.fibrely.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:47.002822"
+    },
+    {
+      "name": "FibreNest",
+      "website": "https://www.fibrenest.com",
+      "status": "active",
+      "price": "100",
+      "speed": "900Mbps",
+      "deal_name": "Superfast ",
+      "last_checked": "2025-11-24T23:13:47.059166"
+    },
+    {
+      "name": "FIBRUS NETWORKS LTD",
+      "website": "https://www.fibrus.com",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:48.067719"
+    },
+    {
+      "name": "Fidelity Group",
+      "website": "https://www.fidelity.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:48.526100"
+    },
+    {
+      "name": "File Sanctuary",
+      "website": "https://www.filesanctuary.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:48.840929"
+    },
+    {
+      "name": "Fleur Telecom",
+      "website": "https://www.fleur.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:49.159605"
+    },
+    {
+      "name": "Foreseer",
+      "website": "https://www.foreseer.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:49.389381"
+    },
+    {
+      "name": "Forth Tech Ltd",
+      "website": "https://www.forthtech.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:51.694593"
+    },
+    {
+      "name": "Fram Broadband Ltd",
+      "website": "https://www.fram.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:52.854833"
+    },
+    {
+      "name": "Freeola",
+      "website": "https://www.freeola.com",
+      "status": "active_blocked",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:53.316404"
+    },
+    {
+      "name": "Fresh Fibre",
+      "website": "https://www.freshfibre.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:53.424392"
+    },
+    {
+      "name": "Fuse2",
+      "website": "https://www.fuse2.co.uk",
+      "status": "active_blocked",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:54.190056"
+    },
+    {
+      "name": "Fusion Fibre",
+      "website": "https://www.fusionfibre.co.uk",
+      "status": "parked",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:54.211567"
+    },
+    {
+      "name": "G.Network Communications Limited",
+      "website": "https://www.g.network",
+      "status": "active",
+      "price": "22",
+      "speed": "600Mbps",
+      "deal_name": "superfast ",
+      "last_checked": "2025-11-24T23:13:54.503232"
+    },
+    {
+      "name": "GC Broadband",
+      "website": "https://www.gc.co.uk",
+      "status": "timeout",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:54.550232"
+    },
+    {
+      "name": "Ghost Broadband",
+      "website": "https://www.ghost.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:55.169841"
+    },
+    {
+      "name": "Ghost Gamer Broadband",
+      "website": "https://www.ghostgamer.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:55.312244"
+    },
+    {
+      "name": "Giant Communications",
+      "website": "https://www.giant.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:55.312244"
+    },
+    {
+      "name": "giffgaff",
+      "website": "https://www.giffgaff.com/broadband",
+      "status": "active",
+      "price": "20.00",
+      "speed": "67Mbps",
+      "deal_name": "Superfast",
+      "last_checked": "2025-11-24T23:13:55.377233"
+    },
+    {
+      "name": "Gigabeam",
+      "website": "https://www.gigabeam.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": "20Mbps",
+      "deal_name": "essential ",
+      "last_checked": "2025-11-24T23:13:55.526643"
+    },
+    {
+      "name": "Gigability Broadband Limited",
+      "website": "https://www.gigability.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:56.063681"
+    },
+    {
+      "name": "Gigaclear Limited",
+      "website": "https://www.gigaclear.com",
+      "status": "active",
+      "price": "17",
+      "speed": "500Mbps",
+      "deal_name": "Ultrafast ",
+      "last_checked": "2025-11-24T23:13:56.140632"
+    },
+    {
+      "name": "Gigaloch Limited",
+      "website": "https://www.gigaloch.com",
+      "status": "active",
+      "price": "35",
+      "speed": "1Gbps",
+      "deal_name": "essential ",
+      "last_checked": "2025-11-24T23:13:56.212142"
+    },
+    {
+      "name": "Giganet (Cuckoo Fibre Ltd)",
+      "website": "https://www.giganet.uk",
+      "status": "active",
+      "price": "39.00",
+      "speed": "900Mbps",
+      "deal_name": "m262",
+      "last_checked": "2025-11-24T23:13:56.460983"
+    },
+    {
+      "name": "Glide Business",
+      "website": "https://www.glide.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": "1000Mbps",
+      "deal_name": "gig",
+      "last_checked": "2025-11-24T23:13:56.668417"
+    },
+    {
+      "name": "Go Internet",
+      "website": "https://www.go.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:57.207311"
+    },
+    {
+      "name": "GoFibre Broadband Limited",
+      "website": "https://www.gofibre.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:57.269086"
+    },
+    {
+      "name": "Gower Coast IT Solutions",
+      "website": "https://www.gowercoastit.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:57.409729"
+    },
+    {
+      "name": "Grace Solutions",
+      "website": "https://www.grace.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:57.605848"
+    },
+    {
+      "name": "Grain Connect",
+      "website": "https://www.grainconnect.com",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:57.877752"
+    },
+    {
+      "name": "Grayshott Gigabit",
+      "website": "https://www.grayshottgigabit.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:58.005711"
+    },
+    {
+      "name": "Greystar Communications",
+      "website": "https://www.greystar.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:58.623746"
+    },
+    {
+      "name": "Hampshire Community Broadband",
+      "website": "https://www.hampshirecommunity.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:58.743412"
+    },
+    {
+      "name": "HCB",
+      "website": "https://www.hcb.co.uk",
+      "status": "parked",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:13:58.805823"
+    },
+    {
+      "name": "Hebnet",
+      "website": "https://www.hebnet.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:00.100075"
+    },
+    {
+      "name": "Hexsol Ltd",
+      "website": "https://www.hexsol.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:00.177004"
+    },
+    {
+      "name": "Hey! Broadband",
+      "website": "https://www.hey.com/broadband",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:01.388534"
+    },
+    {
+      "name": "High Tide Group",
+      "website": "https://www.hightide.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:01.915927"
+    },
+    {
+      "name": "Highland Broadband and Lothian Broadband",
+      "website": "https://www.hbltd.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:02.657356"
+    },
+    {
+      "name": "Home Telecom",
+      "website": "https://www.home.co.uk",
+      "status": "active",
+      "price": "100",
+      "speed": "12Mbps",
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:02.799092"
+    },
+    {
+      "name": "Home Unity",
+      "website": "https://www.homeunity.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": "superfast",
+      "last_checked": "2025-11-24T23:14:03.443899"
+    },
+    {
+      "name": "Host My Office",
+      "website": "https://www.hostmyoffice.co.uk",
+      "status": "active_blocked",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:03.591119"
+    },
+    {
+      "name": "HS4 Internet Limited",
+      "website": "https://www.hs4.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:03.836298"
+    },
+    {
+      "name": "Hull Fibre",
+      "website": "https://www.hullfibre.com",
+      "status": "timeout",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:03.982663"
+    },
+    {
+      "name": "Hull Telecoms",
+      "website": "https://www.hulls.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:04.594530"
+    },
+    {
+      "name": "Husky Networks",
+      "website": "https://www.huskys.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:04.596473"
+    },
+    {
+      "name": "Hyperoptic Limited",
+      "website": "https://www.hyperoptic.com",
+      "status": "active",
+      "price": "23",
+      "speed": "900Mbps",
+      "deal_name": "Superfast ",
+      "last_checked": "2025-11-24T23:14:04.779605"
+    },
+    {
+      "name": "iceConnect",
+      "website": "https://www.iceconnect.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:04.844728"
+    },
+    {
+      "name": "ICUK Computing Services Limited",
+      "website": "https://www.icukcomputing.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:05.335036"
+    },
+    {
+      "name": "IDNet",
+      "website": "https://www.idnet.com",
+      "status": "active",
+      "price": null,
+      "speed": "1000Mbps",
+      "deal_name": "superfast",
+      "last_checked": "2025-11-24T23:14:05.512393"
+    },
+    {
+      "name": "Imperial Telecom Ltd",
+      "website": "https://www.imperial.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:05.694396"
+    },
+    {
+      "name": "incedIT",
+      "website": "https://www.incedit.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:06.347650"
+    },
+    {
+      "name": "INeedBroadband Ltd",
+      "website": "https://www.ineedbroadband.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": "1000Mbps",
+      "deal_name": "superfast ",
+      "last_checked": "2025-11-24T23:14:06.500838"
+    },
+    {
+      "name": "Inspira Technology Group Ltd",
+      "website": "https://www.inspiratechnology.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:06.553928"
+    },
+    {
+      "name": "Inspire Telecom",
+      "website": "https://www.inspire.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:07.133234"
+    },
+    {
+      "name": "Intech Fusion",
+      "website": "https://www.intechfusion.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:07.468945"
+    },
+    {
+      "name": "INTERADS",
+      "website": "https://www.interads.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:07.996796"
+    },
+    {
+      "name": "Internet Central",
+      "website": "https://www.internetcentral.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:08.969600"
+    },
+    {
+      "name": "Internet Logics",
+      "website": "https://www.internetlogics.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:10.029323"
+    },
+    {
+      "name": "Internetty Limited",
+      "website": "https://www.internetty.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:10.600878"
+    },
+    {
+      "name": "ION Systems",
+      "website": "https://www.ionsystems.co.uk",
+      "status": "timeout",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:11.541071"
+    },
+    {
+      "name": "ISL Technology Group",
+      "website": "https://www.isltechnology.co.uk",
+      "status": "parked",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:11.941238"
+    },
+    {
+      "name": "IT4A",
+      "website": "https://www.it4a.co.uk",
+      "status": "timeout",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:11.958168"
+    },
+    {
+      "name": "italk",
+      "website": "https://www.italk.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:11.990561"
+    },
+    {
+      "name": "ITCS UK LTD",
+      "website": "https://www.itcs.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:12.023615"
+    },
+    {
+      "name": "ITS Technology Group",
+      "website": "https://www.itstechnology.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:13.021331"
+    },
+    {
+      "name": "ItsFibre",
+      "website": "https://www.itsfibre.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": "1000Mbps",
+      "deal_name": "superfast ",
+      "last_checked": "2025-11-24T23:14:13.163193"
+    },
+    {
+      "name": "ITWiser",
+      "website": "https://www.itwiser.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": "Essential",
+      "last_checked": "2025-11-24T23:14:13.789102"
+    },
+    {
+      "name": "J-D Telecom",
+      "website": "https://www.jd.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:16.647519"
+    },
+    {
+      "name": "Jarvis Cloud X",
+      "website": "https://www.jarviscloudx.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:14.002595"
+    },
+    {
+      "name": "JJCS",
+      "website": "https://www.jjcs.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:16.796394"
+    },
+    {
+      "name": "JMS Systems",
+      "website": "https://www.jmssystems.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:17.208878"
+    },
+    {
+      "name": "Jordec Communications",
+      "website": "https://www.jordec.co.uk",
+      "status": "active_blocked",
+      "price": null,
+      "speed": null,
+      "deal_name": "M231",
+      "last_checked": "2025-11-24T23:14:17.272461"
+    },
+    {
+      "name": "Juice Broadband",
+      "website": "https://www.juice.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:18.218622"
+    },
+    {
+      "name": "Jurassic (Cuckoo Fibre Ltd)",
+      "website": "https://www.jurassicfibre.com",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:18.272816"
+    },
+    {
+      "name": "KCOM",
+      "website": "https://www.kcom.com",
+      "status": "active",
+      "price": "39.99",
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:18.567282"
+    },
+    {
+      "name": "KERO",
+      "website": "https://www.kero.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:18.975718"
+    },
+    {
+      "name": "KES",
+      "website": "https://www.kes.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": "essential ",
+      "last_checked": "2025-11-24T23:14:19.500039"
+    },
+    {
+      "name": "Kinetic Telecom",
+      "website": "https://www.kinetic.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:20.488090"
+    },
+    {
+      "name": "Knutsford IT",
+      "website": "https://www.knutsfordit.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:20.865244"
+    },
+    {
+      "name": "Kuiper Communications Limited",
+      "website": "https://www.kuiper.co.uk",
+      "status": "timeout",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:21.310563"
+    },
+    {
+      "name": "Landlines 2u",
+      "website": "https://www.landlines2u.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": "Essential ",
+      "last_checked": "2025-11-24T23:14:21.749921"
+    },
+    {
+      "name": "Lansalot",
+      "website": "https://www.lansalot.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": "superfast ",
+      "last_checked": "2025-11-24T23:14:22.735867"
+    },
+    {
+      "name": "Leisure Connect",
+      "website": "https://www.leisureconnect.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:23.766143"
+    },
+    {
+      "name": "Lightning Fibre",
+      "website": "https://www.lightningfibre.co.uk",
+      "status": "active",
+      "price": "48",
+      "speed": "10Gbps",
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:24.865244"
+    },
+    {
+      "name": "LightSpeed Broadband Ltd",
+      "website": "https://www.lightspeedbroadband.co.uk",
+      "status": "active_blocked",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:25.733455"
+    },
+    {
+      "name": "LilaConnect Ltd",
+      "website": "https://www.lilaconnect.com",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:28.489459"
+    },
+    {
+      "name": "Lima Communications Ltd",
+      "website": "https://www.lima.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:29.991317"
+    },
+    {
+      "name": "Link broadband",
+      "website": "https://www.link.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:31.960364"
+    },
+    {
+      "name": "Lit Fibre Ltd",
+      "website": "https://www.litfibre.com",
+      "status": "active",
+      "price": "35.00",
+      "speed": "1000Mbps",
+      "deal_name": "Lit 1000",
+      "last_checked": "2025-11-24T23:14:32.743379"
+    },
+    {
+      "name": "Localphone",
+      "website": "https://www.localphone.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:34.214527"
+    },
+    {
+      "name": "Loop Scorpio",
+      "website": "https://www.loopscorpio.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:35.259137"
+    },
+    {
+      "name": "Mac-man Ltd",
+      "website": "https://www.macman.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": "1536Mbps",
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:36.604893"
+    },
+    {
+      "name": "Marykirk.com",
+      "website": "https://www.marykirkcom.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:39.071468"
+    },
+    {
+      "name": "Max Fibre",
+      "website": "https://www.max.co.uk",
+      "status": "timeout",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:41.831627"
+    },
+    {
+      "name": "MBDEV",
+      "website": "https://www.mbdev.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:41.959148"
+    },
+    {
+      "name": "Megganet",
+      "website": "https://www.megganet.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:45.672501"
+    },
+    {
+      "name": "Mersey Fibre",
+      "website": "https://www.merseyfibre.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:47.831411"
+    },
+    {
+      "name": "Merula Limited",
+      "website": "https://www.merula.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:48.606901"
+    },
+    {
+      "name": "Michaelston-y-Fedw Internet CIC",
+      "website": "https://www.michaelstonyfedwcic.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:49.447645"
+    },
+    {
+      "name": "Microtalk",
+      "website": "https://www.microtalk.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:51.731462"
+    },
+    {
+      "name": "MIH VoIP & Broadband",
+      "website": "https://www.mihvoip.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": "M624",
+      "last_checked": "2025-11-24T23:14:52.280303"
+    },
+    {
+      "name": "Millennium Telecom Ltd",
+      "website": "https://www.millennium.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:53.615929"
+    },
+    {
+      "name": "MJRCC Ltd",
+      "website": "https://www.mjrcc.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:54.628220"
+    },
+    {
+      "name": "Monsternet Highland",
+      "website": "https://www.monsternethighland.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:56.043160"
+    },
+    {
+      "name": "Moortek",
+      "website": "https://www.moortek.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:56.064742"
+    },
+    {
+      "name": "Mt. Helicon Technologies Ltd",
+      "website": "https://www.mthelicontechnologies.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:56.896099"
+    },
+    {
+      "name": "MTH Networks",
+      "website": "https://www.mths.co.uk",
+      "status": "parked",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:14:59.253873"
+    },
+    {
+      "name": "Net1",
+      "website": "https://www.net1.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:00.153254"
+    },
+    {
+      "name": "Netcalibre",
+      "website": "https://www.netcalibre.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": "M104",
+      "last_checked": "2025-11-24T23:15:01.045963"
+    },
+    {
+      "name": "No Metric",
+      "website": "https://www.nometric.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:02.271975"
+    },
+    {
+      "name": "No One Internet",
+      "website": "https://www.noone.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:02.730548"
+    },
+    {
+      "name": "Not Just Computers Ltd",
+      "website": "https://www.notjustcomputers.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:02.820940"
+    },
+    {
+      "name": "NOW",
+      "website": "https://www.nowtv.com/broadband",
+      "status": "maintenance",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:03.161992"
+    },
+    {
+      "name": "NWIMS",
+      "website": "https://www.nwims.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:03.492871"
+    },
+    {
+      "name": "Odyssey",
+      "website": "https://www.odyssey.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:03.719179"
+    },
+    {
+      "name": "Ogi",
+      "website": "https://www.ogi.wales",
+      "status": "active",
+      "price": "17",
+      "speed": "200Mbps",
+      "deal_name": "Full Fibre 200",
+      "last_checked": "2025-11-24T23:15:03.985426"
+    },
+    {
+      "name": "Olilo",
+      "website": "https://www.olilo.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:04.093844"
+    },
+    {
+      "name": "Onecom",
+      "website": "https://www.onecom.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:04.423735"
+    },
+    {
+      "name": "Onestream",
+      "website": "https://www.onestream.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:04.522230"
+    },
+    {
+      "name": "Onex Solutions",
+      "website": "https://www.onex.co.uk",
+      "status": "timeout",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:04.615254"
+    },
+    {
+      "name": "Open Fibre UK",
+      "website": "https://www.openfibre.co.uk",
+      "status": "parked",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:05.327940"
+    },
+    {
+      "name": "Optima",
+      "website": "https://www.optima.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:05.406337"
+    },
+    {
+      "name": "Opus Broadband Limited",
+      "website": "https://www.opus.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:05.455336"
+    },
+    {
+      "name": "ORBIX UK Ltd",
+      "website": "https://www.orbix.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:06.267192"
+    },
+    {
+      "name": "Origin Broadband",
+      "website": "https://www.originbroadband.com",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:06.700015"
+    },
+    {
+      "name": "Phase 5 communications",
+      "website": "https://www.phase5.co.uk",
+      "status": "active",
+      "price": "36",
+      "speed": "300Mbps",
+      "deal_name": "Ultrafast ",
+      "last_checked": "2025-11-24T23:15:06.991439"
+    },
+    {
+      "name": "Photonic Networks",
+      "website": "https://www.photonics.co.uk",
+      "status": "active_blocked",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:07.198647"
+    },
+    {
+      "name": "Plusnet",
+      "website": "https://www.plus.net/broadband",
+      "status": "error_401",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:07.903559"
+    },
+    {
+      "name": "Point2Point IT",
+      "website": "https://www.point2pointit.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:08.178072"
+    },
+    {
+      "name": "POP Telecom",
+      "website": "https://www.poptelecom.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:08.663166"
+    },
+    {
+      "name": "Precision IT Cymru",
+      "website": "https://www.precisionitcymru.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:08.846959"
+    },
+    {
+      "name": "Premier System Solutions Ltd",
+      "website": "https://www.premiersystem.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:10.495078"
+    },
+    {
+      "name": "Premier Talk UK",
+      "website": "https://www.premiertalk.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": "24Mbps",
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:14.760800"
+    },
+    {
+      "name": "Protect & Connect Ltd",
+      "website": "https://www.protectconnect.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:15.424991"
+    },
+    {
+      "name": "Purefibre Internet Ltd",
+      "website": "https://www.purefibre.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:15.765184"
+    },
+    {
+      "name": "Puzzle Technology Ltd",
+      "website": "https://www.puzzletechnology.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:15.903365"
+    },
+    {
+      "name": "Quayside Technical Services",
+      "website": "https://www.quaysidetechnical.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:16.192959"
+    },
+    {
+      "name": "Quickline",
+      "website": "https://www.quickline.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:17.070196"
+    },
+    {
+      "name": "Rapid Rural Internet Services",
+      "website": "https://www.rapidrural.co.uk",
+      "status": "active",
+      "price": "35.00",
+      "speed": "100Mbps",
+      "deal_name": "superfast ",
+      "last_checked": "2025-11-24T23:15:18.805397"
+    },
+    {
+      "name": "Ravenbridge",
+      "website": "https://www.ravenbridge.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:20.751077"
+    },
+    {
+      "name": "Rebel Broadband UK Limited",
+      "website": "https://www.rebel.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:22.021221"
+    },
+    {
+      "name": "Red Dragon I.T. Ltd.",
+      "website": "https://www.reddragonit.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": "essential ",
+      "last_checked": "2025-11-24T23:15:22.489245"
+    },
+    {
+      "name": "RedBox Events",
+      "website": "https://www.redboxevents.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:22.808644"
+    },
+    {
+      "name": "Regis IT",
+      "website": "https://www.regisit.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:24.271418"
+    },
+    {
+      "name": "Rethink IT Group",
+      "website": "https://www.rethinkit.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:24.654331"
+    },
+    {
+      "name": "Rise Fibre",
+      "website": "https://www.risefibre.com",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:24.945621"
+    },
+    {
+      "name": "Rocket Fibre Ltd",
+      "website": "https://www.rocketfibre.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:25.218281"
+    },
+    {
+      "name": "RooneyVOIP",
+      "website": "https://www.rooneyvoip.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:26.198989"
+    },
+    {
+      "name": "Rural Communications",
+      "website": "https://www.rural.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:26.316283"
+    },
+    {
+      "name": "SCG",
+      "website": "https://www.scg.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:27.292797"
+    },
+    {
+      "name": "Scot-Tel-Gould",
+      "website": "https://www.scottelgould.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:28.158801"
+    },
+    {
+      "name": "SDC Digital",
+      "website": "https://www.sdcdigital.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:28.764250"
+    },
+    {
+      "name": "seethelight From Sky",
+      "website": "https://www.seethelightfromsky.co.uk",
+      "status": "active",
+      "price": "33.50",
+      "speed": "160Mbps",
+      "deal_name": "superfast ",
+      "last_checked": "2025-11-24T23:15:29.698109"
+    },
+    {
+      "name": "Sevenoaks Computers",
+      "website": "https://www.sevenoakscomputers.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:30.872526"
+    },
+    {
+      "name": "Sherwood Data Systems Ltd",
+      "website": "https://www.sherwooddatasystems.co.uk",
+      "status": "error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:32.572399"
+    },
+    {
+      "name": "Shetland Broadband",
+      "website": "https://www.shetlandbroadband.com",
+      "status": "timeout",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:33.792820"
+    },
+    {
+      "name": "Simple Telecoms",
+      "website": "https://www.simples.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:33.915379"
+    },
+    {
+      "name": "Single Mode Networks",
+      "website": "https://www.singlemodes.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:34.164051"
+    },
+    {
+      "name": "SKT Controls & Communications Ltd",
+      "website": "https://www.sktcontrols.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": "gIG",
+      "last_checked": "2025-11-24T23:15:34.677574"
+    },
+    {
+      "name": "Sky",
+      "website": "https://www.sky.com/broadband",
+      "status": "active",
+      "price": "29",
+      "speed": "5Gbps",
+      "deal_name": "Full Fibre 500",
+      "last_checked": "2025-11-24T23:15:35.689938"
+    },
+    {
+      "name": "Skyenet",
+      "website": "https://www.skyenet.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:36.529282"
+    },
+    {
+      "name": "Squirrel Internet Ltd",
+      "website": "https://www.squirrel.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:37.398015"
+    },
+    {
+      "name": "StayConnected.Systems",
+      "website": "https://www.stayconnectedsystems.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:37.632538"
+    },
+    {
+      "name": "Stride Communications",
+      "website": "https://www.stride.co.uk",
+      "status": "timeout",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:37.738364"
+    },
+    {
+      "name": "Structured Communications",
+      "website": "https://www.structured.co.uk",
+      "status": "parked",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:39.680502"
+    },
+    {
+      "name": "Sumlock Bondain",
+      "website": "https://www.sumlockbondain.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:40.535650"
+    },
+    {
+      "name": "Supanet Limited",
+      "website": "https://www.supanet.com",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:40.751786"
+    },
+    {
+      "name": "Superhero Broadband",
+      "website": "https://www.superherobroadband.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:41.351197"
+    },
+    {
+      "name": "Supported Computing Limited",
+      "website": "https://www.supportedcomputing.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:41.610261"
+    },
+    {
+      "name": "Swish Fibre Limited (Cuckoo Fibre Ltd)",
+      "website": "https://www.swishfibre.com",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:42.256855"
+    },
+    {
+      "name": "TalkTalk",
+      "website": "https://www.talktalk.co.uk/broadband",
+      "status": "active",
+      "price": "28.00",
+      "speed": "150Mbps",
+      "deal_name": "Fibre 150",
+      "last_checked": "2025-11-24T23:15:42.654630"
+    },
+    {
+      "name": "Tarragon Solutions Ltd",
+      "website": "https://www.tarragon.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:43.407071"
+    },
+    {
+      "name": "TeamIT Solutions ltd",
+      "website": "https://www.teamit.co.uk",
+      "status": "parked",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:44.006415"
+    },
+    {
+      "name": "Techworx IT",
+      "website": "https://www.techworxit.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:44.232130"
+    },
+    {
+      "name": "Teleconnect",
+      "website": "https://www.teleconnect.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:45.192132"
+    },
+    {
+      "name": "The Cent.re Group Limited.",
+      "website": "https://www.thecentre.co.uk",
+      "status": "timeout",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:45.405589"
+    },
+    {
+      "name": "The Communication Gateway",
+      "website": "https://www.thecommunicationgateway.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:46.207145"
+    },
+    {
+      "name": "The IT Dept",
+      "website": "https://www.theitdept.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:47.653802"
+    },
+    {
+      "name": "The One Broadband",
+      "website": "https://www.theone.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:47.958330"
+    },
+    {
+      "name": "Three UK",
+      "website": "https://www.three.co.uk/broadband",
+      "status": "active",
+      "price": "25.00",
+      "speed": "100Mbps",
+      "deal_name": "gig",
+      "last_checked": "2025-11-24T23:15:48.417775"
+    },
+    {
+      "name": "Time Talk",
+      "website": "https://www.timetalk.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:48.534445"
+    },
+    {
+      "name": "toob",
+      "website": "https://www.toob.co.uk",
+      "status": "active",
+      "price": "22",
+      "speed": "900Mbps",
+      "deal_name": "Superfast ",
+      "last_checked": "2025-11-24T23:15:49.426377"
+    },
+    {
+      "name": "TOTSCO Hub",
+      "website": "https://www.totscohub.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:49.778772"
+    },
+    {
+      "name": "Touch Telecom",
+      "website": "https://www.touch.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:49.999046"
+    },
+    {
+      "name": "Transparent Telecom",
+      "website": "https://www.transparent.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:50.472460"
+    },
+    {
+      "name": "Triarom Ltd",
+      "website": "https://www.triarom.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:50.829720"
+    },
+    {
+      "name": "Trooli",
+      "website": "https://www.trooli.com",
+      "status": "active",
+      "price": "29.95",
+      "speed": "2Gbps",
+      "deal_name": "FullFibre25",
+      "last_checked": "2025-11-24T23:15:52.008719"
+    },
+    {
+      "name": "Truespeed Communications Ltd",
+      "website": "https://www.truespeed.com",
+      "status": "active",
+      "price": "35.00",
+      "speed": "900Mbps",
+      "deal_name": "Truespeed 900",
+      "last_checked": "2025-11-24T23:15:52.367199"
+    },
+    {
+      "name": "Twyce",
+      "website": "https://www.twyce.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:52.788716"
+    },
+    {
+      "name": "Unchained ISP",
+      "website": "https://www.unchainedisp.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:52.954223"
+    },
+    {
+      "name": "Unmasked Technology",
+      "website": "https://www.unmaskedtechnology.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:53.666336"
+    },
+    {
+      "name": "Uptime Allies",
+      "website": "https://www.uptimeallies.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": "100Mbps",
+      "deal_name": "essential ",
+      "last_checked": "2025-11-24T23:15:55.411282"
+    },
+    {
+      "name": "UrFibre",
+      "website": "https://www.urfibre.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:56.378875"
+    },
+    {
+      "name": "Utility Warehouse",
+      "website": "https://www.utilitywarehouse.co.uk/broadband",
+      "status": "active",
+      "price": null,
+      "speed": "1000Mbps",
+      "deal_name": "Essential",
+      "last_checked": "2025-11-24T23:15:56.614033"
+    },
+    {
+      "name": "V4 Consumer",
+      "website": "https://www.v4consumer.co.uk",
+      "status": "active",
+      "price": "51.99",
+      "speed": "1000Mbps",
+      "deal_name": "Full Fibre 1000",
+      "last_checked": "2025-11-25T00:45:00.000000"
+    },
+    {
+      "name": "VDX Networks",
+      "website": "https://www.vdxs.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:57.568529"
+    },
+    {
+      "name": "Velocity1",
+      "website": "https://www.velocity1.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": "1000Mbps",
+      "deal_name": "gig",
+      "last_checked": "2025-11-24T23:15:57.789662"
+    },
+    {
+      "name": "VersaTek",
+      "website": "https://www.versatek.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:58.151150"
+    },
+    {
+      "name": "Vfast ltd",
+      "website": "https://www.vfast.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": "300Mbps",
+      "deal_name": "superfast ",
+      "last_checked": "2025-11-24T23:15:58.963051"
+    },
+    {
+      "name": "Via Wire",
+      "website": "https://www.viawire.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": "600Mbps",
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:59.282355"
+    },
+    {
+      "name": "Village Networks",
+      "website": "https://www.villagenetworks.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:59.389792"
+    },
+    {
+      "name": "Virgin Media Limited",
+      "website": "https://www.virginmedia.com/broadband",
+      "status": "maintenance",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:15:59.543588"
+    },
+    {
+      "name": "Vispa",
+      "website": "https://www.vispa.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:16:00.127263"
+    },
+    {
+      "name": "Vodafone Ltd",
+      "website": "https://www.vodafone.co.uk/broadband",
+      "status": "active",
+      "price": "25",
+      "speed": "2.2Gbps",
+      "deal_name": "Full Fibre 74",
+      "last_checked": "2025-11-24T23:16:00.261179"
+    },
+    {
+      "name": "Voiceflex",
+      "website": "https://www.voiceflex.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:16:01.091111"
+    },
+    {
+      "name": "VoiceHost Limited",
+      "website": "https://www.voicehost.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": "10Gbps",
+      "deal_name": "Essential ",
+      "last_checked": "2025-11-24T23:16:01.273281"
+    },
+    {
+      "name": "VoIPVoice Telecom",
+      "website": "https://www.voipvoice.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:16:01.437394"
+    },
+    {
+      "name": "Vonage Business Limited",
+      "website": "https://www.vonagebusiness.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:16:01.862786"
+    },
+    {
+      "name": "Voneus Limited",
+      "website": "https://www.voneus.com",
+      "status": "active",
+      "price": null,
+      "speed": "900Mbps",
+      "deal_name": "M124",
+      "last_checked": "2025-11-24T23:16:02.404496"
+    },
+    {
+      "name": "Voxon",
+      "website": "https://www.voxon.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:16:03.457791"
+    },
+    {
+      "name": "W3Z Broadband",
+      "website": "https://www.w3z.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:16:03.734959"
+    },
+    {
+      "name": "Warden Technology Services Limited",
+      "website": "https://www.wardentechnology.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:16:04.151146"
+    },
+    {
+      "name": "Watch Software",
+      "website": "https://www.watchsoftware.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:16:04.724083"
+    },
+    {
+      "name": "WBCB",
+      "website": "https://www.wbcb.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:16:07.082809"
+    },
+    {
+      "name": "WebMate",
+      "website": "https://www.webmate.co.uk",
+      "status": "parked",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:16:08.758854"
+    },
+    {
+      "name": "Website Success",
+      "website": "https://www.websitesuccess.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:16:09.479970"
+    },
+    {
+      "name": "WeFibre",
+      "website": "https://www.wefibre.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:16:10.035405"
+    },
+    {
+      "name": "Welcoms",
+      "website": "https://www.welcoms.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": "1000Mbps",
+      "deal_name": "gig",
+      "last_checked": "2025-11-24T23:16:10.073850"
+    },
+    {
+      "name": "Wessex Internet Limited",
+      "website": "https://www.wessexinternet.com",
+      "status": "active",
+      "price": null,
+      "speed": "125Mbps",
+      "deal_name": "Full Fibre 250",
+      "last_checked": "2025-11-24T23:16:10.730140"
+    },
+    {
+      "name": "WestFibre",
+      "website": "https://www.westfibre.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:16:10.953770"
+    },
+    {
+      "name": "WiFi Scotland LLP",
+      "website": "https://www.wifiscotlandllp.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:16:11.271626"
+    },
+    {
+      "name": "WiFiSetup",
+      "website": "https://www.wifisetup.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": "essential ",
+      "last_checked": "2025-11-24T23:16:11.310362"
+    },
+    {
+      "name": "WightFibre",
+      "website": "https://www.wightfibre.com",
+      "status": "active",
+      "price": "20.95",
+      "speed": "900Mbps",
+      "deal_name": "ultrafast",
+      "last_checked": "2025-11-24T23:16:11.419354"
+    },
+    {
+      "name": "Wildanet",
+      "website": "https://www.wildanet.com",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:16:11.676459"
+    },
+    {
+      "name": "WILDYE LIMITED",
+      "website": "https://www.wildye.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:16:11.812085"
+    },
+    {
+      "name": "WiSpire",
+      "website": "https://www.wispire.co.uk",
+      "status": "active",
+      "price": "15.99",
+      "speed": "11Mbps",
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:16:12.359377"
+    },
+    {
+      "name": "Wizards",
+      "website": "https://www.wizards.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": "130Mbps",
+      "deal_name": "M116",
+      "last_checked": "2025-11-24T23:16:13.489437"
+    },
+    {
+      "name": "WNCUK.NET",
+      "website": "https://www.wncuknet.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:16:13.687654"
+    },
+    {
+      "name": "Worcester I.T. Services",
+      "website": "https://www.worcesterit.co.uk",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:16:13.733402"
+    },
+    {
+      "name": "XPON Wireless",
+      "website": "https://www.xponwireless.co.uk",
+      "status": "ssl_error",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:16:14.184664"
+    },
+    {
+      "name": "Yayzi Broadband",
+      "website": "https://www.yayzi.com",
+      "status": "active",
+      "price": "25.00",
+      "speed": "1000Mbps",
+      "deal_name": "Yayzi 1000",
+      "last_checked": "2025-11-24T23:16:14.467418"
+    },
+    {
+      "name": "York Fibre",
+      "website": "https://www.yorkfibre.com",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": "ultrafast",
+      "last_checked": "2025-11-24T23:16:14.551162"
+    },
+    {
+      "name": "YouFibre Limited",
+      "website": "https://www.youfibre.com",
+      "status": "active",
+      "price": "98",
+      "speed": "1000Mbps",
+      "deal_name": "YouFibre 1000",
+      "last_checked": "2025-11-24T23:16:15.658015"
+    },
+    {
+      "name": "Your Co-op Broadband",
+      "website": "https://www.yourcoopbroadband.coop",
+      "status": "offline",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:16:16.324416"
+    },
+    {
+      "name": "Your Computer People Ltd",
+      "website": "https://www.yourcomputerpeople.co.uk",
+      "status": "active",
+      "price": null,
+      "speed": null,
+      "deal_name": "M457",
+      "last_checked": "2025-11-24T23:16:15.841256"
+    },
+    {
+      "name": "Zarro Broadband",
+      "website": "https://www.zarro.co.uk",
+      "status": "unknown",
+      "price": null,
+      "speed": null,
+      "deal_name": null,
+      "last_checked": "2025-11-24T23:16:16.653385"
+    },
+    {
+      "name": "Zen Internet",
+      "website": "https://www.zen.co.uk",
+      "status": "active",
+      "price": "37.99",
+      "speed": "2Gbps",
+      "deal_name": "superfast",
+      "last_checked": "2025-11-24T23:16:17.387000"
+    },
+    {
+      "name": "Zzoomm plc",
+      "website": "https://www.zzoomm.com",
+      "status": "active",
+      "price": "32.00",
+      "speed": "200Mbps",
+      "deal_name": "GigaFast",
+      "last_checked": "2025-11-24T23:16:17.871965"
+    }
+  ]
+}

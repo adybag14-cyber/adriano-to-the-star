@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stellar Forge: Megastructure Construction | Adriano to the Stars</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Fira+Code&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+        body { background: #050505; color: #fff; font-family: 'Inter', sans-serif; padding: 2rem; overflow: hidden; }
+        canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        .titan-hud {
+            position: fixed; top: 2rem; left: 2rem; z-index: 100;
+            background: rgba(10, 10, 10, 0.95); border: 2px solid #ffd700;
+            padding: 2.5rem; border-radius: 4px; box-shadow: 0 0 50px rgba(255, 215, 0, 0.2);
+            min-width: 450px; backdrop-filter: blur(20px);
+        }
+        .construction-log {
+            height: 200px; overflow-y: auto; background: rgba(0,0,0,0.5);
+            padding: 1rem; margin-top: 1.5rem; font-family: 'Fira Code'; font-size: 0.75rem; color: #ffd700;
+        }
+        .roadmap-grid {
+            position: fixed; bottom: 2rem; right: 2rem; z-index: 100;
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem;
+        }
+        .titan-chip {
+            background: rgba(255, 215, 0, 0.1); color: #ffd700; border: 1px solid rgba(255, 215, 0, 0.3);
+            padding: 0.4rem 0.8rem; border-radius: 4px; font-size: 0.65rem; font-weight: 900;
+        }
+        .stat-row { display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,215,0,0.1); padding: 0.5rem 0; font-size: 0.85rem; }
+    </style>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+
+<body>
+    <canvas id="forge-canvas"></canvas>
+
+    <div class="titan-hud">
+        <h1 style="margin: 0 0 1rem 0; font-family: 'Orbitron'; letter-spacing: 5px; color: #ffd700;">TITAN FORGE: TYPE IV ENG</h1>
+        
+        <div class="stat-row"><span>Stellar Engine (#4001)</span> <span style="color: #00ff96;">STABLE THRUST</span></div>
+        <div class="stat-row"><span>Dyson Shell (#4002)</span> <span style="color: #00ff96;">84.2% COMPLETE</span></div>
+        <div class="stat-row"><span>Ringworld (#4004)</span> <span style="color: #00ff96;">ROTATION SYNCED</span></div>
+        <div class="stat-row"><span>Stellar Lifting (#4020)</span> <span style="color: #ffd700;">EXTRACTION ACTIVE</span></div>
+
+        <div class="construction-log" id="forge-log">
+            [SYS]: Initializing Nanite Construction Swarms (#4011)...<br>
+            [SYS]: Deploying Orbital Anchor Physics (#4013)...
+        </div>
+
+        <button onclick="window.fireBeam()" style="width: 100%; padding: 1rem; background: #ffd700; border: none; font-family: 'Orbitron'; font-weight: 900; margin-top: 1.5rem; cursor: pointer;">FIRE NICOLL-DYSON BEAM (#4005)</button>
+    </div>
+
+    <div class="roadmap-grid">
+        <div class="titan-chip">#4001 Stellar Engine</div>
+        <div class="titan-chip">#4002 Dyson Shell</div>
+        <div class="titan-chip">#4004 Ringworld</div>
+        <div class="titan-chip">#4005 Dyson Beam</div>
+        <div class="titan-chip">#4006 Space Elevator</div>
+        <div class="titan-chip">#4011 Nanite Swarms</div>
+        <div class="titan-chip">#4013 Orbital Anchor</div>
+        <div class="titan-chip">#4020 Stellar Lifting</div>
+        <div class="titan-chip">#4021 Topopolis</div>
+        <div class="titan-chip">#4022 Gravity Wave Comms</div>
+    </div>
+
+    <script type="module" src="forge-sim.js"></script>
+</body>
+
+</html>

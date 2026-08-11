@@ -1,0 +1,108 @@
+/* Keyboard Shortcuts Styles */
+
+.shortcut-feedback {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: linear-gradient(135deg, rgba(8, 10, 25, 0.95), rgba(18, 22, 40, 0.98));
+    border: 2px solid rgba(186, 148, 79, 0.4);
+    border-radius: 8px;
+    padding: 1rem 2rem;
+    color: #ba944f;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.9rem;
+    z-index: 10001;
+    opacity: 0;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.shortcut-feedback.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Keyboard Shortcuts Help Modal */
+#keyboard-shortcuts-help .modal-content {
+    max-width: 600px;
+}
+
+.shortcuts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.shortcut-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(186, 148, 79, 0.2);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.shortcut-item:hover {
+    border-color: rgba(186, 148, 79, 0.4);
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.shortcut-item kbd {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: rgba(186, 148, 79, 0.2);
+    border: 1px solid rgba(186, 148, 79, 0.4);
+    border-radius: 6px;
+    color: #ba944f;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    font-weight: 600;
+    min-width: 80px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.shortcut-item span {
+    flex: 1;
+    margin-left: 1.5rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-family: 'Raleway', sans-serif;
+}
+
+.shortcuts-note {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.85rem;
+    margin-top: 1.5rem;
+    font-style: italic;
+}
+
+.shortcuts-note kbd {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    background: rgba(186, 148, 79, 0.2);
+    border: 1px solid rgba(186, 148, 79, 0.3);
+    border-radius: 4px;
+    color: #ba944f;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .shortcut-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .shortcut-item span {
+        margin-left: 0;
+    }
+}
+

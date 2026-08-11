@@ -1,0 +1,154 @@
+{
+    "name": "Adriano To The Star",
+    "short_name": "ATTS",
+    "description": "Buy celestial bodies in the Andromeda Galaxy. Explore exoplanets, claim your star, and join the cosmic journey!",
+    "start_url": "./?source=pwa",
+    "scope": "./",
+    "display": "standalone",
+    "background_color": "#0a0a14",
+    "theme_color": "#ba944f",
+    "orientation": "any",
+    "icons": [
+        {
+            "src": "./images/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "./images/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "./images/screenshot-wide.png",
+            "sizes": "1280x720",
+            "type": "image/png",
+            "form_factor": "wide"
+        },
+        {
+            "src": "./images/screenshot-narrow.png",
+            "sizes": "750x1334",
+            "type": "image/png",
+            "form_factor": "narrow"
+        }
+    ],
+    "categories": [
+        "education",
+        "entertainment",
+        "lifestyle"
+    ],
+    "shortcuts": [
+        {
+            "name": "Exoplanet Database",
+            "short_name": "Database",
+            "description": "Browse 9,564 exoplanets",
+            "url": "./database.html",
+            "icons": [
+                {
+                    "src": "./images/icon-192x192.png",
+                    "sizes": "192x192"
+                }
+            ]
+        },
+        {
+            "name": "Stellar AI",
+            "short_name": "AI Chat",
+            "description": "Chat with cosmic AI",
+            "url": "./stellar-ai.html",
+            "icons": [
+                {
+                    "src": "./images/icon-192x192.png",
+                    "sizes": "192x192"
+                }
+            ]
+        },
+        {
+            "name": "Analytics Dashboard",
+            "short_name": "Analytics",
+            "description": "View analytics and statistics",
+            "url": "./analytics-dashboard.html",
+            "icons": [
+                {
+                    "src": "./images/icon-192x192.png",
+                    "sizes": "192x192"
+                }
+            ]
+        },
+        {
+            "name": "Play Games",
+            "short_name": "Games",
+            "description": "Space-themed games",
+            "url": "./games.html",
+            "icons": [
+                {
+                    "src": "./images/icon-192x192.png",
+                    "sizes": "192x192"
+                }
+            ]
+        },
+        {
+            "name": "Planet Marketplace",
+            "short_name": "Marketplace",
+            "description": "Buy, sell, and trade exoplanet claims",
+            "url": "./marketplace.html",
+            "icons": [
+                {
+                    "src": "./images/icon-192x192.png",
+                    "sizes": "192x192"
+                }
+            ]
+        },
+        {
+            "name": "Secure Chat",
+            "short_name": "Secure Chat",
+            "description": "Encrypted messaging",
+            "url": "./secure-chat.html",
+            "icons": [
+                {
+                    "src": "./images/icon-192x192.png",
+                    "sizes": "192x192"
+                }
+            ]
+        },
+        {
+            "name": "Space Education",
+            "short_name": "Education",
+            "description": "Learn about the cosmos",
+            "url": "./education.html",
+            "icons": [
+                {
+                    "src": "./images/icon-192x192.png",
+                    "sizes": "192x192"
+                }
+            ]
+        },
+        {
+            "name": "Experimental Projects",
+            "short_name": "Projects",
+            "description": "Explore future web tech",
+            "url": "./projects.html",
+            "icons": [
+                {
+                    "src": "./images/icon-192x192.png",
+                    "sizes": "192x192"
+                }
+            ]
+        }
+    ],
+    "share_target": {
+        "action": "./database.html",
+        "method": "GET",
+        "enctype": "application/x-www-form-urlencoded",
+        "params": {
+            "title": "title",
+            "text": "text",
+            "url": "url"
+        }
+    },
+    "related_applications": [],
+    "prefer_related_applications": false
+}

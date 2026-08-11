@@ -1,0 +1,146 @@
+
+export default {
+    async fetch(request, env) {
+        const url = new URL(request.url);
+        let key = url.pathname.slice(1); // Remove leading slash
+
+        // CORS headers for all responses
+        const corsHeaders = {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, HEAD, POST, OPTIONS',
+            'Access-Control-Allow-Headers': '*',
+            'Access-Control-Expose-Headers': 'content-length,content-type,content-range,accept-ranges,etag,x-hal-debug',
+            // 'Access-Control-Allow-Credentials': 'true', // Optional
+            'Access-Control-Max-Age': '86400',
+            'x-hal-debug': 'worker-v2-integrated'
+        };
+
+        // Handle preflight requests
+        if (request.method === 'OPTIONS') {
+            return new Response(null, { headers: corsHeaders });
+        }
+
+        try {
+            // --- REDIRECTIONS ---
+            // Security.txt Redirect (Root -> .well-known)
+            if (url.pathname === '/security.txt') {
+                return Response.redirect('https://adrianotothestar.com/.well-known/security.txt', 301);
+            }
+
+            // --- API ROUTING LOGIC ---
+            // Route /api/planets/search requests to NASA TAP
+            if (url.pathname.startsWith('/api/planets')) {
+                return await this.handleApiRequest(request, url, corsHeaders);
+            }
+
+            // --- R2 BUCKET LOGIC (Existing) ---
+            // Strip /resolve/main/ from path (HuggingFace URL format used by WebLLM)
+            key = key.replace(/\/resolve\/main\//g, '/');
+
+            // Route all requests to SWF_BUCKET (starisdons-swf-files)
+            const bucket = env.SWF_BUCKET;
+
+            if (!bucket) {
+                return this.createErrorResponse('Bucket binding not found', 500, corsHeaders);
+            }
+
+            // Handle Range requests for R2
+            const object = await this.fetchObject(bucket, key, request);
+
+            if (object === null) {
+                return this.createErrorResponse(`Object Not Found: ${key}`, 404, corsHeaders);
+            }
+
+            return this.createSuccessResponse(object, key, corsHeaders);
+        } catch (error) {
+            return this.createErrorResponse(`Worker Error: ${error.message}\nKey: ${key}`, 500, corsHeaders);
+        }
+    },
+
+    // New API Handler System
+    async handleApiRequest(request, url, corsHeaders) {
+        const searchQuery = url.searchParams.get('q') || '';
+
+        // Construct NASA TAP Query
+        // Optimized for performance: Limit columns and rows
+        const tapQuery = searchQuery
+            ? `select pl_name, hostname, discoverymethod, pl_orbper, pl_rade, pl_eqt, sy_dist from ps where pl_name like '%${searchQuery}%' or hostname like '%${searchQuery}%' order by sy_dist asc`
+            : `select top 100 pl_name, hostname, discoverymethod, pl_orbper, pl_rade, pl_eqt, sy_dist from ps order by sy_dist asc`;
+
+        const encodedQuery = encodeURIComponent(tapQuery);
+        const targetUrl = `https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=${encodedQuery}&format=json`;
+
+        try {
+            const response = await fetch(targetUrl, {
+                headers: {
+                    'User-Agent': 'AdrianoToTheStar-Worker/1.0'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`NASA Archive Error: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+
+            // Return JSON with CORS
+            return new Response(JSON.stringify(data), {
+                headers: {
+                    ...corsHeaders,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+        } catch (err) {
+            return this.createErrorResponse(`API Proxy Failed: ${err.message}`, 502, corsHeaders);
+        }
+    },
+
+    async fetchObject(bucket, key, request) {
+        // Handle Range requests for R2 (only for .bin shards to avoid Cache API errors)
+        const rangeHeader = request.headers.get('Range');
+        if (rangeHeader && key.endsWith('.bin')) {
+            return await bucket.get(key, { range: request.headers });
+        }
+        return await bucket.get(key);
+    },
+
+    createSuccessResponse(object, key, corsHeaders) {
+        // Create a fresh headers object
+        const headers = new Headers();
+
+        // Standard metadata
+        object.writeHttpMetadata(headers);
+        headers.set('etag', object.httpEtag);
+        headers.set('accept-ranges', 'bytes');
+
+        // Explicitly set content-range if it exists
+        if (object.range) {
+            const start = object.range.offset;
+            const end = object.range.offset + object.range.length - 1;
+            headers.set('content-range', `bytes ${start}-${end}/${object.size}`);
+        }
+
+        // Apply CORS headers
+        Object.entries(corsHeaders).forEach(([k, v]) => headers.set(k, v));
+
+        const status = (object.range && key.endsWith('.bin')) ? 206 : 200;
+
+        const response = new Response(object.body, { status });
+
+        // Set headers on the response object
+        headers.forEach((v, k) => response.headers.set(k, v));
+
+        return response;
+    },
+
+    createErrorResponse(message, status, corsHeaders) {
+        return new Response(message, {
+            status,
+            headers: {
+                ...corsHeaders,
+                'Content-Type': 'text/plain'
+            }
+        });
+    },
+};

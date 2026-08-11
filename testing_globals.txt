@@ -1,0 +1,70 @@
+
+arc-dataset\apps\js\testing_interface.js:16:    CURRENT_INPUT_GRID = new Grid(3, 3);
+arc-dataset\apps\js\testing_interface.js:17:    TEST_PAIRS = new Array();
+arc-dataset\apps\js\testing_interface.js:18:    CURRENT_TEST_PAIR_INDEX = 0;
+arc-dataset\apps\js\testing_interface.js:39:    selected = $('#symbol_picker .selected-symbol-preview')[0];
+arc-dataset\apps\js\testing_interface.js:45:        cell = $(event.target);
+arc-dataset\apps\js\testing_interface.js:46:        symbol = getSelectedSymbol();
+arc-dataset\apps\js\testing_interface.js:48:        mode = $('input[name=tool_switching]:checked').val();
+arc-dataset\apps\js\testing_interface.js:52:            grid = CURRENT_OUTPUT_GRID.grid;
+arc-dataset\apps\js\testing_interface.js:64:    size = $('#output_grid_size').val();
+arc-dataset\apps\js\testing_interface.js:65:    size = parseSizeTuple(size);
+arc-dataset\apps\js\testing_interface.js:66:    height = size[0];
+arc-dataset\apps\js\testing_interface.js:67:    width = size[1];
+arc-dataset\apps\js\testing_interface.js:69:    jqGrid = $('#output_grid .edition_grid');
+arc-dataset\apps\js\testing_interface.js:71:    dataGrid = JSON.parse(JSON.stringify(CURRENT_OUTPUT_GRID.grid));
+arc-dataset\apps\js\testing_interface.js:72:    CURRENT_OUTPUT_GRID = new Grid(height, width, dataGrid);
+arc-dataset\apps\js\testing_interface.js:78:    CURRENT_OUTPUT_GRID = new Grid(3, 3);
+arc-dataset\apps\js\testing_interface.js:85:    CURRENT_OUTPUT_GRID = convertSerializedGridToGridObject(CURRENT_INPUT_GRID.grid);
+arc-dataset\apps\js\testing_interface.js:94:        pairSlot = $('<div id="pair_preview_' + pairId + '" class="pair_preview" index="' + pairId + '"></div>');
+arc-dataset\apps\js\testing_interface.js:99:        jqInputGrid = $('<div class="input_preview"></div>');
+arc-dataset\apps\js\testing_interface.js:104:        jqOutputGrid = $('<div class="output_preview"></div>');
+arc-dataset\apps\js\testing_interface.js:121:        pair = train[i];
+arc-dataset\apps\js\testing_interface.js:122:        values = pair['input'];
+arc-dataset\apps\js\testing_interface.js:123:        input_grid = convertSerializedGridToGridObject(values)
+arc-dataset\apps\js\testing_interface.js:124:        values = pair['output'];
+arc-dataset\apps\js\testing_interface.js:125:        output_grid = convertSerializedGridToGridObject(values)
+arc-dataset\apps\js\testing_interface.js:129:        pair = test[i];
+arc-dataset\apps\js\testing_interface.js:132:    values = TEST_PAIRS[0]['input'];
+arc-dataset\apps\js\testing_interface.js:133:    CURRENT_INPUT_GRID = convertSerializedGridToGridObject(values)
+arc-dataset\apps\js\testing_interface.js:135:    CURRENT_TEST_PAIR_INDEX = 0;
+arc-dataset\apps\js\testing_interface.js:141:    big_space = '&nbsp;'.repeat(4); 
+arc-dataset\apps\js\testing_interface.js:144:            task_index===null ? '' :
+arc-dataset\apps\js\testing_interface.js:161:            contents = JSON.parse(contents);
+arc-dataset\apps\js\testing_interface.js:162:            train = contents['train'];
+arc-dataset\apps\js\testing_interface.js:163:            test = contents['test'];
+arc-dataset\apps\js\testing_interface.js:183:                train = json['train'];
+arc-dataset\apps\js\testing_interface.js:184:                test = json['test'];
+arc-dataset\apps\js\testing_interface.js:209:    values = TEST_PAIRS[CURRENT_TEST_PAIR_INDEX]['input'];
+arc-dataset\apps\js\testing_interface.js:210:    CURRENT_INPUT_GRID = convertSerializedGridToGridObject(values)
+arc-dataset\apps\js\testing_interface.js:218:    reference_output = TEST_PAIRS[CURRENT_TEST_PAIR_INDEX]['output'];
+arc-dataset\apps\js\testing_interface.js:219:    submitted_output = CURRENT_OUTPUT_GRID.grid;
+arc-dataset\apps\js\testing_interface.js:225:        ref_row = reference_output[i];
+arc-dataset\apps\js\testing_interface.js:238:    jqInputGrid = $('#evaluation_input');
+arc-dataset\apps\js\testing_interface.js:245:    CURRENT_OUTPUT_GRID = convertSerializedGridToGridObject(CURRENT_INPUT_GRID.grid);
+arc-dataset\apps\js\testing_interface.js:256:    toolMode = $('input[name=tool_switching]:checked').val();
+arc-dataset\apps\js\testing_interface.js:277:        symbol_preview = $(event.target);
+arc-dataset\apps\js\testing_interface.js:283:        toolMode = $('input[name=tool_switching]:checked').val();
+arc-dataset\apps\js\testing_interface.js:286:                symbol = getSelectedSymbol();
+arc-dataset\apps\js\testing_interface.js:319:            selected = $('.ui-selected');
+arc-dataset\apps\js\testing_interface.js:324:            COPY_PASTE_DATA = [];
+arc-dataset\apps\js\testing_interface.js:326:                x = parseInt($(selected[i]).attr('x'));
+arc-dataset\apps\js\testing_interface.js:327:                y = parseInt($(selected[i]).attr('y'));
+arc-dataset\apps\js\testing_interface.js:328:                symbol = parseInt($(selected[i]).attr('symbol'));
+arc-dataset\apps\js\testing_interface.js:340:            selected = $('.edition_grid').find('.ui-selected');
+arc-dataset\apps\js\testing_interface.js:346:            jqGrid = $(selected.parent().parent()[0]);
+arc-dataset\apps\js\testing_interface.js:349:                targetx = parseInt(selected.attr('x'));
+arc-dataset\apps\js\testing_interface.js:350:                targety = parseInt(selected.attr('y'));
+arc-dataset\apps\js\testing_interface.js:352:                xs = new Array();
+arc-dataset\apps\js\testing_interface.js:353:                ys = new Array();
+arc-dataset\apps\js\testing_interface.js:354:                symbols = new Array();
+arc-dataset\apps\js\testing_interface.js:362:                minx = Math.min(...xs);
+arc-dataset\apps\js\testing_interface.js:363:                miny = Math.min(...ys);
+arc-dataset\apps\js\testing_interface.js:365:                    x = xs[i];
+arc-dataset\apps\js\testing_interface.js:366:                    y = ys[i];
+arc-dataset\apps\js\testing_interface.js:367:                    symbol = symbols[i];
+arc-dataset\apps\js\testing_interface.js:368:                    newx = x - minx + targetx;
+arc-dataset\apps\js\testing_interface.js:369:                    newy = y - miny + targety;
+arc-dataset\apps\js\testing_interface.js:370:                    res = jqGrid.find('[x="' + newx + '"][y="' + newy + '"] ');
+arc-dataset\apps\js\testing_interface.js:372:                        cell = $(res[0]);
+

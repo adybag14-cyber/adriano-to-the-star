@@ -1,0 +1,338 @@
+[1mdiff --git a/database-optimized.js b/database-optimized.js[m
+[1mindex 0c315bb..9b4a36d 100644[m
+[1m--- a/database-optimized.js[m
+[1m+++ b/database-optimized.js[m
+[36m@@ -81,9 +81,9 @@[m [mclass OptimizedDatabase {[m
+      */[m
+     showEmptyState(container) {[m
+         const hasSearch = this.searchTerm && this.searchTerm.length >= 2;[m
+[31m-        const hasFilters = this.activeFilters.status !== 'all' || [m
+[31m-                          this.activeFilters.type !== 'all' || [m
+[31m-                          this.activeFilters.availability !== 'all';[m
+[32m+[m[32m        const hasFilters = this.activeFilters.status !== 'all' ||[m
+[32m+[m[32m            this.activeFilters.type !== 'all' ||[m
+[32m+[m[32m            this.activeFilters.availability !== 'all';[m
+ [m
+         let suggestions = [];[m
+         let actionButton = '';[m
+[36m@@ -880,7 +880,7 @@[m [mclass OptimizedDatabase {[m
+     applyFilters() {[m
+         // Use search index for fast search results[m
+         let dataToFilter = this.allData;[m
+[31m-        [m
+[32m+[m
+         const hasSearch = this.searchTerm && this.searchTerm.length >= 2;[m
+         if (hasSearch) {[m
+             // Use indexed search for instant results[m
+[36m@@ -1313,151 +1313,168 @@[m [masync function claimPlanet(kepid) {[m
+     try {[m
+         // Check if user is logged in[m
+         if (typeof authManager === 'undefined' || !authManager.isAuthenticated()) {[m
+[31m-        // Store the kepid for after login[m
+[31m-        sessionStorage.setItem('pendingClaim', kepid);[m
+[31m-[m
+[31m-        // Show login modal if available[m
+[31m-        if (typeof showModal === 'function') {[m
+[31m-            // Check if modal exists[m
+[31m-            const loginModal = document.getElementById('login-modal');[m
+[31m-            if (loginModal) {[m
+[31m-                showModal('login-modal');[m
+[31m-                return;[m
+[32m+[m[32m            // Store the kepid for after login[m
+[32m+[m[32m            sessionStorage.setItem('pendingClaim', kepid);[m
+[32m+[m
+[32m+[m[32m            // Show login modal if available[m
+[32m+[m[32m            if (typeof showModal === 'function') {[m
+[32m+[m[32m                // Check if modal exists[m
+[32m+[m[32m                const loginModal = document.getElementById('login-modal');[m
+[32m+[m[32m                if (loginModal) {[m
+[32m+[m[32m                    showModal('login-modal');[m
+[32m+[m[32m                    return;[m
+[32m+[m[32m                }[m
+             }[m
+[31m-        }[m
+ [m
+[31m-        // If modal not available, show confirm and redirect[m
+[31m-        if (confirm('🚀 You need to be logged in to claim exoplanets!\n\nWould you like to login now?')) {[m
+[31m-            // Redirect to members page for login (which has the beautiful login container)[m
+[31m-            window.location.href = 'members.html?redirect=database&claim=' + kepid;[m
+[31m-        } else {[m
+[31m-            sessionStorage.removeItem('pendingClaim');[m
+[32m+[m[32m            // If modal not available, show confirm and redirect[m
+[32m+[m[32m            if (confirm('🚀 You need to be logged in to claim exoplanets!\n\nWould you like to login now?')) {[m
+[32m+[m[32m                // Redirect to members page for login (which has the beautiful login container)[m
+[32m+[m[32m                window.location.href = 'members.html?redirect=database&claim=' + kepid;[m
+[32m+[m[32m            } else {[m
+[32m+[m[32m                sessionStorage.removeItem('pendingClaim');[m
+[32m+[m[32m            }[m
+[32m+[m[32m            return;[m
+         }[m
+[31m-        return;[m
+[31m-    }[m
+ [m
+[31m-    // User is logged in, proceed with claim[m
+[31m-    console.log('🚀 Claiming planet:', kepid);[m
+[32m+[m[32m        // User is logged in, proceed with claim[m
+[32m+[m[32m        console.log('🚀 Claiming planet:', kepid);[m
+ [m
+[31m-    // Check if we're on GitLab Pages (no backend available)[m
+[31m-    // Also check if we're NOT on localhost/127.0.0.1[m
+[31m-    const hostname = window.location.hostname;[m
+[31m-    const isGitLabPages = hostname.includes('gitlab.io') ||[m
+[31m-        hostname.includes('gitlab-pages') ||[m
+[31m-        (hostname !== 'localhost' && hostname !== '127.0.0.1' && !hostname.startsWith('192.168.') && !hostname.startsWith('10.'));[m
+[32m+[m[32m        // Check if we're on GitLab Pages (no backend available)[m
+[32m+[m[32m        // Also check if we're NOT on localhost/127.0.0.1[m
+[32m+[m[32m        const hostname = window.location.hostname;[m
+[32m+[m[32m        const isGitLabPages = hostname.includes('gitlab.io') ||[m
+[32m+[m[32m            hostname.includes('gitlab-pages') ||[m
+[32m+[m[32m            (hostname !== 'localhost' && hostname !== '127.0.0.1' && !hostname.startsWith('192.168.') && !hostname.startsWith('10.'));[m
+ [m
+[31m-    console.log('🌐 Hostname:', hostname, '| Is GitLab Pages:', isGitLabPages);[m
+[32m+[m[32m        console.log('🌐 Hostname:', hostname, '| Is GitLab Pages:', isGitLabPages);[m
+ [m
+[31m-    if (isGitLabPages) {[m
+[31m-        // Use localStorage for claims on GitLab Pages[m
+[31m-        console.log('🌐 GitLab Pages detected - Using localStorage for claims');[m
+[31m-        try {[m
+[31m-            await claimPlanetLocal(kepid);[m
+[31m-        } finally {[m
+[31m-            // Reset claiming flag[m
+[31m-            if (window.databaseInstance) {[m
+[31m-                window.databaseInstance.isClaiming = false;[m
+[32m+[m[32m        if (isGitLabPages) {[m
+[32m+[m[32m            // Use localStorage for claims on GitLab Pages[m
+[32m+[m[32m            console.log('🌐 GitLab Pages detected - Using localStorage for claims');[m
+[32m+[m[32m            try {[m
+[32m+[m[32m                await claimPlanetLocal(kepid);[m
+[32m+[m[32m            } finally {[m
+[32m+[m[32m                // Reset claiming flag[m
+[32m+[m[32m                if (window.databaseInstance) {[m
+[32m+[m[32m                    window.databaseInstance.isClaiming = false;[m
+[32m+[m[32m                }[m
+             }[m
+[32m+[m[32m            return;[m
+         }[m
+[31m-        return;[m
+[31m-    }[m
+ [m
+[31m-    // Try backend first (localhost only)[m
+[31m-    try {[m
+[31m-        console.log('🔌 Attempting to claim via backend...');[m
+[32m+[m[32m        // Try backend first (localhost only)[m
+[32m+[m[32m        try {[m
+[32m+[m[32m            console.log('🔌 Attempting to claim via backend...');[m
+ [m
+[31m-        const controller = new AbortController();[m
+[31m-        const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 second timeout (faster)[m
+[32m+[m[32m            const controller = new AbortController();[m
+[32m+[m[32m            const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 second timeout (faster)[m
+ [m
+[31m-        const response = await fetch('http://localhost:3002/api/planets/claim', {[m
+[31m-            method: 'POST',[m
+[31m-            headers: {[m
+[31m-                'Content-Type': 'application/json',[m
+[31m-                'Authorization': authManager.getHeaders ? authManager.getHeaders()['Authorization'] : `Bearer ${authManager.token || ''}`[m
+[31m-            },[m
+[31m-            body: JSON.stringify({ kepid: kepid }),[m
+[31m-            signal: controller.signal[m
+[31m-        });[m
+[32m+[m[32m            const response = await fetch('http://localhost:3002/api/planets/claim', {[m
+[32m+[m[32m                method: 'POST',[m
+[32m+[m[32m                headers: {[m
+[32m+[m[32m                    'Content-Type': 'application/json',[m
+[32m+[m[32m                    'Authorization': authManager.getHeaders ? authManager.getHeaders()['Authorization'] : `Bearer ${authManager.token || ''}`[m
+[32m+[m[32m                },[m
+[32m+[m[32m                body: JSON.stringify({ kepid: kepid }),[m
+[32m+[m[32m                signal: controller.signal[m
+[32m+[m[32m            });[m
+ [m
+[31m-        clearTimeout(timeoutId);[m
+[32m+[m[32m            clearTimeout(timeoutId);[m
+ [m
+[31m-        console.log('📥 Response received:', response.status);[m
+[32m+[m[32m            console.log('📥 Response received:', response.status);[m
+ [m
+[31m-        if (response.ok) {[m
+[31m-            const data = await response.json();[m
+[32m+[m[32m            if (response.ok) {[m
+[32m+[m[32m                const data = await response.json();[m
+ [m
+[31m-            if (data.success) {[m
+[31m-                console.log('✅ Planet claimed successfully via backend');[m
+[31m-                [m
+[31m-                // Show success notification instead of alert[m
+[31m-                if (window.databaseInstance) {[m
+[31m-                    window.databaseInstance.showSuccessNotification([m
+[31m-                        `Successfully claimed exoplanet!`,[m
+[31m-                        `Planet: ${data.planet?.kepler_name || data.planet?.kepoi_name || `Kepler-${kepid}`}`,[m
+[31m-                        'View Dashboard',[m
+[31m-                        () => window.location.href = 'dashboard.html'[m
+[31m-                    );[m
+[31m-                } else {[m
+[31m-                    // Fallback to simple notification[m
+[31m-                    if (window.databaseAdvancedFeatures && window.databaseAdvancedFeatures.showNotification) {[m
+[31m-                        window.databaseAdvancedFeatures.showNotification(`Successfully claimed ${data.planet?.kepler_name || data.planet?.kepoi_name || `Kepler-${kepid}`}!`, 'success');[m
+[32m+[m[32m                if (data.success) {[m
+[32m+[m[32m                    console.log('✅ Planet claimed successfully via backend');[m
+[32m+[m
+[32m+[m[32m                    // Show success notification instead of alert[m
+[32m+[m[32m                    if (window.databaseInstance) {[m
+[32m+[m[32m                        window.databaseInstance.showSuccessNotification([m
+[32m+[m[32m                            `Successfully claimed exoplanet!`,[m
+[32m+[m[32m                            `Planet: ${data.planet?.kepler_name || data.planet?.kepoi_name || `Kepler-${kepid}`}`,[m
+[32m+[m[32m                            'View Dashboard',[m
+[32m+[m[32m                            () => window.location.href = 'dashboard.html'[m
+[32m+[m[32m                        );[m
+[32m+[m[32m                    } else {[m
+[32m+[m[32m                        // Fallback to simple notification[m
+[32m+[m[32m                        if (window.databaseAdvancedFeatures && window.databaseAdvancedFeatures.showNotification) {[m
+[32m+[m[32m                            window.databaseAdvancedFeatures.showNotification(`Successfully claimed ${data.planet?.kepler_name || data.planet?.kepoi_name || `Kepler-${kepid}`}!`, 'success');[m
+[32m+[m[32m                        }[m
+                     }[m
+[31m-                }[m
+ [m
+[31m-                // Update the planet card to show as claimed[m
+[31m-                updatePlanetAvailability(kepid, 'claimed');[m
+[31m-[m
+[31m-                // Save to localStorage as backup[m
+[31m-                saveClaimToLocalStorage(kepid, data.planet);[m
+[31m-[m
+[31m-                // Update reputation system (using singleton)[m
+[31m-                if (window.getReputationSystem) {[m
+[31m-                    const repSystem = window.getReputationSystem();[m
+[31m-                    await repSystem.init();[m
+[31m-                    await repSystem.updateActivity('planet_claimed');[m
+[31m-                } else if (window.ReputationSystem) {[m
+[31m-                    const repSystem = ReputationSystem.getInstance();[m
+[31m-                    await repSystem.init();[m
+[31m-                    await repSystem.updateActivity('planet_claimed');[m
+[31m-                }[m
+[32m+[m[32m                    // Update the planet card to show as claimed[m
+[32m+[m[32m                    updatePlanetAvailability(kepid, 'claimed');[m
+[32m+[m
+[32m+[m[32m                    // Save to localStorage as backup[m
+[32m+[m[32m                    saveClaimToLocalStorage(kepid, data.planet);[m
+[32m+[m
+[32m+[m[32m                    // Update reputation system (using singleton)[m
+[32m+[m[32m                    if (window.getReputationSystem) {[m
+[32m+[m[32m                        const repSystem = window.getReputationSystem();[m
+[32m+[m[32m                        await repSystem.init();[m
+[32m+[m[32m                        await repSystem.updateActivity('planet_claimed');[m
+[32m+[m[32m                    } else if (window.ReputationSystem) {[m
+[32m+[m[32m                        const repSystem = ReputationSystem.getInstance();[m
+[32m+[m[32m                        await repSystem.init();[m
+[32m+[m[32m                        await repSystem.updateActivity('planet_claimed');[m
+[32m+[m[32m                    }[m
+ [m
+[31m-                // Reset claiming flag before reload[m
+[31m-                if (window.databaseInstance) {[m
+[31m-                    window.databaseInstance.isClaiming = false;[m
+[31m-                }[m
+[32m+[m[32m                    // Reset claiming flag before reload[m
+[32m+[m[32m                    if (window.databaseInstance) {[m
+[32m+[m[32m                        window.databaseInstance.isClaiming = false;[m
+[32m+[m[32m                    }[m
+ [m
+[31m-                // Refresh the page to update UI[m
+[31m-                setTimeout(() => {[m
+[31m-                    location.reload();[m
+[31m-                }, 1000);[m
+[31m-                return;[m
+[31m-            } else {[m
+[31m-                console.error('✗ Backend returned success:false');[m
+[31m-                if (window.databaseInstance) {[m
+[31m-                    window.databaseInstance.showErrorNotification([m
+[31m-                        'Failed to claim planet',[m
+[31m-                        data.error || 'The planet may already be claimed or there was a server error.',[m
+[31m-                        'Try Again',[m
+[31m-                        () => claimPlanet(kepid)[m
+[31m-                    );[m
+[32m+[m[32m                    // Refresh the page to update UI[m
+[32m+[m[32m                    setTimeout(() => {[m
+[32m+[m[32m                        location.reload();[m
+[32m+[m[32m                    }, 1000);[m
+[32m+[m[32m                    return;[m
+                 } else {[m
+[31m-                    // Fallback to simple notification[m
+[31m-                    if (window.databaseAdvancedFeatures && window.databaseAdvancedFeatures.showNotification) {[m
+[31m-                        window.databaseAdvancedFeatures.showNotification(data.error || 'Failed to claim planet', 'error');[m
+[32m+[m[32m                    console.error('✗ Backend returned success:false');[m
+[32m+[m[32m                    if (window.databaseInstance) {[m
+[32m+[m[32m                        window.databaseInstance.showErrorNotification([m
+[32m+[m[32m                            'Failed to claim planet',[m
+[32m+[m[32m                            data.error || 'The planet may already be claimed or there was a server error.',[m
+[32m+[m[32m                            'Try Again',[m
+[32m+[m[32m                            () => claimPlanet(kepid)[m
+[32m+[m[32m                        );[m
+[32m+[m[32m                    } else {[m
+[32m+[m[32m                        // Fallback to simple notification[m
+[32m+[m[32m                        if (window.databaseAdvancedFeatures && window.databaseAdvancedFeatures.showNotification) {[m
+[32m+[m[32m                            window.databaseAdvancedFeatures.showNotification(data.error || 'Failed to claim planet', 'error');[m
+[32m+[m[32m                        }[m
+                     }[m
+[32m+[m[32m                    // Reset claiming flag[m
+[32m+[m[32m                    if (window.databaseInstance) {[m
+[32m+[m[32m                        window.databaseInstance.isClaiming = false;[m
+[32m+[m[32m                    }[m
+[32m+[m[32m                    return;[m
+                 }[m
+[31m-                // Reset claiming flag[m
+[31m-                if (window.databaseInstance) {[m
+[31m-                    window.databaseInstance.isClaiming = false;[m
+[32m+[m[32m            } else {[m
+[32m+[m[32m                const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));[m
+[32m+[m[32m                console.error('✗ Backend error:', response.status, errorData);[m
+[32m+[m
+[32m+[m[32m                // If backend fails, try localStorage as fallback[m
+[32m+[m[32m                console.log('🔄 Falling back to localStorage...');[m
+[32m+[m[32m                try {[m
+[32m+[m[32m                    await claimPlanetLocal(kepid);[m
+[32m+[m[32m                } finally {[m
+[32m+[m[32m                    // Reset claiming flag[m
+[32m+[m[32m                    if (window.databaseInstance) {[m
+[32m+[m[32m                        window.databaseInstance.isClaiming = false;[m
+[32m+[m[32m                    }[m
+                 }[m
+                 return;[m
+             }[m
+[31m-        } else {[m
+[31m-            const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));[m
+[31m-            console.error('✗ Backend error:', response.status, errorData);[m
+[32m+[m[32m        } catch (error) {[m
+[32m+[m[32m            console.error('✗ Error claiming planet:', error);[m
+[32m+[m[32m            console.error('Error name:', error.name);[m
+[32m+[m[32m            console.error('Error message:', error.message);[m
+ [m
+[31m-            // If backend fails, try localStorage as fallback[m
+[31m-            console.log('🔄 Falling back to localStorage...');[m
+[32m+[m[32m            // Always fallback to localStorage on any error[m
+[32m+[m[32m            console.log('🔄 Error occurred, falling back to localStorage...');[m
+             try {[m
+                 await claimPlanetLocal(kepid);[m
+             } finally {[m
+[36m@@ -1468,22 +1485,8 @@[m [masync function claimPlanet(kepid) {[m
+             }[m
+             return;[m
+         }[m
+[31m-    } catch (error) {[m
+[31m-        console.error('✗ Error claiming planet:', error);[m
+[31m-        console.error('Error name:', error.name);[m
+[31m-        console.error('Error message:', error.message);[m
+[31m-[m
+[31m-        // Always fallback to localStorage on any error[m
+[31m-        console.log('🔄 Error occurred, falling back to localStorage...');[m
+[31m-        try {[m
+[31m-            await claimPlanetLocal(kepid);[m
+[31m-        } finally {[m
+[31m-            // Reset claiming flag[m
+[31m-            if (window.databaseInstance) {[m
+[31m-                window.databaseInstance.isClaiming = false;[m
+[31m-            }[m
+[31m-        }[m
+[31m-        return;[m
+[32m+[m[32m    } catch (e) {[m
+[32m+[m[32m        console.error('Unexpected error in claimPlanet:', e);[m
+     }[m
+ }[m
+ [m

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JVM Diagnostic</title>
+    <script src="https://cjrtnc.leaningtech.com/4.2/loader.js"></script>
+    <style>body { background: #000; color: #0f0; font-family: monospace; padding: 20px; }</style>
+</head>
+<body>
+    <h2>JVM Diagnostic Tool</h2>
+    <div id="log"></div>
+
+    <script type="module">
+        const logDiv = document.getElementById('log');
+        function log(msg) {
+            logDiv.innerHTML += `[${new Date().toLocaleTimeString()}] ${msg}<br>`;
+        }
+
+        (async function() {
+            try {
+                log("1. Initializing CheerpJ (Minimal Mode)...");
+                
+                // Minimal Init - No Files, No Custom Args
+                await cheerpjInit({
+                    javaProperties: ["java.version=8"], // Try Java 8 default first
+                    arguments: ["-Xmx512m"] 
+                });
+                
+                log("2. CheerpJ Initialized. Starting JVM...");
+                
+                // Run simple command
+                const exitCode = await cheerpjRunMain("java.lang.System", "out.println", "HELLO WORLD FROM JVM!");
+                
+                log("3. JVM Success! Exit Code: " + exitCode);
+                
+            } catch (e) {
+                log("CRITICAL ERROR: " + e);
+                console.error(e);
+            }
+        })();
+    </script>
+</body>
+</html>

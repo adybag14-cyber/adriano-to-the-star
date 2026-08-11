@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Procedural Planet | V3 High Fidelity</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #000;
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        #canvas-container {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .ui-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border: 1px solid rgba(186, 148, 79, 0.4);
+            border-radius: 12px;
+            backdrop-filter: blur(15px);
+            color: #fff;
+            max-width: 320px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            margin: 0 0 15px 0;
+            color: #ba944f;
+            font-size: 1.3rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(186, 148, 79, 0.5);
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ba944f, #d4a95a);
+            color: #000;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+
+        .control-group {
+            margin-bottom: 15px;
+        }
+
+        .control-group label {
+            display: block;
+            font-size: 0.75rem;
+            color: #999;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            cursor: pointer;
+            accent-color: #ba944f;
+            height: 6px;
+        }
+
+        select {
+            width: 100%;
+            background: rgba(20, 20, 30, 0.95);
+            border: 1px solid #444;
+            color: #fff;
+            padding: 10px;
+            border-radius: 6px;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        button {
+            width: 100%;
+            background: linear-gradient(135deg, #ba944f, #d4a95a);
+            color: #000;
+            border: none;
+            padding: 12px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(186, 148, 79, 0.4);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 15px;
+            color: #888;
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: #ba944f;
+        }
+
+        .stats {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            color: #555;
+            font-size: 0.7rem;
+            text-align: right;
+            pointer-events: none;
+        }
+
+        .feature-badge {
+            display: inline-block;
+            background: rgba(186, 148, 79, 0.2);
+            border: 1px solid rgba(186, 148, 79, 0.3);
+            color: #ba944f;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.65rem;
+            margin: 2px;
+        }
+
+        #loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ba944f;
+            font-size: 1.5rem;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 8px 0;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            accent-color: #ba944f;
+            width: 16px;
+            height: 16px;
+        }
+
+        .checkbox-group label {
+            font-size: 0.8rem;
+            color: #ccc;
+            margin: 0;
+        }
+    </style>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+
+<body>
+    <div id="loading">INITIALIZING PLANETARY FORGE V3...</div>
+    <div id="canvas-container"></div>
+
+    <div class="ui-overlay">
+        <a href="../../projects.html" class="back-link">← BACK TO PROJECTS</a>
+        <h1>Planetary Forge <span class="version-badge">V3</span></h1>
+
+        <div class="control-group">
+            <label>Planet Type</label>
+            <select id="planet-type">
+                <option value="terran">Terran (Earth-like)</option>
+                <option value="archipelago">Archipelago (Water World)</option>
+                <option value="desert">Arid (Desert)</option>
+                <option value="ice">Glacial (Ice World)</option>
+                <option value="alien">Xeno (Alien Flora)</option>
+                <option value="lava">Volcanic (Primordial)</option>
+                <option value="gas">Gas Giant</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label>Water Level</label>
+            <input type="range" id="water-level" min="0" max="1" step="0.01" value="0.5">
+        </div>
+
+        <div class="control-group">
+            <label>Terrain Scale</label>
+            <input type="range" id="roughness" min="0.5" max="4" step="0.1" value="1.8">
+        </div>
+
+        <div class="control-group">
+            <label>Atmosphere Density</label>
+            <input type="range" id="atmosphere-density" min="0" max="2" step="0.05" value="1.0">
+        </div>
+
+        <div class="control-group">
+            <label>Cloud Coverage</label>
+            <input type="range" id="cloud-coverage" min="0" max="1" step="0.01" value="0.5">
+        </div>
+
+        <div class="checkbox-group">
+            <input type="checkbox" id="enable-clouds" checked>
+            <label for="enable-clouds">Volumetric Clouds</label>
+        </div>
+
+        <div class="checkbox-group">
+            <input type="checkbox" id="enable-atmosphere" checked>
+            <label for="enable-atmosphere">Atmospheric Scattering</label>
+        </div>
+
+        <div class="checkbox-group">
+            <input type="checkbox" id="enable-city-lights" checked>
+            <label for="enable-city-lights">City Lights (Night Side)</label>
+        </div>
+
+        <button id="generate-btn">Generate New Planet</button>
+        <button id="day-mode-btn"
+            style="background: linear-gradient(135deg, #4f94ba, #5ad4d1); margin-top: 15px;">Toggle Day Mode</button>
+    </div>
+
+    <div class="stats">
+        <span class="feature-badge">Rayleigh Scattering</span>
+        <span class="feature-badge">Volumetric Clouds</span>
+        <span class="feature-badge">Ridge Noise</span>
+        <br>
+        <span style="margin-top: 5px; display: inline-block;">WebGL 2.0 • Icosahedron Geometry • PBR Shading</span>
+    </div>
+
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+    <script>
+        /**
+         * 3D Procedural Planet Generator V3
+         * - Rayleigh & Mie Atmospheric Scattering
+         * - Volumetric Cloud Layer
+         * - Enhanced Ridge Noise & Domain Warping
+         * - PBR-like Terrain Shading
+         * - Dynamic City Lights
+         */
+
+        // --- GLSL Noise Functions ---
+        const glslNoise = `
+            vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+            vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+            vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
+            vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+
+            float snoise(vec3 v) {
+                const vec2 C = vec2(1.0/6.0, 1.0/3.0);
+                const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
+
+                vec3 i  = floor(v + dot(v, C.yyy));
+                vec3 x0 = v - i + dot(i, C.xxx);
+
+                vec3 g = step(x0.yzx, x0.xyz);
+                vec3 l = 1.0 - g;
+                vec3 i1 = min(g.xyz, l.zxy);
+                vec3 i2 = max(g.xyz, l.zxy);
+
+                vec3 x1 = x0 - i1 + C.xxx;
+                vec3 x2 = x0 - i2 + C.yyy;
+                vec3 x3 = x0 - D.yyy;
+
+                i = mod289(i);
+                vec4 p = permute(permute(permute(
+                            i.z + vec4(0.0, i1.z, i2.z, 1.0))
+                        + i.y + vec4(0.0, i1.y, i2.y, 1.0))
+                        + i.x + vec4(0.0, i1.x, i2.x, 1.0));
+
+                float n_ = 0.142857142857;
+                vec3 ns = n_ * D.wyz - D.xzx;
+
+                vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+
+                vec4 x_ = floor(j * ns.z);
+                vec4 y_ = floor(j - 7.0 * x_);
+
+                vec4 x = x_ * ns.x + ns.yyyy;
+                vec4 y = y_ * ns.x + ns.yyyy;
+                vec4 h = 1.0 - abs(x) - abs(y);
+
+                vec4 b0 = vec4(x.xy, y.xy);
+                vec4 b1 = vec4(x.zw, y.zw);
+
+                vec4 s0 = floor(b0)*2.0 + 1.0;
+                vec4 s1 = floor(b1)*2.0 + 1.0;
+                vec4 sh = -step(h, vec4(0.0));
+
+                vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy;
+                vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww;
+
+                vec3 p0 = vec3(a0.xy, h.x);
+                vec3 p1 = vec3(a0.zw, h.y);
+                vec3 p2 = vec3(a1.xy, h.z);
+                vec3 p3 = vec3(a1.zw, h.w);
+
+                vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2,p2), dot(p3,p3)));
+                p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;
+
+                vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+                m = m * m;
+                return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
+            }
+
+            // Fractional Brownian Motion with Ridge Noise
+            float fbmRidge(vec3 p, float seed) {
+                float value = 0.0;
+                float amplitude = 0.5;
+                float frequency = 1.0;
+                float prev = 1.0;
+
+                for (int i = 0; i < 8; i++) {
+                    float n = snoise(p * frequency + seed);
+                    
+                    // Ridge transform for first 4 octaves
+                    if (i < 4) {
+                        n = abs(n);
+                        n = 1.0 - n;
+                        n = n * n;
+                        value += n * amplitude * prev;
+                        prev = n;
+                    } else {
+                        value += n * amplitude;
+                    }
+                    
+                    amplitude *= 0.5;
+                    frequency *= 2.0;
+                }
+                return value;
+            }
+
+            // Standard FBM
+            float fbm(vec3 p, float seed) {
+                float value = 0.0;
+                float amplitude = 0.5;
+                float frequency = 1.0;
+
+                for (int i = 0; i < 6; i++) {
+                    value += snoise(p * frequency + seed) * amplitude;
+                    amplitude *= 0.5;
+                    frequency *= 2.0;
+                }
+                return value;
+            }
+        `;
+
+        // --- Planet Surface Vertex Shader ---
+        const planetVertexShader = `
+            ${glslNoise}
+
+            varying vec2 vUv;
+            varying vec3 vNormal;
+            varying vec3 vPosition;
+            varying vec3 vWorldPosition;
+            varying float vElevation;
+            varying float vSlope;
+
+            uniform float uSeed;
+            uniform float uRoughness;
+
+            void main() {
+                vUv = uv;
+                vPosition = position;
+                
+                // Domain Warping for organic continental shapes
+                vec3 warpOffset = vec3(
+                    snoise(position * 2.0 + uSeed),
+                    snoise(position * 2.0 + uSeed + 100.0),
+                    snoise(position * 2.0 + uSeed + 200.0)
+                ) * 0.15;
+                vec3 warpedPos = position + warpOffset;
+
+                // Calculate elevation using ridge FBM
+                float elevation = fbmRidge(warpedPos * uRoughness, uSeed);
+                vElevation = elevation;
+
+                // Calculate slope from noise derivatives (approximate)
+                float eps = 0.01;
+                float nx = fbmRidge((warpedPos + vec3(eps, 0.0, 0.0)) * uRoughness, uSeed);
+                float ny = fbmRidge((warpedPos + vec3(0.0, eps, 0.0)) * uRoughness, uSeed);
+                float nz = fbmRidge((warpedPos + vec3(0.0, 0.0, eps)) * uRoughness, uSeed);
+                vec3 gradient = vec3(nx - elevation, ny - elevation, nz - elevation) / eps;
+                
+                // Compute proper normal from gradient
+                vec3 computedNormal = normalize(normal - gradient * 0.5);
+                vNormal = normalize(normalMatrix * computedNormal);
+                
+                // Slope calculation
+                vSlope = length(gradient);
+
+                // Displace vertex
+                float displacement = elevation * 0.12;
+                vec3 newPosition = position + normal * displacement;
+                
+                vWorldPosition = (modelMatrix * vec4(newPosition, 1.0)).xyz;
+
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+            }
+        `;
+
+        // --- Planet Surface Fragment Shader ---
+        const planetFragmentShader = `
+            ${glslNoise}
+
+            varying vec2 vUv;
+            varying vec3 vNormal;
+            varying vec3 vPosition;
+            varying vec3 vWorldPosition;
+            varying float vElevation;
+            varying float vSlope;
+
+            uniform float uWaterLevel;
+            uniform float uSeed;
+            uniform vec3 uSunDirection;
+            uniform float uEnableCityLights;
+            uniform float uTime;             // Added for cloud animation
+            uniform float uCloudCoverage;    // Added for cloud shadows
+            uniform float uAmbientIntensity; // Added for Day Mode brightness control
+            
+            // Biome Colors
+            uniform vec3 uColorDeepWater;
+            uniform vec3 uColorShallowWater;
+            uniform vec3 uColorSand;
+            uniform vec3 uColorGrass;
+            uniform vec3 uColorForest;
+            uniform vec3 uColorRock;
+            uniform vec3 uColorSnow;
+
+            void main() {
+                vec3 viewDir = normalize(cameraPosition - vWorldPosition);
+                vec3 normal = normalize(vNormal);
+                vec3 lightDir = normalize(uSunDirection);
+
+                // --- Lighting ---
+                float NdotL = dot(normal, lightDir);
+                float diff = max(NdotL, 0.0);
+                
+                // Soft shadows / ambient occlusion approximation
+                float ao = 1.0 - vSlope * 0.3;
+                ao = max(ao, 0.3);
+                
+                // Ambient with hemisphere lighting - controlled by uniform and boosted base
+                float skyFactor = (normal.y * 0.5 + 0.5);
+                vec3 ambientBase = mix(vec3(0.2, 0.2, 0.25), vec3(0.4, 0.45, 0.5), skyFactor); // Boosted base (was 0.15-0.35)
+                vec3 ambient = ambientBase * uAmbientIntensity;
+                
+                vec3 color = vec3(0.0);
+                float h = vElevation;
+                
+                // Temperature based on latitude
+                float latitude = abs(normalize(vPosition).y);
+                float localTemp = 0.6 - pow(latitude, 1.5) * 1.0;
+                localTemp += snoise(vPosition * 4.0 + uSeed * 0.5) * 0.15;
+                localTemp = clamp(localTemp, 0.0, 1.0);
+
+                // --- Biome Determination ---
+                if (h < uWaterLevel) {
+                    // Water
+                    float depth = (uWaterLevel - h);
+                    color = mix(uColorShallowWater, uColorDeepWater, clamp(depth * 8.0, 0.0, 1.0));
+                    
+                    // Specular highlight on water with Roughness
+                    vec3 halfDir = normalize(lightDir + viewDir);
+                    
+                    // Procedural Roughness
+                    float roughness = snoise(vPosition * 20.0); // Simple noise for waves
+                    roughness = roughness * 0.5 + 0.5;
+                    
+                    float specPower = mix(200.0, 50.0, roughness); 
+                    float spec = pow(max(dot(normal, halfDir), 0.0), specPower);
+                    color += vec3(1.0, 0.95, 0.9) * spec * 0.6;
+                    
+                    // Ice at cold latitudes
+                    if (localTemp < 0.15) {
+                        float iceBlend = 1.0 - localTemp / 0.15;
+                        color = mix(color, vec3(0.9, 0.95, 1.0), iceBlend * 0.9);
+                    }
+                } else {
+                    // Land
+                    float altitude = (h - uWaterLevel) / (1.0 - uWaterLevel);
+                    altitude = clamp(altitude, 0.0, 1.0);
+                    
+                    // Steep slopes get rock
+                    float steepness = smoothstep(0.3, 0.8, vSlope);
+                    
+                    // Base biome color by altitude
+                    vec3 biomeColor;
+                    if (altitude < 0.05) {
+                        biomeColor = uColorSand; // Beach
+                    } else if (altitude < 0.25) {
+                        float t = (altitude - 0.05) / 0.2;
+                        biomeColor = mix(uColorGrass, uColorForest, t);
+                        // Dry areas become savanna/desert
+                        if (localTemp > 0.7) {
+                            biomeColor = mix(biomeColor, uColorSand, (localTemp - 0.7) * 3.0);
+                        }
+                    } else if (altitude < 0.5) {
+                        float t = (altitude - 0.25) / 0.25;
+                        biomeColor = mix(uColorForest, uColorRock, t);
+                    } else {
+                        float t = (altitude - 0.5) / 0.5;
+                        biomeColor = mix(uColorRock, uColorSnow, t);
+                    }
+                    
+                    // Blend in rock on steep slopes
+                    color = mix(biomeColor, uColorRock, steepness);
+                    
+                    // Snow at cold temperatures or high altitude
+                    float snowLine = 0.6 - localTemp * 0.4;
+                    if (altitude > snowLine) {
+                        float snowBlend = (altitude - snowLine) / (1.0 - snowLine);
+                        color = mix(color, uColorSnow, snowBlend * 0.95);
+                    }
+                    
+                    // Polar snow
+                    if (localTemp < 0.2) {
+                        float polarSnow = 1.0 - localTemp / 0.2;
+                        color = mix(color, uColorSnow, polarSnow * 0.8);
+                    }
+                }
+
+                // --- Apply Lighting ---
+                vec3 litColor = color * (ambient + diff * 0.9) * ao;
+
+                // --- Cloud Shadows ---
+                // Re-use cloud noise logic to project shadows
+                vec3 pCloud = vPosition * 3.0 + uTime * 0.02; // Must match Cloud Shader scale
+                float cloudNoise = 0.0;
+                cloudNoise += snoise(pCloud + uSeed) * 0.5;
+                cloudNoise += snoise(pCloud * 2.0 + uSeed + 50.0) * 0.25;
+                cloudNoise += snoise(pCloud * 4.0 + uSeed + 100.0) * 0.125;
+                
+                float cloudDensity = (cloudNoise + 0.5);
+                float shadowThreshold = 1.0 - uCloudCoverage;
+                
+                // Shadow mask
+                if (cloudDensity > shadowThreshold) {
+                    float shadowIntensity = smoothstep(shadowThreshold, shadowThreshold + 0.1, cloudDensity);
+                    litColor *= (1.0 - shadowIntensity * 0.25); // Subtle shadow (was 0.4)
+                }
+
+                // --- Night Side City Lights ---
+                if (uEnableCityLights > 0.5) {
+                    float night = 1.0 - max(NdotL, 0.0);
+                    night = smoothstep(0.6, 1.0, night);
+                    
+                    if (h > uWaterLevel && night > 0.0 && localTemp > 0.2 && localTemp < 0.8) {
+                        float cities = snoise(vPosition * 40.0 + uSeed * 10.0);
+                        cities = smoothstep(0.55, 0.7, cities);
+                        
+                        // Cluster lights near coasts
+                        float coastDist = abs(h - uWaterLevel);
+                        float coastFactor = 1.0 - smoothstep(0.0, 0.15, coastDist);
+                        cities *= (1.0 + coastFactor * 2.0);
+                        
+                        vec3 lightColor = vec3(1.0, 0.85, 0.5); // Warm city glow
+                        litColor += lightColor * cities * night * 0.6;
+                    }
+                }
+
+                gl_FragColor = vec4(litColor, 1.0);
+            }
+        `;
+
+        // --- Atmosphere Vertex Shader (Rayleigh/Mie) ---
+        const atmosphereVertexShader = `
+            varying vec3 vNormal;
+            varying vec3 vPosition;
+            varying vec3 vWorldPosition;
+            
+            uniform float uAtmosphereRadius;
+
+            void main() {
+                vNormal = normalize(normalMatrix * normal);
+                vPosition = position;
+                
+                vec3 scaledPos = position * uAtmosphereRadius;
+                vWorldPosition = (modelMatrix * vec4(scaledPos, 1.0)).xyz;
+                
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(scaledPos, 1.0);
+            }
+        `;
+
+        // --- Atmosphere Fragment Shader (Rayleigh Scattering) ---
+        const atmosphereFragmentShader = `
+            varying vec3 vNormal;
+            varying vec3 vPosition;
+            varying vec3 vWorldPosition;
+            
+            uniform vec3 uSunDirection;
+            uniform float uAtmosphereDensity;
+            uniform vec3 uAtmosphereColor;
+
+            void main() {
+                vec3 viewDir = normalize(cameraPosition - vWorldPosition);
+                vec3 normal = normalize(vNormal);
+                vec3 lightDir = normalize(uSunDirection);
+                
+                // Fresnel effect (rim lighting)
+                float fresnel = 1.0 - dot(viewDir, normal);
+                fresnel = pow(fresnel, 3.0);
+                
+                // Rayleigh scattering approximation
+                // Blue light scatters more (short wavelength)
+                float sunAngle = dot(normal, lightDir);
+                float scatter = pow(max(sunAngle, 0.0), 0.5);
+                
+                // Mie scattering (forward scattering around sun)
+                float viewSun = max(dot(viewDir, -lightDir), 0.0);
+                float mie = pow(viewSun, 8.0) * 0.5;
+                
+                // Combined atmosphere color
+                vec3 rayleighColor = uAtmosphereColor * scatter;
+                vec3 mieColor = vec3(1.0, 0.9, 0.7) * mie;
+                
+                vec3 finalColor = (rayleighColor + mieColor) * fresnel * uAtmosphereDensity;
+                
+                // Alpha based on fresnel and density
+                float alpha = fresnel * uAtmosphereDensity * 0.8;
+                alpha = clamp(alpha, 0.0, 0.9);
+                
+                gl_FragColor = vec4(finalColor, alpha);
+            }
+        `;
+
+        // --- Cloud Layer Vertex Shader ---
+        const cloudVertexShader = `
+            varying vec3 vNormal;
+            varying vec3 vPosition;
+            varying vec3 vWorldPosition;
+            
+            uniform float uCloudAltitude;
+
+            void main() {
+                vNormal = normalize(normalMatrix * normal);
+                vPosition = position;
+                
+                vec3 scaledPos = position * uCloudAltitude;
+                vWorldPosition = (modelMatrix * vec4(scaledPos, 1.0)).xyz;
+                
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(scaledPos, 1.0);
+            }
+        `;
+
+        // --- Cloud Layer Fragment Shader ---
+        const cloudFragmentShader = `
+            ${glslNoise}
+
+            varying vec3 vNormal;
+            varying vec3 vPosition;
+            varying vec3 vWorldPosition;
+            
+            uniform float uTime;
+            uniform float uCloudCoverage;
+            uniform float uSeed;
+            uniform vec3 uSunDirection;
+
+            void main() {
+                vec3 normal = normalize(vNormal);
+                vec3 lightDir = normalize(uSunDirection);
+                vec3 viewDir = normalize(cameraPosition - vWorldPosition);
+                
+                // Animated cloud noise
+                vec3 p = vPosition * 3.0 + uTime * 0.02;
+                
+                // Multi-octave cloud noise
+                float clouds = 0.0;
+                clouds += snoise(p + uSeed) * 0.5;
+                clouds += snoise(p * 2.0 + uSeed + 50.0) * 0.25;
+                clouds += snoise(p * 4.0 + uSeed + 100.0) * 0.125;
+                clouds += snoise(p * 8.0 + uSeed + 150.0) * 0.0625;
+                
+                // Remap to coverage
+                clouds = (clouds + 0.5);
+                clouds = smoothstep(1.0 - uCloudCoverage, 1.0, clouds);
+                
+                // Cloud lighting
+                float NdotL = dot(normal, lightDir);
+                float light = max(NdotL, 0.0) * 0.8 + 0.2;
+                
+                // Silver lining effect
+                float rim = 1.0 - abs(dot(viewDir, normal));
+                rim = pow(rim, 2.0);
+                
+                // Self-shadowing (thicker clouds are darker)
+                float shadow = 1.0 - clouds * 0.3;
+                
+                vec3 cloudColor = vec3(1.0) * light * shadow;
+                cloudColor += vec3(1.0, 0.95, 0.9) * rim * 0.2;
+                
+                // Alpha
+                float alpha = clouds * 0.85;
+                
+                // Fade at edges for soft look
+                float edgeFade = 1.0 - pow(abs(dot(viewDir, normal)), 0.5);
+                alpha *= (1.0 - edgeFade * 0.3);
+                
+                gl_FragColor = vec4(cloudColor, alpha);
+            }
+        `;
+
+        // --- Gas Giant Shader ---
+        const gasGiantFragmentShader = `
+            ${glslNoise}
+
+            varying vec3 vNormal;
+            varying vec3 vPosition;
+            varying vec3 vWorldPosition;
+            varying float vElevation;
+
+            uniform float uSeed;
+            uniform vec3 uSunDirection;
+            uniform vec3 uColor1;
+            uniform vec3 uColor2;
+            uniform vec3 uColor3;
+
+            void main() {
+                vec3 viewDir = normalize(cameraPosition - vWorldPosition);
+                vec3 normal = normalize(vNormal);
+                vec3 lightDir = normalize(uSunDirection);
+
+                float diff = max(dot(normal, lightDir), 0.0);
+                float ambient = 0.15;
+                
+                // Latitude-based banding
+                float y = vPosition.y;
+                float bands = sin(y * 20.0 + snoise(vPosition * 2.0 + uSeed) * 3.0);
+                bands = bands * 0.5 + 0.5;
+                
+                // Turbulent storms
+                float storm = snoise(vPosition * 4.0 + uSeed);
+                storm = pow(abs(storm), 0.5) * sign(storm);
+                
+                // Color mixing
+                vec3 color = mix(uColor1, uColor2, bands);
+                color = mix(color, uColor3, smoothstep(0.6, 0.8, abs(storm)));
+                
+                // Great Red Spot / storm features
+                vec3 stormCenter = vec3(0.5, 0.2, 0.3);
+                float stormDist = distance(normalize(vPosition), normalize(stormCenter));
+                if (stormDist < 0.15) {
+                    float stormIntensity = 1.0 - stormDist / 0.15;
+                    color = mix(color, vec3(0.8, 0.3, 0.2), stormIntensity * 0.8);
+                }
+                
+                // Atmosphere rim
+                float fresnel = pow(1.0 - dot(viewDir, normal), 3.0);
+                color += vec3(0.5, 0.6, 0.8) * fresnel * 0.3;
+
+                gl_FragColor = vec4(color * (ambient + diff), 1.0);
+            }
+        `;
+
+        // --- App State ---
+        let scene, camera, renderer, controls;
+        let planet, atmosphere, clouds;
+        let planetUniforms, atmosphereUniforms, cloudUniforms;
+        let startTime = Date.now();
+        let isDayMode = false;
+        let stars; // Reference to starfield
+
+        const presets = {
+            terran: {
+                waterLevel: 0.5,
+                colors: {
+                    deep: 0x001e4d, shallow: 0x006994, sand: 0xd4b483,
+                    grass: 0x567d46, forest: 0x228b22, rock: 0x5a4d41, snow: 0xffffff
+                },
+                atmosphereColor: [0.4, 0.7, 1.0]
+            },
+            archipelago: {
+                waterLevel: 0.72,
+                colors: {
+                    deep: 0x003366, shallow: 0x00aaaa, sand: 0xf0e68c,
+                    grass: 0x32cd32, forest: 0x006400, rock: 0x696969, snow: 0xffffff
+                },
+                atmosphereColor: [0.3, 0.6, 1.0]
+            },
+            desert: {
+                waterLevel: 0.15,
+                colors: {
+                    deep: 0x8b0000, shallow: 0xcd5c5c, sand: 0xd2691e,
+                    grass: 0x8b4513, forest: 0xa0522d, rock: 0x4a3c31, snow: 0xffe4b5
+                },
+                atmosphereColor: [1.0, 0.6, 0.3]
+            },
+            ice: {
+                waterLevel: 0.45,
+                colors: {
+                    deep: 0x001133, shallow: 0x335577, sand: 0xa8c5e5,
+                    grass: 0xddeeff, forest: 0xaaccff, rock: 0x778899, snow: 0xffffff
+                },
+                atmosphereColor: [0.6, 0.8, 1.0]
+            },
+            alien: {
+                waterLevel: 0.5,
+                colors: {
+                    deep: 0x1a0033, shallow: 0x660066, sand: 0x4a3050,
+                    grass: 0x9932cc, forest: 0x8b008b, rock: 0x483d8b, snow: 0xe6e6fa
+                },
+                atmosphereColor: [0.8, 0.4, 1.0]
+            },
+            lava: {
+                waterLevel: 0.3,
+                colors: {
+                    deep: 0xff4500, shallow: 0xff6600, sand: 0x2d2d2d,
+                    grass: 0x1a1a1a, forest: 0x0d0d0d, rock: 0x333333, snow: 0x4d4d4d
+                },
+                atmosphereColor: [1.0, 0.3, 0.1]
+            },
+            gas: {
+                waterLevel: 0.0,
+                colors: {
+                    color1: [0.9, 0.7, 0.5],
+                    color2: [0.8, 0.5, 0.3],
+                    color3: [0.6, 0.4, 0.2]
+                },
+                atmosphereColor: [0.8, 0.75, 0.6]
+            }
+        };
+
+        function init() {
+            const container = document.getElementById('canvas-container');
+
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x000000);
+
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 4;
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(renderer.domElement);
+
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.minDistance = 2;
+            controls.maxDistance = 15;
+
+            // Create starfield
+            createStarfield();
+
+            // Create planet
+            createPlanet();
+
+            // Hide loading
+            document.getElementById('loading').style.opacity = '0';
+            setTimeout(() => document.getElementById('loading').style.display = 'none', 500);
+
+            // Setup UI
+            setupUI();
+
+            // Start animation
+            animate();
+        }
+
+        function createStarfield() {
+            const geometry = new THREE.BufferGeometry();
+            const vertices = [];
+            const colors = [];
+
+            for (let i = 0; i < 5000; i++) {
+                vertices.push(
+                    THREE.MathUtils.randFloatSpread(300),
+                    THREE.MathUtils.randFloatSpread(300),
+                    THREE.MathUtils.randFloatSpread(300)
+                );
+
+                const brightness = Math.random() * 0.5 + 0.5;
+                const hue = Math.random();
+                const color = new THREE.Color();
+                color.setHSL(hue, 0.2, brightness);
+                colors.push(color.r, color.g, color.b);
+            }
+
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+            geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
+            const material = new THREE.PointsMaterial({ size: 0.3, vertexColors: true, transparent: true });
+            stars = new THREE.Points(geometry, material);
+            scene.add(stars);
+        }
+
+        function createPlanet() {
+            const preset = presets.terran;
+            const seed = Math.random() * 1000;
+
+            // Planet geometry (high detail icosahedron)
+            const geometry = new THREE.IcosahedronGeometry(1, 128);
+
+            // Planet uniforms
+            planetUniforms = {
+                uTime: { value: 0 },
+                uSeed: { value: seed },
+                uRoughness: { value: 1.8 },
+                uWaterLevel: { value: preset.waterLevel },
+                uSunDirection: { value: new THREE.Vector3(1, 0.3, 0.5).normalize() },
+                uEnableCityLights: { value: 1.0 },
+                uCloudCoverage: { value: 0.5 },
+                uAmbientIntensity: { value: 1.0 }, // Default Space intensity
+                uColorDeepWater: { value: new THREE.Color(preset.colors.deep) },
+                uColorShallowWater: { value: new THREE.Color(preset.colors.shallow) },
+                uColorSand: { value: new THREE.Color(preset.colors.sand) },
+                uColorGrass: { value: new THREE.Color(preset.colors.grass) },
+                uColorForest: { value: new THREE.Color(preset.colors.forest) },
+                uColorRock: { value: new THREE.Color(preset.colors.rock) },
+                uColorSnow: { value: new THREE.Color(preset.colors.snow) }
+            };
+
+            const planetMaterial = new THREE.ShaderMaterial({
+                vertexShader: planetVertexShader,
+                fragmentShader: planetFragmentShader,
+                uniforms: planetUniforms
+            });
+
+            planet = new THREE.Mesh(geometry, planetMaterial);
+            scene.add(planet);
+
+            // Atmosphere
+            const atmGeometry = new THREE.IcosahedronGeometry(1, 32);
+
+            atmosphereUniforms = {
+                uSunDirection: { value: new THREE.Vector3(1, 0.3, 0.5).normalize() },
+                uAtmosphereRadius: { value: 1.15 },
+                uAtmosphereDensity: { value: 1.0 },
+                uAtmosphereColor: { value: new THREE.Vector3(...preset.atmosphereColor) }
+            };
+
+            const atmMaterial = new THREE.ShaderMaterial({
+                vertexShader: atmosphereVertexShader,
+                fragmentShader: atmosphereFragmentShader,
+                uniforms: atmosphereUniforms,
+                side: THREE.BackSide,
+                transparent: true,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+
+            atmosphere = new THREE.Mesh(atmGeometry, atmMaterial);
+            scene.add(atmosphere);
+
+            // Clouds
+            const cloudGeometry = new THREE.IcosahedronGeometry(1, 64);
+
+            cloudUniforms = {
+                uTime: { value: 0 },
+                uSeed: { value: seed },
+                uCloudAltitude: { value: 1.02 },
+                uCloudCoverage: { value: 0.5 },
+                uSunDirection: { value: new THREE.Vector3(1, 0.3, 0.5).normalize() }
+            };
+
+            const cloudMaterial = new THREE.ShaderMaterial({
+                vertexShader: cloudVertexShader,
+                fragmentShader: cloudFragmentShader,
+                uniforms: cloudUniforms,
+                transparent: true,
+                depthWrite: false
+            });
+
+            clouds = new THREE.Mesh(cloudGeometry, cloudMaterial);
+            scene.add(clouds);
+
+            // Sun light
+            const sunLight = new THREE.DirectionalLight(0xffffff, 1.5);
+            sunLight.position.set(5, 1.5, 2.5);
+            scene.add(sunLight);
+
+            const ambientLight = new THREE.AmbientLight(0x111122);
+            scene.add(ambientLight);
+        }
+
+        function setupUI() {
+            document.getElementById('generate-btn').addEventListener('click', () => {
+                regeneratePlanet();
+            });
+
+            document.getElementById('planet-type').addEventListener('change', (e) => {
+                applyPreset(e.target.value);
+            });
+
+            document.getElementById('water-level').addEventListener('input', (e) => {
+                planetUniforms.uWaterLevel.value = parseFloat(e.target.value);
+            });
+
+            document.getElementById('roughness').addEventListener('input', (e) => {
+                planetUniforms.uRoughness.value = parseFloat(e.target.value);
+            });
+
+            document.getElementById('atmosphere-density').addEventListener('input', (e) => {
+                atmosphereUniforms.uAtmosphereDensity.value = parseFloat(e.target.value);
+            });
+
+            document.getElementById('cloud-coverage').addEventListener('input', (e) => {
+                const val = parseFloat(e.target.value);
+                cloudUniforms.uCloudCoverage.value = val;
+                planetUniforms.uCloudCoverage.value = val; // Sync for shadows
+            });
+
+            document.getElementById('enable-clouds').addEventListener('change', (e) => {
+                clouds.visible = e.target.checked;
+            });
+
+            document.getElementById('enable-atmosphere').addEventListener('change', (e) => {
+                atmosphere.visible = e.target.checked;
+            });
+
+            document.getElementById('enable-city-lights').addEventListener('change', (e) => {
+                planetUniforms.uEnableCityLights.value = e.target.checked ? 1.0 : 0.0;
+            });
+
+            document.getElementById('day-mode-btn').addEventListener('click', () => {
+                isDayMode = !isDayMode;
+                const btn = document.getElementById('day-mode-btn');
+
+                if (isDayMode) {
+                    scene.background = new THREE.Color(0x87CEEB); // Sky Blue
+                    if (stars) stars.visible = false;
+                    // Boost ambient light for day
+                    scene.children.forEach(child => {
+                        if (child.isAmbientLight) child.intensity = 0.6;
+                    });
+
+                    // Boost Shader Ambient
+                    planetUniforms.uAmbientIntensity.value = 3.5; // Massive boost for Day look
+
+                    btn.textContent = "Switch to Space Mode";
+                    btn.style.background = "linear-gradient(135deg, #ba944f, #d4a95a)"; // Gold
+                } else {
+                    scene.background = new THREE.Color(0x000000); // Space Black
+                    if (stars) stars.visible = true;
+
+                    // Reset Three.js Ambient Light
+                    scene.children.forEach(child => {
+                        if (child.isAmbientLight) child.intensity = 1.0;
+                    });
+
+                    // Reset Shader Ambient Intensity
+                    planetUniforms.uAmbientIntensity.value = 1.0;
+
+                    btn.textContent = "Toggle Day Mode";
+                    btn.style.background = "linear-gradient(135deg, #4f94ba, #5ad4d1)"; // Blue
+                }
+            });
+        }
+
+        function regeneratePlanet() {
+            const newSeed = Math.random() * 1000;
+            planetUniforms.uSeed.value = newSeed;
+            cloudUniforms.uSeed.value = newSeed;
+        }
+
+        function applyPreset(presetName) {
+            const preset = presets[presetName];
+            if (!preset) return;
+
+            document.getElementById('water-level').value = preset.waterLevel;
+            planetUniforms.uWaterLevel.value = preset.waterLevel;
+
+            if (presetName === 'gas') {
+                // For gas giants, hide clouds and use different shader
+                clouds.visible = false;
+                document.getElementById('enable-clouds').checked = false;
+            } else {
+                planetUniforms.uColorDeepWater.value.set(preset.colors.deep);
+                planetUniforms.uColorShallowWater.value.set(preset.colors.shallow);
+                planetUniforms.uColorSand.value.set(preset.colors.sand);
+                planetUniforms.uColorGrass.value.set(preset.colors.grass);
+                planetUniforms.uColorForest.value.set(preset.colors.forest);
+                planetUniforms.uColorRock.value.set(preset.colors.rock);
+                planetUniforms.uColorSnow.value.set(preset.colors.snow);
+            }
+
+            atmosphereUniforms.uAtmosphereColor.value.set(...preset.atmosphereColor);
+            regeneratePlanet();
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const elapsed = (Date.now() - startTime) / 1000;
+
+            if (planetUniforms) planetUniforms.uTime = { value: elapsed };
+            if (cloudUniforms) cloudUniforms.uTime.value = elapsed;
+
+            // Slow rotation
+            if (planet) planet.rotation.y += 0.0005;
+            if (clouds) clouds.rotation.y += 0.0007;
+
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        // Handle resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Initialize
+        init();
+    </script>
+</body>
+
+</html>

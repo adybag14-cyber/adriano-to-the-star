@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galactic Education | Adriano To The Star</title>
+
+    <meta name="description"
+        content="Master exoplanet science with Galactic Education. Interactive 3D planet visualizers, astronomy courses, and space learning modules for interstellar explorers.">
+    <meta name="keywords"
+        content="Galactic Education, Exoplanet Discovery, Space Exploration, Kepler Archive, Adriano To The Star">
+    <link rel="canonical" href="https://adrianotothestar.com/education.html">
+    <!-- Open Graph -->
+    <meta property="og:title" content="Galactic Education | Adriano To The Star">
+    <meta property="og:description"
+        content="Master exoplanet science with Galactic Education. Interactive 3D planet visualizers, astronomy courses, and space learning modules for interstellar explorers.">
+    <meta property="og:url" content="https://adrianotothestar.com/education.html">
+    <meta property="og:image" content="https://adrianotothestar.com/images/bg-large.jpg">
+    <meta property="og:type" content="website">
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Galactic Education | Adriano To The Star">
+    <meta name="twitter:description"
+        content="Master exoplanet science with Galactic Education. Interactive 3D planet visualizers, astronomy courses, and space learning modules for interstellar explorers.">
+    <meta name="twitter:image" content="https://adrianotothestar.com/images/bg-large.jpg">
+
+    <script type="application/ld+json">
+    [
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Adriano To The Star",
+        "url": "https://adrianotothestar.com",
+        "logo": { "@type": "ImageObject", "url": "https://adrianotothestar.com/images/ita_logo.png", "width": 112, "height": 112 },
+        "sameAs": [ "https://twitter.com/AdrianoToTheStar", "https://www.facebook.com/AdrianoToTheStar" ],
+        "contactPoint": { "@type": "ContactPoint", "contactType": "customer support", "email": "contact@adrianotothestar.com" }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Adriano To The Star",
+        "url": "https://adrianotothestar.com",
+        "potentialAction": { "@type": "SearchAction", "target": "https://adrianotothestar.com/database.html?q={search_term_string}", "query-input": "required name=search_term_string" }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://adrianotothestar.com/index.html" }
+          , { "@type": "ListItem", "position": 2, "name": "Galactic Education", "item": "https://adrianotothestar.com/education.html" }
+        ]
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Galactic Education | Adriano To The Star",
+        "speakable": { "@type": "SpeakableSpecification", "xpath": ["/html/head/title", "/html/head/meta[@name=\"description\"]/@content"] },
+        "url": "https://adrianotothestar.com/education.html"
+      }
+    ]
+    </script>
+
+    <link rel="stylesheet" href="fonts/fonts.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="images/ita_logo.png">
+
+    <script data-cfasync="false" src="three.min.js" defer></script>
+    <script data-cfasync="false" src="OrbitControls-r128.js" defer></script>
+    <script data-cfasync="false" src="education-viewer.js" defer></script>
+    <script data-cfasync="false" src="navigation.js" async></script>
+    <script data-cfasync="false" src="cosmic-music-player.js" async fetchpriority="low"></script>
+    <script data-cfasync="false">
+        window.selectEducationPlanet = function (name) {
+            if (window.viewer) window.viewer.loadPlanet(name);
+            else window.__pendingEducationPlanet = name;
+        };
+        document.addEventListener('click', function (event) {
+            const planetButton = event.target.closest?.('[data-education-planet]');
+            if (planetButton) {
+                event.preventDefault();
+                window.selectEducationPlanet(planetButton.dataset.educationPlanet);
+                return;
+            }
+            const extraButton = event.target.closest?.('[data-education-extra]');
+            if (extraButton) {
+                event.preventDefault();
+                const kind = extraButton.dataset.educationExtra;
+                if (window.openEducationExtra) window.openEducationExtra(kind);
+                else window.__pendingEducationExtra = kind;
+            }
+        }, true);
+    </script>
+    <!-- <script src="loader.js"></script> -->
+
+    <style>
+        /* Viewer Specific Styles */
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #000;
+            font-family: 'Inter', sans-serif;
+        }
+
+        #viewer-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: 0;
+            background: radial-gradient(circle at center, #111 0%, #000 100%);
+        }
+
+        /* Glassmorphism Sidebar */
+        #ui-sidebar {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 280px;
+            max-height: calc(100vh - 40px);
+            background: rgba(16, 16, 20, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 10;
+            transform: translateX(-350px);
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            padding: 24px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        #ui-sidebar.active {
+            transform: translateX(0);
+        }
+
+        /* HUD Data Overlay */
+        #data-overlay {
+            position: absolute;
+            bottom: 40px;
+            right: 40px;
+            width: 300px;
+            background: rgba(16, 16, 20, 0.6);
+            border: 1px solid rgba(186, 148, 79, 0.3);
+            border-left: 4px solid #ba944f;
+            border-radius: 0 12px 12px 0;
+            backdrop-filter: blur(20px);
+            padding: 25px;
+            color: #fff;
+            z-index: 5;
+            pointer-events: none;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            transition: opacity 0.3s;
+        }
+
+        .toggle-btn {
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            z-index: 11;
+            background: rgba(186, 148, 79, 0.9);
+            border: none;
+            color: #000;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(186, 148, 79, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.2s;
+        }
+
+        .toggle-btn:hover {
+            transform: scale(1.1);
+            background: #d4a757;
+        }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: #ba944f;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            margin-top: 0;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 10px;
+        }
+
+        .planet-group-title {
+            color: #888;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 0 10px 0;
+            font-weight: 600;
+        }
+
+        .planet-btn {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid transparent;
+            border-radius: 8px;
+            color: #ddd;
+            cursor: pointer;
+            text-align: left;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .planet-btn:hover {
+            background: rgba(186, 148, 79, 0.15);
+            border-color: rgba(186, 148, 79, 0.5);
+            color: #fff;
+            transform: translateX(5px);
+        }
+
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 8px;
+        }
+
+        .data-label {
+            color: #888;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .data-value {
+            color: #fff;
+            font-size: 0.9rem;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        #planet-name {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            color: #fff;
+            border: none;
+        }
+
+        #planet-desc {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: #ccc;
+            margin-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 3D Viewer Container -->
+    <div id="viewer-container"></div>
+
+    <!-- Sidebar Toggle -->
+    <button class="toggle-btn" onclick="document.getElementById('ui-sidebar').classList.toggle('active')">
+        ☰
+    </button>
+
+    <!-- Sidebar UI -->
+    <div id="ui-sidebar" class="active">
+        <div style="display:flex; align-items:center; margin-bottom:20px;">
+            <img src="images/ita_logo_64.webp" alt="Planetary OS Logo" width="30" height="30" style="width:30px; height:30px; margin-right:10px;">
+            <h1
+                style="font-family:'Orbitron'; font-weight:700; color:#fff; font-size: 1rem; margin: 0; display: inline;">
+                PLANETARY OS</h1>
+        </div>
+
+        <div
+            style="display:flex; align-items:center; justify-content:space-between; padding:10px 12px; margin-bottom:18px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 8px;">
+            <div style="display:flex; flex-direction:column;">
+                <span style="font-size:0.85rem; color:#ddd;">HD Textures (8K)</span>
+                <span style="font-size:0.7rem; color:#888; margin-top:2px;">May increase load time</span>
+            </div>
+            <input id="hd-textures-toggle" type="checkbox" style="transform: scale(1.1); cursor:pointer;">
+        </div>
+
+        <div class="planet-group-title">Inner Solar System</div>
+        <button class="planet-btn" data-education-planet="Mercury">🪨 Mercury</button>
+        <button class="planet-btn" data-education-planet="Venus">🔥 Venus</button>
+        <button class="planet-btn" data-education-planet="Earth">🌍 Earth (High-Res)</button>
+        <button class="planet-btn" data-education-planet="Mars">🔴 Mars</button>
+
+        <div class="planet-group-title">Outer Giants</div>
+        <button class="planet-btn" data-education-planet="Jupiter">🟠 Jupiter</button>
+        <button class="planet-btn" data-education-planet="Saturn">🪐 Saturn</button>
+        <button class="planet-btn" data-education-planet="Uranus">❄️ Uranus</button>
+        <button class="planet-btn" data-education-planet="Neptune">🔵 Neptune</button>
+
+        <div class="planet-group-title">Exoplanets (Kepler)</div>
+        <button class="planet-btn" data-education-planet="Kepler-186f">✨ Kepler-186f</button>
+        <button class="planet-btn" data-education-planet="Trappist-1e">🌑 Trappist-1e</button>
+
+        <div class="planet-group-title">Active Modules</div>
+        <button class="planet-btn"
+            data-education-extra="games"
+            style="color: #4ade80; border-color: rgba(74,222,128,0.3);">
+            🎮 Launch Games
+        </button>
+        <button class="planet-btn"
+            data-education-extra="courses"
+            style="color: #a78bfa; border-color: rgba(167, 139, 250, 0.3);">
+            📚 Astronomy Courses
+        </button>
+
+        <div style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+            <a href="index.html" style="color: #aaa; text-decoration: none; font-size: 0.9rem;">← EXIT SIMULATION</a>
+        </div>
+    </div>
+
+    <!-- Data Overlay -->
+    <div id="data-overlay">
+        <h2 id="planet-name" style="border:none; margin:0;">EARTH</h2>
+        <div style="font-family:'Inter'; color:#ba944f; font-size:0.8rem; margin-bottom:20px;">HABITABLE ZONE</div>
+
+        <div class="data-row">
+            <span class="data-label">Diameter</span>
+            <span class="data-value" id="planet-diameter">12,742 km</span>
+        </div>
+        <div class="data-row">
+            <span class="data-label">Distance</span>
+            <span class="data-value" id="planet-distance">1 AU</span>
+        </div>
+        <div class="data-row">
+            <span class="data-label">Surface</span>
+            <span class="data-value" id="planet-surface">71% Water</span>
+        </div>
+
+        <p id="planet-desc">
+            The third planet from the Sun and the only astronomical object known to harbor life. Features a
+            nitrogen-oxygen atmosphere.
+        </p>
+    </div>
+
+</body>
+
+</html>

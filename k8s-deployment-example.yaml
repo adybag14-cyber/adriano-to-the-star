@@ -1,0 +1,36 @@
+# Example Kubernetes Deployment for Stellar AI / Database Services
+# This is a sample deployment configuration
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: site-web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: site-web
+  template:
+    metadata:
+      labels:
+        app: site-web
+    spec:
+      containers:
+      - name: site-web
+        image: us-east1-docker.pkg.dev/graphic-linker-479118-b9/site-prod-us-east1/site-web:v1
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: site-web
+spec:
+  type: LoadBalancer
+  selector:
+    app: site-web
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+

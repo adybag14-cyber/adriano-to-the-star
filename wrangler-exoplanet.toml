@@ -1,0 +1,16 @@
+name = "exoplanet-pioneer"
+compatibility_date = "2023-10-30"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "404_logs"
+database_id = "${DATABASE_ID}"
+
+[[kv_namespaces]]
+binding = "CACHE"
+id = "your_kv_namespace_id"
+
+[durable_objects]
+bindings = [
+  { name = "GAME_ROOM", class_name = "GameRoom" }
+]

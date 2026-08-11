@@ -1,0 +1,593 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Raleway', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #000000;
+    color: #ffffff;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Skip Link for Accessibility */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: #000;
+    color: #fff;
+    padding: 8px;
+    text-decoration: none;
+    z-index: 100;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* Header with Portrait */
+.site-header {
+    text-align: center;
+    padding: 40px 0 20px;
+    background-color: #000;
+}
+
+.header-image-wrapper {
+    display: inline-block;
+}
+
+.header-portrait {
+    max-width: 192px;
+    height: auto;
+    display: block;
+}
+
+/* Sponsored Section */
+.sponsored-section {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.sponsored-title {
+    font-family: 'Raleway', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 400;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #ffffff;
+    margin: 0;
+}
+
+/* Announcement Section */
+.announcement-section {
+    max-width: 900px;
+    margin: 60px auto;
+    padding: 0 20px;
+    text-align: center;
+}
+
+.announcement-title {
+    font-family: 'Raleway', sans-serif;
+    font-size: 2rem;
+    font-weight: 300;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+.announcement-note {
+    font-size: 0.9rem;
+    font-weight: 300;
+    line-height: 1.8;
+    margin: 20px 0;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.announcement-text {
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 1.9;
+    margin: 25px 0;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+/* I.T.A Section */
+.ita-section {
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.ita-large {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 8rem;
+    font-weight: 300;
+    letter-spacing: 25px;
+    margin: 40px 0;
+    color: #ffffff;
+    line-height: 1.1;
+}
+
+/* Apology Section */
+.apology-section {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.apology-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4rem;
+    font-weight: 300;
+    letter-spacing: 8px;
+    margin-bottom: 20px;
+}
+
+.apology-text {
+    font-size: 1rem;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Gallery Grid */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    margin: 80px auto;
+    padding: 0 20px;
+}
+
+.grid-img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.grid-img-large {
+    grid-column: span 2;
+}
+
+.grid-img-small {
+    max-width: 140px;
+}
+
+/* I.T.A Breakdown */
+.ita-breakdown {
+    grid-column: span 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.breakdown-letter {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3.5rem;
+    font-weight: 300;
+    letter-spacing: 8px;
+    margin: 20px 0;
+}
+
+/* Galactic Section */
+.galactic-section {
+    text-align: center;
+    padding: 100px 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.galactic-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4rem;
+    font-weight: 300;
+    letter-spacing: 12px;
+    margin-bottom: 20px;
+}
+
+.galactic-subtitle {
+    font-size: 1.2rem;
+    font-weight: 300;
+    margin: 20px 0;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.cta-button {
+    background-color: transparent;
+    border: 2px solid #ffffff;
+    color: #ffffff;
+    padding: 15px 40px;
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 30px;
+    font-family: 'Raleway', sans-serif;
+}
+
+.cta-button:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+/* Secondary Gallery */
+.secondary-gallery {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.gallery-item {
+    max-width: 140px;
+    height: auto;
+}
+
+/* Agency Section */
+.agency-section {
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.agency-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 5rem;
+    font-weight: 300;
+    letter-spacing: 15px;
+}
+
+/* Massive I.T.A */
+.ita-massive {
+    text-align: center;
+    padding: 100px 20px;
+}
+
+.ita-huge {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 10rem;
+    font-weight: 300;
+    letter-spacing: 30px;
+    margin: 60px 0;
+    line-height: 1;
+}
+
+/* Welcome Section */
+.welcome-section {
+    position: relative;
+    text-align: center;
+    padding: 0;
+    margin: 100px 0;
+}
+
+.welcome-banner {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.welcome-content {
+    padding: 80px 20px;
+}
+
+.welcome-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 6rem;
+    font-weight: 300;
+    letter-spacing: 20px;
+    margin-bottom: 30px;
+}
+
+.welcome-text {
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 1.8;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.welcome-text a {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+/* Services Section */
+.services-section {
+    max-width: 900px;
+    margin: 80px auto;
+    padding: 0 20px;
+    text-align: center;
+}
+
+.section-title {
+    font-family: 'Raleway', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 400;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+}
+
+.services-text {
+    font-size: 1rem;
+    font-weight: 300;
+    margin: 25px 0;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.disclaimer-text {
+    font-size: 0.95rem;
+    font-weight: 300;
+    line-height: 1.9;
+    margin: 20px 0;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+/* About Section */
+.about-section {
+    max-width: 900px;
+    margin: 80px auto;
+    padding: 0 20px;
+    text-align: center;
+}
+
+.subsection-title {
+    font-family: 'Raleway', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    letter-spacing: 2px;
+    margin: 30px 0 20px;
+}
+
+.about-text {
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 1.9;
+    margin: 25px 0;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.learn-more-button {
+    background-color: transparent;
+    border: 2px solid #ffffff;
+    color: #ffffff;
+    padding: 12px 35px;
+    font-size: 0.9rem;
+    font-weight: 400;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 40px 0;
+    font-family: 'Raleway', sans-serif;
+}
+
+.learn-more-button:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.about-image {
+    max-width: 240px;
+    height: auto;
+    margin: 40px auto 0;
+    display: block;
+    border-radius: 50%;
+}
+
+/* Gallery Section NASA */
+.gallery-section-nasa {
+    max-width: 900px;
+    margin: 80px auto;
+    padding: 0 20px;
+    text-align: center;
+}
+
+.nasa-text {
+    font-size: 1.1rem;
+    font-weight: 400;
+    margin: 30px 0;
+}
+
+.info-text {
+    font-size: 0.95rem;
+    font-weight: 300;
+    line-height: 1.8;
+    margin: 15px 0;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.read-more {
+    display: inline-block;
+    color: #ffffff;
+    text-decoration: underline;
+    font-size: 0.95rem;
+    margin-top: 20px;
+}
+
+/* Follow Section with Code */
+.follow-section {
+    max-width: 1000px;
+    margin: 80px auto;
+    padding: 0 20px;
+}
+
+.follow-text {
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 1.8;
+    margin: 30px 0;
+    text-align: center;
+}
+
+.follow-text a {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+.code-container {
+    background-color: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 30px;
+    margin: 40px 0;
+    overflow-x: auto;
+    text-align: left;
+}
+
+.code-container pre {
+    margin: 0;
+}
+
+.code-container code {
+    font-family: 'Courier New', 'Consolas', monospace;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: #c9d1d9;
+}
+
+/* Footer */
+.site-footer {
+    text-align: center;
+    padding: 60px 20px;
+    margin-top: 100px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-text {
+    font-family: 'Raleway', sans-serif;
+    font-size: 1rem;
+    font-weight: 300;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+/* Sidebar Image */
+.sidebar-image {
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100vh;
+    width: 38px;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.sidebar-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .ita-large {
+        font-size: 5rem;
+        letter-spacing: 15px;
+    }
+    
+    .ita-huge {
+        font-size: 6rem;
+        letter-spacing: 15px;
+    }
+    
+    .welcome-title {
+        font-size: 4rem;
+        letter-spacing: 12px;
+    }
+    
+    .galactic-title {
+        font-size: 3rem;
+        letter-spacing: 8px;
+    }
+}
+
+@media (max-width: 768px) {
+    .ita-large {
+        font-size: 3rem;
+        letter-spacing: 8px;
+        margin: 20px 0;
+    }
+    
+    .ita-huge {
+        font-size: 3.5rem;
+        letter-spacing: 8px;
+        margin: 30px 0;
+    }
+    
+    .welcome-title {
+        font-size: 2.5rem;
+        letter-spacing: 6px;
+    }
+    
+    .galactic-title {
+        font-size: 2rem;
+        letter-spacing: 4px;
+    }
+    
+    .agency-title {
+        font-size: 3rem;
+        letter-spacing: 8px;
+    }
+    
+    .apology-title {
+        font-size: 2rem;
+        letter-spacing: 4px;
+    }
+    
+    .breakdown-letter {
+        font-size: 2rem;
+        letter-spacing: 4px;
+    }
+    
+    .gallery-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .grid-img-large {
+        grid-column: span 1;
+    }
+    
+    .ita-breakdown {
+        grid-column: span 1;
+    }
+    
+    .sidebar-image {
+        display: none;
+    }
+    
+    .code-container {
+        padding: 20px;
+    }
+    
+    .code-container code {
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .sponsored-title {
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+    }
+    
+    .announcement-title {
+        font-size: 1.5rem;
+        letter-spacing: 2px;
+    }
+    
+    .section-title {
+        font-size: 1.3rem;
+        letter-spacing: 2px;
+    }
+}
+ 
+ 

@@ -1,0 +1,164 @@
+name: GitLab Mirror Heavy Validation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pioneer-heavy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pioneer-build:
+    name: Windows Pages build + unit gates
+    runs-on: windows-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out GitHub mirror
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+
+      - name: JavaScript syntax gates
+        run: |
+          node --check exoplanet-pioneer.js
+          node --check planet-generator.js
+          node --check local-system-view.js
+          node --check pioneer-raytracing.js
+          node --check scripts/minify-pioneer-pages.mjs
+          node --check scripts/pioneer-playwright-workload.mjs
+          node --check scripts/pioneer-advanced-rendering-smoke.mjs
+
+      - name: Jest regression suite
+        run: npm test -- --runInBand
+
+      - name: Resolve canonical GitLab SHA
+        shell: pwsh
+        run: |
+          $canonical = (Get-Content .gitlab-source-sha -Raw).Trim()
+          if ($canonical -notmatch '^[0-9a-f]{40}$') {
+            throw "Invalid .gitlab-source-sha: $canonical"
+          }
+          "CI_COMMIT_SHA=$canonical" >> $env:GITHUB_ENV
+          "CI_COMMIT_SHORT_SHA=$($canonical.Substring(0, 8))" >> $env:GITHUB_ENV
+          "GITLAB_SOURCE_SHA=$canonical" >> $env:GITHUB_ENV
+
+      - name: Build exact GitLab Pages artifact
+        shell: pwsh
+        run: ./build-pages.ps1
+
+      - name: Verify bundled startup artifact
+        shell: pwsh
+        run: |
+          $html = Get-Content public/exoplanet-pioneer.html -Raw
+          $generated = [regex]::Matches($html, 'src="[^"]*\.pioneer\.(?:bundle\.)?min\.js\?v=')
+          if ($generated.Count -ne 4) {
+            throw "Expected 4 generated Pioneer startup scripts, found $($generated.Count)."
+          }
+          if ($html -notmatch 'pioneer-foundation\.pioneer\.bundle\.min\.js' -or
+              $html -notmatch 'pioneer-systems\.pioneer\.bundle\.min\.js') {
+            throw 'Pioneer startup bundles are missing from the Pages artifact.'
+          }
+          if ($html -notmatch [regex]::Escape("?v=$env:CI_COMMIT_SHORT_SHA")) {
+            throw "Pages artifact is not stamped with canonical GitLab SHA $env:CI_COMMIT_SHORT_SHA."
+          }
+
+      - name: Upload exact Pages artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: pioneer-pages-${{ github.run_id }}
+          path: public
+          if-no-files-found: error
+          retention-days: 2
+
+  pioneer-browser:
+    name: Linux Chromium gameplay workload
+    needs: pioneer-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out GitHub mirror
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+
+      - name: Install Chromium for Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Download Windows-built Pages artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: pioneer-pages-${{ github.run_id }}
+          path: public
+
+      - name: Full Pioneer browser workload
+        run: node scripts/pioneer-playwright-workload.mjs --headless=true --min-headless-fps=1 --ci-render-profile=low --run-id=github-actions-pioneer
+
+
+      - name: Upload Pioneer workload evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: pioneer-heavy-validation-${{ github.run_id }}
+          path: .devbox/logs/github-actions-pioneer
+          if-no-files-found: warn
+          retention-days: 14
+
+  pioneer-advanced:
+    name: Linux Chromium advanced graphics smoke
+    needs: pioneer-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out GitHub mirror
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+
+      - name: Install Chromium for Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Download Windows-built Pages artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: pioneer-pages-${{ github.run_id }}
+          path: public
+
+      - name: Advanced graphics and local-system smoke
+        run: node scripts/pioneer-advanced-rendering-smoke.mjs

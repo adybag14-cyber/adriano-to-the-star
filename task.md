@@ -1,0 +1,54 @@
+# Task List
+
+- [x] Broadband Checker Upgrade <!-- id: 1 -->
+    - [x] Research active providers and data sources
+    - [x] Create provider verification script (`update_broadband_data.py`)
+    - [x] Implement data update workflow (Python -> JSON)
+    - [x] Update `broadband-checker.js` to use dynamic data
+    - [x] Implement "Ping Data Point" (Website Status) in UI
+    - [x] Fix Gigabeam incorrect speed display
+    - [x] Improve domain validation (detect parked domains)
+    - [x] Reset --hard to origin/main <!-- id: 4 -->
+    - [x] Drop stash entry <!-- id: 5 -->
+    - [x] Clean untracked files <!-- id: 6 -->
+- [x] Review entire repo for improvements <!-- id: 2 -->
+    - [x] Fix shop.js linter warning (unused variable)
+- [x] Repository synced with remote <!-- id: 7 -->
+    - [x] Resolve merge conflicts in `broadband-checker.js`
+    - [x] Resolve Git repository size issues
+    - [x] Remove large SWF files from Git tracking
+    - [x] Reset and commit files individually
+    - [x] Successfully push to GitLab
+- [ ] **Scraper Upgrade & Repo Review**
+    - [x] Update `update_broadband_data.py` with regex price scraping
+    - [x] Remove incorrect 'ASL' provider
+    - [x] Run data update script
+    - [x] Update `broadband-checker.js` to display dynamic prices
+    - [x] Review `gta-6-videos` and `total-war-2` folders
+    - [x] Commit and push changes
+- [ ] **Handling Non-Functional Providers**
+    - [x] Implement manual override system in `update_broadband_data.py`
+    - [x] Restore 'ASL' and mark as 'ceased'
+    - [x] Update `broadband-checker.js` to handle 'ceased' status
+    - [x] Add CSS for 'No Longer Functional' badge
+    - [x] Commit and push changes
+- [ ] **Advanced Scraper Enhancements**
+    - [x] Implement speed extraction regex
+    - [x] Improve price extraction logic
+    - [x] Add logging and retry mechanism
+    - [x] Update frontend to display scraped speeds
+    - [x] Update frontend to display scraped speeds
+    - [x] Fix 'Airband' (false negative) and 'Be Fibre' (ceased)
+    - [x] Fix 'BrawBand' (for sale) and 'Arrival' (wrong link)
+    - [x] Fix 'ClearFibre' (not connecting)
+    - [x] Fix 'BT' (connection refused) - Improved headers & override
+    - [x] Fix 'Callflow' (confirmed active)
+    - [x] Fix 'Comms West' (confirmed active)
+    - [x] Fix 'Comms West' (confirmed active)
+    - [x] **Super Advanced Upgrade**: Integrate Uswitch scraping
+    - [x] Verify extraction results
+    - [x] Review `gta-6-videos` and `total-war-2` folders
+    - [x] General Cleanup (removed console logs)
+    - [x] **Extended Verification**: Verified 8 additional providers (Alncom, Exascale, Bunch, Brillband, AirFast, 3DK, Avita, Cuckoo)
+    - [x] **Verification Round 3**: Verified 8 more (6G, Cambridge, BeeBu, Bink, Briant, 1p, Converged, B4SH)
+    - [x] **Verification Round 4**: Verified 8 more (B4RK, Badenoch, Ballscoigne, Bespoke, Bletchley, Bluwan, Bogons, Borders)

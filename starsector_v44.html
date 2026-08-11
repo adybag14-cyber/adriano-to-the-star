@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Starsector DEBUG V46 (LOG FIX ATTEMPT)</title>
+    <script>
+        window.__logHistory = [];
+        const originalLog = console.log;
+        const originalWarn = console.warn;
+        const originalError = console.error;
+        console.log = function (...args) { window.__logHistory.push(["log", args.join(" ")]); originalLog.apply(console, args); };
+        console.warn = function (...args) { window.__logHistory.push(["warn", args.join(" ")]); originalWarn.apply(console, args); };
+        console.error = function (...args) { window.__logHistory.push(["error", args.join(" ")]); originalError.apply(console, args); };
+    </script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000;
+            color: #fff;
+            font-family: monospace;
+        }
+
+        #game-container {
+            width: 100vw;
+            height: 100vh;
+            display: block;
+        }
+
+        #log-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 600px;
+            background: rgba(0, 0, 0, 0.8);
+            overflow-y: scroll;
+            pointer-events: none;
+            font-size: 14px;
+            z-index: 9999;
+            white-space: pre-wrap;
+            font-family: Consolas, monospace;
+        }
+    </style>
+    <!-- Network Debug Hook -->
+    <script>
+        (function () {
+            const originalFetch = window.fetch;
+            const originalXHR = window.XMLHttpRequest;
+
+            window.fetch = async function (...args) {
+                const url = args[0];
+                if (typeof url === 'string' && (url.includes('lwjgl') || url.includes('.js') || url.includes('.wasm'))) {
+                    console.log(`[NETWORK] Fetching: ${url}`);
+                    // Trigger custom log to overlay
+                    if (window.customLog) window.customLog(`[NET] Fetch: ${url}`);
+                }
+                try {
+                    const response = await originalFetch.apply(this, args);
+                    if (typeof url === 'string' && (url.includes('lwjgl') || url.includes('.js') || url.includes('.wasm'))) {
+                        console.log(`[NETWORK] Fetch DONE: ${url} STATUS: ${response.status}`);
+                        if (window.customLog) window.customLog(`[NET] Status ${response.status}: ${url}`);
+                    }
+                    return response;
+                } catch (e) {
+                    console.error(`[NETWORK] Fetch Error for ${url}:`, e);
+                    if (window.customLog) window.customLog(`[NET] Error: ${url} - ${e}`);
+                    throw e;
+                }
+            };
+
+            const XHROpen = originalXHR.prototype.open;
+            originalXHR.prototype.open = function (method, url) {
+                if (typeof url === 'string' && (url.includes('lwjgl') || url.includes('.js'))) {
+                    console.log(`[NETWORK] XHR Open: ${method} ${url}`);
+                    if (window.customLog) window.customLog(`[NET] XHR: ${url}`);
+                }
+                this.addEventListener('load', function () {
+                    if (typeof url === 'string' && (url.includes('lwjgl') || url.includes('.js'))) {
+                        console.log(`[NETWORK] XHR Load: ${url} STATUS: ${this.status}`);
+                    }
+                });
+                return XHROpen.apply(this, arguments);
+            };
+        })();
+    </script>
+    <script src="/cheerpj_dist/4.2/loader.js"></script>
+    <script src="/files/lwjgl.js"></script> <!-- Force Global Registration -->
+    <script type="module" src="/lwjgl.js?v=hybrid1"></script>
+    <script src="/files/shim_fs.js"></script>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+
+<body>
+    <div id="log-overlay">Waiting for logs...</div>
+    <canvas id="lwjglCanvas"></canvas>
+
+    <script type="module">
+        const logOverlay = document.getElementById('log-overlay');
+        window.customLog = (msg) => {
+            console.log(msg);
+            logOverlay.innerText += msg + "\n";
+            logOverlay.scrollTop = logOverlay.scrollHeight;
+        };
+
+        window.onerror = (msg) => customLog(`[ERROR] ${msg}`);
+        window.onunhandledrejection = (e) => customLog(`[PROMISE] ${e.reason}`);
+
+        async function initGame() {
+            customLog("!!! VERSION 2025-DEBUG-V46-JAVA17-LOG-FIX !!!");
+            customLog("Native Binaries: files/gl4es.wasm, files/liblwjgl.so, files/lwjgl.js");
+            customLog("JAR Base: /app/files (CheerpJ webroot mapping)");
+
+            // CHANGED: Explicit CheerpJ webroot path
+            const jarBase = "/app/files";
+            const cp = [
+                ".", // For log4j.properties
+                "/classes/", // Top-level Classes Mount
+                "/files/lwjgl_util.jar",
+                "/files/lwjgl.jar",
+                "/files/jinput.jar"
+            ].join(":");
+            const R2_BASE = "https://pub-a81d5d878e204f2d963b5ee61e981dc4.r2.dev/files";
+
+            // Initialize CheerpJ
+            await cheerpjInit({
+                version: 17,
+                status: "splash",
+                libraries: {
+                    'libGL.so.1': '/files/gl4es.wasm',
+                    'liblwjgl.so': '/files/gl4es.wasm',
+                    'liblwjgl64.so': '/files/gl4es.wasm',
+                    'libopenal.so': '/files/gl4es.wasm',
+                    'libjinput-linux.so': R2_BASE + '/libjinput-linux.so',
+                    'lwjgl': '/files/gl4es.wasm',
+                    'lwjgl64': '/files/gl4es.wasm',
+                    'openal': R2_BASE + '/libopenal.so'
+                },
+                mounts: [
+                    // CRITICAL: Mount Root Home as Memory to allow writing logs/configs
+                    { type: "memory", mountPoint: "/home/user" },
+
+                    // Base Files Mount
+                    { type: "linked", mountPoint: "/files", mountPath: "/files" },
+
+                    // Dedicate Classes Mount (Extracted JARs)
+                    { type: "linked", mountPoint: "/classes", mountPath: "/files/classes" },
+
+
+                    // Mount Game Assets into /home/user (Overlay Read-Only Assets)
+                    // DISABLED to test Memory Shadowing (Step 6720)
+                    // { type: "linked", mountPoint: "/home/user/data", mountPath: "/files/data" },
+                    // { type: "linked", mountPoint: "/home/user/mods", mountPath: "/files/mods" },
+                    // { type: "linked", mountPoint: "/home/user/graphics", mountPath: "/files/graphics" },
+                    // { type: "linked", mountPoint: "/home/user/sounds", mountPath: "/files/sounds" },
+
+                    // Log4j Config IN CWD (/home/user)
+                    { type: "linked", mountPoint: "/home/user/log4j.properties", mountPath: "/files/log4j_debug.properties" },
+
+                    // ATTEMPT: Mount Root Log as Writeable Memory
+                    { type: "memory", mountPoint: "/starsector.log" },
+
+                    // Ensure CP Valid
+                    { type: "linked", mountPoint: "/app/files", mountPath: "/files" },
+
+                    // Font Config
+                    { type: "linked", mountPoint: "/usr/share/fonts", mountPath: "/files/graphics/fonts" },
+                    { type: "linked", mountPoint: "/usr/lib/fonts", mountPath: "/files/graphics/fonts" },
+                    { type: "linked", mountPoint: "/etc/fonts/fonts.conf", mountPath: "/files/common/fonts.conf" },
+                    { type: "linked", mountPoint: "/files/common/fontconfig.properties", mountPath: "/files/common/fontconfig.properties" }
+                ],
+                javaProperties: {
+                    "com.fs.starfarer.settings.paths.saves": "/home/user/saves",
+                    "com.fs.starfarer.settings.paths.screenshots": "/home/user/screenshots",
+                    "com.fs.starfarer.settings.paths.mods": "/home/user/mods",
+                    "com.fs.starfarer.settings.paths.logs": "/home/user",
+                    "fs.home": "/home/user",
+                    "starfarer.res.path": "/home/user",
+                    "java.library.path": ".:/files",
+                    "org.lwjgl.librarypath": ".:/files",
+                    "user.dir": "/home/user",
+                    "user.home": "/home/user",
+                    "sun.java2d.fontpath": "/files/graphics/fonts",
+                    "sun.awt.fontconfig": "/files/common/fonts.conf"
+                },
+                arguments: [
+                    "-Dlog4j.configuration=log4j.properties",
+                    "-Djava.library.path=/files",
+                    "-Dorg.lwjgl.librarypath=/files",
+                    "-Duser.dir=/home/user",
+                    "-Dfs.home=/home/user",
+                    "com.fs.starfarer.combat.CombatMain"
+                ],
+                natives: {
+                    Java_org_lwjgl_Sys_getTimerResolution: () => 1000,
+                    Java_org_lwjgl_Sys_getTime: () => BigInt(Date.now()),
+                    Java_org_lwjgl_Sys_alert: (env, clazz, title, msg) => console.warn("[LWJGL ALERT]", title, msg),
+                    Java_org_lwjgl_Sys_openURL: (env, clazz, url) => window.open(url, '_blank'),
+                    Java_org_lwjgl_opengl_Display_getDisplayMode: () => null,
+                    Java_org_lwjgl_DefaultSysImplementation_getPointerSize: () => 4,
+                    Java_org_lwjgl_DefaultSysImplementation_getJNIVersion: () => 19,
+                    Java_org_lwjgl_DefaultSysImplementation_setDebug: () => { },
+                    Java_org_lwjgl_DefaultSysImplementation_getJNIEnv: () => 0
+                }
+            });
+            customLog("[Setup] cheerpjInit done.");
+
+            // --- RUNTIME PATCH START ---
+            try {
+                // Direct access to global mounts array
+                const mounts = window.cheerpjFSMounts;
+
+                if (mounts && Array.isArray(mounts)) {
+                    customLog(`[Patch] Found ${mounts.length} live mounts in window.cheerpjFSMounts.`);
+                    let patched = false;
+                    for (let m of mounts) {
+                        if (m.mountPoint === "/files/" || m.mountPoint === "/files" ||
+                            m.mountPoint === "/data/" || m.mountPoint === "/data") {
+                            customLog(`[Patch] Patching mount: ${m.mountPoint}`);
+
+                            const originalList = m.mountOps.listAsync;
+                            m.mountOps.listAsync = function (mp, path, fileRef, cb) {
+                                let p = path.replace(/^\/+/, '').replace(/\/+$/, '');
+
+                                if (p === "") {
+                                    if (m.mountPoint.includes("files")) {
+                                        fileRef.push("mods");
+                                        fileRef.push("data");
+                                        fileRef.push("native");
+                                        fileRef.push("lwjgl.js");
+                                        fileRef.push("liblwjgl.so");
+                                        fileRef.push("gl4es.wasm");
+                                        fileRef.push("jawt.js");
+                                    } else if (m.mountPoint.includes("data")) {
+                                        fileRef.push("config");
+                                    }
+                                    return cb();
+                                }
+
+                                if (p === "mods" || p === "files/mods") { return cb(null, []); }
+
+                                // Config Listing
+                                if (
+                                    (m.mountPoint.includes("data") && p === "config") ||
+                                    (m.mountPoint.includes("files") && p === "data/config")
+                                ) {
+                                    fileRef.push("settings.json");
+                                    fileRef.push("battle_objectives.json");
+                                    fileRef.push("contact_tag_data.json");
+                                    fileRef.push("custom_entities.json");
+                                    fileRef.push("engine_styles.json");
+                                    fileRef.push("hull_styles.json");
+                                    fileRef.push("planets.json");
+                                    fileRef.push("sounds.json");
+                                    fileRef.push("tag_data.json");
+                                    fileRef.push("title_screen_variants.csv");
+                                    return cb();
+                                }
+
+                                const stubDirs = ["mods", "saves", "screenshots", "files/mods", "/files/mods", "files/saves", "files/screenshots"];
+                                if (stubDirs.includes(p) || stubDirs.includes(p.replace(/^\/+/, ''))) {
+                                    return cb(null, []);
+                                }
+
+                                return originalList.call(this, mp, path, fileRef, cb);
+                            };
+
+                            const originalStat = m.mountOps.statAsync;
+                            m.mountOps.statAsync = function (mp, path, fileRef, cb) {
+                                const dirs = ["files", "mods", "data", "graphics", "native", "sounds", "saves", "screenshots", "data/config", "data/config/settings.json"];
+                                let p = path.replace(/^\/+/, '').replace(/\/+$/, '');
+
+                                // Fix settings.json stat if needed (it should be a file)
+                                if (p === "data/config/settings.json") {
+                                    // Let original stat handle it (it's real), unless it fails?
+                                    // If we stub directory listing, we might need to ensure stat works if the valid file exists.
+                                    // Original logic usually works for files.
+                                }
+
+                                if (p === "liblwjgl.so" || p.endsWith("/liblwjgl.so") ||
+                                    p === "lwjgl.js" || p.endsWith("/lwjgl.js") ||
+                                    p === "lwjgl64.js" || p.endsWith("/lwjgl64.js")) {
+                                    var s = { type: 1, mode: 33188, size: 2000, ino: 12345, mtime: Date.now(), atime: Date.now(), ctime: Date.now(), nlink: 1, dev: 1, uid: 1000, gid: 1000 };
+                                    cb(null, s);
+                                    return;
+                                }
+
+                                if (dirs.includes(p)) {
+                                    var s = {};
+                                    s.type = 2; // Directory
+                                    s.mode = 16877; // 0755
+                                    s.size = 4096;
+                                    cb(null, s);
+                                    return;
+                                }
+                                return originalStat.call(this, mp, path, fileRef, cb);
+                            };
+
+                            patched = true;
+                        }
+                    }
+                    if (!patched) customLog("[Patch] WARNING: Mount not found!");
+                } else {
+                    customLog("[Patch] window.cheerpjFSMounts not found!");
+                }
+            } catch (e) {
+                customLog("[Patch] Critical Error: " + e);
+            }
+            // --- RUNTIME PATCH END ---
+
+            // --- MANUAL PRELOAD START ---
+            customLog("[Preload] Starting Manual Config Injection...");
+            try {
+                const debugLog = (msg) => {
+                    console.log(msg);
+                    customLog(msg); // Use existing customLog
+                };
+
+                // --- NEW ROBUST PRELOAD LOGIC ---
+                const waitForApis = async () => {
+                    for (let i = 0; i < 500; i++) { // 50 seconds max
+                        let ready = false;
+                        if (window.cheerpOSMkdir) ready = true;
+                        if (window.cheerpOSAddStringFile) ready = true;
+                        const root = window.cheerpjFSMounts ? window.cheerpjFSMounts.find(m => m.mountPoint === "/") : null;
+                        if (root && root.mountOps && root.mountOps.createDirAsync) ready = true;
+
+                        if (ready) return true;
+
+                        if (i % 10 === 0) customLog(`[Preload] Waiting for APIs... (${i}) Mkdir=${!!window.cheerpOSMkdir} Root=${!!root}`);
+                        await new Promise(r => setTimeout(r, 100));
+                    }
+                    return false;
+                };
+                if (!await waitForApis()) customLog("[Preload] TIMEOUT: APIs missing!");
+                else customLog("[Preload] APIs Ready.");
+
+                const mkdir = (path) => new Promise(resolve => {
+                    const timer = setTimeout(() => { customLog(`[Preload] mkdir timeout: ${path}`); resolve(); }, 1000);
+                    if (window.cheerpOSMkdir) {
+                        try { window.cheerpOSMkdir(path, 0o777, (err) => { clearTimeout(timer); resolve(); }); } catch (e) { clearTimeout(timer); resolve(); }
+                    } else {
+                        const root = window.cheerpjFSMounts ? window.cheerpjFSMounts.find(m => m.mountPoint === "/") : null;
+                        if (root && root.mountOps && root.mountOps.createDirAsync) {
+                            let p = path.replace(/^\/+/, '');
+                            if (p === "") { clearTimeout(timer); resolve(); return; }
+                            root.mountOps.createDirAsync(root, p, 511, (err) => { clearTimeout(timer); resolve(); });
+                        } else { clearTimeout(timer); resolve(); }
+                    }
+                });
+
+                const writeFile = (path, content) => new Promise(resolve => {
+                    // Try cheerpOSAddStringFile first if available (Direct VFS write)
+                    if (window.cheerpOSAddStringFile) {
+                        try {
+                            window.cheerpOSAddStringFile(path, content);
+                            customLog(`[Preload] AddStringFile: ${path}`);
+                            resolve();
+                            return;
+                        } catch (e) { /* ignore, try open/write */ }
+                    }
+
+                    const timer = setTimeout(() => { customLog(`[Preload] write timeout: ${path}`); resolve(); }, 2000);
+                    try {
+                        const encoder = new TextEncoder();
+                        const data = encoder.encode(content);
+                        if (window.cheerpOSOpen) {
+                            window.cheerpOSOpen(path, 577, 438, (err, fd) => {
+                                if (err) { clearTimeout(timer); customLog(`[Preload] Open err: ${path} ${err}`); resolve(); return; }
+                                window.cheerpOSWrite(fd, data, 0, data.length, 0, (err2) => {
+                                    clearTimeout(timer);
+                                    if (err2) { }
+                                    else customLog(`[Preload] Wrote: ${path}`);
+                                    window.cheerpOSClose(fd);
+                                    resolve();
+                                });
+                            });
+                        } else { clearTimeout(timer); resolve(); }
+                    } catch (e) { clearTimeout(timer); resolve(); }
+                });
+                // --- END NEW LOGIC ---
+                /* OLD LOGIC
+                // FIND ROOT MOUNT (Confirmed to exist as "/")
+                const root = window.cheerpjFSMounts.find(m => m.mountPoint === "/");
+                if (!root) {
+                    customLog("[Preload] ERROR: Root mount '/' not found!");
+                } else {
+                    customLog("[Preload] Found root mount type=" + root.type);
+                }
+ 
+                const mkdir = (path) => new Promise(resolve => {
+                    if (!root) { resolve(); return; }
+ 
+                    // Path relative to root (remove leading slash)
+                    let p = path.replace(/^\/+/, '');
+                    if (p === "") { resolve(); return; }
+ 
+                    customLog(`[Preload] mkdir '${p}' on root...`);
+ 
+                    // Timeout to prevent hanging
+                    const timer = setTimeout(() => {
+                        customLog(`[Preload] mkdir timeout: ${p}`);
+                        resolve();
+                    }, 1000);
+ 
+                    try {
+                        if (root.mountOps && root.mountOps.createDirAsync) {
+                            root.mountOps.createDirAsync(root, p, 511, (err) => {
+                                clearTimeout(timer);
+                                if (err && err.code !== 17) customLog(`[Preload] mkdir failed: ${p} err=${err.code}`);
+                                else customLog(`[Preload] mkdir success: ${p}`);
+                                resolve();
+                            });
+                        } else {
+                            clearTimeout(timer);
+                            customLog("[Preload] root.mountOps.createDirAsync missing");
+                            resolve();
+                        }
+                    } catch (e) {
+                        clearTimeout(timer);
+                        customLog("[Preload] mkdir exception: " + e);
+                        resolve();
+                    }
+                });
+ 
+                const writeFile = (path, content) => new Promise(resolve => {
+                    const timer = setTimeout(() => { customLog(`[Preload] write timeout: ${path}`); resolve(); }, 2000);
+                    try {
+                        const encoder = new TextEncoder();
+                        const data = encoder.encode(content);
+                        if (window.cheerpOSOpen) {
+                            window.cheerpOSOpen(path, 577, 438, (err, fd) => {
+                                if (err) {
+                                    clearTimeout(timer);
+                                    customLog(`[Preload] Open err: ${path} err=${err}`);
+                                    resolve();
+                                    return;
+                                }
+                                window.cheerpOSWrite(fd, data, 0, data.length, 0, (err2) => {
+                                    clearTimeout(timer);
+                                    if (err2) customLog(`[Preload] Write err: ${path}`);
+                                    else customLog(`[Preload] Wrote: ${path}`);
+                                    window.cheerpOSClose(fd);
+                                    resolve();
+                                });
+                            });
+                        } else {
+                            clearTimeout(timer);
+                            resolve();
+                        }
+                    } catch (e) {
+                        clearTimeout(timer);
+                        resolve();
+                    }
+                }); */
+
+                await mkdir("/home");
+                await mkdir("/home/user");
+                await mkdir("/home/user/data");
+                await mkdir("/home/user/data/config");
+
+                const configList = ["settings.json", "sounds.json", "battle_objectives.json"];
+                for (let c of configList) {
+                    try {
+                        const resp = await fetch("/files/data/config/" + c);
+                        if (resp.ok) {
+                            const text = await resp.text();
+                            await writeFile("/home/user/data/config/" + c, text);
+                        } else {
+                            debugLog(`[Preload] Fetch Fail: ${c} ${resp.status}`);
+                        }
+                    } catch (e) { debugLog(`[Preload] Fetch Ex: ${c} ${e}`); }
+                }
+
+            } catch (e) {
+                customLog("[Preload] Error: " + e);
+            }
+            // --- MANUAL PRELOAD END ---
+
+            cheerpjCreateDisplay(800, 600, document.getElementById('lwjglCanvas'));
+            customLog("[Setup] Launching CombatMain...");
+            try {
+                await cheerpjRunMain("com.fs.starfarer.combat.CombatMain", cp);
+            } catch (e) {
+                customLog("[Run] Error: " + e);
+            }
+        }
+
+        const launcher = () => {
+            if (typeof cheerpjInit !== 'undefined') {
+                initGame().catch(e => console.error(e));
+                return;
+            }
+            // Wait for loader if not ready
+            console.log("[Launcher] Waiting for loader...");
+            setTimeout(launcher, 100);
+            return;
+        */
+        };
+
+        // DIAGNOSTIC: Log Dumper (Globally accessible)
+        window.dumpStarsectorLog = async () => {
+            try {
+                const path = "/home/user/starsector.log";
+                if (window.cheerpOSOpen) {
+                    window.cheerpOSOpen(path, 0, 0, (err, fd) => {
+                        if (err) { window.customLog("[LogDump] Open Error: " + (err.message || err)); return; }
+                        const buf = new Uint8Array(256 * 1024); // 256KB
+                        window.cheerpOSRead(fd, buf, 0, buf.length, 0, (err2, bytesRead) => {
+                            if (err2 && err2 !== -1) window.customLog("[LogDump] Read Error: " + err2);
+                            else {
+                                const text = new TextDecoder().decode(buf.subarray(0, bytesRead));
+                                console.log("--- LOG START ---");
+                                console.log(text);
+                                console.log("--- LOG END ---");
+                                window.customLog("[LogDump] Dumped " + (bytesRead || 0) + " bytes to console.");
+                            }
+                            window.cheerpOSClose(fd);
+                        });
+                    });
+                } else { window.customLog("[LogDump] cheerpOS APIs missing"); }
+            } catch (e) { window.customLog("[LogDump] Ex: " + e); }
+        };
+
+        if (document.readyState === 'complete') {
+            launcher();
+        } else {
+            window.addEventListener('load', launcher);
+        }
+    </script>
+</body>
+
+</html>

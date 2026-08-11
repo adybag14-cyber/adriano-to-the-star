@@ -1,0 +1,136 @@
+/* Messaging Enhancements Styles */
+
+.message-reactions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.reaction-btn {
+    background: rgba(186, 148, 79, 0.1);
+    border: 1px solid rgba(186, 148, 79, 0.3);
+    border-radius: 16px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Raleway', sans-serif;
+}
+
+.reaction-btn:hover {
+    background: rgba(186, 148, 79, 0.2);
+    border-color: #ba944f;
+    transform: scale(1.05);
+}
+
+.reaction-btn.reacted {
+    background: rgba(186, 148, 79, 0.3);
+    border-color: #ba944f;
+}
+
+.read-receipts {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+}
+
+.read-indicator {
+    color: rgba(255, 255, 255, 0.5);
+    font-style: italic;
+}
+
+.read-indicator.unread {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+#typing-indicator {
+    padding: 0.5rem 1rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+    font-size: 0.85rem;
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.message-attachment {
+    margin-top: 0.5rem;
+    padding: 0.75rem;
+    background: rgba(186, 148, 79, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(186, 148, 79, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.attachment-icon {
+    font-size: 1.5rem;
+}
+
+.attachment-info {
+    flex: 1;
+}
+
+.attachment-name {
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.attachment-size {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+.attachment-download {
+    background: rgba(186, 148, 79, 0.2);
+    border: 1px solid rgba(186, 148, 79, 0.4);
+    color: #ba944f;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.85rem;
+}
+
+.attachment-download:hover {
+    background: rgba(186, 148, 79, 0.3);
+    border-color: #ba944f;
+}
+
+.reaction-picker {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    background: rgba(0, 0, 0, 0.95);
+    border: 1px solid rgba(186, 148, 79, 0.3);
+    border-radius: 12px;
+    padding: 0.5rem;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    z-index: 1000;
+}
+
+.reaction-emoji {
+    font-size: 1.5rem;
+    padding: 0.5rem;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background 0.2s ease;
+    text-align: center;
+}
+
+.reaction-emoji:hover {
+    background: rgba(186, 148, 79, 0.2);
+}
+

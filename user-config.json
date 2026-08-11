@@ -1,0 +1,24 @@
+{
+  "user": {
+    "name": "Tdamre Steve",
+    "email": "adybag1@gmail.com",
+    "country": "United Kingdom"
+  },
+  "oracle_cloud": {
+    "account_email": "adybag1@gmail.com",
+    "region": "uk-london-1",
+    "tenancy_name": "Your Tenancy Name",
+    "compartment_ocid": "Your Compartment OCID"
+  },
+  "kubernetes": {
+    "cluster_name": "stellar-ai-cluster",
+    "namespace": "stellar-ai",
+    "master_node_name": "k3s-master"
+  },
+  "notes": [
+    "This file contains user configuration",
+    "Keep sensitive information secure",
+    "Do not commit secrets or passwords to git"
+  ]
+}
+

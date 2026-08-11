@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MechGen - AI-Powered Mech Design Studio | Adriano To The Star</title>
+    
+    <meta name="description" content="Synthesize and visualize complex organic reaction mechanisms with MechGen. AI-powered chemical analysis and RDKit molecular rendering.">
+    <meta name="keywords" content="MechGen, Organic Chemistry, RDKit, AI Synthesis, Adriano To The Star">
+    <link rel="canonical" href="https://adrianotothestar.com/mechgen.html">
+    <!-- Open Graph -->
+    <meta property="og:title" content="MechGen - AI-Powered Mech Design Studio">
+    <meta property="og:description" content="Advanced Organic Reaction Mechanism Synthesis & Visualization.">
+    <meta property="og:url" content="https://adrianotothestar.com/mechgen.html">
+    <meta property="og:image" content="https://adrianotothestar.com/images/bg-large.jpg">
+    <meta property="og:type" content="website">
+    
+    <script type="application/ld+json">
+    [
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "MechGen",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Web"
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://adrianotothestar.com/index.html" },
+          { "@type": "ListItem", "position": 2, "name": "MechGen", "item": "https://adrianotothestar.com/mechgen.html" }
+        ]
+      }
+    ]
+    </script>
+
+    <link rel="stylesheet" href="fonts/fonts.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="loader-minimal.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="icon" type="image/x-icon" href="images/ita_logo.png">
+    <link rel="manifest" href="manifest.json">
+
+    <script src="loader.js"></script>
+    <script src="navigation.js" defer></script>
+    <script src="cosmic-music-player.js" defer></script>
+    <script src="theme-toggle.js" defer></script>
+    <script src="accessibility.js" defer></script>
+
+    <style>
+        html, body { height: 100%; margin: 0; background: #050505; }
+        .mechgen-container { max-width: 1200px; margin: 0 auto; padding: 100px 20px 40px; }
+        .mechgen-header { margin-bottom: 24px; text-align: center; }
+        .mechgen-header h1 { font-family: 'Raleway', sans-serif; font-size: 3rem; letter-spacing: 6px; color: #ba944f; text-transform: uppercase; }
+        .mechgen-frame-container { position: relative; width: 100%; height: 850px; border: 1px solid rgba(186, 148, 79, 0.2); border-radius: 20px; overflow: hidden; background: rgba(0, 0, 0, 0.4); }
+        .mechgen-frame { width: 100%; height: 100%; border: none; }
+        .btn { padding: 12px 20px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(255, 255, 255, 0.05); color: #fff; cursor: pointer; font-weight: 600; text-decoration: none; }
+        .btn-primary { border-color: rgba(186, 148, 79, 0.5); background: rgba(186, 148, 79, 0.15); color: #ba944f; }
+    </style>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+<body>
+    <div class="mechgen-container">
+        <div class="mechgen-header">
+            <h1>MechGen</h1>
+            <p>Advanced Organic Reaction Mechanism Synthesis & Visualization</p>
+        </div>
+
+        <div class="mechgen-controls" style="margin-bottom: 20px; display: flex; gap: 15px; align-items: center; justify-content: center;">
+            <input id="mechgen-backend-url" type="text" placeholder="http://localhost:8001/" style="flex: 1; padding: 12px; border-radius: 10px; background: #000; border: 1px solid #ba944f; color: #fff;">
+            <button id="mechgen-connect" class="btn btn-primary">Connect</button>
+            <button id="mechgen-reset" class="btn">Reset</button>
+        </div>
+
+        <div class="mechgen-frame-container">
+            <iframe id="mechgen-frame" class="mechgen-frame" title="MechGen UI"></iframe>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <p>&copy; 2025 ADRIANO TO THE STAR - I.T.A (Interstellar Travel Agency)</p>
+        <p><a href="index.html">Back to Home</a></p>
+    </footer>
+
+    <script>
+        (function () {
+            var frame = document.getElementById('mechgen-frame');
+            var input = document.getElementById('mechgen-backend-url');
+            var connectBtn = document.getElementById('mechgen-connect');
+            var resetBtn = document.getElementById('mechgen-reset');
+
+            function applyUrl(url) {
+                if (!url) return;
+                frame.src = url;
+                if (input) input.value = url;
+                localStorage.setItem('MECHGEN_WEB_URL', url);
+            }
+
+            connectBtn?.addEventListener('click', () => applyUrl(input.value));
+            resetBtn?.addEventListener('click', () => {
+                const def = 'http://localhost:8001/';
+                applyUrl(def);
+            });
+
+            applyUrl(localStorage.getItem('MECHGEN_WEB_URL') || 'http://localhost:8001/');
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,466 @@
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying 127.0.0.1:8086...
+* Established connection to 127.0.0.1 (127.0.0.1 port 8086) from 127.0.0.1 port 19590 
+* using HTTP/1.x
+> GET / HTTP/1.1
+
+> Host: 127.0.0.1:8086
+
+> User-Agent: curl/8.16.0
+
+> Accept: */*
+
+> 
+
+* Request completely sent off
+* HTTP 1.0, assume close after body
+< HTTP/1.0 200 OK
+
+< Server: SimpleHTTP/0.6 Python/3.12.10
+
+< Date: Sun, 28 Dec 2025 17:27:07 GMT
+
+< Content-type: text/html
+
+< Content-Length: 19019
+
+< Last-Modified: Fri, 19 Dec 2025 23:58:11 GMT
+
+< Access-Control-Allow-Methods: GET, OPTIONS, POST
+
+< Access-Control-Allow-Headers: X-Requested-With, Content-Type, Origin, Authorization, Accept, Client-Security-Token, Accept-Encoding, Range
+
+< Access-Control-Expose-Headers: Content-Range, Content-Length, Accept-Ranges
+
+< Accept-Ranges: bytes
+
+< 
+
+{ [19019 bytes data]
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <title>Adriano To The Star</title>
+    <link rel="icon" type="image/x-icon" href="images/ita_logo.png">
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="fonts/fonts.css">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Using minimal loader.css - safe and working -->
+    <link rel="stylesheet" href="loader-minimal.css">
+    <!-- loader-safe.css causes overlay - animations not compatible with page interaction -->
+    <!-- <link rel="stylesheet" href="loader-safe.css"> -->
+    <!-- Minimal version available: loader-minimal.css -->
+    <!-- Original version available: loader.css -->
+    <link rel="stylesheet" href="getting-started.css">
+    <link rel="stylesheet" href="landing.css">
+    <!-- Core Scripts -->
+    <!-- JavaScript Loader System - Modular and Safe -->
+    <!-- <script src="loader.js"></script> -->
+    <!-- Navigation Menu -->
+    <script src="navigation.js" defer></script>
+    <!-- Language Switcher / i18n -->
+    <!-- <script src="i18n.js" defer></script> -->
+    <!-- Theme Toggle -->
+    <!-- <script src="theme-toggle.js" defer async></script> -->
+    <!-- Keyboard Shortcuts -->
+    <!-- <script src="keyboard-shortcuts.js" defer async></script> -->
+    <!-- Accessibility -->
+    <!-- <script src="accessibility.js" defer async></script> -->
+    <!-- Cosmic Music Player -->
+    <script src="cosmic-music-player.js" defer async></script>
+    <!-- Landing Audio (Mathematical Sound) -->
+    <script src="landing-audio.js" defer></script>
+
+    <!-- Optional Scripts -->
+    <!-- <script src="color-schemes.js" defer async></script>
+    <script src="animation-controls.js" defer async></script>
+    <script src="user-behavior-analytics.js" defer async></script> -->
+
+    <!-- Performance Optimizations -->
+    <!-- <script src="pwa-enhancements.js" defer async></script>
+    <script src="lazy-loading-manager.js" defer async></script> -->
+
+    <!-- Preload critical resources -->
+    <!-- DISABLED FOR TESTING -->
+    <!-- <link rel="preload" href="loader.js" as="script"> -->
+    <!-- <link rel="preload" href="i18n.js" as="script"> -->
+    <link rel="manifest" href="manifest.json">
+    <script src="pwa-loader.js" defer></script>
+
+    <!-- SAFETY VALVE: Force page load if loader hangs -->
+    <!-- SAFETY VALVE: Force page load if loader hangs -->
+    <script>
+        (function () {
+            setTimeout(function () {
+                // Check if main content is still hidden
+                const main = document.getElementById('main-content');
+                if (main && getComputedStyle(main).opacity === '0') {
+                    console.warn('­ƒøí´©Å Safety Valve triggered: Forcing page visibility');
+                    document.body.classList.add('loaded');
+                    const intro = document.getElementById('intro-screen');
+                    if (intro) intro.style.display = 'none';
+
+                    main.style.display = 'block';
+                    main.style.opacity = '1';
+                    main.style.visibility = 'visible';
+                    document.body.style.overflow = 'auto';
+                }
+            }, 4000); // 4 seconds timeout
+        })();
+    </script>
+</head>
+
+<body>
+    <!-- Password Hint Banner -->
+    <div
+        style="position: fixed; top: 0; left: 0; width: 100%; background: #b90e0e; color: #fff; text-align: center; padding: 8px; font-family: monospace; font-size: 14px; z-index: 99999; font-weight: bold; letter-spacing: 1px;">
+        password=hashmenow1234
+    </div>
+
+    <!-- 3D Background -->
+    <canvas id="warp-canvas"></canvas>
+
+    <!-- Play Game Button (Direct Access) -->
+    <a href="database.html" class="play-game-btn" style="
+        position: fixed;
+        top: 90px;
+        right: 30px;
+        z-index: 10001;
+        background: rgba(186, 148, 79, 0.2);
+        border: 2px solid #ba944f;
+        color: #ba944f;
+        padding: 10px 20px;
+        text-decoration: none;
+        font-family: 'Raleway', sans-serif;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(5px);
+    " onmouseover="this.style.background='rgba(186, 148, 79, 0.8)'; this.style.color='#000'"
+        onmouseout="this.style.background='rgba(186, 148, 79, 0.2)'; this.style.color='#ba944f'">
+        PLAY GAME
+    </a>
+
+    <!-- Cinematic Overlay -->
+    <div class="landing-overlay" id="intro-screen">
+        <h1 class="mega-title" data-text="ADRIANO">ADRIANO</h1>
+        <h2 class="subtitle">TO THE STARS</h2>
+
+        <button class="enter-btn" onclick="enterSite()">INITIATE LAUNCH</button>
+    </div>
+
+    <!-- Main Content (Hidden Initially) -->
+    <div id="main-content" style="display: none; opacity: 0; transition: opacity 2s;">
+
+        <!-- Releasing Soon Section -->
+        <section class="announcement-section">
+            <h2 class="announcement-title" data-i18n="home.releasingSoon">RELEASING SOON*</h2>
+            <p class="announcement-note" data-i18n="home.releasingNote">*The cryptographic keys that I will work on and
+                calculate from the
+                chosen
+                object disposition from the database have been scheduled for release later in Q1 2025.</p>
+            <p class="announcement-text">On a small note, I have decided to engage in a conflict of interest
+                by planning
+                to open a new educational institution. Ok, this sounds bad but what's it about?</p>
+            <p class="announcement-text">It is completely free to read and see and open to the entire
+                internet because
+                if I have a good business idea that I cannot physically complete. Still, it will undercut
+                current market
+                leaders, I will post a preview of the concept on a <a href="education.html">different
+                    page</a> on my
+                site.</p>
+        </section>
+
+        <!-- I.T.A Repeated Section -->
+        <section class="ita-section" data-stagger data-stagger-delay="150">
+            <h1 class="ita-large" data-scroll-animate>I.T.A</h1>
+            <h1 class="ita-large" data-scroll-animate>I.T.A</h1>
+            <h1 class="ita-large" data-scroll-animate>I.T.A</h1>
+        </section>
+
+        <!-- Sponsored Section -->
+        <section class="sponsored-section">
+            <h2 class="sponsored-title">SPONSORED BY ELON MUSK AND DONALD TRUMP</h2>
+        </section>
+
+        <!-- Apology Section -->
+        <section class="apology-section">
+            <h1 class="apology-title">My apologies</h1>
+            <p class="apology-text">The title was designed for 1440p resolution displays at an aspect 16:9
+            </p>
+        </section>
+
+        <!-- Sponsored Again -->
+        <section class="sponsored-section">
+            <h2 class="sponsored-title">SPONSORED BY ELON MUSK AND DONALD TRUMP</h2>
+        </section>
+
+        <!-- More I.T.A -->
+        <section class="ita-section">
+            <h1 class="ita-large">I.T.A</h1>
+            <h1 class="ita-large">I.T.A</h1>
+            <h1 class="ita-large">I.T.A</h1>
+        </section>
+
+        <!-- Gallery Grid -->
+        <section class="gallery-grid" data-stagger data-stagger-delay="100">
+            <img src="images/image_2.jpg" alt="Luxury Beach Resort" class="grid-img grid-img-large" data-hover="zoom"
+                data-entrance="slideUp">
+            <div class="ita-breakdown" data-entrance="fadeIn">
+                <h1 class="breakdown-letter" data-scroll-animate>I. Interstellar</h1>
+                <h1 class="breakdown-letter" data-scroll-animate>T. Travel</h1>
+            </div>
+            <img src="images/image_3.jpg" alt="Portrait" class="grid-img" data-hover="zoom" data-entrance="slideUp">
+            <img src="images/image_4.jpg" alt="Swimming Pool" class="grid-img grid-img-small" data-hover="zoom"
+                data-entrance="slideUp">
+            <img src="images/image_5.jpg" alt="Surfers" class="grid-img grid-img-small" data-hover="zoom"
+                data-entrance="slideUp">
+            <img src="images/image_6.jpg" alt="Reading" class="grid-img" data-hover="zoom" data-entrance="slideUp">
+        </section>
+
+        <!-- Galactic Titles -->
+        <section class="galactic-section" data-entrance="fadeIn" data-entrance-delay="100">
+            <h1 class="galactic-title" data-scroll-animate>GALACTIC TITLES AVAILABLE</h1>
+            <p class="galactic-subtitle">Embark on a cosmic adventure</p>
+            <a href="database.html" class="cta-button" data-hover="lift"
+                style="display: inline-block; text-decoration: none;">Start Exploring</a>
+        </section>
+
+        <!-- More Gallery -->
+        <section class="secondary-gallery">
+            <img src="images/image_7.jpg" alt="Wooden Boat" class="gallery-item">
+        </section>
+
+        <!-- Agency Section -->
+        <section class="agency-section">
+            <h1 class="agency-title">A.Agency</h1>
+        </section>
+
+        <!-- Massive I.T.A Repetition -->
+        <section class="ita-massive">
+            <h1 class="ita-huge">I.T.A</h1>
+            <h1 class="ita-huge">I.T.A</h1>
+            <h1 class="ita-huge">I.T.A</h1>
+            <h1 class="ita-huge">I.T.A</h1>
+            <h1 class="ita-huge">I.T.A</h1>
+            <h1 class="ita-huge">I.T.A</h1>
+            <h1 class="ita-huge">I.T.A</h1>
+            <h1 class="ita-huge">I.T.A</h1>
+            <h1 class="ita-huge">I.T.A</h1>
+            <h1 class="ita-huge">I.T.A</h1>
+            <h1 class="ita-huge">I.T.A</h1>
+            <h1 class="ita-huge">I.T.A</h1>
+            <h1 class="ita-huge">I.T.A</h1>
+            <h1 class="ita-huge">I.T.A</h1>
+            <h1 class="ita-huge">I.T.A</h1>
+        </section>
+
+        <!-- Welcome Banner -->
+        <section class="welcome-section">
+            <img src="images/bg-large.jpg" alt="Welcome Banner" class="welcome-banner" data-parallax
+                data-parallax-speed="0.3">
+            <div class="welcome-content" data-entrance="fadeIn" data-entrance-delay="200">
+                <h1 class="welcome-title" data-scroll-animate>WELCOME</h1>
+                <p class="welcome-text">IF YOU HAVE TIME READ THIS, <a
+                        href="https://v3.pebblepad.co.uk/spa/#/public/cbwW6hMr55dMxg96HRkw6y4mxW" target="_blank"
+                        rel="noopener">https://v3.pebblepad.co.uk/spa/#/public/cbwW6hMr55dMxg96HRkw6y4mxW</a>
+                </p>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section class="services-section" id="services">
+            <h2 class="section-title">SERVICES</h2>
+            <p class="services-text">Nothing to book right now. Check back soon.</p>
+            <p class="disclaimer-text">Bro, trust me. If I were you, I'd agree that it is a scam. However,
+                because I'm
+                the business owner, I cannot legally call myself a scam because that would let you sue me.
+            </p>
+            <p class="disclaimer-text">In my honest opinion, if you like the concept, you can buy one. If
+                not, please
+                move along and visit another website.</p>
+            <a href="book-online.html" class="cta-button" data-hover="lift"
+                style="display: inline-block; text-decoration: none; margin-top: 30px;">Book Online</a>
+        </section>
+
+        <!-- About Section -->
+        <section class="about-section">
+            <h2 class="section-title" data-i18n="home.about">ABOUT</h2>
+            <h3 class="subsection-title" data-i18n="home.mission">Our Mission</h3>
+            <p class="about-text" data-i18n="home.missionText">ADRIANO TO THE STAR provides a revolutionary opportunity
+                for individuals
+                to own
+                celestial bodies within the Andromeda galaxy. Our platform, inspired by the wonders of the
+                cosmos,
+                enables the buying and selling of licenses for stars, planets, and large Kepler objects. We
+                aim to
+                redefine the space industry by offering a unique and personalized experience for all space
+                enthusiasts.
+            </p>
+            <a href="about.html" class="learn-more-button" data-i18n="home.learnMore"
+                style="display: inline-block; text-decoration: none;">Learn
+                More</a>
+            <img src="images/image_9.jpg" alt="About Portrait" class="about-image">
+        </section>
+
+        <!-- Gallery Section -->
+        <section class="gallery-section-nasa">
+            <h2 class="section-title" data-i18n="home.gallery">GALLERY</h2>
+            <p class="nasa-text">science.nasa.gov</p>
+            <p class="info-text">We will update the list of contact information later.</p>
+            <p class="info-text">I will list the database for the list of kepler objects currently known to
+                api.nasa.gov
+            </p>
+            <a href="database.html" class="read-more">Read more</a>
+        </section>
+
+        <!-- Follow Us / Code Section -->
+        <section class="follow-section" id="follow">
+            <h2 class="section-title" data-i18n="home.follow">FOLLOW US</h2>
+            <p class="follow-text">I will provide documentation on how I retrieved the request of
+                constellations and
+                kepler objects from <a href="https://api.nasa.gov/" target="_blank"
+                    rel="noopener">https://api.nasa.gov/</a>
+                here.</p>
+
+            <div class="code-container">
+                <pre><code>import os
+import requests
+    
+# Function to fetch data from NASA Exoplanet Archive API
+def fetch_nasa_exoplanet_data(api_key):
+    try:
+        url = f"https://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=cumulative&select=kepid,kepoi_name,kepler_name,koi_disposition,koi_pdisposition,koi_score,koi_fpflag_nt&format=json&api_key={api_key}"
+        response = requests.get(url)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Failed to fetch data from NASA: {e}")
+        return []
+    
+# Function to classify stars and exoplanets
+def classify_objects(data):
+    classifications = []
+    for obj in data:
+        classification = {
+            "kepid": obj.get("kepid", "Unknown"),
+            "kepoi_name": obj.get("kepoi_name", "Unknown"),
+            "kepler_name": obj.get("kepler_name", "Unknown"),
+            "koi_disposition": obj.get("koi_disposition", "Unknown"),
+            "koi_pdisposition": obj.get("koi_pdisposition", "Unknown"),
+            "koi_score": obj.get("koi_score", "Unknown"),
+            "koi_fpflag_nt": obj.get("koi_fpflag_nt", "Unknown")
+        }
+        classifications.append(classification)
+    return classifications
+    
+
+# Main function
+def main():
+    nasa_api_key = os.getenv("NASA_API_KEY")
+    combined_data = fetch_nasa_exoplanet_data(nasa_api_key)
+    classifications = classify_objects(combined_data)
+    
+    output_file = "REDACTED\\REDACTED.txt"
+    with open(output_file, "w") as file:
+        for classification in classifications:
+            file.write(f"{classification}\\n")
+    
+    print(f"Output written to {output_file}")
+    
+if __name__ == "__main__":
+    main()
+        </code></pre>
+            </div>
+
+            <div class="follow-actions" style="margin-top: 2rem; text-align: center;">
+                <a href="#follow" class="cta-button mailing-list-btn" data-hover="lift" style="display: inline-block;">
+                    Join the Mailing List
+                </a>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="site-footer">
+            <p class="footer-text">ADRIANO TO THE STAR</p>
+        </footer>
+
+    </div> <!-- End Main Content -->
+
+100 19019  100 19019    0     0  3976k      0 --:--:-- --:--:-- --:--:-- 4643k
+* shutting down connection #0
+    <!-- Vertical Sidebar Image -->
+    <div class="sidebar-image">
+        <img src="images/sidebar-vertical.jpg" alt="Sidebar decoration">
+    </div>
+
+    <!-- Scripts -->
+    <script src="scroll-animations.js" defer></script>
+    <script src="landing-3d-background.js" type="module"></script>
+    <script>
+        function enterSite() {
+            // Play ambient mathematical sound (requires user interaction)
+            if (window.audioEngine) {
+                try {
+                    window.audioEngine.playAmbientHum();
+                } catch (e) { console.error("Audio error:", e); }
+            }
+
+            // Trigger warp
+            if (window.warpDrive) {
+                try {
+                    window.warpDrive.engageWarp();
+                } catch (e) { console.error("Warp error:", e); }
+            }
+
+            // Fade out intro, fade in content
+            const intro = document.getElementById('intro-screen');
+            const main = document.getElementById('main-content');
+
+            document.body.classList.add('loaded'); // Signal to CSS
+
+            if (intro) {
+                intro.style.transition = 'opacity 1s, transform 1s';
+                intro.style.opacity = '0';
+                intro.style.transform = 'scale(1.5)';
+            }
+
+            setTimeout(() => {
+                if (intro) intro.style.display = 'none';
+                if (main) {
+                    main.style.display = 'block';
+                    // Trigger reflow
+                    void main.offsetWidth;
+                    main.style.opacity = '1';
+                    main.style.visibility = 'visible';
+                }
+
+                // Allow scrolling again
+                document.body.style.overflow = 'auto';
+
+                // Initialize animations now that content is visible
+                if (window.initScrollAnimations) window.initScrollAnimations();
+
+                // Backup: Ensure opacity is 1
+                if (main) requestAnimationFrame(() => main.style.opacity = '1');
+            }, 1000);
+        }
+    </script>
+
+    <!-- Scripts - TEMPORARILY DISABLED -->
+    <!-- <script src="supabase-config.js?v=20241123" defer async
+        onerror="console.warn('supabase-config.js failed')"></script> -->
+    <!-- <script src="auth-supabase.js?v=20241123" defer async onerror="console.warn('auth-supabase.js failed')"></script> -->
+    <!-- <script src="mailing-list.js?v=20241123" defer async onerror="console.warn('mailing-list.js failed')"></script> -->
+    <!-- <script src="loader-bypass.js"></script> -->
+</body>
+
+</html>

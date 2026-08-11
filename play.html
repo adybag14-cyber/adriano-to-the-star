@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Starsector Engine (Debug)</title>
+    
+    <!-- FORCE JAVA 17 BEFORE LOADER -->
+    <script>var cj3InitOptions = {version:17};</script>
+    <script src="/loader.js?v=3"></script>
+    
+    <style>
+        body { margin: 0; background: #000; overflow: hidden; color: #0f0; font-family: monospace; }
+        
+        #overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 1000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        
+        h1 { color: white; letter-spacing: 4px; margin-bottom: 30px; text-shadow: 0 0 10px lime; }
+        
+        button {
+            padding: 15px 40px; font-size: 20px; background: lime; color: black; 
+            border: 2px solid lime; cursor: pointer; font-weight: bold;
+            box-shadow: 0 0 15px lime; transition: 0.2s;
+        }
+        button:hover { background: white; transform: scale(1.05); }
+
+        #progress-container {
+            width: 60%; max-width: 800px; height: 30px; border: 2px solid #333;
+            margin-top: 30px; display: none; background: #111; position: relative;
+        }
+        #progress-bar {
+            width: 0%; height: 100%; background: lime; transition: width 0.1s;
+        }
+        #progress-text { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: bold; text-shadow: 1px 1px 2px black;
+        }
+        #status-text { margin-top: 15px; color: #888; font-size: 14px; }
+
+        #console-container {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 35%;
+            background: rgba(0,0,0,0.85); border-top: 2px solid lime;
+            overflow-y: scroll; z-index: 500; padding: 10px; box-sizing: border-box;
+            display: none; font-size: 12px; white-space: pre-wrap;
+        }
+        .log-err { color: #ff5555; }
+        .log-sys { color: #ffff55; }
+        .log-net { color: #55ffff; }
+        
+        canvas { display: block; width: 100vw; height: 100vh; }
+    </style>
+</head>
+<body>
+    <div id="overlay">
+        <h1>STARSECTOR DEBUG</h1>
+        <button id="startBtn">INITIALIZE ENGINE</button>
+        
+        <div id="progress-container">
+            <div id="progress-bar"></div>
+            <div id="progress-text">0%</div>
+        </div>
+        <div id="status-text">Ready</div>
+    </div>
+
+    <div id="console-container"></div>
+    <canvas id="display"></canvas>
+
+    <script type="module">
+        const consoleDiv = document.getElementById('console-container');
+        const overlay = document.getElementById('overlay');
+        const pBar = document.getElementById('progress-bar');
+        const pText = document.getElementById('progress-text');
+        const pContainer = document.getElementById('progress-container');
+        const sText = document.getElementById('status-text');
+
+        function log(msg, type='info') {
+            const line = document.createElement('div');
+            line.className = (type === 'error' ? 'log-err' : (type === 'system' ? 'log-sys' : (type === 'net' ? 'log-net' : '')));
+            line.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            consoleDiv.appendChild(line);
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        }
+
+        const CORE_ASSETS = [
+            "starfarer_obf.jar", "starfarer.api.jar", "fs.common_obf.jar", "fs.sound_obf.jar",
+            "json.jar", "commons-compiler.jar", "commons-compiler-jdk.jar", "janino.jar",
+            "jinput.jar", "jogg-0.0.7.jar", "jorbis-0.0.15.jar", "log4j-1.2.9.jar",
+            "lwjgl.jar", "lwjgl_util.jar", "txw2-3.0.2.jar", "webp-imageio-0.1.6.jar",
+            "xstream-1.4.10.jar", "jaxb-api-2.4.0-b180830.0359.jar",
+            "console_log4j.properties",
+            "native/linux/liblwjgl.so", "native/linux/libopenal.so", "native/linux/libjinput-linux.so"
+        ];
+
+        async function runMassPrefetch(serverUrl) {
+            pContainer.style.display = 'block';
+            document.getElementById('startBtn').style.display = 'none';
+            
+            log("Fetching Asset Manifest...", 'net');
+            sText.innerText = "Indexing Assets...";
+            let manifest = [];
+            try {
+                const resp = await fetch(serverUrl + "assets.json");
+                if (!resp.ok) throw new Error("Missing assets.json");
+                manifest = await resp.json();
+            } catch (e) {
+                log("Manifest failed! Falling back to Core Only.", 'error');
+            }
+
+            const allFiles = [...new Set([...CORE_ASSETS, ...manifest])];
+            const total = allFiles.length;
+            let completed = 0;
+
+            log(`Starting Safe Prefetch (${total} files)...`, 'net');
+            
+            const CONCURRENCY = 8;
+            
+            const fetchWithTimeout = (resource, timeout = 5000) => {
+                const controller = new AbortController();
+                const id = setTimeout(() => controller.abort(), timeout);
+                return fetch(resource, { signal: controller.signal })
+                    .then(response => {
+                        clearTimeout(id);
+                        return response;
+                    })
+                    .catch(e => {
+                        clearTimeout(id);
+                        throw e;
+                    });
+            };
+
+            async function download(file) {
+                try {
+                    const resp = await fetchWithTimeout(serverUrl + file, 5000); 
+                    if (!resp.ok) {
+                         if (!file.includes("native")) throw new Error(resp.status); 
+                    } else {
+                        await resp.blob(); 
+                    }
+                } catch (e) { }
+                
+                completed++;
+                const percent = Math.floor((completed / total) * 100);
+                
+                if (completed % 5 === 0 || completed === total) {
+                    pBar.style.width = percent + "%";
+                    pText.innerText = `${percent}%`;
+                    sText.innerText = `Caching: ${file} (${completed}/${total})`;
+                }
+            }
+
+            const queue = [...allFiles];
+            const workers = [];
+            
+            for (let i = 0; i < CONCURRENCY; i++) {
+                workers.push((async () => {
+                    while (queue.length > 0) {
+                        const file = queue.shift();
+                        await download(file);
+                    }
+                })());
+            }
+
+            await Promise.all(workers);
+            sText.innerText = "Cache Complete. Booting Engine...";
+            log("Mass Prefetch Finished.", 'net');
+        }
+
+        document.getElementById('startBtn').addEventListener('click', async () => {
+            consoleDiv.style.display = 'block';
+            const serverUrl = window.location.origin + "/";
+            log("Mounting Root: " + serverUrl, 'system');
+
+            const prefetchTask = runMassPrefetch(serverUrl);
+
+            log("Initializing Virtual Machine...", 'system');
+            
+            try {
+                await cheerpjInit({
+                    // FORCE VERSION 17 HERE TOO
+                    version: 17,
+                    natives: {
+                        window: { lwjglCanvasElement: document.getElementById("display") }
+                    },
+                    fileSystem: {
+                        mountPoint: "/app",
+                        type: "overlay",
+                        lower: { type: "http", url: serverUrl },
+                        upper: { type: "indexedDB", name: "starsector_debug_v1" }
+                    },
+                    javaProperties: [
+                        "java.version=17", "os.name=Linux", "user.dir=/app", "user.home=/files/user",
+                        "java.library.path=/app/native/linux:/app/native",
+                        "org.lwjgl.librarypath=/app/native/linux:/app/native",
+                        "legacyLauncher=true", "log4j.debug=true", "java.awt.headless=false",
+                        "-Dcom.fs.starfarer.settings.paths.mods=/files/mods",
+                        "-Dcom.fs.starfarer.settings.paths.saves=/files/saves",
+                        "-Dcom.fs.starfarer.settings.paths.logs=/files/logs",
+                        "-Dfs.game.dir=/app",
+                        "-Dlog4j.configuration=file:/app/console_log4j.properties"
+                    ],
+                    arguments: [
+                        "--add-opens=java.base/java.lang=ALL-UNNAMED",
+                        "--add-opens=java.base/java.util=ALL-UNNAMED",
+                        "--add-opens=java.base/java.nio=ALL-UNNAMED", 
+                        "--add-opens=java.desktop/java.awt=ALL-UNNAMED",
+                        "--add-opens=java.desktop/sun.awt=ALL-UNNAMED",
+                        "-Xmx1024m", "-Xms512m"
+                    ]
+                });
+
+                cheerpjCreateDisplay(1280, 768);
+
+                await prefetchTask;
+
+                log("Executing CombatMain...", 'system');
+                overlay.style.display = 'none';
+
+                const classpath = CORE_ASSETS
+                    .filter(f => f.endsWith(".jar"))
+                    .map(j => "/app/" + j)
+                    .join(":");
+
+                await cheerpjRunMain("com.fs.starfarer.combat.CombatMain", classpath);
+
+            } catch (e) {
+                log("FATAL CRASH: " + e, 'error');
+                console.error(e);
+            }
+        });
+    </script>
+</body>
+</html>

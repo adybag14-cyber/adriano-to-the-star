@@ -1,0 +1,176 @@
+openapi: 3.0.0
+info:
+  title: Adriano To The Star API
+  description: Comprehensive API documentation for Adriano To The Star application
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: support@adrianotothestar.com
+
+servers:
+  - url: https://adrianotothestar.com/api
+    description: Production server
+  - url: http://localhost:3001/api
+    description: Development server
+
+paths:
+  /planets:
+    get:
+      summary: Get planets
+      description: Retrieve list of exoplanets with filtering and pagination
+      parameters:
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Search query
+        - name: type
+          in: query
+          schema:
+            type: string
+          description: Filter by planet type
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+          description: Page number
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+          description: Items per page
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  planets:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Planet'
+                  total:
+                    type: integer
+                  page:
+                    type: integer
+                  limit:
+                    type: integer
+
+  /planets/{id}:
+    get:
+      summary: Get planet by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Planet found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Planet'
+        '404':
+          description: Planet not found
+
+  /planets/{id}/claim:
+    post:
+      summary: Claim a planet
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+      responses:
+        '200':
+          description: Planet claimed successfully
+        '400':
+          description: Planet already claimed
+        '404':
+          description: Planet not found
+
+  /chat:
+    post:
+      summary: Send chat message
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - message
+                - model
+              properties:
+                message:
+                  type: string
+                model:
+                  type: string
+                chatId:
+                  type: string
+      responses:
+        '200':
+          description: Chat response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
+
+components:
+  schemas:
+    Planet:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        distance:
+          type: number
+        discovered:
+          type: string
+        claimed:
+          type: boolean
+        claimedBy:
+          type: string
+
+    ChatResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        chatId:
+          type: string
+        timestamp:
+          type: string
+        model:
+          type: string
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        code:
+          type: integer
+

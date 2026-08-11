@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.AdrianoToTheStar" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/cosmic_gold</item>
+        <item name="colorPrimaryVariant">@color/cosmic_gold_dark</item>
+        <item name="colorOnPrimary">@color/cosmic_white</item>
+        <item name="colorSecondary">@color/cosmic_gold_light</item>
+        <item name="colorOnSecondary">@color/cosmic_dark</item>
+        <item name="android:statusBarColor">@color/cosmic_dark</item>
+        <item name="android:navigationBarColor">@color/cosmic_dark</item>
+        <item name="android:windowBackground">@color/cosmic_dark</item>
+    </style>
+</resources>
+

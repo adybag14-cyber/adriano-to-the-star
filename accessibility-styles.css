@@ -1,0 +1,204 @@
+/* Accessibility Styles - WCAG 2.1 AA Compliance */
+
+/* High Contrast Mode */
+.high-contrast {
+    --bg-primary: #000000;
+    --bg-secondary: #1a1a1a;
+    --text-primary: #ffffff;
+    --text-secondary: #ffffff;
+    --accent-color: #ffff00;
+    --border-color: #ffffff;
+}
+
+.high-contrast body {
+    background: var(--bg-primary) !important;
+    color: var(--text-primary) !important;
+}
+
+.high-contrast * {
+    background-color: var(--bg-primary) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-color) !important;
+}
+
+.high-contrast a {
+    color: var(--accent-color) !important;
+    text-decoration: underline !important;
+}
+
+.high-contrast button,
+.high-contrast .cta-button {
+    background: var(--accent-color) !important;
+    color: #000000 !important;
+    border: 2px solid var(--border-color) !important;
+}
+
+.high-contrast input,
+.high-contrast textarea,
+.high-contrast select {
+    background: var(--bg-primary) !important;
+    color: var(--text-primary) !important;
+    border: 2px solid var(--border-color) !important;
+}
+
+/* Skip Link */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: #ba944f;
+    color: #000000;
+    padding: 12px 16px;
+    text-decoration: none;
+    z-index: 10000;
+    border-radius: 0 0 4px 0;
+    font-weight: 600;
+    font-family: 'Raleway', sans-serif;
+}
+
+.skip-link:focus {
+    top: 0;
+    outline: 3px solid #000000;
+    outline-offset: 2px;
+}
+
+/* Screen Reader Only */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Enhanced Focus Indicators */
+*:focus-visible {
+    outline: 3px solid #ba944f !important;
+    outline-offset: 2px !important;
+    border-radius: 2px;
+}
+
+.high-contrast *:focus-visible {
+    outline: 4px solid #ffffff !important;
+    outline-offset: 3px !important;
+}
+
+/* Accessibility Controls */
+.accessibility-toggle,
+.accessibility-controls button {
+    transition: all 0.3s ease;
+}
+
+.accessibility-toggle:hover,
+.accessibility-controls button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(186, 148, 79, 0.4);
+}
+
+.accessibility-toggle:focus-visible,
+.accessibility-controls button:focus-visible {
+    outline: 3px solid #ba944f !important;
+    outline-offset: 2px !important;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Minimum Touch Target Sizes (44x44px) */
+button,
+a,
+input[type="button"],
+input[type="submit"],
+input[type="checkbox"],
+input[type="radio"] {
+    min-height: 44px;
+    min-width: 44px;
+}
+
+/* Ensure sufficient color contrast */
+a:not(.skip-link) {
+    color: #ba944f;
+}
+
+a:not(.skip-link):hover,
+a:not(.skip-link):focus {
+    color: #d4b86a;
+    text-decoration: underline;
+}
+
+/* Form Labels */
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+input:required + label::after,
+label:has(+ input:required)::after {
+    content: " *";
+    color: #ff6b6b;
+}
+
+/* Error Messages */
+.error-message,
+.invalid-feedback {
+    color: #ff6b6b;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+/* Success Messages */
+.success-message {
+    color: #4cd137;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+/* Loading States */
+.loading,
+[aria-busy="true"] {
+    position: relative;
+    pointer-events: none;
+}
+
+.loading::after,
+[aria-busy="true"]::after {
+    content: "Loading...";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ba944f;
+}
+
+/* Responsive Accessibility */
+@media (max-width: 768px) {
+    .accessibility-toggle {
+        bottom: 120px !important;
+        right: 15px !important;
+        width: 45px !important;
+        height: 45px !important;
+    }
+
+    .accessibility-controls {
+        bottom: 180px !important;
+        right: 15px !important;
+    }
+}
+

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Captain's Log | Native Integration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+        body {
+            margin: 0;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            font-family: 'Fira Code', monospace;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .toolbar {
+            background: #252526;
+            padding: 10px 20px;
+            display: flex;
+            gap: 10px;
+            border-bottom: 1px solid #333;
+            align-items: center;
+        }
+
+        .btn {
+            background: #3c3c3c;
+            color: #ccc;
+            border: 1px solid #444;
+            padding: 5px 15px;
+            cursor: pointer;
+            font-family: inherit;
+            border-radius: 2px;
+        }
+
+        .btn:hover {
+            background: #505050;
+        }
+
+        .btn-primary {
+            background: #007acc;
+            color: white;
+            border-color: #007acc;
+        }
+
+        .btn-primary:hover {
+            background: #0062a3;
+        }
+
+        .status-bar {
+            background: #007acc;
+            color: white;
+            padding: 2px 10px;
+            font-size: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        textarea {
+            flex: 1;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border: none;
+            padding: 20px;
+            font-family: inherit;
+            font-size: 1rem;
+            resize: none;
+            outline: none;
+            line-height: 1.5;
+        }
+
+        .filename {
+            color: #fff;
+            font-weight: bold;
+            margin-right: 20px;
+        }
+    </style>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+
+<body>
+    <div class="toolbar">
+        <a href="../../projects.html" style="text-decoration: none; color: #aaa; margin-right: 20px;">← EXIT</a>
+        <span class="filename" id="current-file">Untitled.txt</span>
+        <button class="btn" id="open-btn">Open File...</button>
+        <button class="btn btn-primary" id="save-btn">Save</button>
+        <button class="btn" id="save-as-btn">Save As...</button>
+    </div>
+
+    <textarea id="editor" spellcheck="false" placeholder="// Begin entry, Captain...
+// This text editor can read and write directly to your local file system."></textarea>
+
+    <div class="status-bar">
+        <span id="status-msg">Ready</span>
+        <span>Col <span id="col-count">1</span>, Ln <span id="ln-count">1</span></span>
+    </div>
+
+    <script type="module">
+        import { NativeBridge } from './native-core.js';
+
+        const bridge = new NativeBridge();
+        const editor = document.getElementById('editor');
+        const statusMsg = document.getElementById('status-msg');
+        const filenameEl = document.getElementById('current-file');
+
+        // Editor Stats
+        editor.addEventListener('input', updateStats);
+        editor.addEventListener('click', updateStats);
+        editor.addEventListener('keyup', updateStats);
+
+        function updateStats() {
+            const val = editor.value.substring(0, editor.selectionStart);
+            const lines = val.split('\n');
+            document.getElementById('ln-count').textContent = lines.length;
+            document.getElementById('col-count').textContent = lines[lines.length - 1].length + 1;
+            statusMsg.textContent = 'Unsaved changes';
+        }
+
+        // Open
+        document.getElementById('open-btn').addEventListener('click', async () => {
+            try {
+                const file = await bridge.openFile();
+                editor.value = file.content;
+                filenameEl.textContent = file.name;
+                statusMsg.textContent = 'File loaded';
+            } catch (e) {
+                if (e.name !== 'AbortError') alert(e.message);
+            }
+        });
+
+        // Save
+        document.getElementById('save-btn').addEventListener('click', async () => {
+            try {
+                const name = await bridge.saveFile(editor.value, false);
+                filenameEl.textContent = name;
+                statusMsg.textContent = 'Saved successfully';
+            } catch (e) {
+                if (e.name !== 'AbortError') alert(e.message);
+            }
+        });
+
+        // Save As
+        document.getElementById('save-as-btn').addEventListener('click', async () => {
+            try {
+                const name = await bridge.saveFile(editor.value, true);
+                filenameEl.textContent = name;
+                statusMsg.textContent = 'Saved successfully';
+            } catch (e) {
+                if (e.name !== 'AbortError') alert(e.message);
+            }
+        });
+
+        // Check Support
+        if (!bridge.supportsFileSystem) {
+            editor.value = "// ERROR: Your browser does not support the File System Access API.\n// Please use Chrome, Edge, or Opera on Desktop.";
+            editor.disabled = true;
+            statusMsg.textContent = 'API Not Supported';
+            document.querySelectorAll('.btn').forEach(b => b.disabled = true);
+        }
+    </script>
+</body>
+
+</html>

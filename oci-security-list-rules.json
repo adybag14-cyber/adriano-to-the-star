@@ -1,0 +1,61 @@
+{
+  "description": "Security List Rules for Kubernetes on Oracle Cloud",
+  "rules": [
+    {
+      "description": "SSH Access",
+      "source": "0.0.0.0/0",
+      "protocol": "TCP",
+      "port": 22,
+      "isStateless": false
+    },
+    {
+      "description": "Kubernetes API Server",
+      "source": "0.0.0.0/0",
+      "protocol": "TCP",
+      "port": 6443,
+      "isStateless": false
+    },
+    {
+      "description": "Kubelet API",
+      "source": "0.0.0.0/0",
+      "protocol": "TCP",
+      "port": 10250,
+      "isStateless": false
+    },
+    {
+      "description": "NodePort Services Range",
+      "source": "0.0.0.0/0",
+      "protocol": "TCP",
+      "portRange": "30000-32767",
+      "isStateless": false
+    },
+    {
+      "description": "HTTP",
+      "source": "0.0.0.0/0",
+      "protocol": "TCP",
+      "port": 80,
+      "isStateless": false
+    },
+    {
+      "description": "HTTPS",
+      "source": "0.0.0.0.0/0",
+      "protocol": "TCP",
+      "port": 443,
+      "isStateless": false
+    }
+  ],
+  "egressRules": [
+    {
+      "description": "Allow all outbound traffic",
+      "destination": "0.0.0.0/0",
+      "protocol": "all",
+      "isStateless": false
+    }
+  ],
+  "notes": [
+    "These rules should be added to your VCN Security List",
+    "For production, restrict source IPs instead of 0.0.0.0/0",
+    "Consider using Network Security Groups for more granular control"
+  ]
+}
+

@@ -1,0 +1,8 @@
+
+ Ôøà´©Å wrangler 4.50.0 (update available 4.59.1)
+ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ
+
+X [ERROR] Pages does not support custom paths for the Wrangler configuration file
+
+
+­ƒ¬Á  Logs were written to "C:\Users\adyba\.wrangler\logs\wrangler-2026-01-13_22-35-36_014.log"

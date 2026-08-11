@@ -1,0 +1,56 @@
+Audit Results:
+
+about.html:
+  - Missing: <!DOCTYPE html>
+  - Missing: <body
+  - Missing: navigation.js
+
+blog.html:
+  - Missing: <!DOCTYPE html>
+  - Missing: <head
+  - Missing: <body
+  - Missing: loader.css
+  - Missing: navigation.js
+  - Missing: styles.css
+
+database.html:
+  - Missing: loader.css
+  - Multiple <html> tags found
+  - Multiple <head> tags found
+
+file-storage.html:
+  - Multiple <head> tags found
+
+games.html:
+  - Multiple <head> tags found
+
+index.html:
+  - Multiple <head> tags found
+
+index_new.html:
+  - Missing: loader.css
+  - Missing: navigation.js
+  - Missing: styles.css
+  - Multiple <head> tags found
+
+index_scraped.html:
+  - Missing: loader.css
+  - Missing: navigation.js
+  - Missing: styles.css
+  - Multiple <head> tags found
+
+shop.html:
+  - Multiple <head> tags found
+
+stellar-ai.html:
+  - Missing: <body
+  - Missing: loader.css
+  - Missing: navigation.js
+
+test-mailing-modal.html:
+  - Missing: loader.css
+  - Missing: navigation.js
+  - Missing: styles.css
+
+total-war-2.html:
+  - Multiple <head> tags found

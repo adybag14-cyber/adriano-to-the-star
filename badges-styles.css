@@ -1,0 +1,460 @@
+/* Badges & Reputation Styles */
+
+.reputation-card {
+    background: linear-gradient(135deg, rgba(8, 10, 25, 0.85), rgba(18, 22, 40, 0.95));
+    border: 2px solid rgba(186, 148, 79, 0.3);
+    border-radius: 18px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+}
+
+.reputation-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgba(186, 148, 79, 0.2);
+}
+
+.reputation-header h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.5rem;
+    font-weight: 300;
+    letter-spacing: 4px;
+    color: #ffffff;
+    margin: 0;
+}
+
+.reputation-level {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: rgba(186, 148, 79, 0.2);
+    border: 2px solid rgba(186, 148, 79, 0.4);
+    border-radius: 8px;
+}
+
+.reputation-level.novice {
+    border-color: rgba(136, 136, 136, 0.4);
+    background: rgba(136, 136, 136, 0.2);
+}
+
+.reputation-level.explorer {
+    border-color: rgba(76, 209, 55, 0.4);
+    background: rgba(76, 209, 55, 0.2);
+}
+
+.reputation-level.astronomer {
+    border-color: rgba(52, 152, 219, 0.4);
+    background: rgba(52, 152, 219, 0.2);
+}
+
+.reputation-level.cosmologist {
+    border-color: rgba(155, 89, 182, 0.4);
+    background: rgba(155, 89, 182, 0.2);
+}
+
+.reputation-level.master {
+    border-color: rgba(243, 156, 18, 0.4);
+    background: rgba(243, 156, 18, 0.2);
+}
+
+.level-icon {
+    font-size: 1.5rem;
+}
+
+.level-name {
+    font-family: 'Raleway', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ba944f;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.reputation-level.novice .level-name { color: #888; }
+.reputation-level.explorer .level-name { color: #4cd137; }
+.reputation-level.astronomer .level-name { color: #3498db; }
+.reputation-level.cosmologist .level-name { color: #9b59b6; }
+.reputation-level.master .level-name { color: #f39c12; }
+
+.reputation-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(186, 148, 79, 0.2);
+    border-radius: 8px;
+}
+
+.stat-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 600;
+    color: #ba944f;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.progress-bar {
+    margin-top: 1.5rem;
+}
+
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.progress-track {
+    height: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ba944f, #d4b86a);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+/* Badges Container */
+.badges-category {
+    margin-bottom: 3rem;
+}
+
+.badges-category h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 300;
+    color: #ba944f;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.badges-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.badge-card {
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(186, 148, 79, 0.2);
+    border-radius: 12px;
+    padding: 1.5rem;
+    position: relative;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-height: 200px;
+}
+
+.badge-card:hover {
+    border-color: rgba(186, 148, 79, 0.4);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.badge-card.locked {
+    opacity: 0.5;
+    filter: grayscale(0.7);
+}
+
+.badge-card.earned {
+    border-color: rgba(76, 209, 55, 0.4);
+    background: rgba(76, 209, 55, 0.05);
+}
+
+.badge-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    filter: drop-shadow(0 0 10px rgba(186, 148, 79, 0.3));
+}
+
+.badge-card.locked .badge-icon {
+    filter: grayscale(1) brightness(0.5);
+}
+
+.badge-info {
+    flex: 1;
+    width: 100%;
+}
+
+.badge-name {
+    font-family: 'Raleway', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+}
+
+.badge-description {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+}
+
+.badge-points {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: rgba(186, 148, 79, 0.2);
+    border: 1px solid rgba(186, 148, 79, 0.3);
+    border-radius: 4px;
+    font-size: 0.85rem;
+    color: #ba944f;
+    margin-bottom: 0.5rem;
+}
+
+.badge-rarity {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.badge-rarity.common {
+    background: rgba(136, 136, 136, 0.2);
+    color: #888;
+    border: 1px solid rgba(136, 136, 136, 0.3);
+}
+
+.badge-rarity.uncommon {
+    background: rgba(76, 209, 55, 0.2);
+    color: #4cd137;
+    border: 1px solid rgba(76, 209, 55, 0.3);
+}
+
+.badge-rarity.rare {
+    background: rgba(52, 152, 219, 0.2);
+    color: #3498db;
+    border: 1px solid rgba(52, 152, 219, 0.3);
+}
+
+.badge-rarity.epic {
+    background: rgba(155, 89, 182, 0.2);
+    color: #9b59b6;
+    border: 1px solid rgba(155, 89, 182, 0.3);
+}
+
+.badge-rarity.legendary {
+    background: rgba(243, 156, 18, 0.2);
+    color: #f39c12;
+    border: 1px solid rgba(243, 156, 18, 0.3);
+}
+
+.badge-checkmark {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 30px;
+    height: 30px;
+    background: rgba(76, 209, 55, 0.2);
+    border: 2px solid #4cd137;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4cd137;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.badge-lock {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    opacity: 0.5;
+}
+
+/* Badge Notification */
+.badge-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    background: linear-gradient(135deg, rgba(8, 10, 25, 0.95), rgba(18, 22, 40, 0.98));
+    border: 2px solid rgba(186, 148, 79, 0.4);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    transform: translateX(400px);
+    opacity: 0;
+    transition: all 0.3s ease;
+    max-width: 350px;
+}
+
+.badge-notification.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.badge-notification-content {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.badge-notification .badge-icon {
+    font-size: 3rem;
+    margin: 0;
+}
+
+.badge-notification .badge-info {
+    flex: 1;
+}
+
+.badge-notification .badge-name {
+    font-size: 1.2rem;
+    margin-bottom: 0.25rem;
+}
+
+.badge-notification .badge-description {
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+}
+
+.badge-notification .badge-points {
+    font-size: 0.9rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .reputation-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+
+    .reputation-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .badges-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .badge-notification {
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+}
+
+/* Badge Unlock Animation */
+.badge-unlock-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 20000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.badge-unlock-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.badge-unlock-content {
+    text-align: center;
+    transform: scale(0.5);
+    transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.badge-unlock-overlay.active .badge-unlock-content {
+    transform: scale(1);
+}
+
+.badge-unlock-icon {
+    font-size: 6rem;
+    margin-bottom: 1rem;
+    animation: bounce 0.6s ease infinite;
+}
+
+.badge-unlock-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem;
+    color: #ba944f;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+
+.badge-unlock-name {
+    font-family: 'Raleway', sans-serif;
+    font-size: 1.5rem;
+    color: #ffffff;
+    opacity: 0.9;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+@keyframes sparkle {
+    0% {
+        opacity: 1;
+        transform: scale(0) translateY(0);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1) translateY(-30px);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0) translateY(-60px);
+    }
+}
+
+.badge-card.earned {
+    animation: badgeGlow 2s ease-in-out infinite;
+}
+
+@keyframes badgeGlow {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(186, 148, 79, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 40px rgba(186, 148, 79, 0.6);
+    }
+}
+

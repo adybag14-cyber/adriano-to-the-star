@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebGPU Raytracer | Experimental Megaproject</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+        body {
+            margin: 0;
+            background: #000;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* Hero Header */
+        header {
+            background: rgba(0, 0, 0, 0.8);
+            border-bottom: 1px solid #333;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 1.5rem;
+            margin: 0;
+            background: linear-gradient(90deg, #fff, #ba944f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Main Viewport */
+        main {
+            flex: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #111;
+        }
+
+        canvas {
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        /* Floating Controls */
+        .controls-panel {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 300px;
+            background: rgba(10, 10, 12, 0.9);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            font-size: 0.9rem;
+        }
+
+        .panel-header {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            color: #ba944f;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .control-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #aaa;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: #ba944f;
+        }
+
+        .value-display {
+            float: right;
+            color: #fff;
+            font-family: monospace;
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            background: #1a1a1a;
+            color: #fff;
+            border: 1px solid #444;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+        }
+
+        button:hover {
+            border-color: #ba944f;
+            color: #ba944f;
+            background: #222;
+        }
+
+        button.primary {
+            background: #ba944f;
+            color: #000;
+            border-color: #ba944f;
+        }
+
+        button.primary:hover {
+            background: #d4a757;
+        }
+
+        /* Benchmark Overlay */
+        .benchmark-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.95);
+            border: 2px solid #ba944f;
+            padding: 40px;
+            text-align: center;
+            border-radius: 12px;
+            display: none;
+            z-index: 100;
+        }
+
+        .score {
+            font-size: 4rem;
+            color: #ba944f;
+            font-family: 'Orbitron', sans-serif;
+            margin: 20px 0;
+            text-shadow: 0 0 20px rgba(186, 148, 79, 0.5);
+        }
+
+        /* Loading */
+        #loader {
+            position: absolute;
+            color: #ba944f;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .ita-logo {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            /* Force left to avoid panel overlap */
+            width: 40px;
+            height: 40px;
+        }
+    </style>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+
+<body>
+    <a href="../../projects.html">
+        <img src="../../images/ita_logo.png" alt="ITA Logo" class="ita-logo">
+    </a>
+
+    <header>
+        <h1>Raytracing Engine <span style="font-size:0.8rem; color:#666; vertical-align:middle;">PROTOTYPE v1.0</span>
+        </h1>
+        <div id="fps-counter" style="font-family:monospace; color:#4ade80;">FPS: 0</div>
+    </header>
+
+    <main>
+        <div id="loader">INITIALIZING COMPUTE SHADERS...</div>
+        <canvas id="canvas" width="1280" height="720"></canvas>
+
+        <div class="controls-panel">
+            <div class="panel-header">CONFIGURATION</div>
+            <div style="font-size:0.7em; color:#666; margin-bottom:10px;">WASD + Mouse to Move/Look</div>
+
+            <div class="control-group">
+                <label>Bounces <span id="val-bounces" class="value-display">3</span></label>
+                <input type="range" id="rays-bounces" min="1" max="16" value="3">
+            </div>
+
+            <div class="control-group">
+                <label>Samples/Frame <span id="val-samples" class="value-display">1</span></label>
+                <input type="range" id="rays-samples" min="1" max="10" value="1">
+            </div>
+
+            <div class="control-group">
+                <label>Light Intensity <span id="val-light" class="value-display">2.0</span></label>
+                <input type="range" id="light-intensity" min="0.1" max="10" step="0.1" value="2.0">
+            </div>
+
+            <div class="control-group">
+                <label>FOV <span id="val-fov" class="value-display">60</span></label>
+                <input type="range" id="camera-fov" min="30" max="120" value="60">
+            </div>
+
+            <div class="control-group">
+                <label>Aperture (DOF) <span id="val-aperture" class="value-display">0.0</span></label>
+                <input type="range" id="cam-aperture" min="0" max="0.5" step="0.01" value="0.0">
+            </div>
+
+            <div class="control-group">
+                <label>Focus Dist <span id="val-focus" class="value-display">10.0</span></label>
+                <input type="range" id="cam-focus" min="1" max="50" step="0.1" value="10.0">
+            </div>
+
+            <div class="control-group">
+                <label>Cam Speed <span id="val-speed" class="value-display">0.1</span></label>
+                <input type="range" id="cam-speed" min="0.01" max="1.0" step="0.01" value="0.1">
+            </div>
+
+            <div class="control-group">
+                <label>Accumulated Samples: <span id="sample-counter" class="value-display"
+                        style="color:#ba944f">0</span></label>
+            </div>
+
+            <div class="panel-header">ACTIONS</div>
+
+            <!-- Sky Mode Toggle -->
+            <div class="control-group" style="margin-bottom: 15px;">
+                <label>Sky Mode</label>
+                <div style="display: flex; gap: 5px;">
+                    <button id="btn-space-mode" class="primary" style="flex: 1;">🌌 SPACE</button>
+                    <button id="btn-day-mode" style="flex: 1;">☀️ DAYTIME</button>
+                </div>
+            </div>
+
+            <!-- Beast Mode -->
+            <div class="control-group" style="margin-bottom: 15px;">
+                <button id="btn-beast-mode"
+                    style="width: 100%; background: linear-gradient(135deg, #ff6b35, #f7931e); color: #000; font-weight: bold; border: 2px solid #ff6b35;">
+                    🔥 BEAST MODE (Path Tracing)
+                </button>
+                <div id="beast-status" style="font-size: 0.7em; color: #666; margin-top: 5px; text-align: center;">
+                    Off - Click to enable 8 bounces, 4 samples
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button id="btn-export">EXPORT PNG</button>
+                <button id="btn-benchmark" class="primary">RUN BENCHMARK</button>
+            </div>
+            <div style="margin-top: 10px;">
+                <button id="btn-toggle-anim" style="width: 100%;">PAUSE ANIMATION</button>
+            </div>
+        </div>
+    </main>
+
+    <div class="benchmark-overlay" id="benchmark-ui">
+        <h2 style="margin:0; color:#fff; font-family:'Orbitron'">BENCHMARK COMPLETE</h2>
+        <div class="score" id="bench-score">12450</div>
+        <p style="color:#aaa;">RAYS/SEC: <span id="bench-rays" style="color:#fff;">0</span></p>
+        <button class="primary" onclick="document.getElementById('benchmark-ui').style.display='none'">CLOSE</button>
+    </div>
+
+    <!-- Core Scripts -->
+    <script type="module" src="raytracer.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Starsector DEBUG V43 (NEW FILE)</title>
+    <script>
+        window.__logHistory = [];
+        const originalLog = console.log;
+        const originalWarn = console.warn;
+        const originalError = console.error;
+        console.log = function (...args) { window.__logHistory.push(["log", args.join(" ")]); originalLog.apply(console, args); };
+        console.warn = function (...args) { window.__logHistory.push(["warn", args.join(" ")]); originalWarn.apply(console, args); };
+        console.error = function (...args) { window.__logHistory.push(["error", args.join(" ")]); originalError.apply(console, args); };
+    </script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000;
+            color: #fff;
+            font-family: monospace;
+        }
+
+        #game-container {
+            width: 100vw;
+            height: 100vh;
+            display: block;
+        }
+
+        #log-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 600px;
+            background: rgba(0, 0, 0, 0.8);
+            overflow-y: scroll;
+            pointer-events: none;
+            font-size: 14px;
+            z-index: 9999;
+            white-space: pre-wrap;
+            font-family: Consolas, monospace;
+        }
+    </style>
+    <!-- Network Debug Hook -->
+    <script>
+        (function () {
+            const originalFetch = window.fetch;
+            const originalXHR = window.XMLHttpRequest;
+
+            window.fetch = async function (...args) {
+                const url = args[0];
+                if (typeof url === 'string' && (url.includes('lwjgl') || url.includes('.js') || url.includes('.wasm'))) {
+                    console.log(`[NETWORK] Fetching: ${url}`);
+                    // Trigger custom log to overlay
+                    if (window.customLog) window.customLog(`[NET] Fetch: ${url}`);
+                }
+                try {
+                    const response = await originalFetch.apply(this, args);
+                    if (typeof url === 'string' && (url.includes('lwjgl') || url.includes('.js') || url.includes('.wasm'))) {
+                        console.log(`[NETWORK] Fetch DONE: ${url} STATUS: ${response.status}`);
+                        if (window.customLog) window.customLog(`[NET] Status ${response.status}: ${url}`);
+                    }
+                    return response;
+                } catch (e) {
+                    console.error(`[NETWORK] Fetch Error for ${url}:`, e);
+                    if (window.customLog) window.customLog(`[NET] Error: ${url} - ${e}`);
+                    throw e;
+                }
+            };
+
+            const XHROpen = originalXHR.prototype.open;
+            originalXHR.prototype.open = function (method, url) {
+                if (typeof url === 'string' && (url.includes('lwjgl') || url.includes('.js'))) {
+                    console.log(`[NETWORK] XHR Open: ${method} ${url}`);
+                    if (window.customLog) window.customLog(`[NET] XHR: ${url}`);
+                }
+                this.addEventListener('load', function () {
+                    if (typeof url === 'string' && (url.includes('lwjgl') || url.includes('.js'))) {
+                        console.log(`[NETWORK] XHR Load: ${url} STATUS: ${this.status}`);
+                    }
+                });
+                return XHROpen.apply(this, arguments);
+            };
+        })();
+    </script>
+    <!-- Standard Local Loader -->
+    <script src="https://cjrtnc.leaningtech.com/3.0/loader.js"></script>
+    <script type="module" src="/lwjgl.js?v=hybrid1"></script>
+    <!-- <script src="/files/patch_cheerpj.js"></script> -->
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+
+<body>
+    <div id="log-overlay">Waiting for logs...</div>
+    <canvas id="lwjglCanvas"></canvas>
+
+    <script type="module">
+        const logOverlay = document.getElementById('log-overlay');
+        const customLog = (msg) => {
+            console.log(msg);
+            logOverlay.innerText += msg + "\n";
+            logOverlay.scrollTop = logOverlay.scrollHeight;
+        };
+
+        window.onerror = (msg) => customLog(`[ERROR] ${msg}`);
+        window.onunhandledrejection = (e) => customLog(`[PROMISE] ${e.reason}`);
+
+        async function initGame() {
+            customLog("!!! VERSION 2025-DEBUG-V43-NEW-FILE !!!");
+            customLog("Native Binaries: files/gl4es.wasm, files/liblwjgl.so, files/lwjgl.js");
+            customLog("JAR Base: /app/files (CheerpJ webroot mapping)");
+
+            // CHANGED: Explicit CheerpJ webroot path
+            const jarBase = "/app/files";
+            const jarFiles = [
+                "starfarer_obf.jar",
+                "fs.common_obf.jar",
+                "fs.sound_obf.jar",
+                "starfarer.api.jar",
+                "json.jar",
+                "xstream-1.4.10.jar",
+                "log4j-1.2.9.jar",
+                "commons-compiler.jar",
+                "commons-compiler-jdk.jar",
+                "janino.jar",
+                "jinput.jar",
+                "lwjgl.jar",
+                "lwjgl_util.jar",
+                "jorbis-0.0.15.jar",
+                "jogg-0.0.7.jar"
+            ];
+            const cp = jarFiles.map(j => jarBase + "/" + j).join(":") + ":/files/config.jar";
+
+            // R2 URL Configuration
+            const R2_BASE = "https://pub-a81d5d878e204f2d963b5ee61e981dc4.r2.dev/files";
+
+            // Pre-configure Mounts to ensure /starfarer.res exists
+            window.cheerpjFSMounts = [
+                { type: "linked", mountPoint: "/files", mountPath: "/files" },
+                { type: "linked", mountPoint: "/starfarer.res", mountPath: "/files" }
+            ];
+
+            // Initialize CheerpJ
+            await cheerpjInit({
+                version: 17,
+                status: "splash",
+                // TEST FETCH to confirm accessibility
+                preInit: async () => {
+                    try {
+                        customLog("[TEST] Fetching /files/lwjgl.js manually...");
+                        const r = await fetch('/files/lwjgl.js');
+                        customLog(`[TEST] Fetch Result: ${r.status}`);
+                    } catch (e) {
+                        customLog(`[TEST] Fetch Failed: ${e}`);
+                    }
+                },
+                libraries: {
+                    'libGL.so.1': '/files/gl4es.wasm',
+                    'liblwjgl.so': '/files/gl4es.wasm',
+                    'liblwjgl64.so': '/files/gl4es.wasm',
+                    'libopenal.so': '/files/gl4es.wasm', // Placeholder too?
+                    'libjinput-linux.so': R2_BASE + '/libjinput-linux.so',
+                    // CheerpJ specific mappings
+                    'lwjgl': '/files/gl4es.wasm',
+                    'lwjgl64': '/files/gl4es.wasm',
+                    'openal': R2_BASE + '/libopenal.so'
+                },
+                mounts: [
+                    { type: "linked", mountPoint: "/starfarer.res", mountPath: "/files" },
+                    { type: "linked", mountPoint: "/files", mountPath: "/files" },
+                    { type: "linked", mountPoint: "/app/files", mountPath: "/files" }
+                ],
+                javaProperties: {
+                    // Absolute Paths for Configs (Attempt to fix ModManager NPE)
+                    // Absolute Paths for Configs (Attempt to fix ModManager NPE)
+                    "com.fs.starfarer.settings.paths.saves": "/files/saves",
+                    "com.fs.starfarer.settings.paths.screenshots": "/files/screenshots",
+                    "com.fs.starfarer.settings.paths.mods": "/files/mods",
+                    "com.fs.starfarer.settings.paths.logs": "/files",
+                    "fs.home": "/files",
+                    "starfarer.res.path": "/files",
+                    "starfarer.settings.paths.saves": "/files/saves",
+                    "starfarer.settings.paths.screenshots": "/files/screenshots",
+                    "starfarer.settings.paths.mods": "/files/mods",
+
+                    // Obfuscated/Scanned Keys (Just in case)
+                    "$com.fs.starfarer.settings.paths.logs": "/files",
+                    "%com.fs.starfarer.settings.paths.saves": "/files/saves",
+                    "+com.fs.starfarer.settings.paths.screenshots": "/files/screenshots",
+                    "$com.fs.starfarer.settings.paths.mods": "/files/mods",
+
+                    // Native Paths
+                    "java.library.path": ".:/files",
+                    "org.lwjgl.librarypath": ".:/files",
+                    "user.dir": "/files",
+                    "user.home": "/files",
+                    "org.lwjgl.util.Debug": "true"
+                },
+                arguments: [
+                    "-Djava.library.path=/files:/app/files",
+                    "-Dorg.lwjgl.librarypath=/files",
+                    "-Duser.dir=/files",
+                    // Injection via Arguments (Redundancy for Launcher)
+                    "-Dcom.fs.starfarer.settings.paths.saves=/files/saves",
+                    "-Dcom.fs.starfarer.settings.paths.screenshots=/files/screenshots",
+                    "-Dcom.fs.starfarer.settings.paths.mods=/files/mods",
+                    "-Dcom.fs.starfarer.settings.paths.logs=/files",
+                    "-Dfs.home=/files",
+                    "-Dstarfarer.res.path=/files",
+
+                    // Obfuscated Keys Injection
+                    "-D$com.fs.starfarer.settings.paths.logs=/files",
+                    "-D%com.fs.starfarer.settings.paths.saves=/files/saves",
+                    "-D+com.fs.starfarer.settings.paths.screenshots=/files/screenshots",
+                    "-D$com.fs.starfarer.settings.paths.mods=/files/mods",
+
+                    "com.fs.starfarer.StarfarerLauncher"
+                ],
+                natives: {
+                    // LWJGL Stubs (Injected globally to bypass library symbol lookup)
+                    Java_org_lwjgl_Sys_getTimerResolution: () => 1000,
+                    Java_org_lwjgl_Sys_getTime: () => BigInt(Date.now()),
+                    Java_org_lwjgl_Sys_alert: (env, clazz, title, msg) => console.warn("[LWJGL ALERT]", title, msg),
+                    Java_org_lwjgl_Sys_openURL: (env, clazz, url) => window.open(url, '_blank'),
+                    Java_org_lwjgl_opengl_Display_getDisplayMode: () => null,
+                    Java_org_lwjgl_DefaultSysImplementation_getPointerSize: () => 4,
+                    Java_org_lwjgl_DefaultSysImplementation_getJNIVersion: () => 19,
+                    Java_org_lwjgl_DefaultSysImplementation_setDebug: () => { },
+                    Java_org_lwjgl_DefaultSysImplementation_getJNIEnv: () => 0
+                }
+            });
+            customLog("[Setup] cheerpjInit done.");
+
+            // --- RUNTIME PATCH START ---
+            try {
+                const mounts = window.cheerpjFSMounts;
+                if (mounts) {
+                    customLog(`[Patch] Found ${mounts.length} mounts.`);
+                    let patched = false;
+                    for (let m of mounts) {
+                        if (m.mountPoint === "/files/" || m.mountPoint === "/files") {
+                            customLog(`[Patch] Patching /files/ mount (Standard Recursive)...`);
+
+                            const originalList = m.mountOps.listAsync;
+                            m.mountOps.listAsync = function (mp, path, fileRef, cb) {
+                                let p = path.replace(/^\/+/, '').replace(/\/+$/, '');
+                                customLog(`[Patch] listAsync called for: '${path}' (Normalized: '${p}')`);
+
+                                if (p === "") {
+                                    // Ensure natives and key folders are "visible" to Java listing
+                                    // even if http-server doesn't serve directory listing
+                                    fileRef.push("mods");
+                                    fileRef.push("data");
+                                    fileRef.push("native");
+                                    fileRef.push("lwjgl.js");  // Real Native Loader
+                                    fileRef.push("liblwjgl.so"); // Real Wasm Binary
+                                    fileRef.push("gl4es.wasm");
+                                    fileRef.push("jawt.js");
+                                    return cb();
+                                }
+                                if (p === "mods" || p === "files/mods") { return cb(null, []); }
+                                if (p === "data") { fileRef.push("config"); return cb(); }
+                                if (p === "data/config") { fileRef.push("settings.json"); return cb(); }
+
+                                // STUB: Return empty array for stubbed directories to prevent NPE
+                                const stubDirs = ["mods", "saves", "screenshots", "files/mods", "/files/mods", "files/saves", "files/screenshots"];
+                                if (stubDirs.includes(p) || stubDirs.includes(p.replace(/^\/+/, ''))) {
+                                    customLog("[Patch] Stubbing listAsync for: " + path);
+                                    return cb(null, []); // Explicit Success Empty List
+                                }
+
+                                return originalList.call(this, mp, path, fileRef, cb);
+                            };
+
+                            const originalStat = m.mountOps.statAsync;
+                            m.mountOps.statAsync = function (mp, path, fileRef, cb) {
+                                customLog("[Patch] statAsync: " + path);
+                                const dirs = ["files", "mods", "data", "graphics", "native", "sounds", "saves", "screenshots", "data/config"];
+                                let p = path.replace(/^\/+/, '').replace(/\/+$/, '');
+                                if (p === "liblwjgl.so" || p === "/liblwjgl.so" || p.endsWith("/liblwjgl.so") ||
+                                    p === "lwjgl.js" || p === "/lwjgl.js" || p.endsWith("/lwjgl.js") ||
+                                    p === "lwjgl64.js" || p === "/lwjgl64.js" || p.endsWith("/lwjgl64.js")) {
+                                    customLog("[Patch] Force-statting Wasm/JS: " + p);
+                                    var s = {
+                                        type: 1, // File
+                                        mode: 33188, // 0644
+                                        size: 2000,
+                                        ino: 12345,
+                                        mtime: Date.now(),
+                                        atime: Date.now(),
+                                        ctime: Date.now(),
+                                        nlink: 1,
+                                        dev: 1,
+                                        uid: 1000,
+                                        gid: 1000
+                                    };
+                                    cb(null, s);
+                                    return;
+                                }
+
+                                if (dirs.includes(p)) {
+                                    // customLog("[Patch] Stubbing directory stat:", p);
+                                    var s = {};
+                                    s.type = 2; // Directory
+                                    s.mode = 16877; // 0755
+                                    s.size = 4096;
+                                    cb(null, s);
+                                    return;
+                                }
+                                return originalStat.call(this, mp, path, fileRef, cb);
+                            };
+
+                            patched = true;
+                        }
+                    }
+                    if (!patched) customLog("[Patch] WARNING: Mount not found!");
+                }
+            } catch (e) {
+                customLog("[Patch] Critical Error: " + e);
+            }
+            // --- RUNTIME PATCH END ---
+
+            cheerpjCreateDisplay(800, 600, document.getElementById('lwjglCanvas'));
+            customLog("[Setup] Launching Launcher...");
+            try {
+                await cheerpjRunMain("com.fs.starfarer.StarfarerLauncher", cp);
+            } catch (e) {
+                customLog("[Run] Error: " + e);
+            }
+        }
+
+        initGame().catch(e => {
+            console.error(e);
+            customLog("[FATAL] initGame caught error: " + e);
+        });
+    </script>
+</body>
+
+</html>

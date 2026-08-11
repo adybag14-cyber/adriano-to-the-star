@@ -1,0 +1,220 @@
+  private static java.util.Map<java.lang.String, java.awt.Color> ÍÍ0000;
+
+  private static java.util.Map<java.lang.String, java.awt.Color> Ï00000;
+
+  private static java.util.Map<java.lang.String, java.lang.Float> ÷¶0000;
+
+  private static java.util.Map<java.lang.String, java.lang.Boolean> float;
+
+  private static boolean Í¶0000;
+
+  private static java.awt.Color ËÊ0000;
+
+  private static java.awt.Color null.Object;
+
+  private static java.awt.Color ËÏ0000;
+
+  private static java.awt.Color ÏÈ0000;
+
+  private static volatile int[] Èo0000;
+
+  static {};
+    Code:
+       0: new           #189                // class java/util/HashMap
+       3: dup
+       4: invokespecial #191                // Method java/util/HashMap."<init>":()V
+       7: putstatic     #194                // Field ÍÈ0000:Ljava/util/Map;
+      10: fconst_1
+      11: putstatic     #196                // Field ÷O0000:F
+      14: iconst_0
+      15: putstatic     #198                // Field ÷Ï0000:I
+      18: fconst_1
+      19: putstatic     #200                // Field ÷Í0000:F
+      22: getstatic     #200                // Field ÷Í0000:F
+      25: putstatic     #202                // Field com/fs/graphics/A/ooOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO.OË0000:F
+      28: ldc           #1                  // class com/fs/starfarer/settings/StarfarerSettings
+      30: invokestatic  #205                // Method org/apache/log4j/Logger.getLogger:(Ljava/lang/Class;)Lorg/apache/log4j/Logger;
+      33: putstatic     #211                // Field Í00000:Lorg/apache/log4j/Logger;
+      36: iconst_0
+      37: putstatic     #213                // Field oO0000:Z
+      40: iconst_0
+      41: putstatic     #215                // Field §o0000:Z
+      44: iconst_0
+      45: putstatic     #217                // Field OÊ0000:Z
+      48: bipush        32
+      50: putstatic     #219                // Field "new.super":I
+      53: new           #221                // class com/fs/starfarer/settings/A
+      56: dup
+      57: invokespecial #223                // Method com/fs/starfarer/settings/A."<init>":()V
+      60: putstatic     #224                // Field ÈO0000:Lcom/fs/starfarer/settings/A;
+      63: iconst_1
+      64: putstatic     #226                // Field OÏ0000:Z
+      67: iconst_1
+      68: putstatic     #228                // Field while:Z
+      71: iconst_1
+      72: putstatic     #230                // Field "null.return":Z
+      75: iconst_1
+      76: putstatic     #232                // Field ÷00000:Z
+      79: iconst_0
+      80: putstatic     #234                // Field Ï¶0000:Z
+      83: iconst_0
+      84: putstatic     #236                // Field OÈ0000:Z
+      87: iconst_0
+      88: putstatic     #238                // Field "class.class":Z
+      91: iconst_0
+      92: putstatic     #240                // Field §00000:Z
+      95: iconst_0
+      96: putstatic     #242                // Field o¶0000:Z
+      99: iconst_1
+     100: putstatic     #244                // Field new:Z
+     103: iconst_0
+     104: putstatic     #246                // Field class:Z
+     107: iconst_1
+     108: putstatic     #248                // Field ÷Ê0000:Z
+     111: ldc           #250                // float 20.0f
+     113: putstatic     #251                // Field Ë00000:F
+     116: ldc           #253                // String normal
+     118: putstatic     #255                // Field "interface.class":Ljava/lang/String;
+     121: iconst_0
+     122: putstatic     #257                // Field ÍÊ0000:Z
+     125: ldc_w         #259                // float 0.5f
+     128: putstatic     #260                // Field §È0000:F
+     131: fconst_1
+     132: putstatic     #262                // Field È¶0000:F
+     135: iconst_0
+     136: putstatic     #264                // Field oÈ0000:Z
+     139: sipush        200
+     142: putstatic     #266                // Field interface:I
+     145: fconst_1
+     146: putstatic     #268                // Field "float.Object":F
+     149: ldc_w         #270                // float 0.3f
+     152: putstatic     #271                // Field ÏÍ0000:F
+     155: new           #189                // class java/util/HashMap
+     158: dup
+     159: invokespecial #191                // Method java/util/HashMap."<init>":()V
+     162: putstatic     #273                // Field §¶0000:Ljava/util/Map;
+     165: iconst_1
+     166: putstatic     #275                // Field OÍ0000:Z
+     169: aconst_null
+     170: putstatic     #277                // Field Ío0000:Lcom/fs/starfarer/settings/StarfarerSettings$Oo;
+     173: ldc_w         #279                // String com.fs.starfarer.settings.osx
+     176: invokestatic  #281                // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+     179: ifnull        186
+     182: iconst_1
+     183: goto          187
+     186: iconst_0
+     187: putstatic     #287                // Field "null.class":Z
+     190: ldc_w         #289                // String com.fs.starfarer.settings.linux
+     193: invokestatic  #281                // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+     196: ifnull        203
+     199: iconst_1
+     200: goto          204
+     203: iconst_0
+     204: putstatic     #291                // Field O10000:Z
+     207: aconst_null
+     208: putstatic     #293                // Field oo0000:Lcom/fs/starfarer/api/combat/CombatReadinessPlugin;
+     211: new           #189                // class java/util/HashMap
+     214: dup
+     215: invokespecial #191                // Method java/util/HashMap."<init>":()V
+     218: putstatic     #295                // Field È00000:Ljava/util/Map;
+     221: new           #189                // class java/util/HashMap
+     224: dup
+     225: invokespecial #191                // Method java/util/HashMap."<init>":()V
+     228: putstatic     #297                // Field ÍÍ0000:Ljava/util/Map;
+     231: new           #189                // class java/util/HashMap
+     234: dup
+     235: invokespecial #191                // Method java/util/HashMap."<init>":()V
+     238: putstatic     #299                // Field Ï00000:Ljava/util/Map;
+     241: new           #189                // class java/util/HashMap
+     244: dup
+     245: invokespecial #191                // Method java/util/HashMap."<init>":()V
+     248: putstatic     #301                // Field ÷¶0000:Ljava/util/Map;
+     251: new           #189                // class java/util/HashMap
+     254: dup
+     255: invokespecial #191                // Method java/util/HashMap."<init>":()V
+     258: putstatic     #303                // Field float:Ljava/util/Map;
+     261: iconst_1
+     262: putstatic     #305                // Field Í¶0000:Z
+     265: aconst_null
+     266: putstatic     #307                // Field ËÊ0000:Ljava/awt/Color;
+     269: aconst_null
+     270: putstatic     #309                // Field "null.Object":Ljava/awt/Color;
+     273: aconst_null
+     274: putstatic     #311                // Field ËÏ0000:Ljava/awt/Color;
+     277: aconst_null
+     278: putstatic     #313                // Field ÏÈ0000:Ljava/awt/Color;
+     281: return
+
+  public com.fs.starfarer.settings.StarfarerSettings();
+    Code:
+       0: aload_0
+       1: invokespecial #318                // Method java/lang/Object."<init>":()V
+       4: return
+
+  public static float oÏ0000();
+    Code:
+       0: invokestatic  #323                // Method "class.Object":()F
+       3: freturn
+
+  public static void o00000(float, int);
+    Code:
+       0: fload_0
+       1: putstatic     #200                // Field ÷Í0000:F
+       4: getstatic     #200                // Field ÷Í0000:F
+       7: putstatic     #202                // Field com/fs/graphics/A/ooOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO.OË0000:F
+      10: iload_1
+      11: putstatic     #328                // Field com/fs/graphics/A/ooOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO."while.new":I
+      14: return
+
+  private static org.json.JSONObject null.new() throws java.io.IOException, org.json.JSONException;
+    Code:
+       0: new           #340                // class java/util/HashSet
+       3: dup
+       4: invokespecial #342                // Method java/util/HashSet."<init>":()V
+       7: astore_0
+       8: aload_0
+       9: ldc_w         #343                // String vsync
+      12: invokevirtual #345                // Method java/util/HashSet.add:(Ljava/lang/Object;)Z
+      15: pop
+      16: aload_0
+      17: ldc_w         #349                // String refreshRate
+      20: invokevirtual #345                // Method java/util/HashSet.add:(Ljava/lang/Object;)Z
+      23: pop
+      24: aload_0
+      25: ldc_w         #351                // String fps
+      28: invokevirtual #345                // Method java/util/HashSet.add:(Ljava/lang/Object;)Z
+      31: pop
+      32: aload_0
+      33: ldc_w         #353                // String devMode
+      36: invokevirtual #345                // Method java/util/HashSet.add:(Ljava/lang/Object;)Z
+      39: pop
+      40: aload_0
+      41: ldc_w         #355                // String godMode
+      44: invokevirtual #345                // Method java/util/HashSet.add:(Ljava/lang/Object;)Z
+      47: pop
+      48: aload_0
+      49: ldc_w         #357                // String playtestingMode
+      52: invokevirtual #345                // Method java/util/HashSet.add:(Ljava/lang/Object;)Z
+      55: pop
+      56: aload_0
+      57: ldc_w         #359                // String colorblindMode
+      60: invokevirtual #345                // Method java/util/HashSet.add:(Ljava/lang/Object;)Z
+      63: pop
+      64: aload_0
+      65: ldc_w         #361                // String resolutionOverride
+      68: invokevirtual #345                // Method java/util/HashSet.add:(Ljava/lang/Object;)Z
+      71: pop
+      72: aload_0
+      73: ldc_w         #363                // String forceAspectRatio
+      76: invokevirtual #345                // Method java/util/HashSet.add:(Ljava/lang/Object;)Z
+      79: pop
+      80: aload_0
+      81: ldc_w         #365                // String autoturnMode
+      84: invokevirtual #345                // Method java/util/HashSet.add:(Ljava/lang/Object;)Z
+      87: pop
+      88: aload_0
+      89: ldc_w         #367                // String showEnemyWaypoints
+      92: invokevirtual #345                // Method java/util/HashSet.add:(Ljava/lang/Object;)Z
+      95: pop
+      96: aload_0
+      97: ldc_w         #369                // String windowLocationX

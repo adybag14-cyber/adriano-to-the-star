@@ -1,0 +1,17 @@
+name = "adriano-404-logger"
+main = "src/index.js"
+compatibility_date = "2024-01-08"
+
+# Monitor the whole domain
+[[routes]]
+pattern = "adrianotothestar.com/*"
+zone_name = "adrianotothestar.com"
+
+[[r2_buckets]]
+binding = "SWF_BUCKET"
+bucket_name = "starisdons-swf-files"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "404_logs"
+database_id = "${DATABASE_ID}"

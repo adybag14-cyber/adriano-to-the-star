@@ -1,0 +1,240 @@
+               default: 162
+          }
+     104: goto          162
+     107: new           #118                // class java/lang/StringBuilder
+     110: dup
+     111: aload         4
+     113: invokestatic  #120                // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+     116: invokespecial #126                // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+     119: ldc           #128                // String CLASSPATH,
+     121: invokevirtual #130                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     124: invokevirtual #134                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     127: astore        4
+     129: goto          162
+     132: new           #118                // class java/lang/StringBuilder
+     135: dup
+     136: aload         4
+     138: invokestatic  #120                // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+     141: invokespecial #126                // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+     144: aload         5
+     146: getfield      #138                // Field com/fs/util/C$Oo.Ë00000:Ljava/lang/String;
+     149: invokevirtual #130                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     152: ldc           #140                // String ,
+     154: invokevirtual #130                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     157: invokevirtual #134                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     160: astore        4
+     162: aload_3
+     163: ifnull        192
+     166: aload         5
+     168: getfield      #111                // Field com/fs/util/C$Oo.super:Lcom/fs/util/C$o;
+     171: getstatic     #45                 // Field com/fs/util/C$o.È00000:Lcom/fs/util/C$o;
+     174: if_acmpne     209
+     177: aload         5
+     179: getfield      #138                // Field com/fs/util/C$Oo.Ë00000:Ljava/lang/String;
+     182: aload_3
+     183: invokevirtual #142                // Method java/lang/String.endsWith:(Ljava/lang/String;)Z
+     186: ifne          192
+     189: goto          209
+     192: aload_0
+     193: aload_1
+     194: aload         5
+     196: invokevirtual #146                // Method È00000:(Ljava/lang/String;Lcom/fs/util/C$Oo;)Ljava/io/InputStream;
+     199: astore        7
+     201: aload         7
+     203: ifnull        209
+     206: aload         7
+     208: areturn
+     209: aload         6
+     211: invokeinterface #150,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     216: ifne          40
+     219: aload         4
+     221: iconst_0
+     222: aload         4
+     224: invokevirtual #154                // Method java/lang/String.length:()I
+     227: iconst_1
+     228: isub
+     229: invokevirtual #157                // Method java/lang/String.substring:(II)Ljava/lang/String;
+     232: astore        4
+     234: new           #161                // class java/lang/RuntimeException
+     237: dup
+     238: new           #118                // class java/lang/StringBuilder
+     241: dup
+     242: ldc           #163                // String Error loading [
+     244: invokespecial #126                // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+     247: aload_1
+     248: invokevirtual #130                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     251: ldc           #165                // String ] resource, not found in [
+     253: invokevirtual #130                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     256: aload         4
+     258: invokevirtual #130                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     261: ldc           #167                // String ]
+     263: invokevirtual #130                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     266: invokevirtual #134                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     269: invokespecial #169                // Method java/lang/RuntimeException."<init>":(Ljava/lang/String;)V
+     272: athrow
+
+  public synchronized long new(java.lang.String, boolean) throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: getfield      #32                 // Field Ê00000:Ljava/util/List;
+       4: invokeinterface #96,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+       9: astore        4
+      11: goto          57
+      14: aload         4
+      16: invokeinterface #100,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      21: checkcast     #43                 // class com/fs/util/C$Oo
+      24: astore_3
+      25: iload_2
+      26: ifne          39
+      29: aload_3
+      30: getfield      #106                // Field com/fs/util/C$Oo.String:Z
+      33: ifeq          39
+      36: goto          57
+      39: aload_0
+      40: aload_1
+      41: aload_3
+      42: invokevirtual #178                // Method new:(Ljava/lang/String;Lcom/fs/util/C$Oo;)J
+      45: lstore        5
+      47: lload         5
+      49: lconst_0
+      50: lcmp
+      51: ifeq          57
+      54: lload         5
+      56: lreturn
+      57: aload         4
+      59: invokeinterface #150,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      64: ifne          14
+      67: lconst_0
+      68: lreturn
+
+  public synchronized long new(java.lang.String, com.fs.util.C$Oo) throws java.io.FileNotFoundException;
+    Code:
+       0: invokestatic  #108                // Method o00000:()[I
+       3: aload_2
+       4: getfield      #111                // Field com/fs/util/C$Oo.super:Lcom/fs/util/C$o;
+       7: invokevirtual #114                // Method com/fs/util/C$o.ordinal:()I
+      10: iaload
+      11: tableswitch   { // 1 to 3
+
+                     1: 59
+
+                     2: 36
+
+                     3: 57
+               default: 105
+          }
+      36: new           #185                // class java/io/File
+      39: dup
+      40: aload_1
+      41: invokespecial #187                // Method java/io/File."<init>":(Ljava/lang/String;)V
+      44: astore_3
+      45: aload_3
+      46: invokevirtual #188                // Method java/io/File.exists:()Z
+      49: ifeq          105
+      52: aload_3
+      53: invokevirtual #191                // Method java/io/File.lastModified:()J
+      56: lreturn
+      57: lconst_0
+      58: lreturn
+      59: new           #185                // class java/io/File
+      62: dup
+      63: new           #118                // class java/lang/StringBuilder
+      66: dup
+      67: aload_2
+      68: getfield      #138                // Field com/fs/util/C$Oo.Ë00000:Ljava/lang/String;
+      71: invokestatic  #120                // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+      74: invokespecial #126                // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+      77: ldc           #194                // String /
+      79: invokevirtual #130                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      82: aload_1
+      83: invokevirtual #130                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      86: invokevirtual #134                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      89: invokespecial #187                // Method java/io/File."<init>":(Ljava/lang/String;)V
+      92: astore_3
+      93: aload_3
+      94: invokevirtual #188                // Method java/io/File.exists:()Z
+      97: ifeq          105
+     100: aload_3
+     101: invokevirtual #191                // Method java/io/File.lastModified:()J
+     104: lreturn
+     105: lconst_0
+     106: lreturn
+
+  public synchronized java.util.List<com.fs.util.container.Pair<com.fs.util.C$Oo, java.io.InputStream>> new(java.lang.String) throws java.io.IOException;
+    Code:
+       0: new           #29                 // class java/util/ArrayList
+       3: dup
+       4: invokespecial #31                 // Method java/util/ArrayList."<init>":()V
+       7: astore_2
+       8: ldc           #94                 // String
+      10: astore_3
+      11: iconst_0
+      12: istore        4
+      14: aload_0
+      15: getfield      #32                 // Field Ê00000:Ljava/util/List;
+      18: invokeinterface #96,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      23: astore        6
+      25: goto          235
+      28: aload         6
+      30: invokeinterface #100,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      35: checkcast     #43                 // class com/fs/util/C$Oo
+      38: astore        5
+      40: iconst_0
+      41: istore        7
+      43: invokestatic  #108                // Method o00000:()[I
+      46: aload         5
+      48: getfield      #111                // Field com/fs/util/C$Oo.super:Lcom/fs/util/C$o;
+      51: invokevirtual #114                // Method com/fs/util/C$o.ordinal:()I
+      54: iaload
+      55: tableswitch   { // 1 to 3
+
+                     1: 112
+
+                     2: 80
+
+                     3: 86
+               default: 140
+          }
+      80: iconst_1
+      81: istore        7
+      83: goto          140
+      86: iconst_1
+      87: istore        7
+      89: new           #118                // class java/lang/StringBuilder
+      92: dup
+      93: aload_3
+      94: invokestatic  #120                // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+      97: invokespecial #126                // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+     100: ldc           #128                // String CLASSPATH,
+     102: invokevirtual #130                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     105: invokevirtual #134                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     108: astore_3
+     109: goto          140
+     112: new           #118                // class java/lang/StringBuilder
+     115: dup
+     116: aload_3
+     117: invokestatic  #120                // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+     120: invokespecial #126                // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+     123: aload         5
+     125: getfield      #138                // Field com/fs/util/C$Oo.Ë00000:Ljava/lang/String;
+     128: invokevirtual #130                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     131: ldc           #140                // String ,
+     133: invokevirtual #130                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     136: invokevirtual #134                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     139: astore_3
+     140: aload_0
+     141: aload_1
+     142: aload         5
+     144: invokevirtual #146                // Method È00000:(Ljava/lang/String;Lcom/fs/util/C$Oo;)Ljava/io/InputStream;
+     147: astore        8
+     149: aload         8
+     151: ifnull        235
+     154: iload         7
+     156: ifeq          164
+     159: iload         4
+     161: ifne          235
+     164: iload         7
+     166: ifeq          172
+     169: iconst_1
+     170: istore        4
+     172: aload_1

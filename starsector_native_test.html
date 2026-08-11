@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Starsector Native Debug</title>
+    <style>
+        body {
+            background: #000;
+            color: #0f0;
+            font-family: monospace;
+        }
+    </style>
+    <!-- Use CheerpJ 4.2 (same as main) -->
+    <script src="https://cjrtnc.leaningtech.com/4.2/loader.js"></script>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+
+<body>
+    <h1>Starsector Native Debugger</h1>
+    <pre id="console"></pre>
+    <script>
+        // redirect console
+        const logPanel = document.getElementById('console');
+        const oldLog = console.log;
+        const oldErr = console.error;
+        const oldWarn = console.warn;
+        function htmlLog(type, args) {
+            const line = document.createElement('div');
+            line.textContent = `[${type}] ` + Array.from(args).join(' ');
+            line.style.color = type === 'ERR' ? '#f00' : (type === 'WARN' ? '#fa0' : '#0f0');
+            logPanel.appendChild(line);
+            oldLog.apply(console, [`[${type}]`, ...args]);
+        }
+        console.log = (...args) => htmlLog('LOG', args);
+        console.error = (...args) => htmlLog('ERR', args);
+        console.warn = (...args) => htmlLog('WARN', args);
+
+        async function start() {
+            try {
+                console.log("Initializing CheerpJ...");
+
+                await cheerpjInit({
+                    version: 17,
+                    javaProperties: [
+                        "java.library.path=/app/cheerpj-natives/natives",
+                        "org.lwjgl.librarypath=/app/cheerpj-natives/natives",
+                        "user.dir=/app/Starsector"
+                    ],
+                    natives: {
+                        // SYNC stubs - critical for linker import satisfaction
+                        JVM_LoadLibrary(libName) {
+                            console.log(`[NATIVE HOOK] JVM_LoadLibrary called for: ${libName}`);
+                            return 123456; // Return a fake address (int)
+                        },
+                        JVM_FindLibraryEntry(handle, name) {
+                            console.log(`[NATIVE HOOK] JVM_FindLibraryEntry called: ${name}`);
+                            return 123457;
+                        },
+                        // Overkill variations just in case
+                        _JVM_LoadLibrary(lib) { return 1; },
+                        "JVM_LoadLibrary(Ljava/lang/String;)V": function (s) { return 1; },
+
+                        // ClassLoader stubs
+                        Java_java_lang_ClassLoader_00024NativeLibrary_load(env, clazz, name, builtin) {
+                            console.log(`[NATIVE HOOK] ClassLoader$NativeLibrary.load called: ${name}`);
+                            return true;
+                        },
+                        Java_java_lang_NullPointerException_getExtendedNPEMessage(env, self) {
+                            return "NullPointerException (Extended message unavailable in CheerpJ stub)";
+                        }
+                    }
+                });
+
+                console.log("CheerpJ Init Done. Running main...");
+
+                const classPath = [
+                    "/app/Starsector/starsector-core/starfarer_obf.jar",
+                    "/app/Starsector/starsector-core/fs.common_obf.jar",
+                    "/app/Starsector/starsector-core/fs.sound_obf.jar",
+                    "/app/Starsector/starsector-core/starfarer.api.jar",
+                    "/app/Starsector/starsector-core/xstream-1.4.10.jar",
+                    "/app/Starsector/starsector-core/janino.jar",
+                    "/app/Starsector/starsector-core/commons-compiler.jar",
+                    "/app/Starsector/starsector-core/commons-compiler-jdk.jar",
+                    "/app/Starsector/starsector-core/jogg-0.0.7.jar",
+                    "/app/Starsector/starsector-core/jorbis-0.0.15.jar",
+                    "/app/Starsector/starsector-core/json.jar",
+                    "/app/Starsector/starsector-core/lwjgl.jar",
+                    "/app/Starsector/starsector-core/lwjgl_util.jar",
+                    "/app/Starsector/starsector-core/log4j-1.2.9.jar",
+                    "/app/Starsector/starsector-core/jinput.jar",
+                    "/app/Starsector/"
+                ].join(':');
+
+                await cheerpjRunMain("com.fs.starfarer.StarfarerLauncher", classPath);
+
+            } catch (e) {
+                console.error("CRASH:", e);
+            }
+        }
+        start();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,91 @@
+/**
+ * Advanced Search Features Styles
+ */
+
+.search-autocomplete {
+    background: rgba(0, 0, 0, 0.95);
+    border: 2px solid rgba(186, 148, 79, 0.4);
+    border-radius: 8px;
+    padding: 0.5rem;
+    max-height: 300px;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(186, 148, 79, 0.2);
+    backdrop-filter: blur(20px);
+    z-index: 10000;
+}
+
+.autocomplete-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    color: rgba(255, 255, 255, 0.9);
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.95rem;
+}
+
+.autocomplete-item:hover {
+    background: rgba(186, 148, 79, 0.2);
+    color: #ba944f;
+    transform: translateX(4px);
+}
+
+.autocomplete-icon {
+    font-size: 1rem;
+    opacity: 0.7;
+}
+
+.autocomplete-text {
+    flex: 1;
+}
+
+/* Scrollbar styling */
+.search-autocomplete::-webkit-scrollbar {
+    width: 8px;
+}
+
+.search-autocomplete::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.search-autocomplete::-webkit-scrollbar-thumb {
+    background: rgba(186, 148, 79, 0.5);
+    border-radius: 4px;
+}
+
+.search-autocomplete::-webkit-scrollbar-thumb:hover {
+    background: rgba(186, 148, 79, 0.7);
+}
+
+/* Light theme support */
+.theme-light .search-autocomplete {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(186, 148, 79, 0.3);
+}
+
+.theme-light .autocomplete-item {
+    color: rgba(0, 0, 0, 0.9);
+}
+
+.theme-light .autocomplete-item:hover {
+    background: rgba(186, 148, 79, 0.1);
+    color: #ba944f;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .search-autocomplete {
+        max-height: 200px;
+        padding: 0.25rem;
+    }
+
+    .autocomplete-item {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.85rem;
+    }
+}
+

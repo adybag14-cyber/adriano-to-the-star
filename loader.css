@@ -1,0 +1,764 @@
+/* ========================================
+   EPIC SPACE LOADING SCREEN
+   ======================================== */
+
+/* Loading Container - FIXED: Never blocks page */
+/* CRITICAL: Use position: absolute instead of fixed to prevent blocking */
+#space-loader {
+    position: absolute !important;
+    top: -9999px !important;
+    left: -9999px !important;
+    width: 0 !important;
+    height: 0 !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    max-width: 0 !important;
+    max-height: 0 !important;
+    z-index: -99999 !important;
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    overflow: hidden !important;
+    background: transparent !important;
+    clip: rect(0,0,0,0) !important;
+    clip-path: inset(100%) !important;
+    /* Additional safety: ensure it can never block */
+    contain: strict !important;
+    isolation: isolate !important;
+}
+
+/* CRITICAL: Ensure loader never blocks, even when visible */
+#space-loader,
+#space-loader *,
+#space-loader::before,
+#space-loader::after {
+    pointer-events: none !important;
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    z-index: -99999 !important;
+}
+
+/* Skip Button */
+.skip-loading-btn {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    padding: 10px 20px;
+    background: rgba(186, 148, 79, 0.2);
+    border: 1px solid rgba(186, 148, 79, 0.5);
+    color: #ba944f;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    z-index: 100000;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    backdrop-filter: blur(5px);
+}
+
+.skip-loading-btn:hover {
+    background: rgba(186, 148, 79, 0.4);
+    border-color: #ba944f;
+    box-shadow: 0 0 15px rgba(186, 148, 79, 0.3);
+}
+
+/* Ensure body and main content are always clickable after loader */
+html,
+html.loaded,
+body,
+body.loaded {
+    pointer-events: auto !important;
+    user-select: auto !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    position: relative !important;
+    z-index: 0 !important;
+}
+
+body.loaded #main,
+body.loaded main {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+    pointer-events: auto !important;
+}
+
+body.loaded section {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+    pointer-events: auto !important;
+}
+
+body.loaded #main,
+body.loaded #cosmic-music-player,
+body.loaded #navigation-menu,
+body.loaded button,
+body.loaded a,
+body.loaded input,
+body.loaded select,
+body.loaded textarea {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+}
+
+/* Force remove any loader that might still exist */
+#space-loader,
+#space-loader *,
+*[id*="loader"],
+*[class*="loader"]:not(.site-header):not(.site-nav),
+.loader-flash,
+.energy-ring,
+.loader-planet,
+.loader-planet::before,
+.loader-planet::after,
+.loader-moon,
+.shooting-star,
+.shooting-star::before,
+.loader-particle,
+#nebula-bg,
+#stars-layer,
+.space-bg-layer {
+    pointer-events: none !important;
+    z-index: -99999 !important;
+    position: absolute !important;
+    top: -9999px !important;
+    left: -9999px !important;
+    width: 0 !important;
+    height: 0 !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    max-width: 0 !important;
+    max-height: 0 !important;
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    transition: none !important;
+    clip: rect(0,0,0,0) !important;
+    clip-path: inset(100%) !important;
+}
+
+body.loaded #space-loader,
+body.loaded #space-loader *,
+body.loaded .loader-flash,
+body.loaded .energy-ring,
+body.loaded .loader-planet,
+body.loaded .loader-planet::before,
+body.loaded .loader-planet::after,
+body.loaded .loader-moon,
+body.loaded .shooting-star,
+body.loaded .shooting-star::before,
+body.loaded .loader-particle,
+body.loaded #nebula-bg,
+body.loaded #stars-layer,
+body.loaded .space-bg-layer,
+#space-loader.fade-out,
+#space-loader.fade-out * {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    z-index: -99999 !important;
+    position: absolute !important;
+    top: -9999px !important;
+    left: -9999px !important;
+    width: 0 !important;
+    height: 0 !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    max-width: 0 !important;
+    max-height: 0 !important;
+    clip: rect(0,0,0,0) !important;
+    clip-path: inset(100%) !important;
+}
+
+/* Ensure main content is above loader when body is loaded */
+body.loaded #main,
+body.loaded section,
+body.loaded button,
+body.loaded a {
+    pointer-events: auto !important;
+    z-index: 1 !important;
+    position: relative !important;
+}
+
+/* Ensure music player is always visible and on top */
+#cosmic-music-player {
+    z-index: 10000 !important;
+    pointer-events: auto !important;
+}
+
+body.loaded #cosmic-music-player {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    z-index: 10000 !important;
+}
+
+/* 3D Space Background Layers - FIXED: Never blocks */
+.space-bg-layer {
+    position: absolute !important;
+    width: 0 !important;
+    height: 0 !important;
+    top: -9999px !important;
+    left: -9999px !important;
+    pointer-events: none !important;
+    display: none !important;
+    visibility: hidden !important;
+    z-index: -99999 !important;
+}
+
+/* Animated Nebula Background - FIXED: Never blocks */
+#nebula-bg {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    top: -9999px !important;
+    left: -9999px !important;
+    width: 0 !important;
+    height: 0 !important;
+    z-index: -99999 !important;
+    background:
+        radial-gradient(ellipse at 10% 20%, rgba(138, 43, 226, 0.4) 0%, transparent 50%),
+        radial-gradient(ellipse at 90% 80%, rgba(0, 191, 255, 0.3) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(186, 148, 79, 0.3) 0%, transparent 60%),
+        radial-gradient(ellipse at 30% 70%, rgba(255, 20, 147, 0.25) 0%, transparent 50%);
+    background-size: 200% 200%;
+    animation: nebulaDrift 20s ease-in-out infinite;
+}
+
+@keyframes nebulaDrift {
+
+    0%,
+    100% {
+        background-position: 0% 0%;
+    }
+
+    25% {
+        background-position: 100% 0%;
+    }
+
+    50% {
+        background-position: 100% 100%;
+    }
+
+    75% {
+        background-position: 0% 100%;
+    }
+}
+
+/* Rotating Stars Layer - FIXED: Never blocks */
+#stars-layer {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    top: -9999px !important;
+    left: -9999px !important;
+    width: 0 !important;
+    height: 0 !important;
+    z-index: -99999 !important;
+    background-image:
+        radial-gradient(2px 2px at 20px 30px, white, transparent),
+        radial-gradient(2px 2px at 60px 70px, white, transparent),
+        radial-gradient(1px 1px at 50px 50px, white, transparent),
+        radial-gradient(1px 1px at 130px 80px, white, transparent),
+        radial-gradient(2px 2px at 90px 10px, white, transparent);
+    background-size: 200px 200px;
+    animation: starsRotate 100s linear infinite;
+}
+
+@keyframes starsRotate {
+    from {
+        transform: rotate(0deg) scale(1);
+    }
+
+    to {
+        transform: rotate(360deg) scale(1.1);
+    }
+}
+
+/* 3D Rotating Planet */
+.loader-planet {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background:
+        radial-gradient(circle at 30% 30%,
+            rgba(186, 148, 79, 0.8) 0%,
+            rgba(139, 69, 19, 0.6) 30%,
+            rgba(101, 67, 33, 0.4) 60%,
+            transparent 100%);
+    box-shadow:
+        inset -50px -50px 100px rgba(0, 0, 0, 0.8),
+        inset 30px 30px 80px rgba(186, 148, 79, 0.3),
+        0 0 100px rgba(186, 148, 79, 0.5),
+        0 0 200px rgba(186, 148, 79, 0.3);
+    animation: planetRotate 30s linear infinite, planetFloat 6s ease-in-out infinite;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.4;
+}
+
+@keyframes planetRotate {
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+@keyframes planetFloat {
+
+    0%,
+    100% {
+        transform: translate(-50%, -50%) translateY(0px);
+    }
+
+    50% {
+        transform: translate(-50%, -50%) translateY(-30px);
+    }
+}
+
+/* Ring around planet */
+.loader-planet::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotateX(75deg);
+    width: 600px;
+    height: 600px;
+    border: 3px solid rgba(186, 148, 79, 0.3);
+    border-radius: 50%;
+    box-shadow:
+        0 0 30px rgba(186, 148, 79, 0.4),
+        inset 0 0 30px rgba(186, 148, 79, 0.2);
+}
+
+/* Orbiting Moons */
+.loader-moon {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: radial-gradient(circle at 30% 30%, #fff, #ccc);
+    border-radius: 50%;
+    box-shadow:
+        0 0 30px rgba(255, 255, 255, 0.6),
+        inset -10px -10px 20px rgba(0, 0, 0, 0.4);
+    animation: orbitMoon 10s linear infinite;
+    top: 50%;
+    left: 50%;
+    transform-origin: 0 0;
+}
+
+.loader-moon:nth-child(2) {
+    animation-duration: 15s;
+    animation-delay: 5s;
+    width: 30px;
+    height: 30px;
+}
+
+@keyframes orbitMoon {
+    from {
+        transform: translate(-50%, -50%) rotate(0deg) translateX(300px) rotate(0deg);
+    }
+
+    to {
+        transform: translate(-50%, -50%) rotate(360deg) translateX(300px) rotate(-360deg);
+    }
+}
+
+/* Logo Container */
+.loader-logo {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    animation: logoReveal 2s ease-out forwards;
+}
+
+@keyframes logoReveal {
+    0% {
+        opacity: 0;
+        transform: scale(0.5) translateY(-100px);
+        filter: blur(20px);
+    }
+
+    50% {
+        opacity: 0.5;
+        transform: scale(1.2) translateY(0);
+        filter: blur(5px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        filter: blur(0);
+    }
+}
+
+/* Main Title */
+.loader-title {
+    font-family: 'Raleway', sans-serif;
+    font-size: clamp(2.5rem, 8vw, 6rem);
+    font-weight: 800;
+    letter-spacing: 0.3em;
+    margin: 0;
+    background: linear-gradient(135deg,
+            #ffd700 0%,
+            #ffffff 25%,
+            #ba944f 50%,
+            #ffffff 75%,
+            #ffd700 100%);
+    background-size: 400% 400%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: titleShine 3s ease-in-out infinite;
+    text-shadow: 0 0 80px rgba(186, 148, 79, 0.8);
+    filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
+}
+
+@keyframes titleShine {
+
+    0%,
+    100% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+/* Subtitle */
+.loader-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1rem, 3vw, 2rem);
+    color: rgba(186, 148, 79, 0.9);
+    letter-spacing: 0.5em;
+    margin-top: 1rem;
+    animation: subtitleGlow 2s ease-in-out infinite;
+}
+
+@keyframes subtitleGlow {
+
+    0%,
+    100% {
+        opacity: 0.6;
+        text-shadow: 0 0 10px rgba(186, 148, 79, 0.5);
+    }
+
+    50% {
+        opacity: 1;
+        text-shadow: 0 0 20px rgba(186, 148, 79, 0.8);
+    }
+}
+
+/* Progress Bar Container */
+.loader-progress {
+    position: relative;
+    width: 60%;
+    max-width: 500px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    margin-top: 3rem;
+    overflow: hidden;
+    box-shadow:
+        0 0 10px rgba(186, 148, 79, 0.3),
+        inset 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+/* Progress Bar Fill */
+.loader-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg,
+            #ba944f 0%,
+            #ffd700 50%,
+            #ba944f 100%);
+    background-size: 200% 100%;
+    border-radius: 10px;
+    box-shadow:
+        0 0 20px rgba(186, 148, 79, 0.8),
+        0 0 40px rgba(255, 215, 0, 0.5);
+    animation: progressFill 3s ease-out forwards, progressShimmer 1.5s linear infinite;
+    transform-origin: left;
+}
+
+@keyframes progressFill {
+    from {
+        width: 0%;
+    }
+
+    to {
+        width: 100%;
+    }
+}
+
+@keyframes progressShimmer {
+    0% {
+        background-position: 0% 0%;
+    }
+
+    100% {
+        background-position: 200% 0%;
+    }
+}
+
+/* Loading Text */
+.loader-text {
+    margin-top: 2rem;
+    font-family: 'Raleway', sans-serif;
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: 0.2em;
+    animation: loadingDots 1.5s infinite;
+}
+
+@keyframes loadingDots {
+
+    0%,
+    20% {
+        content: 'LOADING';
+    }
+
+    40% {
+        content: 'LOADING.';
+    }
+
+    60% {
+        content: 'LOADING..';
+    }
+
+    80%,
+    100% {
+        content: 'LOADING...';
+    }
+}
+
+/* Shooting Stars */
+.shooting-star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.8);
+    animation: shootingStar 3s linear infinite;
+}
+
+.shooting-star::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 2px;
+    height: 2px;
+    width: 100px;
+    background: linear-gradient(90deg, white, transparent);
+}
+
+@keyframes shootingStar {
+    0% {
+        transform: translate(0, 0);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(-1000px, 1000px);
+        opacity: 0;
+    }
+}
+
+.shooting-star:nth-child(1) {
+    top: 10%;
+    left: 80%;
+    animation-delay: 0s;
+    animation-duration: 2s;
+}
+
+.shooting-star:nth-child(2) {
+    top: 30%;
+    left: 90%;
+    animation-delay: 1.5s;
+    animation-duration: 2.5s;
+}
+
+.shooting-star:nth-child(3) {
+    top: 50%;
+    left: 70%;
+    animation-delay: 3s;
+    animation-duration: 2s;
+}
+
+/* Energy Rings - FIXED: Never blocks */
+.energy-ring {
+    position: absolute !important;
+    top: -9999px !important;
+    left: -9999px !important;
+    transform: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    max-width: 0 !important;
+    max-height: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    pointer-events: none !important;
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    z-index: -99999 !important;
+    animation: none !important;
+}
+
+.energy-ring:nth-child(2) {
+    animation-delay: 0.5s;
+}
+
+.energy-ring:nth-child(3) {
+    animation-delay: 1s;
+}
+
+@keyframes energyRingExpand {
+    0% {
+        width: 200px;
+        height: 200px;
+        opacity: 1;
+        border-width: 3px;
+    }
+
+    100% {
+        width: 800px;
+        height: 800px;
+        opacity: 0;
+        border-width: 0px;
+    }
+}
+
+/* Glowing Particles */
+.loader-particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: rgba(186, 148, 79, 0.8);
+    border-radius: 50%;
+    box-shadow: 0 0 10px 2px rgba(186, 148, 79, 0.8);
+    animation: particleFloat 10s ease-in-out infinite;
+}
+
+@keyframes particleFloat {
+
+    0%,
+    100% {
+        transform: translate(0, 0);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    90% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(var(--tx), var(--ty));
+        opacity: 0;
+    }
+}
+
+/* Completion Flash */
+@keyframes completionFlash {
+
+    0%,
+    100% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* FIXED: loader-flash - Full screen overlay prevention */
+.loader-flash {
+    position: absolute !important;
+    top: -9999px !important;
+    left: -9999px !important;
+    width: 0 !important;
+    height: 0 !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    max-width: 0 !important;
+    max-height: 0 !important;
+    pointer-events: none !important;
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    z-index: -99999 !important;
+    background: transparent !important;
+    clip: rect(0,0,0,0) !important;
+    clip-path: inset(100%) !important;
+}
+
+/* Welcome Message */
+.loader-welcome {
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.5);
+    animation: welcomeFade 3s ease-in-out infinite;
+}
+
+@keyframes welcomeFade {
+
+    0%,
+    100% {
+        opacity: 0.3;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .loader-planet {
+        width: 250px;
+        height: 250px;
+    }
+
+    .loader-planet::before {
+        width: 350px;
+        height: 350px;
+    }
+
+    .loader-progress {
+        width: 80%;
+    }
+}
+
+/* Fix for blocking extension overlays */
+#preact-border-shadow-host {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    z-index: -99999 !important;
+}

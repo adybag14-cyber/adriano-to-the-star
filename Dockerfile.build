@@ -1,0 +1,27 @@
+# Use Node.js Alpine for a lightweight, Linux-based build environment
+FROM node:18-alpine
+
+# Install build dependencies
+RUN apk add --no-cache bash git
+
+# Set the working directory
+WORKDIR /build
+
+# Copy root files first
+COPY package*.json ./
+COPY build-pages.ps1 ./
+
+# Copy all other necessary files
+# Note: Starsector/ and others are excluded via .dockerignore
+COPY . .
+
+# Run the build process
+# We use a shell script or directly run the steps that build-pages.ps1 does
+# Since we are in Linux, we can't run .ps1 directly easily without pwsh
+# Let's install powershell for alpine or convert logic
+RUN apk add --no-cache powershell
+
+RUN pwsh -File build-pages.ps1
+
+# Default command to verify contents
+CMD ["ls", "-R", "public"]

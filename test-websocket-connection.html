@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Connection Test</title>
+    <style>
+        body {
+            font-family: monospace;
+            background: #1a1a1a;
+            color: #fff;
+            padding: 20px;
+        }
+        .log {
+            background: #2a2a2a;
+            padding: 10px;
+            margin: 5px 0;
+            border-left: 3px solid #3b82f6;
+            border-radius: 4px;
+        }
+        .error { border-color: #ef4444; }
+        .success { border-color: #4ade80; }
+        .warning { border-color: #fbbf24; }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        input {
+            background: #2a2a2a;
+            color: white;
+            border: 1px solid #444;
+            padding: 10px;
+            border-radius: 4px;
+            width: 300px;
+        }
+    </style>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+<body>
+    <h1>🔌 WebSocket Connection Test</h1>
+    
+    <div>
+        <input type="text" id="ws-url" value="ws://localhost:3001/api/gemini-live" placeholder="WebSocket URL">
+        <button onclick="connect()">Connect</button>
+        <button onclick="disconnect()">Disconnect</button>
+        <button onclick="sendTest()">Send Test Message</button>
+    </div>
+    
+    <div>
+        <input type="text" id="test-message" value="Hello, this is a test message" placeholder="Test message">
+    </div>
+    
+    <div id="logs"></div>
+
+    <script>
+        let ws = null;
+        let messageId = 0;
+
+        function log(message, type = 'info') {
+            const logs = document.getElementById('logs');
+            const div = document.createElement('div');
+            div.className = `log ${type}`;
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logs.appendChild(div);
+            logs.scrollTop = logs.scrollHeight;
+            console.log(message);
+        }
+
+        function connect() {
+            const url = document.getElementById('ws-url').value;
+            log(`Connecting to ${url}...`, 'info');
+            
+            try {
+                ws = new WebSocket(url);
+                
+                ws.onopen = () => {
+                    log('✅ WebSocket connected!', 'success');
+                    
+                    // Send setup message
+                    const setup = {
+                        setup: {
+                            model: "models/gemini-2.5-flash-native-audio-preview-09-2025",
+                            generationConfig: {
+                                temperature: 0.7,
+                                maxOutputTokens: 8192,
+                                responseModalities: ["TEXT"]
+                            }
+                        }
+                    };
+                    
+                    log(`📤 Sending setup: ${JSON.stringify(setup)}`, 'info');
+                    ws.send(JSON.stringify(setup));
+                };
+                
+                ws.onmessage = (event) => {
+                    try {
+                        const data = JSON.parse(event.data);
+                        log(`📨 Received: ${JSON.stringify(data).substring(0, 200)}...`, 'success');
+                        
+                        if (data.setupComplete || data.BidiGenerateContentSetupComplete) {
+                            log('✅ Setup complete! Ready to send messages.', 'success');
+                        }
+                        
+                        if (data.serverContent) {
+                            const text = data.serverContent.modelTurn?.parts?.map(p => p.text).join('') ||
+                                        data.serverContent.parts?.map(p => p.text).join('') ||
+                                        '';
+                            if (text) {
+                                log(`💬 Response chunk: "${text.substring(0, 100)}${text.length > 100 ? '...' : ''}"`, 'success');
+                            }
+                        }
+                        
+                        if (data.error) {
+                            log(`❌ Error: ${data.error.message}`, 'error');
+                        }
+                    } catch (e) {
+                        log(`📨 Received (raw): ${event.data.substring(0, 200)}`, 'warning');
+                    }
+                };
+                
+                ws.onerror = (error) => {
+                    log(`❌ WebSocket error: ${error.message || 'Unknown error'}`, 'error');
+                };
+                
+                ws.onclose = (event) => {
+                    log(`🔌 WebSocket closed. Code: ${event.code}, Reason: ${event.reason || 'No reason'}`, 'warning');
+                };
+            } catch (error) {
+                log(`❌ Connection error: ${error.message}`, 'error');
+            }
+        }
+
+        function disconnect() {
+            if (ws) {
+                ws.close();
+                ws = null;
+                log('🔌 Disconnected', 'info');
+            }
+        }
+
+        function sendTest() {
+            if (!ws || ws.readyState !== WebSocket.OPEN) {
+                log('❌ WebSocket not connected!', 'error');
+                return;
+            }
+            
+            const message = document.getElementById('test-message').value;
+            const clientContent = {
+                clientContent: {
+                    turns: [{
+                        role: 'user',
+                        parts: [{ text: message }]
+                    }],
+                    turnComplete: true
+                }
+            };
+            
+            log(`📤 Sending message: "${message}"`, 'info');
+            log(`📤 Full payload: ${JSON.stringify(clientContent)}`, 'info');
+            ws.send(JSON.stringify(clientContent));
+        }
+
+        // Auto-connect on load
+        window.addEventListener('load', () => {
+            log('Page loaded. Click "Connect" to start.', 'info');
+        });
+    </script>
+</body>
+</html>
+
+

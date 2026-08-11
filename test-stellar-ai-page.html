@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Stellar AI Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .test-section {
+            background: #2a2a2a;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .test-item {
+            margin: 10px 0;
+            padding: 10px;
+            background: #333;
+            border-radius: 4px;
+        }
+        .pass { color: #4ade80; }
+        .fail { color: #ef4444; }
+        .warning { color: #fbbf24; }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #2563eb; }
+    </style>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+<body>
+    <h1>🧪 Stellar AI Page Test Suite</h1>
+    
+    <div class="test-section">
+        <h2>File Existence Tests</h2>
+        <div id="file-tests"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Script Loading Tests</h2>
+        <div id="script-tests"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>LiveKit Integration Tests</h2>
+        <div id="livekit-tests"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Backend Connection Tests</h2>
+        <div id="backend-tests"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Actions</h2>
+        <button onclick="openStellarAI()">Open Stellar AI Page</button>
+        <button onclick="runAllTests()">Run All Tests</button>
+    </div>
+
+    <script>
+        const BACKEND_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:3001'
+            : null;
+
+        async function checkFile(file) {
+            try {
+                const response = await fetch(file, { method: 'HEAD' });
+                return response.ok;
+            } catch {
+                return false;
+            }
+        }
+
+        async function testFiles() {
+            const files = [
+                'stellar-ai.html',
+                'stellar-ai.js',
+                'livekit-voice-integration.js',
+                'stellar-ai-styles.css'
+            ];
+
+            const container = document.getElementById('file-tests');
+            container.innerHTML = '';
+
+            for (const file of files) {
+                const exists = await checkFile(file);
+                const div = document.createElement('div');
+                div.className = 'test-item';
+                div.innerHTML = `
+                    <strong>${file}</strong>: 
+                    <span class="${exists ? 'pass' : 'fail'}">
+                        ${exists ? '✓ Found' : '✗ Not Found'}
+                    </span>
+                `;
+                container.appendChild(div);
+            }
+        }
+
+        function testScripts() {
+            const container = document.getElementById('script-tests');
+            container.innerHTML = '';
+
+            const scripts = {
+                'LiveKit Client SDK': typeof LiveKit !== 'undefined',
+                'LiveKitVoiceIntegration': typeof LiveKitVoiceIntegration !== 'undefined',
+                'StellarAI': typeof StellarAI !== 'undefined',
+                'LIVEKIT_CONFIG': typeof window.LIVEKIT_CONFIG !== 'undefined'
+            };
+
+            for (const [name, loaded] of Object.entries(scripts)) {
+                const div = document.createElement('div');
+                div.className = 'test-item';
+                div.innerHTML = `
+                    <strong>${name}</strong>: 
+                    <span class="${loaded ? 'pass' : 'fail'}">
+                        ${loaded ? '✓ Loaded' : '✗ Not Loaded'}
+                    </span>
+                `;
+                container.appendChild(div);
+            }
+        }
+
+        function testLiveKit() {
+            const container = document.getElementById('livekit-tests');
+            container.innerHTML = '';
+
+            const config = window.LIVEKIT_CONFIG || {};
+            const tests = {
+                'Config URL': !!config.url,
+                'Config API Key': !!config.apiKey,
+                'Config API Secret': !!config.apiSecret,
+                'Config Backend URL': !!config.backendUrl
+            };
+
+            for (const [name, passed] of Object.entries(tests)) {
+                const div = document.createElement('div');
+                div.className = 'test-item';
+                div.innerHTML = `
+                    <strong>${name}</strong>: 
+                    <span class="${passed ? 'pass' : 'fail'}">
+                        ${passed ? '✓ Set' : '✗ Not Set'}
+                    </span>
+                `;
+                container.appendChild(div);
+            }
+
+            if (config.url) {
+                const urlDiv = document.createElement('div');
+                urlDiv.className = 'test-item';
+                urlDiv.innerHTML = `<strong>LiveKit URL:</strong> <code>${config.url}</code>`;
+                container.appendChild(urlDiv);
+            }
+        }
+
+        async function testBackend() {
+            const container = document.getElementById('backend-tests');
+            container.innerHTML = '';
+
+            if (!BACKEND_URL) {
+                const div = document.createElement('div');
+                div.className = 'test-item warning';
+                div.innerHTML = '<strong>Backend URL:</strong> Not configured (not localhost)';
+                container.appendChild(div);
+                return;
+            }
+
+            // Test health endpoint
+            try {
+                const response = await fetch(`${BACKEND_URL}/health`);
+                const data = await response.json();
+                const div = document.createElement('div');
+                div.className = 'test-item pass';
+                div.innerHTML = `<strong>Backend Health:</strong> ✓ Connected - ${data.status || 'OK'}`;
+                container.appendChild(div);
+            } catch (error) {
+                const div = document.createElement('div');
+                div.className = 'test-item fail';
+                div.innerHTML = `<strong>Backend Health:</strong> ✗ Failed - ${error.message}`;
+                container.appendChild(div);
+            }
+
+            // Test LiveKit token endpoint
+            try {
+                const config = window.LIVEKIT_CONFIG || {};
+                const response = await fetch(`${BACKEND_URL}/api/livekit/token`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        roomName: 'test-room',
+                        participantName: 'test-user',
+                        livekitUrl: config.url,
+                        apiKey: config.apiKey,
+                        apiSecret: config.apiSecret
+                    })
+                });
+                const data = await response.json();
+                const div = document.createElement('div');
+                div.className = 'test-item';
+                div.innerHTML = `<strong>LiveKit Token Endpoint:</strong> 
+                    <span class="${response.ok ? 'pass' : 'fail'}">
+                        ${response.ok ? '✓ Working' : '✗ Failed'}
+                    </span>
+                `;
+                container.appendChild(div);
+            } catch (error) {
+                const div = document.createElement('div');
+                div.className = 'test-item fail';
+                div.innerHTML = `<strong>LiveKit Token Endpoint:</strong> ✗ Error - ${error.message}`;
+                container.appendChild(div);
+            }
+        }
+
+        async function runAllTests() {
+            console.log('Running all tests...');
+            await testFiles();
+            testScripts();
+            testLiveKit();
+            await testBackend();
+        }
+
+        function openStellarAI() {
+            window.open('stellar-ai.html', '_blank');
+        }
+
+        // Run tests on load
+        window.addEventListener('load', () => {
+            runAllTests();
+        });
+    </script>
+</body>
+</html>
+
+

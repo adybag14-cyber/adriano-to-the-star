@@ -1,0 +1,35 @@
+/* Lazy Loading Styles */
+
+img.lazy-loading {
+    opacity: 0.3;
+    filter: blur(5px);
+    transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+img.lazy-loaded {
+    opacity: 1;
+    filter: blur(0);
+}
+
+img.lazy-error {
+    opacity: 0.5;
+    background: rgba(255, 107, 107, 0.1);
+    border: 1px dashed rgba(255, 107, 107, 0.3);
+}
+
+/* Smooth loading animation */
+img[data-src] {
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0.1) 100%);
+    background-size: 200% 100%;
+    animation: loading-shimmer 1.5s infinite;
+}
+
+@keyframes loading-shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+

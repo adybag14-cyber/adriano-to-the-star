@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cjrtnc.leaningtech.com/3.0/loader.js"></script>
+</head>
+<body>
+    <script>
+        window.addEventListener('load', async () => {
+            console.log("Checking for cheerpjInit...");
+            if (typeof cheerpjInit !== 'undefined') {
+                console.log("SUCCESS: cheerpjInit is defined!");
+            } else {
+                console.error("FAILURE: cheerpjInit is NOT defined!");
+            }
+        });
+    </script>
+</body>
+</html>

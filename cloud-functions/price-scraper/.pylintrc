@@ -1,0 +1,9 @@
+[MASTER]
+ignore=venv,__pycache__
+
+[MESSAGES CONTROL]
+disable=import-error,no-member,missing-module-docstring
+
+[IMPORTS]
+ignored-modules=functions_framework,flask
+

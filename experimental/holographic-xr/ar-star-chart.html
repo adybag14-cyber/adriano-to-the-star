@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Star Chart | Holodeck</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+        body {
+            margin: 0;
+            background: #000;
+            overflow: hidden;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        #info {
+            position: absolute;
+            top: 20px;
+            width: 100%;
+            text-align: center;
+            color: #fff;
+            pointer-events: none;
+            z-index: 100;
+            text-shadow: 0 0 5px #000;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 4px;
+            pointer-events: auto;
+            z-index: 101;
+            background: rgba(0, 0, 0, 0.5);
+        }
+    </style>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+
+<body>
+    <a href="../../projects.html" class="back-btn">← EXIT AR</a>
+    <div id="info">
+        <h1>AR STAR CHART</h1>
+        <p>Point camera at floor to calibrate -> Tap to place Star</p>
+    </div>
+
+    <div id="container"></div>
+
+    <script type="module">
+        import { XRManager } from './xr-core.js';
+
+        // Init AR Scene
+        const manager = new XRManager('container', 'AR');
+
+        // Update UI info
+        const renderer = manager.renderer;
+        renderer.xr.addEventListener('sessionstart', () => {
+            document.getElementById('info').innerHTML = '<p>Scanning Environment...</p>';
+        });
+    </script>
+</body>
+
+</html>

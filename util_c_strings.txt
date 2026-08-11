@@ -1,0 +1,31 @@
+22: ldc           #94                 // String
+119: ldc           #128                // String CLASSPATH,
+152: ldc           #140                // String ,
+242: ldc           #163                // String Error loading [
+251: ldc           #165                // String ] resource, not found in [
+261: ldc           #167                // String ]
+77: ldc           #194                // String /
+8: ldc           #94                 // String
+100: ldc           #128                // String CLASSPATH,
+131: ldc           #140                // String ,
+198: ldc           #194                // String /
+276: ldc           #163                // String Error loading [
+285: ldc           #165                // String ] resource, not found in [
+294: ldc           #167                // String ]
+123: ldc           #194                // String /
+241: ldc           #194                // String /
+323: ldc_w         #266                // String \\
+342: ldc           #194                // String /
+106: ldc           #194                // String /
+195: ldc_w         #288                // String .
+219: ldc           #194                // String /
+116: ldc           #194                // String /
+0: ldc           #94                 // String
+102: ldc           #140                // String ,
+172: ldc           #163                // String Error loading [
+181: ldc           #165                // String ] resource, not found in [
+190: ldc           #167                // String ]
+62: ldc_w         #319                // String Can\'t find a file on the classpath - use openResource() instead.
+87: ldc           #194                // String /
+60: ldc_w         #323                // String /res
+109: ldc           #194                // String /

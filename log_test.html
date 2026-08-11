@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <script>
+        fetch('http://localhost:8087/log', {
+            method: 'POST',
+            body: 'HELLO FROM LOG TEST'
+        }).then(() => document.body.innerText = "SENT").catch(e => document.body.innerText = "FAILED: " + e);
+    </script>
+</body>
+
+</html>

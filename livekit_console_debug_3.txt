@@ -1,0 +1,414 @@
+Set GOOGLE_API_KEY (len: 39)
+    Agents   Starting console mode ­ƒÜÇ
+              
+    21:35:06.299 DEBUG  asyncio          Using proactor: IocpProactor  
+    21:35:06.303 INFO   livekit.agents   starting worker {"version": "1.3.5",  
+                                                         "rtc-version":        
+                                                         "1.0.19"}             
+    21:35:06.306 INFO   livekit.agents   initializing job runner {"tid": 49264}
+    21:35:06.309 INFO   livekit.agents   job runner         {"tid": 49264,     
+                                         initialized        "elapsed_time":    
+                                                            0.0}               
+                 DEBUG  asyncio          Using proactor: IocpProactor  
+    21:35:06.819 DEBUG  livekit.pluginsÔÇª connecting to Gemini Realtime API...  
+    21:35:06.821 DEBUG  livekit.agents   using audio io: `Console` ->          
+                                         `AgentSession` -> `Console`           
+    21:35:06.822 WARNIÔÇª livekit.agents   resume_false_inter {"audio_output":   
+                                         ruption is enabled "Console"}         
+                                         but audio output                      
+                                         does not support                      
+                                         pause, it will be                     
+                                         ignored                               
+    21:35:06.823 DEBUG  livekit.agents   using transcript io: `AgentSession`   
+                                         -> (none)                             
+Exception in thread Thread-2 (_listen_for_toggle):
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\cli\cli.py", line 1104, in _listen_for_toggle
+    ch = readkey()
+         ^^^^^^^^^
+  File "C:\Users\adyba\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\livekit\agents\cli\readchar.py", line 250, in _win_readkey
+    raise KeyboardInterrupt
+KeyboardInterrupt
+    21:44:07.019 WARNIÔÇª livekit.pluginsÔÇª Gemini server indicates               
+                                         disconnection soon. Time left: 50s    
+    21:44:07.020 DEBUG  livekit.pluginsÔÇª send task finished.  
+    21:44:07.053 DEBUG  livekit.pluginsÔÇª connecting to Gemini Realtime API...  
+    21:53:07.251 WARNIÔÇª livekit.pluginsÔÇª Gemini server indicates               
+                                         disconnection soon. Time left: 50s    
+    21:53:07.252 DEBUG  livekit.pluginsÔÇª send task finished.  
+    21:53:07.284 DEBUG  livekit.pluginsÔÇª connecting to Gemini Realtime API...  
+    22:02:07.465 WARNIÔÇª livekit.pluginsÔÇª Gemini server indicates               
+                                         disconnection soon. Time left: 50s    
+    22:02:07.466 DEBUG  livekit.pluginsÔÇª send task finished.  
+    22:02:07.529 DEBUG  livekit.pluginsÔÇª connecting to Gemini Realtime API...  
+    22:11:07.735 WARNIÔÇª livekit.pluginsÔÇª Gemini server indicates               
+                                         disconnection soon. Time left: 50s    
+    22:11:07.736 DEBUG  livekit.pluginsÔÇª send task finished.  
+    22:11:07.766 DEBUG  livekit.pluginsÔÇª connecting to Gemini Realtime API...  
+    22:20:07.970 WARNIÔÇª livekit.pluginsÔÇª Gemini server indicates               
+                                         disconnection soon. Time left: 50s    
+    22:20:07.971 DEBUG  livekit.pluginsÔÇª send task finished.  
+    22:20:08.022 DEBUG  livekit.pluginsÔÇª connecting to Gemini Realtime API...  
+    22:29:08.214 WARNIÔÇª livekit.pluginsÔÇª Gemini server indicates               
+                                         disconnection soon. Time left: 50s    
+    22:29:08.216 DEBUG  livekit.pluginsÔÇª send task finished.  
+    22:29:08.249 DEBUG  livekit.pluginsÔÇª connecting to Gemini Realtime API...  
+    22:38:08.473 WARNIÔÇª livekit.pluginsÔÇª Gemini server indicates               
+                                         disconnection soon. Time left: 50s    
+    22:38:08.474 DEBUG  livekit.pluginsÔÇª send task finished.  
+    22:38:08.519 DEBUG  livekit.pluginsÔÇª connecting to Gemini Realtime API...  
+    22:47:08.686 WARNIÔÇª livekit.pluginsÔÇª Gemini server indicates               
+                                         disconnection soon. Time left: 50s    
+                 DEBUG  livekit.pluginsÔÇª send task finished.  
+    22:47:08.715 DEBUG  livekit.pluginsÔÇª connecting to Gemini Realtime API...  
+    22:56:08.881 WARNIÔÇª livekit.pluginsÔÇª Gemini server indicates               
+                                         disconnection soon. Time left: 50s    
+    22:56:08.882 DEBUG  livekit.pluginsÔÇª send task finished.  
+    22:56:08.912 DEBUG  livekit.pluginsÔÇª connecting to Gemini Realtime API...  
+    23:05:09.086 WARNIÔÇª livekit.pluginsÔÇª Gemini server indicates               
+                                         disconnection soon. Time left: 50s    
+    23:05:09.087 DEBUG  livekit.pluginsÔÇª send task finished.  
+    23:05:09.117 DEBUG  livekit.pluginsÔÇª connecting to Gemini Realtime API...  
+    23:14:09.298 WARNIÔÇª livekit.pluginsÔÇª Gemini server indicates               
+                                         disconnection soon. Time left: 50s    
+    23:14:09.299 DEBUG  livekit.pluginsÔÇª send task finished.  
+    23:14:09.329 DEBUG  livekit.pluginsÔÇª connecting to Gemini Realtime API...  
+    23:23:09.503 WARNIÔÇª livekit.pluginsÔÇª Gemini server indicates               
+                                         disconnection soon. Time left: 50s    
+                 DEBUG  livekit.pluginsÔÇª send task finished.  
+    23:23:09.534 DEBUG  livekit.pluginsÔÇª connecting to Gemini Realtime API...  
+    23:32:09.713 WARNIÔÇª livekit.pluginsÔÇª Gemini server indicates               
+                                         disconnection soon. Time left: 50s    
+    23:32:09.714 DEBUG  livekit.pluginsÔÇª send task finished.  
+    23:32:09.743 DEBUG  livekit.pluginsÔÇª connecting to Gemini Realtime API...  
+    23:41:09.914 WARNIÔÇª livekit.pluginsÔÇª Gemini server indicates               
+                                         disconnection soon. Time left: 50s    
+    23:41:09.915 DEBUG  livekit.pluginsÔÇª send task finished.  
+    23:41:09.968 DEBUG  livekit.pluginsÔÇª connecting to Gemini Realtime API...  
+    23:50:10.136 WARNIÔÇª livekit.pluginsÔÇª Gemini server indicates               
+                                         disconnection soon. Time left: 50s    
+    23:50:10.137 DEBUG  livekit.pluginsÔÇª send task finished.  
+    23:50:10.167 DEBUG  livekit.pluginsÔÇª connecting to Gemini Realtime API...  
+    23:59:10.370 WARNIÔÇª livekit.pluginsÔÇª Gemini server indicates               
+                                         disconnection soon. Time left: 50s    
+    23:59:10.372 DEBUG  livekit.pluginsÔÇª send task finished.  
+    23:59:10.401 DEBUG  livekit.pluginsÔÇª connecting to Gemini Realtime API...  
+    00:08:10.566 WARNIÔÇª livekit.pluginsÔÇª Gemini server indicates               
+                                         disconnection soon. Time left: 50s    
+    00:08:10.567 DEBUG  livekit.pluginsÔÇª send task finished.  
+    00:08:10.597 DEBUG  livekit.pluginsÔÇª connecting to Gemini Realtime API...  
+    00:17:10.780 WARNIÔÇª livekit.pluginsÔÇª Gemini server indicates               
+                                         disconnection soon. Time left: 50s    
+    00:17:10.782 DEBUG  livekit.pluginsÔÇª send task finished.  
+    00:17:10.811 DEBUG  livekit.pluginsÔÇª connecting to Gemini Realtime API...  
+    00:26:10.985 WARNIÔÇª livekit.pluginsÔÇª Gemini server indicates               
+                                         disconnection soon. Time left: 50s    
+    00:26:10.986 DEBUG  livekit.pluginsÔÇª send task finished.  
+    00:26:11.028 DEBUG  livekit.pluginsÔÇª connecting to Gemini Realtime API...  
+    00:35:11.202 WARNIÔÇª livekit.pluginsÔÇª Gemini server indicates               
+                                         disconnection soon. Time left: 50s    
+    00:35:11.204 DEBUG  livekit.pluginsÔÇª send task finished.  
+    00:35:11.249 DEBUG  livekit.pluginsÔÇª connecting to Gemini Realtime API...  
+    00:44:11.416 WARNIÔÇª livekit.pluginsÔÇª Gemini server indicates               
+                                         disconnection soon. Time left: 50s    
+    00:44:11.417 DEBUG  livekit.pluginsÔÇª send task finished.  
+    00:44:11.447 DEBUG  livekit.pluginsÔÇª connecting to Gemini Realtime API...  
+    00:53:11.635 WARNIÔÇª livekit.pluginsÔÇª Gemini server indicates               
+                                         disconnection soon. Time left: 50s    
+    00:53:11.636 DEBUG  livekit.pluginsÔÇª send task finished.  
+    00:53:11.666 DEBUG  livekit.pluginsÔÇª connecting to Gemini Realtime API...  
+    01:02:11.840 WARNIÔÇª livekit.pluginsÔÇª Gemini server indicates               
+                                         disconnection soon. Time left: 50s    
+    01:02:11.842 DEBUG  livekit.pluginsÔÇª send task finished.  
+    01:02:11.900 DEBUG  livekit.pluginsÔÇª connecting to Gemini Realtime API...  
+    01:11:12.084 WARNIÔÇª livekit.pluginsÔÇª Gemini server indicates               
+                                         disconnection soon. Time left: 50s    
+    01:11:12.085 DEBUG  livekit.pluginsÔÇª send task finished.  
+    01:11:12.115 DEBUG  livekit.pluginsÔÇª connecting to Gemini Realtime API...  
+    01:20:12.284 WARNIÔÇª livekit.pluginsÔÇª Gemini server indicates               
+                                         disconnection soon. Time left: 50s    
+    01:20:12.286 DEBUG  livekit.pluginsÔÇª send task finished.  
+    01:20:12.314 DEBUG  livekit.pluginsÔÇª connecting to Gemini Realtime API...  
+    01:29:12.485 WARNIÔÇª livekit.pluginsÔÇª Gemini server indicates               
+                                         disconnection soon. Time left: 50s    
+                 DEBUG  livekit.pluginsÔÇª send task finished.  
+    01:29:12.516 DEBUG  livekit.pluginsÔÇª connecting to Gemini Realtime API...  
+    01:33:17.575 ERROR  livekit.pluginsÔÇª error in receive task: received 1007  
+                                         (invalid frame payload data) Request  
+                                         contains an invalid argument.; then   
+                                         sent 1007 (invalid frame payload      
+                                         data) Request contains an invalid     
+                                         argument.                             
+                                         Traceback (most recent call last):    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\plugins\google\realtime\realtime  
+                                         _api.py", line 779, in _recv_task     
+                                             async for response in             
+                                         session.receive():                    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\goog  
+                                         le\genai\live.py", line 448, in       
+                                         receive                               
+                                             while result := await             
+                                         self._receive():                      
+                                                             ^^^^^^^^^^^^^^^^  
+                                         ^^^^^                                 
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\goog  
+                                         le\genai\live.py", line 529, in       
+                                         _receive                              
+                                             raw_response = await              
+                                         self._ws.recv(decode=False)           
+                                                            ^^^^^^^^^^^^^^^^^  
+                                         ^^^^^^^^^^^^^^^^                      
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\webs  
+                                         ockets\asyncio\connection.py", line   
+                                         322, in recv                          
+                                             raise self.protocol.close_exc     
+                                         from self.recv_exc                    
+                                         websockets.exceptions.ConnectionClos  
+                                         edError: received 1007 (invalid       
+                                         frame payload data) Request contains  
+                                         an invalid argument.; then sent 1007  
+                                         (invalid frame payload data) Request  
+                                         contains an invalid argument.         
+    01:33:17.581 DEBUG  livekit.pluginsÔÇª send task finished.  
+    01:33:17.582 DEBUG  livekit.pluginsÔÇª connecting to Gemini Realtime API...  
+    01:33:42.016 ERROR  livekit.pluginsÔÇª error in receive task: received 1007  
+                                         (invalid frame payload data) Request  
+                                         contains an invalid argument.; then   
+                                         sent 1007 (invalid frame payload      
+                                         data) Request contains an invalid     
+                                         argument.                             
+                                         Traceback (most recent call last):    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\plugins\google\realtime\realtime  
+                                         _api.py", line 779, in _recv_task     
+                                             async for response in             
+                                         session.receive():                    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\goog  
+                                         le\genai\live.py", line 448, in       
+                                         receive                               
+                                             while result := await             
+                                         self._receive():                      
+                                                             ^^^^^^^^^^^^^^^^  
+                                         ^^^^^                                 
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\goog  
+                                         le\genai\live.py", line 529, in       
+                                         _receive                              
+                                             raw_response = await              
+                                         self._ws.recv(decode=False)           
+                                                            ^^^^^^^^^^^^^^^^^  
+                                         ^^^^^^^^^^^^^^^^                      
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\webs  
+                                         ockets\asyncio\connection.py", line   
+                                         322, in recv                          
+                                             raise self.protocol.close_exc     
+                                         from self.recv_exc                    
+                                         websockets.exceptions.ConnectionClos  
+                                         edError: received 1007 (invalid       
+                                         frame payload data) Request contains  
+                                         an invalid argument.; then sent 1007  
+                                         (invalid frame payload data) Request  
+                                         contains an invalid argument.         
+    01:33:42.020 DEBUG  livekit.pluginsÔÇª send task finished.  
+    01:33:42.021 DEBUG  livekit.pluginsÔÇª connecting to Gemini Realtime API...  
+    01:33:49.565 ERROR  livekit.pluginsÔÇª error in receive task: received 1007  
+                                         (invalid frame payload data) Request  
+                                         contains an invalid argument.; then   
+                                         sent 1007 (invalid frame payload      
+                                         data) Request contains an invalid     
+                                         argument.                             
+                                         Traceback (most recent call last):    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\plugins\google\realtime\realtime  
+                                         _api.py", line 779, in _recv_task     
+                                             async for response in             
+                                         session.receive():                    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\goog  
+                                         le\genai\live.py", line 448, in       
+                                         receive                               
+                                             while result := await             
+                                         self._receive():                      
+                                                             ^^^^^^^^^^^^^^^^  
+                                         ^^^^^                                 
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\goog  
+                                         le\genai\live.py", line 529, in       
+                                         _receive                              
+                                             raw_response = await              
+                                         self._ws.recv(decode=False)           
+                                                            ^^^^^^^^^^^^^^^^^  
+                                         ^^^^^^^^^^^^^^^^                      
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\webs  
+                                         ockets\asyncio\connection.py", line   
+                                         322, in recv                          
+                                             raise self.protocol.close_exc     
+                                         from self.recv_exc                    
+                                         websockets.exceptions.ConnectionClos  
+                                         edError: received 1007 (invalid       
+                                         frame payload data) Request contains  
+                                         an invalid argument.; then sent 1007  
+                                         (invalid frame payload data) Request  
+                                         contains an invalid argument.         
+    01:33:49.570 DEBUG  livekit.pluginsÔÇª send task finished.  
+                 DEBUG  livekit.pluginsÔÇª connecting to Gemini Realtime API...  
+    01:33:53.006 ERROR  livekit.pluginsÔÇª error in receive task: received 1007  
+                                         (invalid frame payload data) Request  
+                                         contains an invalid argument.; then   
+                                         sent 1007 (invalid frame payload      
+                                         data) Request contains an invalid     
+                                         argument.                             
+                                         Traceback (most recent call last):    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\plugins\google\realtime\realtime  
+                                         _api.py", line 779, in _recv_task     
+                                             async for response in             
+                                         session.receive():                    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\goog  
+                                         le\genai\live.py", line 448, in       
+                                         receive                               
+                                             while result := await             
+                                         self._receive():                      
+                                                             ^^^^^^^^^^^^^^^^  
+                                         ^^^^^                                 
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\goog  
+                                         le\genai\live.py", line 529, in       
+                                         _receive                              
+                                             raw_response = await              
+                                         self._ws.recv(decode=False)           
+                                                            ^^^^^^^^^^^^^^^^^  
+                                         ^^^^^^^^^^^^^^^^                      
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\webs  
+                                         ockets\asyncio\connection.py", line   
+                                         322, in recv                          
+                                             raise self.protocol.close_exc     
+                                         from self.recv_exc                    
+                                         websockets.exceptions.ConnectionClos  
+                                         edError: received 1007 (invalid       
+                                         frame payload data) Request contains  
+                                         an invalid argument.; then sent 1007  
+                                         (invalid frame payload data) Request  
+                                         contains an invalid argument.         
+    01:33:53.013 DEBUG  livekit.pluginsÔÇª send task finished.  
+                 DEBUG  livekit.pluginsÔÇª connecting to Gemini Realtime API...  
+    01:34:05.211 ERROR  livekit.pluginsÔÇª error in receive task: received 1007  
+                                         (invalid frame payload data) Request  
+                                         contains an invalid argument.; then   
+                                         sent 1007 (invalid frame payload      
+                                         data) Request contains an invalid     
+                                         argument.                             
+                                         Traceback (most recent call last):    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\plugins\google\realtime\realtime  
+                                         _api.py", line 779, in _recv_task     
+                                             async for response in             
+                                         session.receive():                    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\goog  
+                                         le\genai\live.py", line 448, in       
+                                         receive                               
+                                             while result := await             
+                                         self._receive():                      
+                                                             ^^^^^^^^^^^^^^^^  
+                                         ^^^^^                                 
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\goog  
+                                         le\genai\live.py", line 529, in       
+                                         _receive                              
+                                             raw_response = await              
+                                         self._ws.recv(decode=False)           
+                                                            ^^^^^^^^^^^^^^^^^  
+                                         ^^^^^^^^^^^^^^^^                      
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\webs  
+                                         ockets\asyncio\connection.py", line   
+                                         322, in recv                          
+                                             raise self.protocol.close_exc     
+                                         from self.recv_exc                    
+                                         websockets.exceptions.ConnectionClos  
+                                         edError: received 1007 (invalid       
+                                         frame payload data) Request contains  
+                                         an invalid argument.; then sent 1007  
+                                         (invalid frame payload data) Request  
+                                         contains an invalid argument.         
+    01:34:05.216 DEBUG  livekit.pluginsÔÇª send task finished.  
+    01:34:05.217 DEBUG  livekit.pluginsÔÇª connecting to Gemini Realtime API...  

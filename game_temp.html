@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Starsector Node.js Edition</title>
+    <script src="/loader.js"></script>
+    <style>
+        body { margin: 0; background: #050505; color: #00ff00; font-family: monospace; overflow: hidden; }
+        
+        #ui-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10;
+            background: rgba(0,0,0,0.95); display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+        }
+        
+        #progress-container { width: 600px; height: 4px; background: #333; margin: 20px 0; }
+        #progress-bar { width: 0%; height: 100%; background: #00ff00; transition: width 0.1s; }
+        #log-text { color: #888; font-size: 12px; margin-top: 10px; }
+        
+        button {
+            padding: 15px 40px; background: transparent; border: 2px solid #00ff00;
+            color: #00ff00; font-size: 18px; font-weight: bold; cursor: pointer;
+        }
+        button:hover { background: #00ff00; color: black; }
+        
+        canvas { display: block; width: 100vw; height: 100vh; position: absolute; top:0; left:0; }
+    </style>
+</head>
+<body>
+    <div id="ui-layer">
+        <h1 style="text-shadow: 0 0 15px #00ff00;">STARSECTOR KERNEL</h1>
+        <div id="progress-container"><div id="progress-bar"></div></div>
+        <div id="log-text">System Ready.</div>
+        <br>
+        <button id="btn">INITIALIZE</button>
+    </div>
+    <canvas id="display"></canvas>
+
+    <script type="module">
+        const ui = {
+            bar: document.getElementById('progress-bar'),
+            log: document.getElementById('log-text'),
+            btn: document.getElementById('btn'),
+            layer: document.getElementById('ui-layer')
+        };
+
+        // --- 0. OVERCLOCK PATCH (AI OPTIMIZATION) ---
+        // Force the engine to run faster than 60Hz by bypassing the browser's VSync
+        window.requestAnimationFrame = (callback) => setTimeout(callback, 0);
+
+        // --- 1. THROTTLED PREFETCHER (Fixes Browser Freeze) ---
+        async function prefetch() {
+            ui.log.innerText = "Loading Manifest...";
+            const assets = await fetch('assets.json').then(r => r.json());
+            
+            const TOTAL = assets.length;
+            let loaded = 0;
+            
+            // Matches Report: Reduced concurrency to 2
+            const WORKERS = 2;
+            const DELAY_MS = 10; 
+
+            ui.log.innerText = `Queueing ${TOTAL} files...`;
+            const queue = [...assets];
+
+            async function worker() {
+                while (queue.length > 0) {
+                    const file = queue.shift();
+                    try {
+                        // Fetch and Blob to force storage in browser cache
+                        await fetch(file).then(r => r.blob());
+                        loaded++;
+                        
+                        if (loaded % 10 === 0) {
+                            ui.bar.style.width = (loaded / TOTAL * 100) + "%";
+                            ui.log.innerText = `Cached: ${loaded} / ${TOTAL}`;
+                        }
+                        // Yield to UI thread
+                        await new Promise(r => setTimeout(r, DELAY_MS));
+                    } catch (e) { console.warn("Skip:", file); }
+                }
+            }
+
+            const threads = Array(WORKERS).fill(null).map(() => worker());
+            await Promise.all(threads);
+        }
+
+        // --- 2. ENGINE BOOT ---
+        ui.btn.addEventListener('click', async () => {
+            ui.btn.style.display = 'none';
+            
+            // A. Download Assets
+            await prefetch();
+            
+            // B. Init JVM
+            ui.log.innerText = "Initializing Java 17 (Local Runtime)...";
+            const ROOT = window.location.origin + "/";
+
+            try {
+                await cheerpjInit({
+                    natives: { window: { lwjglCanvasElement: document.getElementById("display") } },
+                    fileSystem: {
+                        mountPoint: "/app",
+                        type: "overlay",
+                        lower: { type: "http", url: ROOT },
+                        upper: { type: "indexedDB", name: "starsector_node_v1" }
+                    },
+                    // LOCAL MIRROR CONFIGURATION
+                    runtime: { version: "17", url: "/17/lib/modules" },
+                    javaProperties: [
+                        "java.version=17", "os.name=Linux",
+                        "user.dir=/app", "user.home=/app/saves",
+                        
+                        // Native Path Fix
+                        "java.library.path=/app/native/linux:/app/native",
+                        "org.lwjgl.librarypath=/app/native/linux:/app/native",
+
+                        // Path Redirects
+                        "-Dcom.fs.starfarer.settings.paths.mods=/app/mods",
+                        "-Dcom.fs.starfarer.settings.paths.saves=/app/saves",
+                        "-Dcom.fs.starfarer.settings.paths.logs=/app/logs",
+                        "-Dfs.game.dir=/app",
+                        
+                        "legacyLauncher=true", "log4j.debug=true", "java.awt.headless=false"
+                    ],
+                    arguments: [
+                        "--add-opens=java.base/java.lang=ALL-UNNAMED",
+                        "--add-opens=java.base/java.util=ALL-UNNAMED",
+                        "--add-opens=java.base/java.nio=ALL-UNNAMED", 
+                        "--add-opens=java.desktop/java.awt=ALL-UNNAMED",
+                        "-Xmx1500m", "-Xms512m"
+                    ]
+                });
+
+                cheerpjCreateDisplay(1280, 768);
+
+                // C. Launch
+                ui.log.innerText = "Executing CombatMain...";
+                
+                // Build Classpath dynamically from manifest (JARs only)
+                const assets = await fetch('assets.json').then(r => r.json());
+                const classpath = assets
+                    .filter(f => f.endsWith('.jar'))
+                    .map(f => "/app/" + f)
+                    .join(":");
+
+                // Auto-create log file to ensure write layer is active
+                const addFile = window.cheerpOSAddStringFile || window.cheerpjAddStringFile;
+                try { await addFile("/app/starsector.log", "Init"); } catch(e){}
+
+                document.getElementById('ui-layer').style.display = 'none';
+                await cheerpjRunMain("com.fs.starfarer.combat.CombatMain", classpath);
+
+            } catch (e) {
+                ui.log.innerText = "FATAL: " + e.message;
+                ui.log.style.color = "red";
+                console.error(e);
+            }
+        });
+    </script>
+</body>
+</html>
+

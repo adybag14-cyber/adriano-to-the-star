@@ -1,0 +1,119 @@
+    21:19:13.750 DEBUG  asyncio          Using proactor: IocpProactor  
+    21:19:13.754 DEV    livekit.agents   Watching                              
+                                         C:\Users\adyba\adriano-to-the-star-c  
+                                         lean                                  
+    21:19:15.853 DEBUG  asyncio          Using proactor: IocpProactor  
+    21:19:15.861 INFO   livekit.agents   starting worker {"version": "1.3.5",  
+                                                         "rtc-version":        
+                                                         "1.0.19"}             
+    21:19:15.950 INFO   livekit.agents   registered worker {"agent_name": "",  
+                                                           "id":               
+                                                           "AW_qyAyTsrqP95Z",  
+                                                           "url":              
+                                                           "wss://gemini-integÔÇª
+                                                           "region": "UK",     
+                                                           "protocol": 16}     
+    21:19:41.575 DEBUG  asyncio          Using proactor: IocpProactor  
+    21:19:41.584 INFO   livekit.agents   starting worker {"version": "1.3.5",  
+                                                         "rtc-version":        
+                                                         "1.0.19"}             
+    21:19:41.586 ERROR  livekit.agents   Error in _read_ipc_task               
+                                         Traceback (most recent call last):    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\utils\aio\duplex_unix.py"  
+                                         , line 35, in recv_bytes              
+                                             len_bytes = await                 
+                                         self._reader.readexactly(4)           
+                                                         ^^^^^^^^^^^^^^^^^^^^  
+                                         ^^^^^^^^^^^^^                         
+                                           File "C:\Program                    
+                                         Files\WindowsApps\PythonSoftwareFoun  
+                                         dation.Python.3.12_3.12.2800.0_x64__  
+                                         qbz5n2kfra8p0\Lib\asyncio\streams.py  
+                                         ", line 750, in readexactly           
+                                             raise                             
+                                         exceptions.IncompleteReadError(incom  
+                                         plete, n)                             
+                                         asyncio.exceptions.IncompleteReadErr  
+                                         or: 0 bytes read on a total of 4      
+                                         expected bytes                        
+                                                                               
+                                         The above exception was the direct    
+                                         cause of the following exception:     
+                                                                               
+                                         Traceback (most recent call last):    
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\utils\log.py", line 16,    
+                                         in async_fn_logs                      
+                                             return await fn(*args, **kwargs)  
+                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^  
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\cli\watcher.py", line      
+                                         135, in _read_ipc_task                
+                                             msg = await                       
+                                         channel.arecv_message(self._pch,      
+                                         proto.IPC_MESSAGES)                   
+                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^  
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^      
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\ipc\channel.py", line 47,  
+                                         in arecv_message                      
+                                             return _read_message(await        
+                                         dplx.recv_bytes(), messages)          
+                                                                  ^^^^^^^^^^^  
+                                         ^^^^^^^^^^^^                          
+                                           File                                
+                                         "C:\Users\adyba\AppData\Local\Packag  
+                                         es\PythonSoftwareFoundation.Python.3  
+                                         .12_qbz5n2kfra8p0\LocalCache\local-p  
+                                         ackages\Python312\site-packages\live  
+                                         kit\agents\utils\aio\duplex_unix.py"  
+                                         , line 43, in recv_bytes              
+                                             raise DuplexClosed() from e       
+                                         livekit.agents.utils.aio.duplex_unix  
+                                         .DuplexClosed                         
+    21:19:41.658 INFO   livekit.agents   registered worker {"agent_name": "",  
+                                                           "id":               
+                                                           "AW_PsoLLu2XKzcM",  
+                                                           "url":              
+                                                           "wss://gemini-integÔÇª
+                                                           "region": "UK",     
+                                                           "protocol": 16}     
+    21:24:06.317 DEBUG  asyncio          Using proactor: IocpProactor  
+    21:24:06.325 INFO   livekit.agents   starting worker {"version": "1.3.5",  
+                                                         "rtc-version":        
+                                                         "1.0.19"}             
+    21:24:06.406 INFO   livekit.agents   registered worker {"agent_name": "",  
+                                                           "id":               
+                                                           "AW_recJeavRw34Y",  
+                                                           "url":              
+                                                           "wss://gemini-integÔÇª
+                                                           "region": "UK",     
+                                                           "protocol": 16}     
+    21:24:15.556 DEBUG  asyncio          Using proactor: IocpProactor  
+    21:24:15.563 INFO   livekit.agents   starting worker {"version": "1.3.5",  
+                                                         "rtc-version":        
+                                                         "1.0.19"}             
+    21:24:15.633 INFO   livekit.agents   registered worker {"agent_name": "",  
+                                                           "id":               
+                                                           "AW_hYyHEWQMGxpM",  
+                                                           "url":              
+                                                           "wss://gemini-integÔÇª
+                                                           "region": "UK",     
+                                                           "protocol": 16}     

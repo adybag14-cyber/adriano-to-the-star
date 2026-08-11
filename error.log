@@ -1,0 +1,8 @@
+C:\Users\adyba\adriano-to-the-star-clean\exoplanet-pioneer.js:937
+        assignJob(id, job) {
+                           ^
+
+SyntaxError: Unexpected token '{'
+    at checkSyntax (node:internal/main/check_syntax:74:5)
+
+Node.js v22.21.1

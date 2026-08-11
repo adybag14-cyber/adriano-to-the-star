@@ -1,0 +1,5 @@
+﻿java
+jfr
+jrunscript
+keytool
+rmiregistry

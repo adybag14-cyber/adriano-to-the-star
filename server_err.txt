@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "C:\Users\Ady\Documents\GitHub\starsector-linux\starsector\server.py", line 20, in <module>
+    with socketserver.TCPServer(("", PORT), ForcedRangeHandler) as httpd:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ady\AppData\Local\Programs\Python\Python311\Lib\socketserver.py", line 456, in __init__
+    self.server_bind()
+  File "C:\Users\Ady\AppData\Local\Programs\Python\Python311\Lib\socketserver.py", line 472, in server_bind
+    self.socket.bind(self.server_address)
+OSError: [WinError 10048] Only one usage of each socket address (protocol/network address/port) is normally permitted

@@ -1,0 +1,16 @@
+**
+!.gcloudignore
+!mechgen/
+!mechgen/**
+!mechgen_web/
+!mechgen_web/**
+!fonts/
+!fonts/**
+
+mechgen_web/.venv
+mechgen_web/runs
+mechgen_web/**/__pycache__/
+mechgen_web/**/*.pyc
+mechgen/**/__pycache__/
+mechgen/**/*.pyc
+mechgen/mechgen.egg-info

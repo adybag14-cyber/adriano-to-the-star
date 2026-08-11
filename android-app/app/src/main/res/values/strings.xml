@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Adriano To The Star</string>
+    <string name="app_description">Buy celestial bodies in the Andromeda Galaxy. Explore exoplanets, claim your star, and join the cosmic journey!</string>
+    <string name="loading">Loading...</string>
+    <string name="error_loading">Error loading page. Please check your internet connection.</string>
+    <string name="retry">Retry</string>
+</resources>
+

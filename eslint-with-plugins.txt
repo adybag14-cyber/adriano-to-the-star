@@ -1,0 +1,20 @@
+
+> adriano-to-the-star@1.0.0 lint:all
+> eslint . --ext .js
+
+
+Oops! Something went wrong! :(
+
+ESLint: 9.39.1
+
+TypeError: Key "rules": Key "sonarjs/no-one-iteration-loop": Could not find "no-one-iteration-loop" in plugin "sonarjs".
+    at throwRuleNotFoundError (C:\Users\adyba\adriano-to-the-star\node_modules\eslint\lib\config\config.js:100:16)
+    at Config.validateRulesConfig (C:\Users\adyba\adriano-to-the-star\node_modules\eslint\lib\config\config.js:603:5)
+    at new Config (C:\Users\adyba\adriano-to-the-star\node_modules\eslint\lib\config\config.js:484:9)
+    at [finalizeConfig] (C:\Users\adyba\adriano-to-the-star\node_modules\eslint\lib\config\flat-config-array.js:212:10)
+    at FlatConfigArray.getConfigWithStatus (C:\Users\adyba\adriano-to-the-star\node_modules\@eslint\config-array\dist\cjs\index.cjs:1409:55)
+    at FlatConfigArray.getConfig (C:\Users\adyba\adriano-to-the-star\node_modules\@eslint\config-array\dist\cjs\index.cjs:1427:15)
+    at entryFilter (C:\Users\adyba\adriano-to-the-star\node_modules\eslint\lib\eslint\eslint-helpers.js:323:27)
+    at async NodeHfs.<anonymous> (file:///C:/Users/adyba/adriano-to-the-star/node_modules/@humanfs/core/src/hfs.js:574:24)
+    at async NodeHfs.walk (file:///C:/Users/adyba/adriano-to-the-star/node_modules/@humanfs/core/src/hfs.js:614:3)
+    at async globSearch (C:\Users\adyba\adriano-to-the-star\node_modules\eslint\lib\eslint\eslint-helpers.js:364:20)

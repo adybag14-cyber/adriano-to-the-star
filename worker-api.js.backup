@@ -1,0 +1,118 @@
+
+export default {
+    async fetch(request, env) {
+        const url = new URL(request.url);
+        const path = url.pathname;
+
+        const corsHeaders = {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, HEAD, POST, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+            'Access-Control-Max-Age': '86400',
+        };
+
+        if (request.method === 'OPTIONS') {
+            return new Response(null, { headers: corsHeaders });
+        }
+
+        try {
+            // Routing
+            if (path === '/api/planets/my-claims' && request.method === 'GET') {
+                return await this.handleMyClaims(request, env, corsHeaders);
+            }
+
+            if (path === '/api/planets/claim' && request.method === 'POST') {
+                return await this.handleClaim(request, env, corsHeaders);
+            }
+
+            if (path === '/api/health') {
+                return new Response(JSON.stringify({ status: 'ok', version: '1.0.0' }), {
+                    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                });
+            }
+
+            return new Response('Not Found', { status: 404, headers: corsHeaders });
+        } catch (error) {
+            return new Response(JSON.stringify({ success: false, error: error.message }), {
+                status: 500,
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            });
+        }
+    },
+
+    async handleMyClaims(request, env, corsHeaders) {
+        const authHeader = request.headers.get('Authorization');
+        if (!authHeader) {
+            return new Response(JSON.stringify({ success: false, error: 'Unauthorized' }), {
+                status: 401,
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            });
+        }
+
+        // In a real production setup, we would verify the JWT here using env.SUPABASE_KEY
+        // For now, we proxy to Supabase
+        const response = await fetch(`${env.SUPABASE_URL}/rest/v1/planet_claims?select=*&status=eq.active`, {
+            headers: {
+                'apikey': env.SUPABASE_KEY,
+                'Authorization': authHeader,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const data = await response.json();
+        return new Response(JSON.stringify({ success: true, claims: data }), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+    },
+
+    async handleClaim(request, env, corsHeaders) {
+        const authHeader = request.headers.get('Authorization');
+        if (!authHeader) {
+            return new Response(JSON.stringify({ success: false, error: 'Unauthorized' }), {
+                status: 401,
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            });
+        }
+
+        const body = await request.json();
+        const { kepid } = body;
+
+        if (!kepid) {
+            return new Response(JSON.stringify({ success: false, error: 'Missing KEPID' }), {
+                status: 400,
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            });
+        }
+
+        // Proxy to Supabase to insert claim
+        // This is a simplified version of what the backend would do
+        const insertResponse = await fetch(`${env.SUPABASE_URL}/rest/v1/planet_claims`, {
+            method: 'POST',
+            headers: {
+                'apikey': env.SUPABASE_KEY,
+                'Authorization': authHeader,
+                'Content-Type': 'application/json',
+                'Prefer': 'return=representation'
+            },
+            body: JSON.stringify({
+                kepid: kepid,
+                status: 'active',
+                claimed_at: new Date().toISOString(),
+                certificate_number: `CERT-${Math.floor(Math.random() * 1000000)}`
+            })
+        });
+
+        if (!insertResponse.ok) {
+            const errorData = await insertResponse.json();
+            return new Response(JSON.stringify({ success: false, error: errorData.message || 'Claim failed' }), {
+                status: insertResponse.status,
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            });
+        }
+
+        const data = await insertResponse.json();
+        return new Response(JSON.stringify({ success: true, planet: data[0] }), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+    }
+};

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CheerpJ Fetch Intercept Test</title>
+    <script src="https://cjrtnc.leaningtech.com/4.1/loader.js"></script>
+    <script src="/cheerpj-natives/natives_clean/lwjgl.js"></script>
+    <script src="/cheerpj-natives/natives_clean/javajpeg.js"></script>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+
+<body>
+    <h1>CheerpJ Fetch Intercept Test</h1>
+    <div id="console"
+        style="font-family: monospace; white-space: pre-wrap; border: 1px solid #ccc; padding: 10px; height: 300px; overflow: auto; background: #f0f0f0;">
+    </div>
+
+    <script>
+        const consoleDiv = document.getElementById('console');
+        function log(msg, color = 'black') {
+            const line = document.createElement('div');
+            line.style.color = color;
+            line.textContent = msg;
+            consoleDiv.appendChild(line);
+        }
+
+        // INTERCEPT FETCH
+        const originalFetch = window.fetch;
+        window.fetch = async function (input, init) {
+            const url = (typeof input === 'string') ? input : input.url;
+
+            if (url && url.includes("liblwjgl.so")) {
+                log("[Network] Intercepted Fetch for liblwjgl.so!", "blue");
+                return new Response("DUMMY_ELF_HEADER_CONTENT_FOR_CHEERPJ", {
+                    status: 200,
+                    headers: { "Content-Type": "application/octet-stream" }
+                });
+            }
+
+            return originalFetch(input, init);
+        };
+
+        (async function () {
+            try {
+                log("Initializing CheerpJ 4.1 (Fetch Intercept)...");
+
+                const absLibUrl = new URL("/liblwjgl.so", window.location.href).href;
+
+                await cheerpjInit({
+                    version: 17,
+                    preloadResources: [
+                        [absLibUrl, "/liblwjgl.so"]
+                    ],
+                    mounts: [
+                        { type: "url", location: "/app", url: new URL("/app/", window.location.href).href }
+                    ],
+                    natives: window.CheerpJ_LWJGL_Natives || {},
+                    javaProperties: {
+                        "java.library.path": "/"
+                    }
+                });
+
+                log("Init Complete.");
+
+                log("Probe: org.lwjgl.Sys");
+                // Run Sys probe
+                await cheerpjRunMain("org.lwjgl.Sys", []);
+                log("Probe Finished.");
+
+            } catch (e) {
+                log("Error: " + e, "red");
+            }
+        })();
+    </script>
+</body>
+
+</html>

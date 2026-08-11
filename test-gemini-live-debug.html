@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini Live Debug Test</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1a1a1a;
+            color: #fff;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .test-section {
+            background: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .test-section h2 {
+            color: #ba944f;
+            margin-top: 0;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .status.success { background: rgba(74, 222, 128, 0.2); border: 1px solid #4ade80; }
+        .status.error { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; }
+        .status.warning { background: rgba(255, 193, 7, 0.2); border: 1px solid #ffc107; }
+        .status.info { background: rgba(96, 165, 250, 0.2); border: 1px solid #60a5fa; }
+        button {
+            background: #ba944f;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #9a7a3f; }
+        button:disabled { background: #555; cursor: not-allowed; }
+        .log {
+            background: #000;
+            padding: 15px;
+            border-radius: 5px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+        .log-entry {
+            margin: 5px 0;
+            padding: 5px;
+        }
+        .log-entry.error { color: #ef4444; }
+        .log-entry.success { color: #4ade80; }
+        .log-entry.info { color: #60a5fa; }
+        .log-entry.warn { color: #ffc107; }
+        input, textarea {
+            background: #1a1a1a;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 8px;
+            border-radius: 5px;
+            width: 100%;
+            margin: 5px 0;
+            font-family: 'Courier New', monospace;
+        }
+        textarea {
+            min-height: 100px;
+        }
+    </style>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+<body>
+    <h1>🔍 Gemini Live Debug Test</h1>
+    
+    <div class="test-section">
+        <h2>1. Backend Connection Test</h2>
+        <div id="backend-status" class="status info">Checking backend connection...</div>
+        <button onclick="testBackend()">Test Backend Connection</button>
+        <button onclick="testWebSocket()">Test WebSocket Connection</button>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Configuration Check</h2>
+        <div id="config-status" class="status info">Checking configuration...</div>
+        <div>
+            <label>Backend URL:</label>
+            <input type="text" id="backend-url" value="http://localhost:3001" placeholder="http://localhost:3001">
+        </div>
+        <div>
+            <label>Gemini API Key (optional if backend has it):</label>
+            <input type="text" id="api-key" placeholder="Your Gemini API Key">
+        </div>
+        <button onclick="checkConfig()">Check Configuration</button>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Gemini Live Test</h2>
+        <div>
+            <label>Test Message:</label>
+            <textarea id="test-message" placeholder="Enter a test message...">Hello, can you hear me?</textarea>
+        </div>
+        <button onclick="testGeminiLive()">Test Gemini Live Model</button>
+        <div id="gemini-status" class="status info" style="display: none;">Ready to test...</div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. Debug Log</h2>
+        <div class="log" id="debug-log"></div>
+        <button onclick="clearLog()">Clear Log</button>
+    </div>
+
+    <script>
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('debug-log');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            const timestamp = new Date().toLocaleTimeString();
+            entry.textContent = `[${timestamp}] ${message}`;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+            console.log(`[${type.toUpperCase()}]`, message);
+        }
+
+        function clearLog() {
+            document.getElementById('debug-log').innerHTML = '';
+        }
+
+        function updateStatus(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = `status ${type}`;
+            element.style.display = 'block';
+        }
+
+        async function testBackend() {
+            log('Testing backend connection...', 'info');
+            const backendUrl = document.getElementById('backend-url').value;
+            
+            try {
+                const response = await fetch(`${backendUrl}/health`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    log(`✅ Backend is running! Status: ${data.status}`, 'success');
+                    updateStatus('backend-status', `✅ Backend is running on ${backendUrl}`, 'success');
+                    return true;
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+            } catch (error) {
+                log(`❌ Backend connection failed: ${error.message}`, 'error');
+                updateStatus('backend-status', `❌ Backend not reachable: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        async function testWebSocket() {
+            log('Testing WebSocket connection...', 'info');
+            const backendUrl = document.getElementById('backend-url').value;
+            const wsUrl = backendUrl.replace(/^https?:\/\//, '').replace(/^http:\/\//, '');
+            const wsProtocol = backendUrl.startsWith('https') ? 'wss' : 'ws';
+            const fullWsUrl = `${wsProtocol}://${wsUrl}/api/gemini-live`;
+            
+            log(`Connecting to: ${fullWsUrl}`, 'info');
+            
+            return new Promise((resolve) => {
+                const ws = new WebSocket(fullWsUrl);
+                let connected = false;
+                
+                const timeout = setTimeout(() => {
+                    if (!connected) {
+                        ws.close();
+                        log('❌ WebSocket connection timeout', 'error');
+                        updateStatus('backend-status', '❌ WebSocket connection timeout', 'error');
+                        resolve(false);
+                    }
+                }, 5000);
+                
+                ws.onopen = () => {
+                    connected = true;
+                    clearTimeout(timeout);
+                    log('✅ WebSocket connected successfully!', 'success');
+                    updateStatus('backend-status', '✅ WebSocket connection successful', 'success');
+                    ws.close();
+                    resolve(true);
+                };
+                
+                ws.onerror = (error) => {
+                    clearTimeout(timeout);
+                    log(`❌ WebSocket error: ${error.message || 'Connection failed'}`, 'error');
+                    updateStatus('backend-status', '❌ WebSocket connection failed', 'error');
+                    resolve(false);
+                };
+                
+                ws.onclose = (event) => {
+                    if (!connected) {
+                        clearTimeout(timeout);
+                        log(`❌ WebSocket closed: ${event.code} ${event.reason || ''}`, 'error');
+                        resolve(false);
+                    }
+                };
+            });
+        }
+
+        function checkConfig() {
+            log('Checking configuration...', 'info');
+            const backendUrl = document.getElementById('backend-url').value;
+            const apiKey = document.getElementById('api-key').value;
+            
+            let configStatus = [];
+            
+            if (backendUrl) {
+                configStatus.push(`✅ Backend URL: ${backendUrl}`);
+            } else {
+                configStatus.push('❌ Backend URL not set');
+            }
+            
+            if (apiKey && apiKey !== 'YOUR_GEMINI_API_KEY_HERE') {
+                configStatus.push(`✅ API Key: ${apiKey.substring(0, 10)}...${apiKey.substring(apiKey.length - 4)}`);
+            } else {
+                configStatus.push('⚠️ API Key not set (backend should have it in .env)');
+            }
+            
+            const statusText = configStatus.join('\n');
+            updateStatus('config-status', statusText, apiKey ? 'success' : 'warning');
+            log(statusText, apiKey ? 'success' : 'warn');
+        }
+
+        async function testGeminiLive() {
+            log('Starting Gemini Live test...', 'info');
+            const backendUrl = document.getElementById('backend-url').value;
+            const apiKey = document.getElementById('api-key').value;
+            const testMessage = document.getElementById('test-message').value || 'Hello, can you hear me?';
+            
+            updateStatus('gemini-status', 'Testing Gemini Live...', 'info');
+            document.getElementById('gemini-status').style.display = 'block';
+            
+            // Check backend first
+            const backendOk = await testBackend();
+            if (!backendOk) {
+                updateStatus('gemini-status', '❌ Backend not available. Please start the backend server.', 'error');
+                return;
+            }
+            
+            // Build WebSocket URL
+            const wsUrl = backendUrl.replace(/^https?:\/\//, '').replace(/^http:\/\//, '');
+            const wsProtocol = backendUrl.startsWith('https') ? 'wss' : 'ws';
+            const fullWsUrl = `${wsProtocol}://${wsUrl}/api/gemini-live`;
+            
+            log(`Connecting to Gemini Live via: ${fullWsUrl}`, 'info');
+            
+            return new Promise((resolve) => {
+                const ws = new WebSocket(fullWsUrl);
+                let responseText = '';
+                let setupComplete = false;
+                const timeout = setTimeout(() => {
+                    ws.close();
+                    log('❌ Request timeout (30s)', 'error');
+                    updateStatus('gemini-status', '❌ Request timeout', 'error');
+                    resolve(false);
+                }, 30000);
+                
+                // Setup message
+                const setupMessage = {
+                    setup: {
+                        model: 'models/gemini-2.5-flash-live',
+                        generationConfig: {
+                            temperature: 0.7,
+                            maxOutputTokens: 8192,
+                            responseModalities: ["TEXT"]
+                        }
+                    }
+                };
+                
+                // Client content message
+                const clientMessage = {
+                    clientContent: {
+                        parts: [{ text: testMessage }]
+                    }
+                };
+                
+                ws.onopen = () => {
+                    log('✅ WebSocket opened, sending setup...', 'success');
+                    ws.send(JSON.stringify(setupMessage));
+                };
+                
+                ws.onmessage = (event) => {
+                    try {
+                        const data = JSON.parse(event.data);
+                        log(`Received: ${JSON.stringify(data).substring(0, 200)}...`, 'info');
+                        
+                        if (data.setupComplete || data.BidiGenerateContentSetupComplete) {
+                            setupComplete = true;
+                            log('✅ Setup complete, sending message...', 'success');
+                            ws.send(JSON.stringify(clientMessage));
+                            return;
+                        }
+                        
+                        if (data.error) {
+                            clearTimeout(timeout);
+                            log(`❌ Error: ${JSON.stringify(data.error)}`, 'error');
+                            updateStatus('gemini-status', `❌ Error: ${data.error.message || JSON.stringify(data.error)}`, 'error');
+                            ws.close();
+                            resolve(false);
+                            return;
+                        }
+                        
+                        if (data.serverContent) {
+                            if (data.serverContent.parts) {
+                                data.serverContent.parts.forEach(part => {
+                                    if (part.text) {
+                                        responseText += part.text;
+                                        log(`📝 Response chunk: ${part.text.substring(0, 50)}...`, 'info');
+                                    }
+                                });
+                            } else if (data.serverContent.modelTurn?.parts) {
+                                data.serverContent.modelTurn.parts.forEach(part => {
+                                    if (part.text) {
+                                        responseText += part.text;
+                                        log(`📝 Response chunk: ${part.text.substring(0, 50)}...`, 'info');
+                                    }
+                                });
+                            }
+                            
+                            if (data.done || data.serverContent.modelTurn?.complete) {
+                                clearTimeout(timeout);
+                                log(`✅ Complete response received: ${responseText}`, 'success');
+                                updateStatus('gemini-status', `✅ Success! Response: ${responseText.substring(0, 100)}...`, 'success');
+                                ws.close();
+                                resolve(true);
+                            }
+                        }
+                    } catch (error) {
+                        log(`❌ Error parsing message: ${error.message}`, 'error');
+                    }
+                };
+                
+                ws.onerror = (error) => {
+                    clearTimeout(timeout);
+                    log(`❌ WebSocket error: ${error.message || 'Unknown error'}`, 'error');
+                    updateStatus('gemini-status', '❌ WebSocket error occurred', 'error');
+                    resolve(false);
+                };
+                
+                ws.onclose = (event) => {
+                    clearTimeout(timeout);
+                    if (responseText) {
+                        log(`✅ Connection closed. Full response: ${responseText}`, 'success');
+                        updateStatus('gemini-status', `✅ Success! Response: ${responseText}`, 'success');
+                    } else if (!setupComplete) {
+                        log(`❌ Connection closed before setup: ${event.code} ${event.reason || ''}`, 'error');
+                        updateStatus('gemini-status', `❌ Connection closed: ${event.code}`, 'error');
+                    }
+                    resolve(!!responseText);
+                };
+            });
+        }
+
+        // Auto-check on load
+        window.addEventListener('load', () => {
+            log('🔍 Debug test page loaded', 'info');
+            checkConfig();
+            setTimeout(() => testBackend(), 1000);
+        });
+    </script>
+</body>
+</html>
+
+

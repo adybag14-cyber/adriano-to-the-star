@@ -1,0 +1,71 @@
+ÿþpublic class com.fs.starfarer.loading.LoadingUtils {
+  private static org.apache.log4j.Logger Ê00000;
+
+  public static java.lang.String super;
+
+  static {};
+    Code:
+       0: ldc           #1                  // class com/fs/starfarer/loading/LoadingUtils
+       2: invokestatic  #12                 // Method org/apache/log4j/Logger.getLogger:(Ljava/lang/Class;)Lorg/apache/log4j/Logger;
+       5: putstatic     #18                 // Field Ê00000:Lorg/apache/log4j/Logger;
+       8: ldc           #20                 // String fs_rowSource
+      10: putstatic     #22                 // Field super:Ljava/lang/String;
+      13: return
+
+  public com.fs.starfarer.loading.LoadingUtils();
+    Code:
+       0: aload_0
+       1: invokespecial #27                 // Method java/lang/Object."<init>":()V
+       4: return
+
+  public static java.util.List<java.lang.String> Í00000(java.lang.String) throws java.io.IOException;
+    Code:
+       0: invokestatic  #38                 // Method com/fs/util/C.Ë00000:()Lcom/fs/util/C;
+       3: aload_0
+       4: invokevirtual #44                 // Method com/fs/util/C.Ë00000:(Ljava/lang/String;)Ljava/util/List;
+       7: areturn
+
+  public static java.util.List<java.lang.String> super(java.lang.String, java.lang.String) throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: iconst_1
+       3: invokestatic  #50                 // Method super:(Ljava/lang/String;Ljava/lang/String;Z)Ljava/util/List;
+       6: astore_2
+       7: aload_2
+       8: areturn
+
+  public static java.util.List<java.lang.String> 100000(java.lang.String, java.lang.String) throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: iconst_0
+       3: invokestatic  #50                 // Method super:(Ljava/lang/String;Ljava/lang/String;Z)Ljava/util/List;
+       6: astore_2
+       7: aload_2
+       8: areturn
+
+  public static java.io.InputStream void(java.lang.String) throws java.io.IOException;
+    Code:
+       0: invokestatic  #38                 // Method com/fs/util/C.Ë00000:()Lcom/fs/util/C;
+       3: aload_0
+       4: invokevirtual #63                 // Method com/fs/util/C.È00000:(Ljava/lang/String;)Ljava/io/InputStream;
+       7: areturn
+
+  public static void §00000(java.lang.String);
+    Code:
+       0: invokestatic  #38                 // Method com/fs/util/C.Ë00000:()Lcom/fs/util/C;
+       3: aload_0
+       4: invokevirtual #68                 // Method com/fs/util/C.Í00000:(Ljava/lang/String;)V
+       7: return
+
+  public static org.json.JSONObject ¶00000(java.lang.String) throws java.io.IOException, org.json.JSONException;
+    Code:
+       0: getstatic     #18                 // Field Ê00000:Lorg/apache/log4j/Logger;
+       3: new           #75                 // class java/lang/StringBuilder
+       6: dup
+       7: ldc           #77                 // String Loading JSON from [
+       9: invokespecial #79                 // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+      12: aload_0
+      13: invokevirtual #81                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      16: ldc           #85                 // String ]

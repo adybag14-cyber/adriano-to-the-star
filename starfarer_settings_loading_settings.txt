@@ -1,0 +1,260 @@
+    Code:
+       0: getstatic     #251                // Field Ë00000:F
+       3: freturn
+
+  public static void Ë00000(float);
+    Code:
+       0: fload_0
+       1: putstatic     #251                // Field Ë00000:F
+       4: return
+
+  public static boolean class.class();
+    Code:
+       0: ldc_w         #379                // String allowForceQuitInIronMode
+       3: invokestatic  #443                // Method class:(Ljava/lang/String;)Z
+       6: ireturn
+
+  public static boolean while.super();
+    Code:
+       0: getstatic     #275                // Field OÍ0000:Z
+       3: ireturn
+
+  public static com.fs.starfarer.loading.O0oO o00000();
+    Code:
+       0: ldc_w         #450                // class com/fs/starfarer/loading/O0oO
+       3: ldc_w         #452                // String player
+       6: invokestatic  #454                // Method com/fs/starfarer/loading/SpecStore.o00000:(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Object;
+       9: checkcast     #450                // class com/fs/starfarer/loading/O0oO
+      12: areturn
+
+  public static void interface(boolean);
+    Code:
+       0: iload_0
+       1: putstatic     #275                // Field OÍ0000:Z
+       4: return
+
+  public static boolean new();
+    Code:
+       0: getstatic     #264                // Field oÈ0000:Z
+       3: ireturn
+
+  public static float new.return();
+    Code:
+       0: getstatic     #271                // Field ÏÍ0000:F
+       3: freturn
+
+  public static void o00000(float);
+    Code:
+       0: fload_0
+       1: putstatic     #271                // Field ÏÍ0000:F
+       4: return
+
+  public static void ËO0000(boolean);
+    Code:
+       0: iload_0
+       1: putstatic     #264                // Field oÈ0000:Z
+       4: return
+
+  public static void ÷È0000() throws java.io.IOException, org.json.JSONException;
+    Code:
+       0: getstatic     #211                // Field Í00000:Lorg/apache/log4j/Logger;
+       3: ldc_w         #466                // String Loading settings
+       6: invokevirtual #468                // Method org/apache/log4j/Logger.info:(Ljava/lang/Object;)V
+       9: invokestatic  #472                // Method "null.new":()Lorg/json/JSONObject;
+      12: putstatic     #474                // Field §Ï0000:Lorg/json/JSONObject;
+      15: getstatic     #474                // Field §Ï0000:Lorg/json/JSONObject;
+      18: ldc_w         #476                // String graphics
+      21: invokevirtual #477                // Method org/json/JSONObject.getJSONObject:(Ljava/lang/String;)Lorg/json/JSONObject;
+      24: putstatic     #483                // Field §Ë0000:Lorg/json/JSONObject;
+      27: getstatic     #474                // Field §Ï0000:Lorg/json/JSONObject;
+      30: ldc_w         #485                // String bonusXP
+      33: invokevirtual #477                // Method org/json/JSONObject.getJSONObject:(Ljava/lang/String;)Lorg/json/JSONObject;
+      36: putstatic     #486                // Field oÏ0000:Lorg/json/JSONObject;
+      39: ldc_w         #488                // String defaultFont
+      42: invokestatic  #490                // Method while:(Ljava/lang/String;)Ljava/lang/String;
+      45: putstatic     #493                // Field "float.new":Ljava/lang/String;
+      48: ldc_w         #279                // String com.fs.starfarer.settings.osx
+      51: invokestatic  #281                // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+      54: ifnull        61
+      57: iconst_1
+      58: goto          62
+      61: iconst_0
+      62: putstatic     #287                // Field "null.class":Z
+      65: ldc_w         #289                // String com.fs.starfarer.settings.linux
+      68: invokestatic  #281                // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+      71: ifnull        78
+      74: iconst_1
+      75: goto          79
+      78: iconst_0
+      79: putstatic     #291                // Field O10000:Z
+      82: ldc_w         #495                // String suppliesPerMarinePerDay
+      85: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+      88: putstatic     #500                // Field ÍË0000:F
+      91: ldc_w         #502                // String minFighterReplacementRate
+      94: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+      97: putstatic     #503                // Field ÈÏ0000:F
+     100: ldc_w         #505                // String renderDHullOverlay
+     103: invokestatic  #443                // Method class:(Ljava/lang/String;)Z
+     106: putstatic     #238                // Field "class.class":Z
+     109: ldc_w         #506                // String suppliesPerCrewPerDay
+     112: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     115: putstatic     #507                // Field ËO0000:F
+     118: ldc_w         #509                // String suppliesPerCargoUnitOverCapacity
+     121: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     124: putstatic     #510                // Field §10000:F
+     127: ldc_w         #512                // String suppliesPerFuelUnitOverCapacity
+     130: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     133: putstatic     #513                // Field ÍÏ0000:F
+     136: ldc_w         #515                // String suppliesPerPersonnelUnitOverCapacity
+     139: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     142: putstatic     #516                // Field "class.super":F
+     145: ldc_w         #518                // String supplyConsumptionMothballedMult
+     148: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     151: putstatic     #519                // Field ÏË0000:F
+     154: ldc_w         #521                // String uiFadeSpeedMult
+     157: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     160: putstatic     #268                // Field "float.Object":F
+     163: ldc_w         #522                // String minArmorFraction
+     166: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     169: putstatic     #523                // Field ÈÊ0000:F
+     172: ldc_w         #525                // String baseTravelSpeed
+     175: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     178: putstatic     #526                // Field "null.String":F
+     181: ldc_w         #528                // String speedPerBurnLevel
+     184: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     187: putstatic     #529                // Field ÈÍ0000:F
+     190: ldc_w         #531                // String unitsPerLightYear
+     193: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     196: putstatic     #532                // Field §Í0000:F
+     199: ldc_w         #534                // String maxArmorDamageReduction
+     202: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     205: putstatic     #535                // Field "new.class":F
+     208: ldc_w         #537                // String dpsToHitStrengthMult
+     211: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     214: putstatic     #538                // Field Ïo0000:F
+     217: ldc_w         #540                // String baseRepairRateFrigate
+     220: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     223: putstatic     #541                // Field null:F
+     226: ldc_w         #543                // String baseRepairRateDestroyer
+     229: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     232: putstatic     #544                // Field oÍ0000:F
+     235: ldc_w         #546                // String baseRepairRateCruiser
+     238: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     241: putstatic     #547                // Field ÏO0000:F
+     244: ldc_w         #549                // String baseRepairRateCapital
+     247: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     250: putstatic     #550                // Field Oo0000:F
+     253: ldc_w         #552                // String sensorRangeBase
+     256: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     259: putstatic     #553                // Field ËÈ0000:F
+     262: ldc_w         #555                // String baseSensorFrigate
+     265: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     268: putstatic     #556                // Field ÍO0000:F
+     271: ldc_w         #558                // String baseSensorDestroyer
+     274: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     277: putstatic     #559                // Field "interface.Object":F
+     280: ldc_w         #561                // String baseSensorCruiser
+     283: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     286: putstatic     #562                // Field "float.super":F
+     289: ldc_w         #564                // String baseSensorCapital
+     292: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     295: putstatic     #565                // Field "while.super":F
+     298: ldc_w         #567                // String maxSensorShips
+     301: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     304: putstatic     #568                // Field "class.return":F
+     307: ldc_w         #570                // String maxShipsInFleet
+     310: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     313: putstatic     #571                // Field "new.new":F
+     316: ldc_w         #573                // String suppliesPerShipOverMaxInFleet
+     319: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     322: putstatic     #574                // Field "interface.String":F
+     325: ldc_w         #576                // String sensorRangeMax
+     328: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     331: putstatic     #577                // Field "float.class":F
+     334: ldc_w         #579                // String sensorRangeMaxHyper
+     337: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     340: putstatic     #580                // Field "float.String":F
+     343: ldc_w         #582                // String detectionRangeTransponderMult
+     346: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     349: putstatic     #583                // Field Ë¶0000:F
+     352: ldc_w         #585                // String detectionRangeDetailsMult
+     355: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     358: putstatic     #586                // Field "interface.new":F
+     361: ldc_w         #588                // String detectionRangeDetailsAlwaysMult
+     364: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     367: putstatic     #589                // Field "class.Object":F
+     370: ldc_w         #591                // String detectionRangeDetailsAlwaysNonFleet
+     373: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     376: putstatic     #592                // Field OO0000:F
+     379: ldc_w         #594                // String detectionRangeDetailsAlwaysMin
+     382: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     385: putstatic     #595                // Field ËË0000:F
+     388: ldc_w         #597                // String baseFleetSelectionRadius
+     391: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     394: putstatic     #598                // Field "new.Object":F
+     397: ldc_w         #600                // String fleetSelectionRadiusPerUnitSize
+     400: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     403: putstatic     #601                // Field ÏÏ0000:F
+     406: ldc_w         #603                // String maxFleetSelectionRadius
+     409: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     412: putstatic     #604                // Field OË0000:F
+     415: ldc_w         #606                // String minVentTimeForWeaponReload
+     418: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     421: putstatic     #607                // Field ÈÈ0000:F
+     424: ldc_w         #609                // String easyPlayerDamageDealtMult
+     427: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     430: putstatic     #610                // Field "while.new":F
+     433: ldc_w         #612                // String easyPlayerDamageTakenMult
+     436: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     439: putstatic     #613                // Field "class.new":F
+     442: ldc_w         #615                // String easySensorBonus
+     445: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     448: putstatic     #616                // Field ÷10000:F
+     451: ldc_w         #618                // String defaultBattleSize
+     454: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     457: f2i
+     458: putstatic     #266                // Field interface:I
+     461: getstatic     #273                // Field §¶0000:Ljava/util/Map;
+     464: getstatic     #620                // Field com/fs/starfarer/api/combat/ShipAPI$HullSize.FIGHTER:Lcom/fs/starfarer/api/combat/ShipAPI$HullSize;
+     467: ldc_w         #626                // String nebulaSpeedFighter
+     470: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     473: invokestatic  #628                // Method java/lang/Float.valueOf:(F)Ljava/lang/Float;
+     476: invokeinterface #634,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     481: pop
+     482: getstatic     #273                // Field §¶0000:Ljava/util/Map;
+     485: getstatic     #640                // Field com/fs/starfarer/api/combat/ShipAPI$HullSize.FRIGATE:Lcom/fs/starfarer/api/combat/ShipAPI$HullSize;
+     488: ldc_w         #643                // String nebulaSpeedFrigate
+     491: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     494: invokestatic  #628                // Method java/lang/Float.valueOf:(F)Ljava/lang/Float;
+     497: invokeinterface #634,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     502: pop
+     503: getstatic     #273                // Field §¶0000:Ljava/util/Map;
+     506: getstatic     #645                // Field com/fs/starfarer/api/combat/ShipAPI$HullSize.DESTROYER:Lcom/fs/starfarer/api/combat/ShipAPI$HullSize;
+     509: ldc_w         #648                // String nebulaSpeedDestroyer
+     512: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     515: invokestatic  #628                // Method java/lang/Float.valueOf:(F)Ljava/lang/Float;
+     518: invokeinterface #634,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     523: pop
+     524: getstatic     #273                // Field §¶0000:Ljava/util/Map;
+     527: getstatic     #650                // Field com/fs/starfarer/api/combat/ShipAPI$HullSize.CRUISER:Lcom/fs/starfarer/api/combat/ShipAPI$HullSize;
+     530: ldc_w         #653                // String nebulaSpeedCruiser
+     533: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     536: invokestatic  #628                // Method java/lang/Float.valueOf:(F)Ljava/lang/Float;
+     539: invokeinterface #634,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     544: pop
+     545: getstatic     #273                // Field §¶0000:Ljava/util/Map;
+     548: getstatic     #655                // Field com/fs/starfarer/api/combat/ShipAPI$HullSize.CAPITAL_SHIP:Lcom/fs/starfarer/api/combat/ShipAPI$HullSize;
+     551: ldc_w         #658                // String nebulaSpeedCapital
+     554: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     557: invokestatic  #628                // Method java/lang/Float.valueOf:(F)Ljava/lang/Float;
+     560: invokeinterface #634,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     565: pop
+     566: ldc_w         #660                // String autosaveEnabledByDefault
+     569: invokestatic  #443                // Method class:(Ljava/lang/String;)Z
+     572: putstatic     #248                // Field ÷Ê0000:Z
+     575: ldc_w         #662                // String autosaveDefaultIntervalMinutes
+     578: invokestatic  #496                // Method ÷00000:(Ljava/lang/String;)F
+     581: putstatic     #251                // Field Ë00000:F
+     584: invokestatic  #664                // Method ÷10000:()V
+     587: invokestatic  #667                // Method com/fs/starfarer/O0OO.o00000:()V
+     590: invokestatic  #672                // Method com/fs/starfarer/launcher/ooOO.Ë00000:()Lcom/fs/starfarer/launcher/ooOO;

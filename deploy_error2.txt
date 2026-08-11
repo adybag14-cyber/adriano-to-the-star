@@ -1,0 +1,18 @@
+
+ Ôøà´©Å wrangler 4.50.0 (update available 4.59.1)
+ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ
+Ôû▓ [WARNING] Pages now has wrangler.toml support.
+
+  We detected a configuration file at C:\Users\adyba\adriano-to-the-star-clean\wrangler.toml but it is missing the "pages_build_output_dir" field, required by Pages.
+  If you would like to use this configuration file to deploy your project, please use "pages_build_output_dir" to specify the directory of static files to upload.
+  Ignoring configuration file for now, and proceeding with project deploy.
+
+
+Ô£¿ Compiled Worker successfully
+
+X [ERROR] Error: Pages only supports files up to 25 MiB in size
+
+  assets/models/props/bridge_table.glb is 41 MiB in size
+
+
+­ƒ¬Á  Logs were written to "C:\Users\adyba\.wrangler\logs\wrangler-2026-01-13_22-39-47_292.log"

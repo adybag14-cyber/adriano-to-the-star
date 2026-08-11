@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H.A.L. | Sentient Ship Computer</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Orbitron:wght@400;700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../../styles.css">
+    <link rel="stylesheet" href="../../projects.css">
+    <style>
+        body {
+            background: #050505;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .hal-terminal {
+            width: 100%;
+            max-width: 900px;
+            height: 80vh;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #ff3333;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 0 50px rgba(255, 0, 0, 0.1);
+            backdrop-filter: blur(20px);
+        }
+
+        .hal-header {
+            padding: 1rem;
+            border-bottom: 2px solid #ff3333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 51, 51, 0.1);
+        }
+
+        .hal-header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .hal-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.7rem;
+            color: rgba(255, 51, 51, 0.8);
+            user-select: none;
+        }
+
+        .hal-toggle input {
+            accent-color: #ff3333;
+        }
+
+        .hal-title {
+            color: #ff3333;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 2px;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+        }
+
+        .hal-status {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            color: #ff3333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #ff3333;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+                box-shadow: 0 0 10px #ff3333;
+            }
+
+            50% {
+                opacity: 0.5;
+                box-shadow: 0 0 2px #ff3333;
+            }
+
+            100% {
+                opacity: 1;
+                box-shadow: 0 0 10px #ff3333;
+            }
+        }
+
+        .hal-eye-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            min-height: 200px;
+        }
+
+        .hal-eye {
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle at center, #ff9999 0%, #ff0000 40%, #550000 70%, #000 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 60px rgba(255, 0, 0, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .hal-eye.listening {
+            box-shadow: 0 0 100px rgba(255, 0, 0, 0.8);
+            transform: scale(1.1);
+        }
+
+        .hal-eye.thinking {
+            animation: thinking 1s infinite alternate;
+        }
+
+        @keyframes thinking {
+            from {
+                opacity: 0.8;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+        }
+
+        .chat-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+            font-family: 'Fira Code', monospace;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            border-top: 1px solid rgba(255, 51, 51, 0.3);
+        }
+
+        .message {
+            max-width: 80%;
+            line-height: 1.6;
+            font-size: 0.95rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.hal {
+            align-self: flex-start;
+            color: #ffcccc;
+            border-left: 3px solid #ff3333;
+            padding-left: 1rem;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            color: #cccccc;
+            text-align: right;
+            border-right: 3px solid #666;
+            padding-right: 1rem;
+        }
+
+        .input-area {
+            padding: 1.5rem;
+            border-top: 1px solid rgba(255, 51, 51, 0.3);
+            display: flex;
+            gap: 1rem;
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        #voice-btn {
+            background: transparent;
+            border: 1px solid #ff3333;
+            color: #ff3333;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        #voice-btn:hover {
+            background: rgba(255, 51, 51, 0.2);
+            box-shadow: 0 0 15px rgba(255, 51, 51, 0.3);
+        }
+
+        #voice-btn.active {
+            background: #ff3333;
+            color: #000;
+            box-shadow: 0 0 20px #ff3333;
+        }
+
+        #text-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 51, 51, 0.3);
+            border-radius: 4px;
+            padding: 0 1rem;
+            color: #fff;
+            font-family: 'Fira Code', monospace;
+            outline: none;
+        }
+
+        #text-input:focus {
+            border-color: #ff3333;
+            background: rgba(255, 51, 51, 0.05);
+        }
+
+        .system-log {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 250px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.7rem;
+            color: rgba(255, 51, 51, 0.5);
+            text-align: right;
+            pointer-events: none;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            color: rgba(255, 51, 51, 0.6);
+            text-decoration: none;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            border: 1px solid rgba(255, 51, 51, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            border-color: #ff3333;
+            color: #ff3333;
+        }
+
+        /* WebLLM Progress */
+        #model-status {
+            position: absolute;
+            bottom: 80px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            color: rgba(255, 51, 51, 0.7);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 5px;
+            display: none;
+        }
+    </style>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+
+<body>
+    <a href="../../index.html">
+        <img src="../../images/ita_logo.png" alt="ITA Logo" class="ita-logo">
+    </a>
+
+
+    <a href="../../projects.html" class="back-btn">← TERMINATE SESSION</a>
+
+    <div class="hal-terminal">
+        <div class="hal-header">
+            <span class="hal-title" id="hal-title">H.A.L. 9000 // WEB-LLM INTEGRATED</span>
+            <div class="hal-header-right">
+                <label class="hal-toggle">
+                    <input type="checkbox" id="cerebras-toggle">
+                    <span>Cerebras (Qwen3 235B)</span>
+                </label>
+                <div class="hal-status">
+                    <span id="connection-status">AWAITING SYSTEM BOOT...</span>
+                    <div class="status-dot"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="hal-eye-container">
+            <div class="hal-eye" id="hal-eye"></div>
+        </div>
+
+        <div class="chat-area" id="chat-history">
+            <div class="message hal">
+                System initializing... <br><br>
+                Please ensure you are serving this page via a local HTTP server if using ESM modules.
+            </div>
+        </div>
+
+        <div id="model-status">Neural link initializing...</div>
+
+        <div class="input-area">
+            <button id="voice-btn" title="Voice Command">
+                🎤
+            </button>
+            <input type="text" id="text-input" placeholder="Enter command or query..." autocomplete="off">
+        </div>
+    </div>
+
+    <div class="system-log" id="system-log">
+        > SYSTEM BOOT<br>
+        > MEMORY: 64TB OK<br>
+        > WEBGPU: DETECTED<br>
+    </div>
+
+    <!-- WebLLM Logic -->
+    <script src="hal-core.js?v=v20" type="module" data-cfasync="false"></script>
+    <script src="voice-bridge.js" data-cfasync="false"></script>
+</body>
+
+</html>

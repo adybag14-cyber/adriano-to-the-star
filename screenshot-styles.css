@@ -1,0 +1,99 @@
+/**
+ * Screenshot Tool Styles
+ */
+
+.screenshot-btn {
+    position: fixed;
+    bottom: 420px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(186, 148, 79, 0.9), rgba(186, 148, 79, 0.7));
+    border: 2px solid rgba(186, 148, 79, 0.5);
+    color: #ffffff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 10000;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.screenshot-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(186, 148, 79, 0.5);
+}
+
+.screenshot-menu {
+    position: fixed;
+    background: rgba(0, 0, 0, 0.95);
+    border: 2px solid rgba(186, 148, 79, 0.4);
+    border-radius: 12px;
+    padding: 0.5rem;
+    z-index: 10001;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    min-width: 200px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(20px);
+}
+
+.screenshot-menu.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.screenshot-option {
+    display: block;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.9);
+    cursor: pointer;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.95rem;
+    text-align: left;
+    transition: all 0.3s ease;
+    margin-bottom: 0.25rem;
+}
+
+.screenshot-option:last-child {
+    margin-bottom: 0;
+}
+
+.screenshot-option:hover {
+    background: rgba(186, 148, 79, 0.2);
+    color: #ba944f;
+    transform: translateX(4px);
+}
+
+.screenshot-selection-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10006;
+    cursor: crosshair;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .screenshot-btn {
+        bottom: 400px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+    }
+}
+

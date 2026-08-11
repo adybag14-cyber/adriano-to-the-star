@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Omega Rendering Core 4.0 | Adriano to the Stars</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+        body { margin: 0; background: #000; overflow: hidden; color: #fff; font-family: 'Orbitron'; }
+        canvas { width: 100vw; height: 100vh; display: block; }
+        .omega-hud {
+            position: fixed; top: 2rem; left: 2rem;
+            background: rgba(0, 0, 0, 0.9); border: 2px solid #ba944f;
+            padding: 2.5rem; border-radius: 4px; box-shadow: 0 0 50px rgba(186, 148, 79, 0.4);
+        }
+        .roadmap-line { font-size: 0.75rem; color: #ba944f; margin-bottom: 0.5rem; letter-spacing: 2px; }
+    </style>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+
+<body>
+    <canvas id="omega-canvas"></canvas>
+    <div class="omega-hud">
+        <h1 style="margin: 0 0 1rem 0; letter-spacing: 5px;">OMEGA CORE v4.0</h1>
+        <div class="roadmap-line">RTGI & PATH TRACING (#281)</div>
+        <div class="roadmap-line">SVDAG VOXEL RENDERING (#316)</div>
+        <div class="roadmap-line">ADAPTIVE TESSELLATION (#402)</div>
+        <div class="roadmap-line">DLSS 3.5 COMPATIBILITY (#437)</div>
+        <div style="margin-top: 2rem; font-size: 0.6rem; opacity: 0.5;">FINAL ARCHITECTURAL SIGN-OFF (#500)</div>
+    </div>
+    <script type="module" src="omega-sim.js"></script>
+</body>
+
+</html>

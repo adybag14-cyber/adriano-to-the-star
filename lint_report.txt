@@ -1,0 +1,416 @@
+
+> adriano-to-the-star@1.0.0 lint:check
+> eslint *.js
+
+
+C:\Users\adyba\adriano-to-the-star-clean\animations.js
+  121:42  warning  Define a constant instead of duplicating this literal 4 times  sonarjs/no-duplicate-string
+
+C:\Users\adyba\adriano-to-the-star-clean\auth-supabase.js
+  161:18  warning  '_e' is defined but never used                                                       no-unused-vars
+  167:5   warning  Async method 'register' has a complexity of 29. Maximum allowed is 20                complexity
+  167:11  warning  Refactor this function to reduce its Cognitive Complexity from 28 to the 15 allowed  sonarjs/cognitive-complexity
+  167:19  warning  Async method 'register' has too many statements (54). Maximum allowed is 30          max-statements
+  292:5   warning  Async method 'login' has a complexity of 25. Maximum allowed is 20                   complexity
+  292:11  warning  Refactor this function to reduce its Cognitive Complexity from 25 to the 15 allowed  sonarjs/cognitive-complexity
+  292:16  warning  Async method 'login' has too many statements (50). Maximum allowed is 30             max-statements
+  331:70  warning  Define a constant instead of duplicating this literal 3 times                        sonarjs/no-duplicate-string
+  487:26  warning  '_e' is defined but never used                                                       no-unused-vars
+
+C:\Users\adyba\adriano-to-the-star-clean\auth.js
+  103:18  warning  '_e' is defined but never used                                                       no-unused-vars
+  117:5   warning  Async method 'register' has a complexity of 21. Maximum allowed is 20                complexity
+  117:11  warning  Refactor this function to reduce its Cognitive Complexity from 26 to the 15 allowed  sonarjs/cognitive-complexity
+  117:19  warning  Async method 'register' has too many statements (54). Maximum allowed is 30          max-statements
+  205:26  warning  '_e' is defined but never used                                                       no-unused-vars
+  241:11  warning  Refactor this function to reduce its Cognitive Complexity from 16 to the 15 allowed  sonarjs/cognitive-complexity
+  241:16  warning  Async method 'login' has too many statements (47). Maximum allowed is 30             max-statements
+  308:26  warning  '_e' is defined but never used                                                       no-unused-vars
+  361:11  warning  Refactor this function to reduce its Cognitive Complexity from 19 to the 15 allowed  sonarjs/cognitive-complexity
+  361:19  warning  Async method 'loadUser' has too many statements (34). Maximum allowed is 30          max-statements
+  381:41  warning  Define a constant instead of duplicating this literal 3 times                        sonarjs/no-duplicate-string
+  384:30  warning  '_e' is defined but never used                                                       no-unused-vars
+
+C:\Users\adyba\adriano-to-the-star-clean\booking-system.js
+  170:27  warning  Define a constant instead of duplicating this literal 4 times                             sonarjs/no-duplicate-string
+  321:5   warning  'bookingSystem' is assigned a value but never used. Allowed unused vars must match /^_/u  no-unused-vars
+
+C:\Users\adyba\adriano-to-the-star-clean\broadband-checker.js
+  212:29  warning  Generic Object Injection Sink                                                        security/detect-object-injection
+  235:5   warning  Method 'findProviderWebsite' has a complexity of 21. Maximum allowed is 20           complexity
+  244:20  warning  Generic Object Injection Sink                                                        security/detect-object-injection
+  333:53  warning  Define a constant instead of duplicating this literal 4 times                        sonarjs/no-duplicate-string
+  335:53  warning  Define a constant instead of duplicating this literal 4 times                        sonarjs/no-duplicate-string
+  336:52  warning  Define a constant instead of duplicating this literal 4 times                        sonarjs/no-duplicate-string
+  338:55  warning  Define a constant instead of duplicating this literal 3 times                        sonarjs/no-duplicate-string
+  507:61  warning  Define a constant instead of duplicating this literal 5 times                        sonarjs/no-duplicate-string
+  507:85  warning  Define a constant instead of duplicating this literal 13 times                       sonarjs/no-duplicate-string
+  509:62  warning  Define a constant instead of duplicating this literal 3 times                        sonarjs/no-duplicate-string
+  511:47  warning  Define a constant instead of duplicating this literal 3 times                        sonarjs/no-duplicate-string
+  555:44  warning  'e' is defined but never used. Allowed unused args must match /^_/u                  no-unused-vars
+  567:45  warning  Define a constant instead of duplicating this literal 6 times                        sonarjs/no-duplicate-string
+  583:42  warning  Define a constant instead of duplicating this literal 3 times                        sonarjs/no-duplicate-string
+  738:5   warning  Refactor this function to reduce its Cognitive Complexity from 20 to the 15 allowed  sonarjs/cognitive-complexity
+  738:12  warning  Method 'cleanup' has too many statements (32). Maximum allowed is 30                 max-statements
+
+C:\Users\adyba\adriano-to-the-star-clean\cosmic-music-player.js
+    40:34  warning  Define a constant instead of duplicating this literal 3 times                         sonarjs/no-duplicate-string
+    46:34  warning  Define a constant instead of duplicating this literal 3 times                         sonarjs/no-duplicate-string
+    52:34  warning  Define a constant instead of duplicating this literal 3 times                         sonarjs/no-duplicate-string
+    58:34  warning  Define a constant instead of duplicating this literal 3 times                         sonarjs/no-duplicate-string
+    64:34  warning  Define a constant instead of duplicating this literal 3 times                         sonarjs/no-duplicate-string
+    70:34  warning  Define a constant instead of duplicating this literal 3 times                         sonarjs/no-duplicate-string
+    76:34  warning  Define a constant instead of duplicating this literal 3 times                         sonarjs/no-duplicate-string
+    82:34  warning  Define a constant instead of duplicating this literal 3 times                         sonarjs/no-duplicate-string
+    88:34  warning  Define a constant instead of duplicating this literal 3 times                         sonarjs/no-duplicate-string
+    94:34  warning  Define a constant instead of duplicating this literal 3 times                         sonarjs/no-duplicate-string
+   100:34  warning  Define a constant instead of duplicating this literal 3 times                         sonarjs/no-duplicate-string
+   106:34  warning  Define a constant instead of duplicating this literal 3 times                         sonarjs/no-duplicate-string
+   112:34  warning  Define a constant instead of duplicating this literal 3 times                         sonarjs/no-duplicate-string
+   118:34  warning  Define a constant instead of duplicating this literal 3 times                         sonarjs/no-duplicate-string
+   124:34  warning  Define a constant instead of duplicating this literal 3 times                         sonarjs/no-duplicate-string
+   130:34  warning  Define a constant instead of duplicating this literal 3 times                         sonarjs/no-duplicate-string
+   136:34  warning  Define a constant instead of duplicating this literal 3 times                         sonarjs/no-duplicate-string
+   142:34  warning  Define a constant instead of duplicating this literal 3 times                         sonarjs/no-duplicate-string
+   241:5   warning  Refactor this function to reduce its Cognitive Complexity from 22 to the 15 allowed   sonarjs/cognitive-complexity
+   241:12  warning  Method 'cleanup' has too many statements (35). Maximum allowed is 30                  max-statements
+   250:58  warning  Define a constant instead of duplicating this literal 7 times                         sonarjs/no-duplicate-string
+   253:59  warning  Define a constant instead of duplicating this literal 3 times                         sonarjs/no-duplicate-string
+   254:57  warning  Define a constant instead of duplicating this literal 3 times                         sonarjs/no-duplicate-string
+   255:57  warning  Define a constant instead of duplicating this literal 3 times                         sonarjs/no-duplicate-string
+   256:56  warning  Define a constant instead of duplicating this literal 4 times                         sonarjs/no-duplicate-string
+   257:57  warning  Define a constant instead of duplicating this literal 3 times                         sonarjs/no-duplicate-string
+   300:37  warning  Define a constant instead of duplicating this literal 8 times                         sonarjs/no-duplicate-string
+   392:5   warning  Async method 'initPlayer' has too many lines (302). Maximum allowed is 200            max-lines-per-function
+   392:21  warning  Async method 'initPlayer' has too many statements (39). Maximum allowed is 30         max-statements
+   437:36  warning  Refactor this function to reduce its Cognitive Complexity from 21 to the 15 allowed   sonarjs/cognitive-complexity
+   447:46  warning  'isPlaying' is assigned a value but never used. Allowed unused vars must match /^_/u  no-unused-vars
+   529:68  warning  Define a constant instead of duplicating this literal 6 times                         sonarjs/no-duplicate-string
+   534:29  warning  Refactor this function to reduce its Cognitive Complexity from 27 to the 15 allowed   sonarjs/cognitive-complexity
+   608:36  warning  Refactor this function to reduce its Cognitive Complexity from 19 to the 15 allowed   sonarjs/cognitive-complexity
+   850:27  warning  Generic Object Injection Sink                                                         security/detect-object-injection
+   857:23  warning  Define a constant instead of duplicating this literal 10 times                        sonarjs/no-duplicate-string
+   918:22  warning  '_err' is defined but never used                                                      no-unused-vars
+  1201:20  warning  Method 'savePlayerState' has too many statements (34). Maximum allowed is 30          max-statements
+  1317:5   warning  Refactor this function to reduce its Cognitive Complexity from 30 to the 15 allowed   sonarjs/cognitive-complexity
+  1317:26  warning  Method 'saveStateBeforeUnload' has too many statements (40). Maximum allowed is 30    max-statements
+  1608:33  warning  Function has too many statements (38). Maximum allowed is 30                          max-statements
+
+C:\Users\adyba\adriano-to-the-star-clean\database-advanced-features.js
+  228:5   warning  Method 'applyAdvancedFilters' has a complexity of 23. Maximum allowed is 20          complexity
+  240:22  warning  Missing radix parameter                                                              radix
+  241:22  warning  Missing radix parameter                                                              radix
+  245:67  warning  Refactor this function to reduce its Cognitive Complexity from 20 to the 15 allowed  sonarjs/cognitive-complexity
+  245:67  warning  Arrow function has a complexity of 31. Maximum allowed is 20                         complexity
+  266:51  warning  Define a constant instead of duplicating this literal 3 times                        sonarjs/no-duplicate-string
+  305:27  warning  Missing radix parameter                                                              radix
+  575:33  warning  Generic Object Injection Sink                                                        security/detect-object-injection
+  622:59  warning  Arrow function has too many statements (34). Maximum allowed is 30                   max-statements
+  623:27  warning  Missing radix parameter                                                              radix
+  638:41  warning  Define a constant instead of duplicating this literal 3 times                        sonarjs/no-duplicate-string
+  687:13  error    'navigator' is not defined                                                           no-undef
+  688:13  error    'navigator' is not defined                                                           no-undef
+  697:13  error    'navigator' is not defined                                                           no-undef
+
+C:\Users\adyba\adriano-to-the-star-clean\database-advanced.js
+  283:5   warning  Refactor this function to reduce its Cognitive Complexity from 18 to the 15 allowed    sonarjs/cognitive-complexity
+  283:5   warning  Method 'createPlanetCard' has a complexity of 27. Maximum allowed is 20                complexity
+  369:26  warning  Generic Object Injection Sink                                                          security/detect-object-injection
+  370:26  warning  Generic Object Injection Sink                                                          security/detect-object-injection
+  492:5   warning  'advancedDB' is assigned a value but never used. Allowed unused vars must match /^_/u  no-unused-vars
+
+C:\Users\adyba\adriano-to-the-star-clean\database-optimized.js
+   201:60  warning  Define a constant instead of duplicating this literal 5 times                          sonarjs/no-duplicate-string
+   294:11  warning  Refactor this function to reduce its Cognitive Complexity from 16 to the 15 allowed    sonarjs/cognitive-complexity
+   294:25  warning  Async method 'loadUserClaims' has too many statements (31). Maximum allowed is 30      max-statements
+   368:11  warning  Refactor this function to reduce its Cognitive Complexity from 16 to the 15 allowed    sonarjs/cognitive-complexity
+   368:26  warning  Async method 'loadLocalClaims' has too many statements (36). Maximum allowed is 30     max-statements
+   862:5   warning  Refactor this function to reduce its Cognitive Complexity from 20 to the 15 allowed    sonarjs/cognitive-complexity
+   862:29  warning  Method 'updatePaginationControls' has too many statements (31). Maximum allowed is 30  max-statements
+  1000:16  warning  Generic Object Injection Sink                                                          security/detect-object-injection
+  1023:1   warning  Async function 'claimPlanet' has too many statements (49). Maximum allowed is 30       max-statements
+  1023:1   warning  Async function 'claimPlanet' has a complexity of 22. Maximum allowed is 20             complexity
+  1023:16  warning  Refactor this function to reduce its Cognitive Complexity from 18 to the 15 allowed    sonarjs/cognitive-complexity
+  1134:1   warning  Async function 'claimPlanetLocal' has too many statements (72). Maximum allowed is 30  max-statements
+  1134:1   warning  Async function 'claimPlanetLocal' has a complexity of 52. Maximum allowed is 20        complexity
+  1134:16  warning  Refactor this function to reduce its Cognitive Complexity from 43 to the 15 allowed    sonarjs/cognitive-complexity
+
+C:\Users\adyba\adriano-to-the-star-clean\database-visualization-features.js
+  142:18  warning  Generic Object Injection Sink               security/detect-object-injection
+  143:17  warning  Generic Object Injection Sink               security/detect-object-injection
+  145:13  warning  Generic Object Injection Sink               security/detect-object-injection
+  151:20  warning  Missing radix parameter                     radix
+  151:34  warning  Missing radix parameter                     radix
+  155:29  warning  Variable Assigned to Object Injection Sink  security/detect-object-injection
+
+C:\Users\adyba\adriano-to-the-star-clean\download-new-music.js
+  72:9   warning  Found existsSync from package "fs" with non literal argument at index 0         security/detect-non-literal-fs-filename
+  90:24  warning  Found createWriteStream from package "fs" with non literal argument at index 0  security/detect-non-literal-fs-filename
+  95:31  warning  Found statSync from package "fs" with non literal argument at index 0           security/detect-non-literal-fs-filename
+
+C:\Users\adyba\adriano-to-the-star-clean\file-storage.js
+    6:7   warning  'FileStorageManager' is defined but never used. Allowed unused vars must match /^_/u  no-unused-vars
+   24:23  warning  'authManager' is not modified in this loop                                            no-unmodified-loop-condition
+   90:51  warning  Define a constant instead of duplicating this literal 3 times                         sonarjs/no-duplicate-string
+  425:16  warning  Generic Object Injection Sink                                                         security/detect-object-injection
+  560:73  warning  Generic Object Injection Sink                                                         security/detect-object-injection
+
+C:\Users\adyba\adriano-to-the-star-clean\games.js
+   42:45  warning  Generic Object Injection Sink                                                security/detect-object-injection
+  139:55  warning  Define a constant instead of duplicating this literal 3 times                sonarjs/no-duplicate-string
+  157:55  warning  Define a constant instead of duplicating this literal 3 times                sonarjs/no-duplicate-string
+  292:19  warning  Async method 'playGame' has too many statements (32). Maximum allowed is 30  max-statements
+  299:59  warning  Define a constant instead of duplicating this literal 4 times                sonarjs/no-duplicate-string
+
+C:\Users\adyba\adriano-to-the-star-clean\generate-games-manifest.js
+  35:1  warning  Function 'categorizeGame' has a complexity of 36. Maximum allowed is 20  complexity
+
+C:\Users\adyba\adriano-to-the-star-clean\groups-manager.js
+  148:27  warning  Define a constant instead of duplicating this literal 5 times                             sonarjs/no-duplicate-string
+  285:11  warning  Refactor this function to reduce its Cognitive Complexity from 18 to the 15 allowed       sonarjs/cognitive-complexity
+  552:5   warning  'groupsManager' is assigned a value but never used. Allowed unused vars must match /^_/u  no-unused-vars
+
+C:\Users\adyba\adriano-to-the-star-clean\gta-6-videos.js
+   13:70  error    'MEDIA_PATHS' is not defined                                   no-undef
+   14:15  error    'MEDIA_PATHS' is not defined                                   no-undef
+   49:26  warning  'e' is defined but never used                                  no-unused-vars
+   96:22  warning  'e' is defined but never used                                  no-unused-vars
+  163:52  warning  Define a constant instead of duplicating this literal 3 times  sonarjs/no-duplicate-string
+  290:53  warning  Define a constant instead of duplicating this literal 3 times  sonarjs/no-duplicate-string
+
+C:\Users\adyba\adriano-to-the-star-clean\kepler_data_parsed.js
+    15:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+    16:15  warning  Define a constant instead of duplicating this literal 5592 times  sonarjs/no-duplicate-string
+    23:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+    40:15  warning  Define a constant instead of duplicating this literal 4839 times  sonarjs/no-duplicate-string
+    47:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+    55:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+    63:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+    71:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+    87:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+    95:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   103:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   111:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   119:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   159:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   167:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   183:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   191:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   199:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   215:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   223:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   231:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   263:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   271:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   279:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   287:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   295:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   303:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   311:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   327:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   343:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   351:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   359:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   367:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   375:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   391:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   399:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   407:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   415:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   423:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   431:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   447:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   455:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   463:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   471:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   487:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   503:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   527:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   535:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   543:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   551:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   559:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   567:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   575:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   599:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   607:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   623:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   631:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   639:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   663:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   671:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   695:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   703:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   711:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   719:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   727:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   735:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   743:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   767:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   783:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   791:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   799:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   807:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   831:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   839:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   847:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   855:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   871:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   879:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   887:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   895:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   903:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   919:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   927:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   935:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   943:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   975:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+   983:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+  1007:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+  1015:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+  1023:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+  1031:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+  1055:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+  1063:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+  1071:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+  1079:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+  1111:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+  1119:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+  1127:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+  1135:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+  1143:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+  1151:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+  1159:20  warning  Define a constant instead of duplicating this literal 3 times     sonarjs/no-duplicate-string
+
+C:\Users\adyba\adriano-to-the-star-clean\large-exoplanet-loader.js
+   22:11  warning  Refactor this function to reduce its Cognitive Complexity from 23 to the 15 allowed  sonarjs/cognitive-complexity
+   22:27  warning  Async method 'loadLargeDataset' has too many statements (52). Maximum allowed is 30  max-statements
+   75:29  warning  Blocks are nested too deeply (6). Maximum allowed is 5                               max-depth
+   81:34  warning  '_e' is defined but never used                                                       no-unused-vars
+   95:26  warning  '_e' is defined but never used                                                       no-unused-vars
+  323:47  warning  Generic Object Injection Sink                                                        security/detect-object-injection
+
+C:\Users\adyba\adriano-to-the-star-clean\media-config.js
+  33:38  error  'module' is not defined  no-undef
+  34:5   error  'module' is not defined  no-undef
+
+C:\Users\adyba\adriano-to-the-star-clean\media-helper.js
+  19:19  warning  Generic Object Injection Sink  security/detect-object-injection
+  22:22  warning  Generic Object Injection Sink  security/detect-object-injection
+  22:22  error    'MEDIA_PATHS' is not defined   no-undef
+  56:38  error    'module' is not defined        no-undef
+  57:5   error    'module' is not defined        no-undef
+
+C:\Users\adyba\adriano-to-the-star-clean\navigation.js
+   20:25  warning  Define a constant instead of duplicating this literal 6 times    sonarjs/no-duplicate-string
+   35:22  warning  Define a constant instead of duplicating this literal 6 times    sonarjs/no-duplicate-string
+  117:53  warning  Define a constant instead of duplicating this literal 3 times    sonarjs/no-duplicate-string
+  185:47  warning  Arrow function has too many lines (230). Maximum allowed is 200  max-lines-per-function
+
+C:\Users\adyba\adriano-to-the-star-clean\package-cli.js
+  49:29  warning  Found readdirSync from package "fs" with non literal argument at index 0  security/detect-non-literal-fs-filename
+
+C:\Users\adyba\adriano-to-the-star-clean\setup-music.js
+  46:9   warning  Found existsSync from package "fs" with non literal argument at index 0         security/detect-non-literal-fs-filename
+  64:24  warning  Found createWriteStream from package "fs" with non literal argument at index 0  security/detect-non-literal-fs-filename
+  69:31  warning  Found statSync from package "fs" with non literal argument at index 0           security/detect-non-literal-fs-filename
+
+C:\Users\adyba\adriano-to-the-star-clean\shop.js
+   17:35  warning  Define a constant instead of duplicating this literal 3 times                        sonarjs/no-duplicate-string
+  152:11  warning  Refactor this function to reduce its Cognitive Complexity from 18 to the 15 allowed  sonarjs/cognitive-complexity
+  152:26  warning  Async method 'downloadProduct' has too many statements (52). Maximum allowed is 30   max-statements
+  173:23  warning  'basePath' is assigned a value but never used. Allowed unused vars must match /^_/u  no-unused-vars
+
+C:\Users\adyba\adriano-to-the-star-clean\stellar-ai-enhancements.js
+   20:15  warning  'originalFormatText' is assigned a value but never used. Allowed unused vars must match /^_/u  no-unused-vars
+   41:26  error    Unsafe Regular Expression                                                                      security/detect-unsafe-regex
+   50:42  warning  Define a constant instead of duplicating this literal 3 times                                  sonarjs/no-duplicate-string
+   57:43  error    Unsafe Regular Expression                                                                      security/detect-unsafe-regex
+   79:34  warning  Generic Object Injection Sink                                                                  security/detect-object-injection
+   84:35  warning  Found non-literal argument to RegExp Constructor                                               security/detect-non-literal-regexp
+   90:47  error    Unsafe Regular Expression                                                                      security/detect-unsafe-regex
+  139:21  error    'navigator' is not defined                                                                     no-undef
+
+C:\Users\adyba\adriano-to-the-star-clean\stellar-ai.js
+    41:11  warning  Refactor this function to reduce its Cognitive Complexity from 16 to the 15 allowed  sonarjs/cognitive-complexity
+    53:29  warning  Blocks are nested too deeply (6). Maximum allowed is 5                               max-depth
+    72:24  warning  Method 'setupEventListeners' has too many statements (38). Maximum allowed is 30     max-statements
+    80:54  warning  Define a constant instead of duplicating this literal 4 times                        sonarjs/no-duplicate-string
+   227:55  warning  Define a constant instead of duplicating this literal 3 times                        sonarjs/no-duplicate-string
+   243:11  warning  Refactor this function to reduce its Cognitive Complexity from 19 to the 15 allowed  sonarjs/cognitive-complexity
+   243:22  warning  Async method 'sendMessage' has too many statements (38). Maximum allowed is 30       max-statements
+   431:51  warning  Define a constant instead of duplicating this literal 3 times                        sonarjs/no-duplicate-string
+   785:16  warning  Generic Object Injection Sink                                                        security/detect-object-injection
+   803:52  warning  Define a constant instead of duplicating this literal 3 times                        sonarjs/no-duplicate-string
+   823:22  warning  Async method 'downloadCLI' has too many statements (31). Maximum allowed is 30       max-statements
+   848:26  warning  '_e' is defined but never used                                                       no-unused-vars
+  1091:34  warning  '_e' is defined but never used                                                       no-unused-vars
+  1091:38  warning  Empty block statement                                                                no-empty
+  1093:26  warning  '_e' is defined but never used                                                       no-unused-vars
+
+C:\Users\adyba\adriano-to-the-star-clean\sync-games-from-onedrive.js
+   46:5   error    'process' is not defined                                                          no-undef
+   76:13  warning  Found existsSync from package "fs" with non literal argument at index 0           security/detect-non-literal-fs-filename
+  116:1   warning  Function 'categorizeGame' has a complexity of 36. Maximum allowed is 20           complexity
+  116:10  warning  'categorizeGame' is defined but never used. Allowed unused vars must match /^_/u  no-unused-vars
+  149:23  warning  Found statSync from package "fs" with non literal argument at index 0             security/detect-non-literal-fs-filename
+
+C:\Users\adyba\adriano-to-the-star-clean\temp-music-player-backup.js
+   39:34  warning  Define a constant instead of duplicating this literal 3 times                        sonarjs/no-duplicate-string
+   45:34  warning  Define a constant instead of duplicating this literal 3 times                        sonarjs/no-duplicate-string
+   51:34  warning  Define a constant instead of duplicating this literal 3 times                        sonarjs/no-duplicate-string
+   57:34  warning  Define a constant instead of duplicating this literal 3 times                        sonarjs/no-duplicate-string
+   63:34  warning  Define a constant instead of duplicating this literal 3 times                        sonarjs/no-duplicate-string
+   69:34  warning  Define a constant instead of duplicating this literal 3 times                        sonarjs/no-duplicate-string
+   75:34  warning  Define a constant instead of duplicating this literal 3 times                        sonarjs/no-duplicate-string
+   81:34  warning  Define a constant instead of duplicating this literal 3 times                        sonarjs/no-duplicate-string
+   87:34  warning  Define a constant instead of duplicating this literal 3 times                        sonarjs/no-duplicate-string
+   93:34  warning  Define a constant instead of duplicating this literal 3 times                        sonarjs/no-duplicate-string
+   99:34  warning  Define a constant instead of duplicating this literal 3 times                        sonarjs/no-duplicate-string
+  105:34  warning  Define a constant instead of duplicating this literal 3 times                        sonarjs/no-duplicate-string
+  111:34  warning  Define a constant instead of duplicating this literal 3 times                        sonarjs/no-duplicate-string
+  117:34  warning  Define a constant instead of duplicating this literal 3 times                        sonarjs/no-duplicate-string
+  123:34  warning  Define a constant instead of duplicating this literal 3 times                        sonarjs/no-duplicate-string
+  129:34  warning  Define a constant instead of duplicating this literal 3 times                        sonarjs/no-duplicate-string
+  135:34  warning  Define a constant instead of duplicating this literal 3 times                        sonarjs/no-duplicate-string
+  141:34  warning  Define a constant instead of duplicating this literal 3 times                        sonarjs/no-duplicate-string
+  208:5   warning  Refactor this function to reduce its Cognitive Complexity from 22 to the 15 allowed  sonarjs/cognitive-complexity
+  208:12  warning  Method 'cleanup' has too many statements (35). Maximum allowed is 30                 max-statements
+  217:58  warning  Define a constant instead of duplicating this literal 6 times                        sonarjs/no-duplicate-string
+  220:59  warning  Define a constant instead of duplicating this literal 3 times                        sonarjs/no-duplicate-string
+  221:57  warning  Define a constant instead of duplicating this literal 3 times                        sonarjs/no-duplicate-string
+  222:57  warning  Define a constant instead of duplicating this literal 3 times                        sonarjs/no-duplicate-string
+  223:56  warning  Define a constant instead of duplicating this literal 4 times                        sonarjs/no-duplicate-string
+  224:57  warning  Define a constant instead of duplicating this literal 3 times                        sonarjs/no-duplicate-string
+  267:37  warning  Define a constant instead of duplicating this literal 6 times                        sonarjs/no-duplicate-string
+  359:21  warning  Async method 'initPlayer' has too many statements (32). Maximum allowed is 30        max-statements
+  403:68  warning  Define a constant instead of duplicating this literal 7 times                        sonarjs/no-duplicate-string
+  578:27  warning  Generic Object Injection Sink                                                        security/detect-object-injection
+  585:23  warning  Define a constant instead of duplicating this literal 6 times                        sonarjs/no-duplicate-string
+  646:22  warning  '_err' is defined but never used                                                     no-unused-vars
+
+C:\Users\adyba\adriano-to-the-star-clean\total-war-2.js
+   10:68  error    'MEDIA_PATHS' is not defined                no-undef
+   11:15  error    'MEDIA_PATHS' is not defined                no-undef
+   43:26  warning  'e' is defined but never used               no-unused-vars
+  122:13  warning  Generic Object Injection Sink               security/detect-object-injection
+  136:18  warning  Generic Object Injection Sink               security/detect-object-injection
+  137:17  warning  Generic Object Injection Sink               security/detect-object-injection
+  139:13  warning  Generic Object Injection Sink               security/detect-object-injection
+  156:16  warning  Generic Object Injection Sink               security/detect-object-injection
+  234:26  warning  Variable Assigned to Object Injection Sink  security/detect-object-injection
+
+C:\Users\adyba\adriano-to-the-star-clean\update-games-manifest.js
+  45:1   warning  Function 'categorizeGame' has a complexity of 36. Maximum allowed is 20           complexity
+  45:10  warning  'categorizeGame' is defined but never used. Allowed unused vars must match /^_/u  no-unused-vars
+  72:23  warning  Found statSync from package "fs" with non literal argument at index 0             security/detect-non-literal-fs-filename
+
+C:\Users\adyba\adriano-to-the-star-clean\worker.js
+   8:24  error  'Response' is not defined  no-undef
+  13:24  error  'Response' is not defined  no-undef
+  20:24  error  'Response' is not defined  no-undef
+  23:29  error  'Headers' is not defined   no-undef
+  31:20  error  'Response' is not defined  no-undef
+
+Ô£û 347 problems (22 errors, 325 warnings)
+

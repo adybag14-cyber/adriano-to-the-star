@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biological & Life Engine | Adriano to the Stars</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+        body { margin: 0; background: #000; overflow: hidden; color: #fff; font-family: 'Inter', sans-serif; }
+        canvas { width: 100vw; height: 100vh; display: block; }
+        .hud {
+            position: fixed; bottom: 2rem; left: 2rem;
+            background: rgba(5, 15, 10, 0.9); border: 1px solid #00ff96;
+            padding: 2rem; border-radius: 12px; backdrop-filter: blur(15px);
+            min-width: 350px; z-index: 100; box-shadow: 0 0 30px rgba(0, 255, 150, 0.2);
+        }
+        .roadmap-status {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+            margin-top: 1.5rem; font-size: 0.75rem; border-top: 1px solid rgba(0, 255, 150, 0.3);
+            padding-top: 1rem;
+        }
+        .item-chip {
+            background: rgba(0, 255, 150, 0.1); color: #00ff96;
+            padding: 0.3rem 0.6rem; border-radius: 4px; border: 1px solid rgba(0, 255, 150, 0.3);
+        }
+        .control-group { margin-bottom: 1.5rem; }
+        label { display: block; font-size: 0.8rem; opacity: 0.7; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 1px; }
+        input[type="range"] { width: 100%; accent-color: #00ff96; }
+    </style>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+
+<body>
+    <canvas id="life-canvas"></canvas>
+
+    <div class="hud">
+        <h2 style="margin: 0 0 0.5rem 0; font-family: 'Orbitron'; letter-spacing: 3px; color: #00ff96;">BIOLOGICAL MASTER</h2>
+        <p style="font-size: 0.85rem; opacity: 0.6; margin-bottom: 2rem;">Alien Ecosystem & Flocking Simulation</p>
+
+        <div class="control-group">
+            <label>Population Density (Item #77)</label>
+            <input type="range" id="density" min="1000" max="50000" step="1000" value="10000">
+        </div>
+
+        <div class="control-group">
+            <label>Bioluminescent Pulse (Item #136)</label>
+            <input type="range" id="pulse" min="0.1" max="5" step="0.1" value="1.0">
+        </div>
+
+        <div class="roadmap-status">
+            <div class="item-chip">#49 Bioluminescence</div>
+            <div class="item-chip">#77 Flocking AI</div>
+            <div class="item-chip">#84 Skin SSS</div>
+            <div class="item-chip">#93 Bio-Pulses</div>
+            <div class="item-chip">#119 Alien Insects</div>
+            <div class="item-chip">#131 Hair & Fur</div>
+            <div class="item-chip">#136 Synced Pulsing</div>
+        </div>
+    </div>
+
+    <script type="module" src="life-sim.js"></script>
+</body>
+
+</html>

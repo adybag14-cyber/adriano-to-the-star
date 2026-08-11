@@ -1,0 +1,149 @@
+# GitLab CI/CD pipeline for Adriano To The Star
+# Windows shell runner -> verified static artifact -> GitLab Pages -> production checks
+
+variables:
+  NODE_VERSION: "18"
+  NPM_CONFIG_CACHE: "$CI_PROJECT_DIR/.npm"
+  FF_USE_FASTZIP: "true"
+  ARTIFACT_COMPRESSION_LEVEL: "fastest"
+  CACHE_COMPRESSION_LEVEL: "fastest"
+  GIT_CLEAN_FLAGS: -ffdxq
+  GIT_CONFIG_PARAMETERS: "'core.longpaths=true'"
+
+workflow:
+  rules:
+    - when: always
+
+default:
+  interruptible: true
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+      - api_failure
+
+stages:
+  - validate
+  - build
+  - security
+  - deploy
+  - monitor
+
+.setup_logic:
+  node_windows:
+    - if (Test-Path "package.json") { if (-not (Test-Path "node_modules")) { npm ci --prefer-offline --no-audit } }
+
+cache:
+  key:
+    files:
+      - package-lock.json
+  paths:
+    - node_modules/
+    - .npm/
+  policy: pull-push
+
+lint:windows:
+  stage: validate
+  tags: [windows]
+  needs: []
+  before_script:
+    - !reference [.setup_logic, node_windows]
+  script:
+    - powershell -ExecutionPolicy Bypass -File ci/smart-runner-windows.ps1 validate-lint
+  allow_failure: true
+  timeout: 5m
+
+test:windows:
+  stage: validate
+  tags: [windows]
+  needs: []
+  before_script:
+    - !reference [.setup_logic, node_windows]
+  script:
+    - powershell -ExecutionPolicy Bypass -File ci/smart-runner-windows.ps1 validate-test
+  artifacts:
+    when: always
+    paths:
+      - coverage/
+  timeout: 15m
+
+build:windows:
+  stage: build
+  tags: [windows]
+  script:
+    - powershell -ExecutionPolicy Bypass -File ci/smart-runner-windows.ps1 build
+  artifacts:
+    paths:
+      - public/
+    expire_in: 1 week
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  timeout: 30m
+
+security_scan:windows:
+  stage: security
+  tags: [windows]
+  script:
+    - powershell -ExecutionPolicy Bypass -File ci/smart-runner-windows.ps1 security
+  allow_failure: true
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  timeout: 5m
+
+pages:
+  stage: deploy
+  pages: true
+  tags: [windows]
+  dependencies:
+    - build:windows
+  script:
+    - if (-not (Test-Path public)) { Write-Error "Build artifacts (public directory) not found"; exit 1 }
+    - powershell -ExecutionPolicy Bypass -File ci/smart-runner-windows.ps1 deploy-pages
+  artifacts:
+    paths:
+      - public/
+  environment:
+    name: production
+    url: https://adrianotothestar.com
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  timeout: 30m
+
+deploy_mechgen_web:windows:
+  stage: deploy
+  tags: [windows]
+  variables:
+    PROJECT_ID: "adriano-broadband"
+    REGION: "europe-west2"
+    SERVICE_NAME: "mechgen-web"
+  script:
+    - powershell -ExecutionPolicy Bypass -File ci/smart-runner-windows.ps1 deploy-mechgen
+  allow_failure: true
+  artifacts:
+    paths:
+      - mechgen_backend_url.txt
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" && $GCP_SA_KEY_B64 && $GEMINI_API_KEY'
+  timeout: 15m
+
+deploy_api_worker:windows:
+  stage: deploy
+  tags: [windows]
+  script:
+    - powershell -ExecutionPolicy Bypass -File ci/smart-runner-windows.ps1 deploy-api-worker
+  allow_failure: true
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" && $CLOUDFLARE_API_TOKEN'
+  timeout: 10m
+
+health_check:windows:
+  stage: monitor
+  tags: [windows]
+  needs:
+    - pages
+  script:
+    - powershell -ExecutionPolicy Bypass -File ci/smart-runner-windows.ps1 monitor-health
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  timeout: 5m

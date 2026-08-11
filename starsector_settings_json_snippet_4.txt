@@ -1,0 +1,50 @@
+      14: aload_2
+      15: invokestatic  #811                // Method com/fs/starfarer/loading/scripts/ScriptStore.Ê00000:(Ljava/lang/Class;)Ljava/lang/Object;
+      18: areturn
+      19: astore_2
+      20: aconst_null
+      21: areturn
+    Exception table:
+       from    to  target type
+           5    18    19   Class java/lang/ClassNotFoundException
+
+  public static org.json.JSONObject OÍ0000();
+    Code:
+       0: getstatic     #474                // Field §Ï0000:Lorg/json/JSONObject;
+       3: areturn
+
+  public static boolean ÏO0000();
+    Code:
+       0: getstatic     #230                // Field "null.return":Z
+       3: ireturn
+
+  public static void null(boolean);
+    Code:
+       0: iload_0
+       1: putstatic     #230                // Field "null.return":Z
+       4: return
+
+  public static boolean Ë10000();
+    Code:
+       0: getstatic     #228                // Field while:Z
+       3: ireturn
+
+  public static void class(boolean);
+    Code:
+       0: iload_0
+       1: putstatic     #228                // Field while:Z
+       4: return
+
+  public static boolean while();
+    Code:
+       0: getstatic     #234                // Field Ï¶0000:Z
+       3: ireturn
+
+  public static void new(boolean);
+    Code:
+       0: iload_0
+       1: putstatic     #234                // Field Ï¶0000:Z
+       4: return
+
+  public static boolean §Í0000();
+    Code:

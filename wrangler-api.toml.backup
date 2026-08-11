@@ -1,0 +1,13 @@
+
+name = "exoplanet-api-worker"
+main = "worker-api.js"
+compatibility_date = "2023-10-30"
+
+[vars]
+SUPABASE_URL = "https://sepesbfytkmbgjyfqriw.supabase.co"
+# Note: Use wrangler secret put SUPABASE_KEY for production
+SUPABASE_KEY = "sb_publishable_aU2YdyJxTZFH9D5JJJPzeQ_oND2bpw0"
+
+[routes]
+pattern = "api.adrianotothestar.com/*"
+custom_domain = true

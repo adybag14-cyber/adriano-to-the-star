@@ -1,0 +1,15 @@
+    21:13:34.546 DEBUG  asyncio          Using proactor: IocpProactor  
+    21:13:34.550 DEV    livekit.agents   Watching                              
+                                         C:\Users\adyba\adriano-to-the-star-c  
+                                         lean                                  
+    21:13:36.860 DEBUG  asyncio          Using proactor: IocpProactor  
+    21:13:36.869 INFO   livekit.agents   starting worker {"version": "1.3.5",  
+                                                         "rtc-version":        
+                                                         "1.0.19"}             
+    21:13:37.006 INFO   livekit.agents   registered worker {"agent_name": "",  
+                                                           "id":               
+                                                           "AW_JEKzPnhrSro3",  
+                                                           "url":              
+                                                           "wss://gemini-integÔÇª
+                                                           "region": "UK",     
+                                                           "protocol": 16}     

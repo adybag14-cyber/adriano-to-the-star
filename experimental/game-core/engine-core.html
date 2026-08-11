@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum-Holographic Engine Core | Adriano to the Stars</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Fira+Code&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+        body { margin: 0; background: #000; overflow: hidden; color: #fff; font-family: 'Inter', sans-serif; }
+        canvas { width: 100vw; height: 100vh; display: block; }
+        .hud {
+            position: fixed; top: 2rem; right: 2rem;
+            background: rgba(20, 20, 20, 0.95); border: 1px solid #ba944f;
+            padding: 2rem; border-radius: 8px; backdrop-filter: blur(15px);
+            min-width: 350px; z-index: 100; box-shadow: 0 0 30px rgba(186, 148, 79, 0.3);
+        }
+        .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 1.5rem; }
+        .feature-item { font-size: 0.7rem; color: #ba944f; background: rgba(186, 148, 79, 0.1); padding: 0.3rem 0.6rem; border-radius: 4px; }
+        .glitch-btn {
+            background: #ba944f; color: #000; border: none; padding: 0.8rem; width: 100%;
+            font-family: 'Orbitron'; font-weight: 900; margin-top: 1rem; cursor: pointer;
+        }
+    </style>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+
+<body>
+    <canvas id="core-canvas"></canvas>
+
+    <div class="hud">
+        <h2 style="margin: 0 0 1rem 0; font-family: 'Orbitron'; color: #ba944f; letter-spacing: 2px;">ENGINE CORE V1</h2>
+        
+        <div style="font-family: 'Fira Code'; font-size: 0.8rem; opacity: 0.7;">
+            RTGI: ACTIVE (#3)<br>
+            SSR: RESOLVING (#14)<br>
+            FSR 3.0: UPSCALING (#37)
+        </div>
+
+        <div class="feature-grid">
+            <div class="feature-item">#11 SMAA</div>
+            <div class="feature-item">#15 Bokeh</div>
+            <div class="feature-item">#21 SSAO</div>
+            <div class="feature-item">#22 TAA</div>
+            <div class="feature-item">#23 Skeletal</div>
+            <div class="feature-item">#67 Heat</div>
+            <div class="feature-item">#74 Fire</div>
+            <div class="feature-item">#97 Kill-Cam</div>
+        </div>
+
+        <button class="glitch-btn" onclick="window.triggerGlitch()">SYSTEM GLITCH (#48)</button>
+    </div>
+
+    <script type="module" src="engine-core.js"></script>
+</body>
+
+</html>

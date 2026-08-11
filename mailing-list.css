@@ -1,0 +1,312 @@
+/* Mailing List Modal Styles */
+
+.mailing-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.mailing-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+}
+
+.mailing-modal-content {
+    position: relative;
+    background: linear-gradient(135deg, rgba(10, 10, 20, 0.95), rgba(20, 20, 40, 0.95));
+    border: 2px solid rgba(186, 148, 79, 0.4);
+    border-radius: 20px;
+    padding: 3rem;
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8),
+        0 0 40px rgba(186, 148, 79, 0.2);
+    animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.mailing-modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(186, 148, 79, 0.2);
+    border: 2px solid rgba(186, 148, 79, 0.4);
+    color: #ba944f;
+    font-size: 2rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    line-height: 1;
+    padding: 0;
+}
+
+.mailing-modal-close:hover {
+    background: rgba(186, 148, 79, 0.3);
+    transform: rotate(90deg);
+    box-shadow: 0 0 20px rgba(186, 148, 79, 0.5);
+}
+
+.mailing-modal-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.mailing-modal-header h2 {
+    color: #ba944f;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.mailing-modal-header p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.mailing-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"] {
+    padding: 0.875rem 1.25rem;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(186, 148, 79, 0.3);
+    border-radius: 12px;
+    color: white;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    font-family: 'Raleway', sans-serif;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus {
+    outline: none;
+    border-color: #ba944f;
+    background: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 20px rgba(186, 148, 79, 0.3);
+}
+
+.form-group input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.checkbox-group {
+    gap: 0.75rem;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: background 0.2s ease;
+}
+
+.checkbox-group label:hover {
+    background: rgba(186, 148, 79, 0.1);
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #ba944f;
+}
+
+.mailing-submit-btn {
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, #ba944f, #967338);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(186, 148, 79, 0.4);
+    margin-top: 0.5rem;
+}
+
+.mailing-submit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(186, 148, 79, 0.6);
+}
+
+.mailing-submit-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.mailing-submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.mailing-privacy {
+    text-align: center;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 0.5rem;
+}
+
+.mailing-privacy a {
+    color: #ba944f;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+}
+
+.mailing-privacy a:hover {
+    opacity: 0.8;
+}
+
+/* Success Message */
+.mailing-success {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.success-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    animation: bounceIn 0.6s ease;
+}
+
+@keyframes bounceIn {
+    0% {
+        transform: scale(0);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.mailing-success h3 {
+    color: #ba944f;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+.mailing-success p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.success-btn {
+    padding: 0.875rem 2rem;
+    background: rgba(186, 148, 79, 0.2);
+    border: 2px solid #ba944f;
+    color: #ba944f;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.success-btn:hover {
+    background: rgba(186, 148, 79, 0.3);
+    transform: scale(1.05);
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .mailing-modal-content {
+        padding: 2rem 1.5rem;
+        width: 95%;
+    }
+
+    .mailing-modal-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .mailing-modal-header p {
+        font-size: 0.9rem;
+    }
+
+    .mailing-submit-btn {
+        font-size: 1rem;
+    }
+}
+
+/* Smooth scrollbar for modal */
+.mailing-modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.mailing-modal-content::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+.mailing-modal-content::-webkit-scrollbar-thumb {
+    background: rgba(186, 148, 79, 0.4);
+    border-radius: 10px;
+}
+
+.mailing-modal-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(186, 148, 79, 0.6);
+}

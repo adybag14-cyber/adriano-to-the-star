@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <h1>Loader Test</h1>
+    <script type="module">
+        console.log("Attempting to import lwjgl.js...");
+        try {
+            const m = await import("/files/lwjgl.js");
+            console.log("Success! Module loaded:", m);
+            if (m.default) {
+                console.log("Default export:", m.default);
+                m.default();
+            }
+        } catch (e) {
+            console.error("Failed to load module:", e);
+        }
+    </script>
+</body>
+
+</html>

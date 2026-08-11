@@ -1,0 +1,9 @@
+[log] BUTTON CLICKED!
+[warning] Deprecated: Use cheerpOSAddStringFile
+[error] CheerpOS: Directories are not supported /app/data/config/settings.json
+[warning] Deprecated: Use cheerpOSAddStringFile
+[error] TypeError: Cannot set properties of undefined (setting '/console_log4j.properties')
+    at cheerpOSAddStringFileMain (https://cjrtnc.leaningtech.com/4.2/cheerpOS.js:2062:24)
+    at cheerpOSAddStringFile (https://cjrtnc.leaningtech.com/4.2/cheerpOS.js:2051:3)
+    at cheerpjAddStringFile (https://cjrtnc.leaningtech.com/4.2/cheerpOS.js:2079:9)
+    at HTMLButtonElement.<anonymous> (http://127.0.0.1:8091/debug_game.html:59:17)

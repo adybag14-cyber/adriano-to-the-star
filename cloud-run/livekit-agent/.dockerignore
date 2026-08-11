@@ -1,0 +1,17 @@
+# Ignore unnecessary files in Docker build
+*.md
+*.sh
+*.ps1
+.git
+.gitignore
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info
+dist
+build
+

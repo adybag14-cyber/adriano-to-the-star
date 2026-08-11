@@ -1,0 +1,40 @@
+{
+  "name": "stellar-ai-cli",
+  "version": "1.0.0",
+  "description": "Stellar AI Command Line Interface - Run AI chat locally with tool calling and file system integration",
+  "main": "index.js",
+  "bin": {
+    "stellar-ai": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "test": "node test.js",
+    "postinstall": "node -e \"console.log('\\n✅ Dependencies installed successfully!\\n\\nRun: node index.js\\n')\"",
+    "setup": "npm install",
+    "check": "node -e \"console.log('Node.js:', process.version); console.log('Platform:', process.platform);\""
+  },
+  "keywords": [
+    "ai",
+    "cli",
+    "chat",
+    "puter",
+    "tool-calling",
+    "file-system"
+  ],
+  "author": "Adriano To The Star",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "fs-extra": "^11.2.0",
+    "mime-types": "^2.1.35",
+    "sharp": "^0.33.2",
+    "@heyputer/puter.js": "^2.0.0"
+  },
+  "devDependencies": {
+    "archiver": "^6.0.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
+

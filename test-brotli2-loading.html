@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Brotli2 Loading</title>
+</head>
+<body>
+    <h1>Testing Brotli2 Loading</h1>
+    <div id="status">Loading...</div>
+
+    <script src="brotli2-prototype.js"></script>
+
+    <script>
+        setTimeout(() => {
+            const statusDiv = document.getElementById('status');
+            if (typeof Brotli2 !== 'undefined') {
+                statusDiv.textContent = '✓ Brotli2 loaded successfully';
+                statusDiv.style.color = 'green';
+                
+                // Try to create an instance
+                try {
+                    const brotli2 = new Brotli2();
+                    statusDiv.textContent += ' ✓ Instance created successfully';
+                } catch (e) {
+                    statusDiv.textContent += ' ✗ Failed to create instance: ' + e.message;
+                    statusDiv.style.color = 'red';
+                }
+            } else {
+                statusDiv.textContent = '✗ Brotli2 not loaded';
+                statusDiv.style.color = 'red';
+                console.error('Brotli2 is not defined');
+                console.log('typeof Brotli2:', typeof Brotli2);
+                console.log('window keys:', Object.keys(window).filter(k => k.includes('brotli')));
+            }
+        }, 100);
+    </script>
+</body>
+</html>

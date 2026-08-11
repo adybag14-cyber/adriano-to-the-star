@@ -1,0 +1,21 @@
+{
+  "name": "tracker-api",
+  "version": "1.0.0",
+  "description": "Cloud Run API for the secure tracker console",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "pg": "^8.11.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  }
+}
+

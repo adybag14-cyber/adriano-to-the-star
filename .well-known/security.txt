@@ -1,0 +1,4 @@
+Contact: mailto:security@adrianotothestar.com
+Expires: 2027-01-10T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://adrianotothestar.com/.well-known/security.txt

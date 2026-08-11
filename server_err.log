@@ -1,0 +1,568 @@
+::1 - - [08/Jan/2026 12:10:59] "GET /starsector.html HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:10:59] "GET /cheerpj/4.2/loader.js?v=monotonic50 HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:10:59] "GET /cheerpj-natives/natives/lwjgl.js?v=monotonic50 HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:10:59] "GET /universal-simulation-hub.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:10:59] "GET /cheerpj-natives/natives/javajpeg.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:10:59] "GET /void-warfare-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:10:59] "GET /planetary-environment-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:10:59] "GET /galactic-governance-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:10:59] "GET /mining-resource-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:10:59] "GET /xeno-intelligence-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:10:59] "GET /fleet-command-mega-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:10:59] "GET /intelligence-shadow-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:10:59] "GET /procedural-content-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:10:59] "GET /galactic-commerce-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:10:59] "GET /quantum-propulsion-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:10:59] "GET /deep-space-industry-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:10:59] "GET /metaphysics-apotheosis-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:10:59] "GET /starsector-auth.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:10:59] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:10:59] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:10:59] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:10:59] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:10:59] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:10:59] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:10:59] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:10:59] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:10:59] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:10:59] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:10:59] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:10:59] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:10:59] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:10:59] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:10:59] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:10:59] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:10:59] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:10:59] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:10:59] "GET /Starsector/starsector-core/starfarer_obf_v2.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:10:59] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:10:59] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:10:59] "GET /Starsector/starsector-core/lwjgl.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:10:59] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:10:59] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:10:59] "GET /Starsector/starsector-core/log4j-1.2.9.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:10:59] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:10:59] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:10:59] "GET /cheerpj-natives/lwjgl-fixed.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:10:59] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:10:59] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:10:59] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:10:59] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:10:59] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:10:59] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:10:59] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:10:59] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:10:59] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:10:59] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:10:59] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:10:59] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:14:57] "GET /starsector.html HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:14:57] "GET /cheerpj/4.2/loader.js?v=monotonic50 HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:14:57] "GET /cheerpj-natives/natives/javajpeg.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:14:57] "GET /cheerpj-natives/natives/lwjgl.js?v=monotonic50 HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:14:57] "GET /planetary-environment-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:14:57] "GET /universal-simulation-hub.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:14:57] "GET /void-warfare-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:14:57] "GET /galactic-governance-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:14:57] "GET /mining-resource-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:14:57] "GET /xeno-intelligence-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:14:57] "GET /intelligence-shadow-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:14:57] "GET /quantum-propulsion-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:14:57] "GET /fleet-command-mega-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:14:57] "GET /procedural-content-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:14:57] "GET /deep-space-industry-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:14:57] "GET /galactic-commerce-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:14:57] "GET /metaphysics-apotheosis-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:14:57] "GET /starsector-auth.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:14:57] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:14:57] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:14:57] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:14:57] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:14:57] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:14:57] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:14:57] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:14:57] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:14:57] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:14:57] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:14:57] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:14:57] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:14:57] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:14:57] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:14:58] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:14:58] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:14:58] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:14:58] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:14:58] "GET /Starsector/starsector-core/starfarer_obf_v2.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:14:58] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:14:58] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:14:58] "GET /Starsector/starsector-core/lwjgl.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:14:58] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:14:58] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:14:58] "GET /Starsector/starsector-core/log4j-1.2.9.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:14:58] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:14:58] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:14:58] "GET /cheerpj-natives/lwjgl-fixed.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:14:58] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:14:58] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:14:58] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:14:58] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:14:58] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:14:58] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:14:58] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:14:58] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:14:58] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:14:58] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:14:58] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:14:58] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:17:50] "GET /starsector.html HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:17:50] "GET /cheerpj/4.2/loader.js?v=monotonic50 HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:17:50] "GET /cheerpj-natives/natives/javajpeg.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:17:50] "GET /cheerpj-natives/natives/lwjgl.js?v=monotonic50 HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:17:50] "GET /universal-simulation-hub.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:17:50] "GET /planetary-environment-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:17:50] "GET /void-warfare-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:17:50] "GET /galactic-governance-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:17:50] "GET /mining-resource-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:17:50] "GET /xeno-intelligence-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:17:50] "GET /quantum-propulsion-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:17:50] "GET /fleet-command-mega-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:17:50] "GET /intelligence-shadow-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:17:50] "GET /procedural-content-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:17:50] "GET /deep-space-industry-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:17:50] "GET /galactic-commerce-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:17:50] "GET /metaphysics-apotheosis-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:17:50] "GET /starsector-auth.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:17:50] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:17:50] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:17:50] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:17:50] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:17:50] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:17:50] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:17:50] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:17:50] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:17:50] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:17:50] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:17:50] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:17:50] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:17:50] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:17:50] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:17:50] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:17:50] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:17:50] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:17:50] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:17:50] "GET /Starsector/starsector-core/starfarer_obf_v2.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:17:50] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:17:50] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:17:50] "GET /Starsector/starsector-core/lwjgl.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:17:50] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:17:50] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:17:50] "GET /Starsector/starsector-core/log4j-1.2.9.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:17:50] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:17:50] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:17:50] "GET /cheerpj-natives/lwjgl-fixed.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:17:50] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:17:50] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:17:50] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:17:50] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:17:50] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:17:50] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:17:50] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:17:50] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:17:50] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:17:50] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:17:50] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:17:50] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:20:58] "GET /starsector.html HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:20:58] "GET /cheerpj/4.2/loader.js?v=monotonic50 HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:20:58] "GET /cheerpj-natives/natives/javajpeg.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:20:58] "GET /universal-simulation-hub.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:20:58] "GET /void-warfare-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:20:58] "GET /planetary-environment-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:20:58] "GET /cheerpj-natives/natives/lwjgl.js?v=monotonic50 HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:20:58] "GET /galactic-governance-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:20:58] "GET /mining-resource-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:20:58] "GET /xeno-intelligence-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:20:58] "GET /quantum-propulsion-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:20:58] "GET /fleet-command-mega-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:20:58] "GET /deep-space-industry-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:20:58] "GET /intelligence-shadow-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:20:58] "GET /metaphysics-apotheosis-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:20:58] "GET /galactic-commerce-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:20:58] "GET /procedural-content-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:20:58] "GET /starsector-auth.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:20:58] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:20:58] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:20:58] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:20:58] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:20:58] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:20:58] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:20:58] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:20:58] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:20:58] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:20:58] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:20:58] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:20:58] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:20:58] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:20:58] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:20:59] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:20:59] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:20:59] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:20:59] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:20:59] "GET /Starsector/starsector-core/starfarer_obf_v2.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:20:59] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:20:59] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:20:59] "GET /Starsector/starsector-core/lwjgl.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:20:59] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:20:59] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:20:59] "GET /Starsector/starsector-core/log4j-1.2.9.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:20:59] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:20:59] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:20:59] "GET /cheerpj-natives/lwjgl-fixed.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:20:59] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:20:59] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:20:59] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:20:59] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:20:59] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:20:59] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:20:59] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:20:59] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:20:59] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:20:59] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:20:59] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:20:59] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:24:18] "GET /starsector.html HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:24:18] "GET /cheerpj/4.2/loader.js?v=monotonic50 HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:24:18] "GET /cheerpj-natives/natives/javajpeg.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:24:18] "GET /universal-simulation-hub.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:24:18] "GET /void-warfare-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:24:18] "GET /cheerpj-natives/natives/lwjgl.js?v=monotonic50 HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:24:18] "GET /planetary-environment-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:24:18] "GET /galactic-governance-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:24:18] "GET /mining-resource-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:24:18] "GET /xeno-intelligence-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:24:18] "GET /quantum-propulsion-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:24:18] "GET /intelligence-shadow-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:24:18] "GET /deep-space-industry-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:24:18] "GET /fleet-command-mega-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:24:18] "GET /procedural-content-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:24:18] "GET /galactic-commerce-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:24:18] "GET /metaphysics-apotheosis-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:24:18] "GET /starsector-auth.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:24:18] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:24:18] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:24:18] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:24:18] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:24:18] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:24:18] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:24:18] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:24:18] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:24:18] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:24:18] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:24:18] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:24:18] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:24:18] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:24:18] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:24:18] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:24:18] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:24:18] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:24:18] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:24:18] "GET /Starsector/starsector-core/starfarer_obf_v2.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:24:18] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:24:18] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:24:18] "GET /Starsector/starsector-core/lwjgl.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:24:19] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:24:19] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:24:19] "GET /Starsector/starsector-core/log4j-1.2.9.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:24:19] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:24:19] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:24:19] "GET /cheerpj-natives/lwjgl-fixed.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:24:19] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:24:19] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:24:19] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:24:19] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:24:19] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:24:19] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:24:19] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:24:19] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:24:19] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:24:19] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:24:19] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:24:19] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:26:57] "GET /starsector.html HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:26:57] "GET /cheerpj/4.2/loader.js?v=monotonic50 HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:26:57] "GET /cheerpj-natives/natives/javajpeg.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:26:57] "GET /universal-simulation-hub.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:26:57] "GET /planetary-environment-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:26:57] "GET /cheerpj-natives/natives/lwjgl.js?v=monotonic50 HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:26:57] "GET /void-warfare-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:26:57] "GET /galactic-governance-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:26:57] "GET /mining-resource-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:26:57] "GET /xeno-intelligence-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:26:57] "GET /quantum-propulsion-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:26:57] "GET /intelligence-shadow-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:26:57] "GET /fleet-command-mega-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:26:57] "GET /deep-space-industry-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:26:57] "GET /procedural-content-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:26:57] "GET /galactic-commerce-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:26:57] "GET /metaphysics-apotheosis-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:26:57] "GET /starsector-auth.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:26:57] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:26:57] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:26:57] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:26:57] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:26:57] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:26:57] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:26:57] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:26:57] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:26:57] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:26:57] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:26:57] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:26:57] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:26:57] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:26:57] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:26:57] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:26:57] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:26:57] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:26:57] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:26:57] "GET /Starsector/starsector-core/starfarer_obf_v2.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:26:57] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:26:57] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:26:57] "GET /Starsector/starsector-core/lwjgl.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:26:57] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:26:57] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:26:57] "GET /Starsector/starsector-core/log4j-1.2.9.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:26:57] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:26:57] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:26:57] "GET /cheerpj-natives/lwjgl-fixed.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:26:57] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:26:57] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:26:57] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:26:57] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:26:57] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:26:57] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:26:57] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:26:57] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:26:57] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:26:57] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:26:57] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:26:57] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:29:47] "GET /starsector.html HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:29:47] "GET /cheerpj/4.2/loader.js?v=monotonic50 HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:29:47] "GET /cheerpj-natives/natives/javajpeg.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:29:47] "GET /cheerpj-natives/natives/lwjgl.js?v=monotonic50 HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:29:47] "GET /void-warfare-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:29:47] "GET /planetary-environment-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:29:47] "GET /galactic-governance-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:29:47] "GET /mining-resource-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:29:47] "GET /universal-simulation-hub.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:29:47] "GET /quantum-propulsion-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:29:47] "GET /xeno-intelligence-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:29:47] "GET /fleet-command-mega-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:29:47] "GET /intelligence-shadow-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:29:47] "GET /procedural-content-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:29:47] "GET /deep-space-industry-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:29:47] "GET /galactic-commerce-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:29:47] "GET /metaphysics-apotheosis-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:29:47] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:29:47] "GET /starsector-auth.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:29:47] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:29:47] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:29:47] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:29:47] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:29:47] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:29:47] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:29:47] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:29:47] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:29:47] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:29:47] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:29:47] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:29:47] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:29:47] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:29:47] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:29:47] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:29:47] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:29:47] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:29:47] "GET /Starsector/starsector-core/starfarer_obf_v2.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:29:47] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:29:47] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:29:47] "GET /Starsector/starsector-core/lwjgl.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:29:47] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:29:47] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:29:47] "GET /Starsector/starsector-core/log4j-1.2.9.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:29:47] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:29:47] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:29:47] "GET /cheerpj-natives/lwjgl-fixed.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:29:47] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:29:47] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:29:47] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:29:47] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:29:47] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:29:47] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:29:47] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:29:47] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:29:47] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:29:47] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:29:47] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:29:47] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:32:27] "GET /starsector.html HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:32:27] "GET /cheerpj/4.2/loader.js?v=monotonic50 HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:32:27] "GET /cheerpj-natives/natives/javajpeg.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:32:27] "GET /cheerpj-natives/natives/lwjgl.js?v=monotonic50 HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:32:27] "GET /universal-simulation-hub.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:32:27] "GET /galactic-governance-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:32:27] "GET /planetary-environment-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:32:27] "GET /void-warfare-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:32:27] "GET /mining-resource-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:32:27] "GET /xeno-intelligence-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:32:27] "GET /quantum-propulsion-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:32:27] "GET /intelligence-shadow-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:32:27] "GET /fleet-command-mega-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:32:27] "GET /deep-space-industry-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:32:27] "GET /procedural-content-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:32:27] "GET /galactic-commerce-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:32:27] "GET /metaphysics-apotheosis-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:32:27] "GET /starsector-auth.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:32:27] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:32:27] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:32:27] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:32:27] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:32:27] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:32:27] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:32:27] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:32:27] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:32:27] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:32:27] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:32:27] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:32:27] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:32:27] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:32:27] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:32:28] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:32:28] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:32:28] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:32:28] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:32:28] "GET /Starsector/starsector-core/starfarer_obf_v2.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:32:28] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:32:28] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:32:28] "GET /Starsector/starsector-core/lwjgl.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:32:28] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:32:28] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:32:28] "GET /Starsector/starsector-core/log4j-1.2.9.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:32:28] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:32:28] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:32:28] "GET /cheerpj-natives/lwjgl-fixed.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:32:28] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:32:28] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:32:28] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:32:28] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:32:28] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:32:28] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:32:28] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:32:28] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:32:28] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:32:28] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:32:28] code 501, message Unsupported method ('POST')
+::1 - - [08/Jan/2026 12:32:28] "POST /log HTTP/1.1" 501 -
+::1 - - [08/Jan/2026 12:37:09] "GET /starsector.html HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:37:09] "GET /cheerpj-natives/natives/javajpeg.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:37:09] "GET /cheerpj-natives/natives/lwjgl.js?v=monotonic50 HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:37:09] "GET /planetary-environment-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:37:09] "GET /void-warfare-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:37:09] "GET /universal-simulation-hub.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:37:09] "GET /galactic-governance-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:37:09] "GET /xeno-intelligence-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:37:09] "GET /quantum-propulsion-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:37:09] "GET /mining-resource-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:37:09] "GET /intelligence-shadow-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:37:09] "GET /deep-space-industry-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:37:09] "GET /metaphysics-apotheosis-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:37:09] "GET /galactic-commerce-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:37:09] "GET /fleet-command-mega-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:37:09] "GET /procedural-content-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:37:09] "GET /starsector-auth.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:37:10] "GET /cj3.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:37:10] "GET /Starsector/starsector-core/starfarer_obf_v2.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:37:10] "GET /Starsector/starsector-core/lwjgl.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:37:10] "GET /Starsector/starsector-core/log4j-1.2.9.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:37:10] "GET /cheerpj-natives/lwjgl-fixed.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:40:38] "GET /starsector.html HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:40:39] "GET /cheerpj-natives/natives/javajpeg.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:40:39] "GET /void-warfare-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:40:39] "GET /galactic-governance-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:40:39] "GET /universal-simulation-hub.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:40:39] "GET /cheerpj-natives/natives/lwjgl.js?v=monotonic50 HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:40:39] "GET /planetary-environment-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:40:39] "GET /mining-resource-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:40:39] "GET /xeno-intelligence-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:40:39] "GET /quantum-propulsion-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:40:39] "GET /intelligence-shadow-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:40:39] "GET /fleet-command-mega-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:40:39] "GET /deep-space-industry-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:40:39] "GET /procedural-content-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:40:39] "GET /galactic-commerce-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:40:39] "GET /metaphysics-apotheosis-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:40:39] "GET /starsector-auth.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:40:42] "GET /Starsector/starsector-core/starfarer_obf_v2.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:40:42] "GET /Starsector/starsector-core/lwjgl.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:40:42] "GET /Starsector/starsector-core/log4j-1.2.9.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:40:42] "GET /cheerpj-natives/lwjgl-fixed.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:43:04] "GET /loader_test.html HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:46:52] "GET /starsector.html HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:46:52] "GET /cheerpj-natives/natives/javajpeg.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:46:52] "GET /cheerpj-natives/natives/lwjgl.js?v=monotonic50 HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:46:52] "GET /universal-simulation-hub.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:46:52] "GET /planetary-environment-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:46:52] "GET /galactic-governance-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:46:52] "GET /void-warfare-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:46:52] "GET /mining-resource-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:46:52] "GET /xeno-intelligence-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:46:52] "GET /quantum-propulsion-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:46:52] "GET /intelligence-shadow-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:46:52] "GET /fleet-command-mega-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:46:52] "GET /deep-space-industry-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:46:52] "GET /procedural-content-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:46:52] "GET /metaphysics-apotheosis-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:46:52] "GET /galactic-commerce-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:46:52] "GET /starsector-auth.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:46:52] "GET /Starsector/starsector-core/starfarer_obf_v2.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:46:52] "GET /Starsector/starsector-core/lwjgl.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:46:52] "GET /Starsector/starsector-core/log4j-1.2.9.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:46:52] "GET /cheerpj-natives/lwjgl-fixed.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:50] "GET /starsector.html HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:50] "GET /cheerpj-natives/natives/javajpeg.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:50] "GET /galactic-governance-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:50] "GET /planetary-environment-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:50] "GET /universal-simulation-hub.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:50] "GET /mining-resource-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:50] "GET /void-warfare-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:50] "GET /cheerpj-natives/natives/lwjgl.js?v=monotonic50 HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:50] "GET /quantum-propulsion-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:50] "GET /xeno-intelligence-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:50] "GET /intelligence-shadow-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:50] "GET /fleet-command-mega-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:50] "GET /deep-space-industry-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:50] "GET /procedural-content-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:50] "GET /galactic-commerce-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:50] "GET /metaphysics-apotheosis-engine.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:50] "GET /starsector-auth.js HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:51] "GET /Starsector/starsector-core/starfarer_obf_v2.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:51] "GET /Starsector/starsector-core/lwjgl.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:51] "GET /Starsector/starsector-core/log4j-1.2.9.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:51] "GET /cheerpj-natives/lwjgl-fixed.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:57] "GET /merged_game.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:57] "GET /Starsector/starsector-core/fs.sound_obf.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:57] "GET /Starsector/starsector-core/xstream-1.4.10.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:57] "GET /Starsector/starsector-core/janino.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:57] "GET /Starsector/starsector-core/commons-compiler.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:57] "GET /Starsector/starsector-core/commons-compiler-jdk.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:57] "GET /Starsector/starsector-core/jogg-0.0.7.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:57] "GET /Starsector/starsector-core/jorbis-0.0.15.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:57] "GET /Starsector/starsector-core/lwjgl_renamed.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:57] "GET /Starsector/starsector-core/lwjgl_util.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:57] "GET /Starsector/starsector-core/jinput.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:57] "GET /Starsector/starsector-core/txw2-3.0.2.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:57] "GET /Starsector/starsector-core/jaxb-api-2.4.0-b180830.0359.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:57] "GET /Starsector/starsector-core/webp-imageio-0.1.6.jar HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:57] "GET /Starsector HTTP/1.1" 301 -
+::1 - - [08/Jan/2026 12:49:57] "GET /Starsector/ HTTP/1.1" 200 -
+::1 - - [08/Jan/2026 12:49:57] "GET /Starsector/starsector-core HTTP/1.1" 301 -
+::1 - - [08/Jan/2026 12:49:57] "GET /Starsector/starsector-core/ HTTP/1.1" 200 -

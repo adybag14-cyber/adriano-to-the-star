@@ -1,0 +1,222 @@
+{
+  "common": {
+    "home": "首页",
+    "database": "数据库",
+    "games": "游戏",
+    "shop": "商店",
+    "about": "关于",
+    "blog": "博客",
+    "contact": "联系",
+    "login": "登录",
+    "logout": "登出",
+    "register": "注册",
+    "search": "搜索",
+    "filter": "筛选",
+    "submit": "提交",
+    "cancel": "取消",
+    "save": "保存",
+    "delete": "删除",
+    "edit": "编辑",
+    "close": "关闭",
+    "loading": "加载中...",
+    "error": "错误",
+    "success": "成功",
+    "back": "返回",
+    "next": "下一步",
+    "previous": "上一步"
+  },
+  "home": {
+    "title": "Adriano To The Star",
+    "subtitle": "星际旅行社",
+    "sponsored": "由 ELON MUSK 和 DONALD TRUMP 赞助",
+    "releasingSoon": "即将发布*",
+    "releasingNote": "*我将从数据库中选择的对象配置中工作和计算的加密密钥计划在2025年第一季度晚些时候发布。",
+    "about": "关于我们",
+    "mission": "我们的使命",
+    "missionText": "ADRIANO TO THE STAR 为个人提供了在仙女座星系内拥有天体的革命性机会。我们的平台受到宇宙奇迹的启发，允许买卖恒星、行星和大型开普勒物体的许可证。我们的目标是通过为所有太空爱好者提供独特和个性化的体验来重新定义太空行业。",
+    "learnMore": "了解更多",
+    "gallery": "画廊",
+    "follow": "关注我们"
+  },
+  "database": {
+    "title": "系外行星数据库",
+    "subtitle": "探索开普勒档案中的9,564多个天体",
+    "searchPlaceholder": "搜索行星...",
+    "filterBy": "筛选条件",
+    "planetType": "行星类型",
+    "discoveryMethod": "发现方法",
+    "status": "状态",
+    "claimed": "已认领",
+    "available": "可用",
+    "claimPlanet": "认领行星",
+    "alreadyClaimed": "已认领",
+    "planetDetails": "行星详情",
+    "discoveryYear": "发现年份",
+    "distance": "距离",
+    "temperature": "温度",
+    "aboutDatabase": "关于数据库",
+    "dataSource": "数据源",
+    "nasaExoplanetArchive": "NASA系外行星档案API"
+  },
+  "stellarAI": {
+    "title": "STELLAR AI",
+    "subtitle": "您的智能宇宙伴侣",
+    "chatHistory": "聊天历史",
+    "newChat": "新聊天",
+    "clearChat": "清空聊天",
+    "exportChat": "导出聊天",
+    "selectModel": "选择AI模型",
+    "askAnything": "向Stellar AI提问任何问题...",
+    "send": "发送",
+    "welcome": "欢迎使用Stellar AI",
+    "welcomeText": "由先进AI驱动的智能宇宙伴侣",
+    "features": {
+      "conversations": "自然对话",
+      "imageAnalysis": "图像分析",
+      "knowledgeBase": "知识库",
+      "saveHistory": "保存历史"
+    }
+  },
+  "marketplace": {
+    "title": "行星市场",
+    "subtitle": "购买、出售和交易系外行星认领",
+    "buy": "购买",
+    "sell": "出售",
+    "trade": "交易",
+    "price": "价格",
+    "seller": "卖家",
+    "buyer": "买家",
+    "createListing": "创建列表",
+    "myListings": "我的列表"
+  },
+  "messaging": {
+    "title": "直接消息",
+    "subtitle": "与其他成员的私人对话",
+    "loginRequired": "需要登录",
+    "loginPrompt": "请登录以发送和接收直接消息。",
+    "conversations": "对话",
+    "newMessage": "新消息",
+    "selectConversation": "选择对话",
+    "selectConversationText": "从侧边栏选择对话或开始新对话",
+    "typeMessage": "输入消息...",
+    "send": "发送"
+  },
+  "badges": {
+    "title": "徽章和成就",
+    "subtitle": "解锁成就并展示您的宇宙之旅",
+    "reputation": "声誉",
+    "points": "积分",
+    "level": "等级",
+    "unlocked": "已解锁",
+    "locked": "已锁定"
+  },
+  "analytics": {
+    "title": "分析仪表板",
+    "subtitle": "跟踪您的宇宙之旅和平台统计",
+    "totalClaims": "总认领数",
+    "totalUsers": "总用户数",
+    "totalPlanets": "总行星数",
+    "recentActivity": "最近活动"
+  },
+  "newsletter": {
+    "title": "通讯",
+    "subtitle": "了解最新的宇宙新闻和功能",
+    "subscribe": "订阅",
+    "email": "电子邮件地址",
+    "subscribeButton": "订阅通讯",
+    "unsubscribe": "取消订阅",
+    "subscribed": "已订阅",
+    "subscriptionSuccess": "成功订阅通讯！"
+  },
+  "calendar": {
+    "title": "太空事件日历",
+    "subtitle": "跟踪发射、发现和宇宙事件",
+    "upcoming": "即将到来",
+    "past": "过去",
+    "today": "今天",
+    "thisWeek": "本周",
+    "thisMonth": "本月"
+  },
+  "education": {
+    "title": "太空教育",
+    "subtitle": "了解系外行星、天文学和太空探索",
+    "courses": "课程",
+    "tutorials": "教程",
+    "simulations": "模拟",
+    "games": "游戏"
+  },
+  "nav": {
+    "routes": "航线",
+    "database": "世界数据库",
+    "maps": "星图",
+    "projects": "项目",
+    "begin": "开始探索"
+  },
+  "hero": {
+    "eyebrow": "星际旅行社 · 飞行系统在线",
+    "line1": "宇宙如今",
+    "line2": "就是目的地。",
+    "lead": "进入一部不断生长的遥远世界图鉴。比较系外行星、规划未来航线，并体验可能引领人类走出地球的研究系统。",
+    "primary": "进入世界数据库",
+    "soundtrack": "启动任务配乐",
+    "scroll": "向下探索"
+  },
+  "stats": {
+    "worlds": "已收录天体",
+    "soundtracks": "任务声景",
+    "horizon": "可能的地平线"
+  },
+  "stage": {
+    "window": "出发窗口已开启",
+    "distance": "距离",
+    "status": "状态",
+    "simulated": "模拟",
+    "caption": "概念航线可视化"
+  },
+  "routes": {
+    "title": "每一次旅程，都始于一个系统。",
+    "lead": "I.T.A 将科学数据、航线智能与人类想象力连接成一个可导航的星际体验。",
+    "databaseKicker": "世界情报",
+    "databaseTitle": "系外行星数据库",
+    "databaseText": "筛选数千条天体记录，比较行星环境，并找出值得进一步研究的世界。",
+    "openDatabase": "打开数据库",
+    "mapsKicker": "空间制图",
+    "mapsTitle": "交互式星图",
+    "mapsText": "穿行于相互连接的恒星系统，观察距离、邻域和恒星环境如何塑造一条航线。",
+    "openMaps": "规划航线",
+    "aiKicker": "任务智能",
+    "aiTitle": "星际 AI",
+    "aiText": "提出问题、解读天文数据，把庞大的目录转化为聚焦的任务简报。",
+    "openAi": "打开任务 AI"
+  },
+  "passage": {
+    "line1": "不只是行星清单。",
+    "line2": "而是抵达的感觉。",
+    "text": "未来的太空旅行不会只用速度衡量。它还关乎方向感、信心、惊叹，以及让原本不可想象的距离变得可以理解。",
+    "discovery": "发现",
+    "clarity": "清晰",
+    "immersion": "沉浸"
+  },
+  "mission": {
+    "title": "从信号到目的地。",
+    "step1Title": "发现",
+    "step1Text": "在围绕旅行者真正关心的问题构建的科学目录中搜索。",
+    "step2Title": "理解",
+    "step2Text": "把原始测量数据转化为气候、尺度、风险与可能性。",
+    "step3Title": "穿越",
+    "step3Text": "沿着连贯航线进入星图、模拟系统与面向未来的项目。"
+  },
+  "manifesto": {
+    "quote": "第一次星际旅程早在发射之前就已开始——当宇宙变得可以理解之时。"
+  },
+  "final": {
+    "title": "选择你的第一个世界。",
+    "text": "目录已经开放。你的航线，从一个问题、一个信号和一个目的地开始。",
+    "cta": "开始远征"
+  },
+  "footer": {
+    "tagline": "一个独立的星际旅行概念、研究平台，以及向更远处眺望的邀请。",
+    "privacy": "隐私",
+    "online": "旅行社系统在线"
+  }
+}

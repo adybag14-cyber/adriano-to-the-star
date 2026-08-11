@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Gemini Live API</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: #000;
+            color: #0f0;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #0f0;
+            border-radius: 5px;
+        }
+        .success { color: #0f0; }
+        .error { color: #f00; }
+        .info { color: #ff0; }
+        button {
+            background: #0f0;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 5px;
+        }
+        button:hover { background: #0a0; }
+        pre {
+            background: #111;
+            padding: 10px;
+            border-radius: 3px;
+            overflow-x: auto;
+        }
+    </style>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+<body>
+    <h1>🧪 Gemini Live API Test</h1>
+    <p class="info">Testing gemini-2.5-flash-live model with provided API key</p>
+    
+    <div class="test-section">
+        <h2>Test 1: WebSocket (bidiGenerateContent)</h2>
+        <button onclick="testWebSocket()">Run WebSocket Test</button>
+        <div id="websocket-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 2: REST API (generateContent)</h2>
+        <button onclick="testREST()">Run REST Test</button>
+        <div id="rest-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 3: REST Streaming (streamGenerateContent)</h2>
+        <button onclick="testRESTStreaming()">Run REST Streaming Test</button>
+        <div id="rest-streaming-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <button onclick="runAllTests()">Run All Tests</button>
+    </div>
+
+    <script>
+        const API_KEY = new URLSearchParams(window.location.search).get('key') || localStorage.getItem('GOOGLE_API_KEY') || '';
+        const TEST_PROMPT = 'Hello! Can you respond with a short test message?';
+
+        function log(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            const className = type === 'error' ? 'error' : type === 'success' ? 'success' : 'info';
+            element.innerHTML += `<div class="${className}">${message}</div>`;
+        }
+
+        function clearLog(elementId) {
+            document.getElementById(elementId).innerHTML = '';
+        }
+
+        async function testWebSocket() {
+            clearLog('websocket-result');
+            log('websocket-result', '📡 Starting WebSocket test with gemini-2.5-flash-live...', 'info');
+            
+            try {
+                const wsUrl = `wss://generativelanguage.googleapis.com/ws/google.cloud.aiplatform.v1beta1.LlmBidiService/BidiGenerateContent?key=${API_KEY}`;
+                
+                return new Promise((resolve, reject) => {
+                    const ws = new WebSocket(wsUrl);
+                    let responseText = '';
+                    let setupComplete = false;
+                    const timeout = setTimeout(() => {
+                        ws.close();
+                        log('websocket-result', '❌ WebSocket timeout after 30 seconds', 'error');
+                        reject(new Error('Timeout'));
+                    }, 30000);
+
+                    ws.onopen = () => {
+                        log('websocket-result', '✅ WebSocket connected', 'success');
+                        
+                        const setupMessage = {
+                            setup: {
+                                model: 'models/gemini-2.5-flash-live',
+                                generationConfig: {
+                                    temperature: 0.7,
+                                    maxOutputTokens: 1024
+                                }
+                            }
+                        };
+                        ws.send(JSON.stringify(setupMessage));
+                        log('websocket-result', '📤 Setup message sent', 'info');
+                    };
+
+                    ws.onmessage = (event) => {
+                        try {
+                            const data = JSON.parse(event.data);
+                            
+                            if (data.setupComplete) {
+                                log('websocket-result', '✅ Setup complete', 'success');
+                                setupComplete = true;
+                                
+                                const clientMessage = {
+                                    clientContent: {
+                                        turn: {
+                                            role: 'user',
+                                            parts: [{ text: TEST_PROMPT }]
+                                        }
+                                    }
+                                };
+                                ws.send(JSON.stringify(clientMessage));
+                                log('websocket-result', '📤 Client message sent', 'info');
+                            } else if (data.serverContent) {
+                                if (data.serverContent.modelTurn) {
+                                    const parts = data.serverContent.modelTurn.parts || [];
+                                    parts.forEach(part => {
+                                        if (part.text) {
+                                            responseText += part.text;
+                                        }
+                                    });
+                                }
+                            }
+                        } catch (error) {
+                            log('websocket-result', `❌ Error parsing message: ${error.message}`, 'error');
+                        }
+                    };
+
+                    ws.onerror = (error) => {
+                        clearTimeout(timeout);
+                        log('websocket-result', `❌ WebSocket error: ${error.message || 'Unknown error'}`, 'error');
+                        reject(error);
+                    };
+
+                    ws.onclose = () => {
+                        clearTimeout(timeout);
+                        if (responseText) {
+                            log('websocket-result', `✅ Response: "${responseText}"`, 'success');
+                            resolve(responseText);
+                        } else if (!setupComplete) {
+                            log('websocket-result', '❌ WebSocket closed before setup complete', 'error');
+                            reject(new Error('Closed before setup'));
+                        } else {
+                            log('websocket-result', responseText || '⚠️ No response text received', responseText ? 'success' : 'error');
+                            resolve(responseText || '');
+                        }
+                    };
+                });
+            } catch (error) {
+                log('websocket-result', `❌ Test failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testREST() {
+            clearLog('rest-result');
+            log('rest-result', '🌐 Starting REST API test with gemini-2.5-flash-live-preview...', 'info');
+            
+            try {
+                const response = await fetch(
+                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-live-preview:generateContent?key=${API_KEY}`,
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: TEST_PROMPT }] }],
+                            generationConfig: {
+                                temperature: 0.7,
+                                maxOutputTokens: 1024
+                            }
+                        })
+                    }
+                );
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    log('rest-result', `❌ HTTP ${response.status}: ${errorText}`, 'error');
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+                const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || 'No response text';
+                
+                log('rest-result', `✅ Response: "${responseText}"`, 'success');
+                return responseText;
+            } catch (error) {
+                log('rest-result', `❌ Test failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testRESTStreaming() {
+            clearLog('rest-streaming-result');
+            log('rest-streaming-result', '🌊 Starting REST Streaming test with gemini-2.5-flash-live...', 'info');
+            
+            try {
+                const response = await fetch(
+                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-live:streamGenerateContent?key=${API_KEY}`,
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: TEST_PROMPT }] }],
+                            generationConfig: {
+                                temperature: 0.7,
+                                maxOutputTokens: 1024
+                            }
+                        })
+                    }
+                );
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    log('rest-streaming-result', `❌ HTTP ${response.status}: ${errorText}`, 'error');
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let responseText = '';
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    const chunk = decoder.decode(value);
+                    const lines = chunk.split('\n').filter(line => line.trim());
+
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            try {
+                                const data = JSON.parse(line.substring(6));
+                                const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+                                if (text) {
+                                    responseText += text;
+                                }
+                            } catch (e) {
+                                // Skip invalid JSON
+                            }
+                        }
+                    }
+                }
+
+                log('rest-streaming-result', `✅ Response: "${responseText}"`, 'success');
+                return responseText;
+            } catch (error) {
+                log('rest-streaming-result', `❌ Test failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function runAllTests() {
+            console.log('Running all tests...');
+            await testWebSocket();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            await testREST();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            await testRESTStreaming();
+        }
+    </script>
+</body>
+</html>
+
+

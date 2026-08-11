@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Starsector Access Portal | Adriano To The Star</title>
+    
+    <meta name="description" content="Secure access portal for Starsector Browser Edition. Authenticate to launch your interstellar fleet and explore the sector.">
+    <link rel="canonical" href="https://adrianotothestar.com/starsector-login.html">
+    
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="pages-styles.css">
+    <link rel="stylesheet" href="loader-minimal.css">
+    <link rel="stylesheet" href="theme-styles.css">
+    <link rel="icon" type="image/x-icon" href="images/ita_logo.png">
+
+    <script src="loader.js"></script>
+    <script src="navigation.js" defer></script>
+    <script src="cosmic-music-player.js" defer></script>
+    <script src="theme-toggle.js" defer></script>
+
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at center, #1a1a2e 0%, #000000 100%);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            overflow: hidden;
+        }
+
+        .starfield {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(2px 2px at 20% 30%, #fff, transparent), radial-gradient(2px 2px at 70% 90%, #fff, transparent);
+            animation: twinkle 4s infinite ease-in-out;
+            pointer-events: none;
+        }
+
+        @keyframes twinkle { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        .login-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 420px;
+            padding: 40px;
+            background: rgba(10, 10, 20, 0.85);
+            border: 1px solid rgba(186, 148, 79, 0.3);
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .logo-section h1 { font-size: 2.5rem; color: #ba944f; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 8px; }
+        .logo-section p { color: #607d8b; font-size: 0.9rem; letter-spacing: 2px; }
+
+        .input-group { margin: 25px 0; text-align: left; }
+        .input-group label { display: block; color: #90a4ae; font-size: 0.85rem; margin-bottom: 10px; text-transform: uppercase; }
+        .input-group input { width: 100%; padding: 16px; background: rgba(20, 30, 50, 0.8); border: 1px solid rgba(186, 148, 79, 0.2); border-radius: 12px; color: #fff; outline: none; }
+        .input-group input:focus { border-color: #ba944f; box-shadow: 0 0 20px rgba(186, 148, 79, 0.2); }
+
+        .login-btn { width: 100%; padding: 16px; background: #ba944f; border: none; border-radius: 12px; color: black; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: all 0.3s; }
+        .login-btn:hover { transform: translateY(-2px); background: #d4a757; }
+
+        .error-msg { background: rgba(244, 67, 54, 0.15); border: 1px solid rgba(244, 67, 54, 0.3); color: #ef5350; padding: 12px; border-radius: 10px; margin-bottom: 20px; display: none; }
+        .error-msg.visible { display: block; }
+    </style>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+<body>
+    <div class="starfield"></div>
+
+    <div class="login-container">
+        <div class="logo-section">
+            <h1>Starsector</h1>
+            <p>Access Portal</p>
+        </div>
+
+        <div id="errorMsg" class="error-msg">Invalid access code. Please try again.</div>
+
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="password">Access Code</label>
+                <input type="password" id="password" placeholder="Enter access code" required>
+            </div>
+            <button type="submit" class="login-btn" id="loginBtn">Launch Simulation</button>
+        </form>
+
+        <a href="index.html" style="display: block; margin-top: 25px; color: #546e7a; text-decoration: none; font-size: 0.85rem;">← Return to Main Site</a>
+    </div>
+
+    <script src="starsector-auth.js"></script>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const pass = document.getElementById('password').value;
+            const success = await StarsectorAuth.login(pass);
+            if (success) window.location.href = 'starsector.html';
+            else document.getElementById('errorMsg').classList.add('visible');
+        });
+    </script>
+</body>
+</html>

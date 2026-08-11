@@ -1,0 +1,43 @@
+[OK] GEMINI_API_KEY is set (length: 39 chars)
+[OK] USE_GEMINI_LIVE = False
+[OK] Gemini configured successfully
+
+[TEST] Testing Gemini Live Models...
+============================================================
+
+[TEST] Trying model: gemini-2.5-flash-live
+   [OK] Model object created
+   [TEST] Sending test request...
+   [INFO] Non-streaming failed: 404 models/gemini-2.5-flash-live is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+   [TEST] Trying streaming...
+   [ERROR] Streaming also failed: 404 models/gemini-2.5-flash-live is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+
+[TEST] Trying model: gemini-2.5-flash-live-preview
+   [OK] Model object created
+   [TEST] Sending test request...
+   [INFO] Non-streaming failed: 404 models/gemini-2.5-flash-live-preview is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+   [TEST] Trying streaming...
+   [ERROR] Streaming also failed: 404 models/gemini-2.5-flash-live-preview is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+
+[TEST] Trying model: gemini-live-2.5-flash-preview
+   [OK] Model object created
+   [TEST] Sending test request...
+   [INFO] Non-streaming failed: 404 models/gemini-live-2.5-flash-preview is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+   [TEST] Trying streaming...
+   [ERROR] Streaming also failed: 404 models/gemini-live-2.5-flash-preview is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+
+[TEST] Trying model: gemini-2.0-flash-live-001
+   [OK] Model object created
+   [TEST] Sending test request...
+   [INFO] Non-streaming failed: 404 models/gemini-2.0-flash-live-001 is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+   [TEST] Trying streaming...
+   [ERROR] Streaming also failed: 404 models/gemini-2.0-flash-live-001 is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+
+[WARNING] ÔÜá´©Å  No live models available
+[INFO] Falling back to standard REST API (gemini-2.5-flash)
+
+[TEST] Testing fallback model: gemini-2.5-flash
+[OK] Fallback model works: Hello!
+
+============================================================
+[TEST COMPLETE]

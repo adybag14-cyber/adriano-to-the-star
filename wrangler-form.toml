@@ -1,0 +1,20 @@
+name = "adrianotothestar-form-mailer"
+main = "workers/form-mailer/index.js"
+compatibility_date = "2026-05-10"
+
+routes = [
+  { pattern = "adrianotothestar.com/api/test-form*", zone_name = "adrianotothestar.com" },
+  { pattern = "www.adrianotothestar.com/api/test-form*", zone_name = "adrianotothestar.com" }
+]
+
+[vars]
+RECIPIENT_EMAIL = "adybag14@gmail.com"
+SENDER_EMAIL = "forms@adrianotothestar.com"
+SENDER_NAME = "Adriano To The Star Forms"
+ALLOWED_ORIGINS = "https://adrianotothestar.com,https://www.adrianotothestar.com,http://localhost:8787,http://127.0.0.1:8787,null"
+
+[[send_email]]
+name = "EMAIL"
+destination_address = "adybag14@gmail.com"
+allowed_sender_addresses = [ "forms@adrianotothestar.com" ]
+remote = true

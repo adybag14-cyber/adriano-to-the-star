@@ -1,0 +1,189 @@
+/**
+ * Planet Discovery Print Stylesheet
+ * Optimized styles for printing planet data and pages
+ */
+
+@media print {
+    /* Reset margins and padding */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    /* Hide non-essential elements */
+    .menu-toggle,
+    .language-switcher,
+    .cosmic-music-player,
+    .theme-toggle,
+    button:not(.print-button),
+    nav,
+    footer,
+    .no-print {
+        display: none !important;
+    }
+
+    /* Page setup */
+    @page {
+        size: A4;
+        margin: 2cm;
+    }
+
+    body {
+        background: white !important;
+        color: black !important;
+        font-size: 12pt;
+        line-height: 1.5;
+    }
+
+    /* Headers */
+    h1, h2, h3, h4, h5, h6 {
+        color: black !important;
+        page-break-after: avoid;
+        margin-top: 1em;
+        margin-bottom: 0.5em;
+    }
+
+    /* Links */
+    a {
+        color: black !important;
+        text-decoration: underline;
+    }
+
+    a[href^="http"]:after {
+        content: " (" attr(href) ")";
+        font-size: 0.9em;
+        color: #666;
+    }
+
+    /* Images */
+    img {
+        max-width: 100% !important;
+        height: auto !important;
+        page-break-inside: avoid;
+    }
+
+    /* Tables */
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        page-break-inside: avoid;
+    }
+
+    table th,
+    table td {
+        border: 1px solid #000 !important;
+        padding: 0.5em;
+        text-align: left;
+    }
+
+    table th {
+        background: #f0f0f0 !important;
+        font-weight: bold;
+    }
+
+    /* Sections */
+    section {
+        page-break-inside: avoid;
+        margin-bottom: 1em;
+    }
+
+    /* Cards */
+    .card {
+        border: 1px solid #000 !important;
+        background: white !important;
+        page-break-inside: avoid;
+        margin-bottom: 1em;
+        padding: 1em;
+    }
+
+    /* Planet data */
+    .planet-card {
+        page-break-inside: avoid;
+        border: 2px solid #000 !important;
+        background: white !important;
+        padding: 1em;
+        margin-bottom: 1em;
+    }
+
+    .planet-card h3 {
+        color: black !important;
+        border-bottom: 2px solid #000;
+        padding-bottom: 0.5em;
+        margin-bottom: 0.5em;
+    }
+
+    .planet-card .planet-data {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5em;
+    }
+
+    .planet-card .planet-data dt {
+        font-weight: bold;
+    }
+
+    /* Avoid page breaks */
+    .no-break {
+        page-break-inside: avoid;
+    }
+
+    /* Force page breaks */
+    .page-break {
+        page-break-before: always;
+    }
+
+    /* Print buttons */
+    .print-button {
+        display: inline-block !important;
+        background: #f0f0f0 !important;
+        border: 1px solid #000 !important;
+        padding: 0.5em 1em;
+        margin: 0.5em;
+        cursor: pointer;
+    }
+
+    /* Charts and visualizations */
+    canvas,
+    svg {
+        max-width: 100% !important;
+        page-break-inside: avoid;
+    }
+
+    /* Lists */
+    ul, ol {
+        margin-left: 1.5em;
+    }
+
+    /* Code blocks */
+    pre, code {
+        background: #f5f5f5 !important;
+        border: 1px solid #ccc;
+        padding: 0.5em;
+        page-break-inside: avoid;
+        font-size: 0.9em;
+    }
+
+    /* Footer for each page */
+    @page {
+        @bottom-right {
+            content: "Page " counter(page) " of " counter(pages);
+            font-size: 0.9em;
+            color: #666;
+        }
+    }
+
+    /* Watermark (optional) */
+    body::before {
+        content: "Adriano To The Star - Planet Discovery";
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-45deg);
+        font-size: 3em;
+        color: rgba(0, 0, 0, 0.05);
+        z-index: -1;
+        pointer-events: none;
+    }
+}
+

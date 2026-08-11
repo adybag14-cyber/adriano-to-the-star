@@ -1,0 +1,52 @@
+{
+    "version": "0.1.0",
+    "model_type": "gemma2",
+    "quantization": "q4f16_1",
+    "model_lib": "https://starisdons-swf-worker.adybag14.workers.dev/t5_gemma2-q4f16_1/t5_gemma2-q4f16_1-webgpu.wasm",
+    "model_lib_tag": "gemma_v2_2b_q4f16_1_webgpu",
+    "tokenizer_files": [
+        "tokenizer.model",
+        "tokenizer.json",
+        "tokenizer_config.json"
+    ],
+    "conv_template": {
+        "name": "gemma_instruction",
+        "system_template": "<bos>{system_message}",
+        "system_message": "",
+        "system_prefix_token_ids": [
+            2
+        ],
+        "add_role_after_system_message": true,
+        "roles": {
+            "user": "<start_of_turn>user",
+            "assistant": "<start_of_turn>model"
+        },
+        "role_templates": {
+            "user": "{user_message}",
+            "assistant": "{assistant_message}",
+            "tool": "{tool_message}"
+        },
+        "messages": [],
+        "seps": [
+            "<end_of_turn>\n"
+        ],
+        "role_content_sep": "\n",
+        "role_empty_sep": "\n",
+        "stop_str": [
+            "<end_of_turn>"
+        ],
+        "stop_token_ids": [
+            1,
+            107
+        ],
+        "function_string": "",
+        "use_function_calling": false
+    },
+    "context_window_size": 2048,
+    "prefill_chunk_size": 2048,
+    "sliding_window_size": 2048,
+    "attention_sink_size": 0,
+    "max_batch_size": 1,
+    "tensor_parallel_shards": 1,
+    "vocab_size": 262144
+}

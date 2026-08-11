@@ -1,0 +1,38 @@
+{
+  "appId": "com.adrianotothestar.app",
+  "appName": "Adriano To The Star",
+  "webDir": ".",
+  "bundledWebRuntime": false,
+  "server": {
+    "url": "https://starisdons-d53656.gitlab.io",
+    "cleartext": true
+  },
+  "plugins": {
+    "PushNotifications": {
+      "presentationOptions": ["badge", "sound", "alert"]
+    },
+    "Camera": {
+      "permissions": {
+        "camera": "Allow camera access for planet image uploads",
+        "photos": "Allow photo library access"
+      }
+    },
+    "Geolocation": {
+      "permissions": {
+        "location": "Allow location access for AR planet viewing"
+      }
+    },
+    "App": {
+      "launchUrl": "https://starisdons-d53656.gitlab.io"
+    }
+  },
+  "ios": {
+    "contentInset": "automatic",
+    "scrollEnabled": true
+  },
+  "android": {
+    "allowMixedContent": true,
+    "captureInput": true
+  }
+}
+

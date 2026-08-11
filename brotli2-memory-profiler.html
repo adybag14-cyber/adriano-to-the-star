@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brotli2 Memory Profiler</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+        }
+        h1 {
+            color: #4ec9b0;
+            border-bottom: 2px solid #4ec9b0;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #569cd6;
+            margin-top: 30px;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .status.running {
+            background-color: #1e3a8a;
+            border-left: 4px solid #3b82f6;
+        }
+        .status.complete {
+            background-color: #065f46;
+            border-left: 4px solid #10b981;
+        }
+        .status.error {
+            background-color: #7f1d1d;
+            border-left: 4px solid #ef4444;
+        }
+        .status.warning {
+            background-color: #92400e;
+            border-left: 4px solid #f59e0b;
+        }
+        pre {
+            background-color: #2d2d2d;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            border: 1px solid #404040;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 8px 12px;
+            text-align: left;
+            border-bottom: 1px solid #404040;
+        }
+        th {
+            background-color: #2d2d2d;
+            color: #4ec9b0;
+        }
+        tr:hover {
+            background-color: #3d3d3d;
+        }
+        button {
+            background-color: #4ec9b0;
+            color: #1e1e1e;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        button:hover {
+            background-color: #3db89a;
+        }
+        button:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+        }
+        .pass { color: #10b981; }
+        .fail { color: #ef4444; }
+    </style>
+</head>
+<body>
+    <h1>Brotli2 Memory Profiler</h1>
+    
+    <div id="status" class="status">
+        <p>Status: <span id="statusText">Ready</span></p>
+    </div>
+    
+    <button id="runMemoryProfile" onclick="runMemoryProfile()">Run Memory Profile</button>
+    
+    <div id="results">
+        <h2>Results</h2>
+        <pre id="output"></pre>
+    </div>
+
+    <!-- Load Brotli2 prototype -->
+    <script src="brotli2-prototype.js"></script>
+    <script src="brotli2-memory-profiler.js"></script>
+    
+    <script>
+        function runMemoryProfile() {
+            const statusText = document.getElementById('statusText');
+            const statusDiv = document.getElementById('status');
+            const output = document.getElementById('output');
+            const button = document.getElementById('runMemoryProfile');
+            
+            button.disabled = true;
+            statusText.textContent = 'Running...';
+            statusDiv.className = 'status running';
+            output.textContent = '';
+            
+            // Capture console output
+            const logs = [];
+            const originalLog = console.log;
+            console.log = function(...args) {
+                logs.push(args.join(' '));
+                originalLog.apply(console, args);
+                output.textContent = logs.join('\n');
+            };
+            
+            window.brotli2MemoryProfiler.runMemoryProfile()
+                .then(() => {
+                    statusText.textContent = 'Complete';
+                    statusDiv.className = 'status complete';
+                    console.log = originalLog;
+                    button.disabled = false;
+                })
+                .catch((error) => {
+                    if (error.message.includes('Memory API not available')) {
+                        statusText.textContent = 'Warning: Memory API not available';
+                        statusDiv.className = 'status warning';
+                    } else {
+                        statusText.textContent = 'Error: ' + error.message;
+                        statusDiv.className = 'status error';
+                    }
+                    console.log = originalLog;
+                    button.disabled = false;
+                });
+        }
+    </script>
+</body>
+</html>

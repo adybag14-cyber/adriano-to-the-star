@@ -1,0 +1,13 @@
+  public static java.io.InputStream void(java.lang.String) throws java.io.IOException;
+
+    Code:
+
+       0: invokestatic  #38                 // Method com/fs/util/C.Ë00000:()Lcom/fs/util/C;
+
+       3: aload_0
+
+       4: invokevirtual #63                 // Method com/fs/util/C.È00000:(Ljava/lang/String;)Ljava/io/InputStream;
+
+       7: areturn
+
+

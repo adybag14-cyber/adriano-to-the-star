@@ -1,0 +1,16 @@
+
+name = "starisdons-swf-worker"
+main = "worker.js"
+compatibility_date = "2023-10-30"
+
+[[r2_buckets]]
+binding = "SWF_BUCKET"
+bucket_name = "starisdons-swf-files"
+
+[[r2_buckets]]
+binding = "STARSECTOR_BUCKET"
+bucket_name = "starsector"
+
+[[r2_buckets]]
+binding = "EXOPLANET_ASSETS"
+bucket_name = "exoplanet-pioneer-assets"

@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Starsector - Browser Edition</title>
+    <link rel="icon" type="image/x-icon" href="images/ita_logo.png">
+
+    <!-- Remote Logger for Debugging -->
+    <script>
+        (function () {
+            const originalLog = console.log;
+            const originalError = console.error;
+            const originalWarn = console.warn;
+
+            const shouldSendRemoteLogs = true; // Enabled for debugging on localhost
+
+            function sendLog(type, args) {
+                try {
+                    const msg = args.map(a => {
+                        try { return (typeof a === 'object' ? JSON.stringify(a) : String(a)); }
+                        catch (e) { return String(a); }
+                    }).join(' ');
+
+                    const overlayMsg = msg;
+                    let logMsg = msg;
+
+                    if (msg.includes('Missing import')) {
+                        try {
+                            const trace = (new Error('Missing import trace')).stack;
+                            logMsg += `\n${trace}`;
+                            originalError(trace);
+                        } catch (e) { }
+                    }
+
+                    // Append to on-screen overlay
+                    const logDiv = document.getElementById('debug-log-overlay');
+                    if (logDiv) {
+                        const line = document.createElement('div');
+                        line.textContent = `[${type}] ${overlayMsg}`;
+                        line.style.borderBottom = '1px solid rgba(0,255,0,0.1)';
+                        logDiv.appendChild(line);
+                        logDiv.scrollTop = logDiv.scrollHeight;
+                    }
+
+                    if (shouldSendRemoteLogs && (logMsg.includes('JVM') || logMsg.includes('CheerpJ') || logMsg.includes('Exception') || logMsg.includes('Error') || logMsg.includes('Starsector') || logMsg.includes('NATIVE') || logMsg.includes('Setup') || logMsg.includes('Mock') || logMsg.includes('Classpath') || logMsg.includes('API PROBE') || logMsg.includes('Global'))) {
+                        fetch('/log', {
+                            method: 'POST',
+                            body: `[${type}] ${logMsg}`
+                        }).catch(() => { });
+                    }
+                } catch (e) { }
+            }
+
+            console.log = function (...args) { sendLog('LOG', args); originalLog.apply(console, args); };
+            console.error = function (...args) { sendLog('ERROR', args); originalError.apply(console, args); };
+            console.warn = function (...args) { sendLog('WARN', args); originalWarn.apply(console, args); };
+
+            window.onerror = function (msg, url, line) {
+                sendLog('FATAL', [`Uncaught: ${msg} @ ${url}:${line}`]);
+            };
+        })();
+    </script>
+
+    <!-- CRITICAL FIX: Monotonic High-Res Timer (Global Shim) -->
+    <script>
+        (function () {
+            try {
+                const _realNow = performance.now.bind(performance);
+                let _lastNow = _realNow();
+
+                // Overwrite performance.now with a guaranteed monotonic version
+                Object.defineProperty(performance, 'now', {
+                    value: function () {
+                        let now = _realNow();
+                        if (now <= _lastNow) {
+                            now = _lastNow + 1.0; // Force 1ms increment to prevent dt=0 truncation
+                        }
+                        _lastNow = now;
+                        return now;
+                    },
+                    writable: true,
+                    configurable: true
+                });
+
+                console.log("[Polyfill] Monotonic performance.now() installed globally.");
+
+                // Also polyfill Date.now() just in case Sys.getTime uses it
+                const _realDateNow = Date.now.bind(Date);
+                let _lastDateNow = _realDateNow();
+                Date.now = function () {
+                    let now = _realDateNow();
+                    if (now <= _lastDateNow) {
+                        now = _lastDateNow + 1; // Force 1ms increment
+                    }
+                    _lastDateNow = now;
+                    return now;
+                };
+                console.log("[Polyfill] Monotonic Date.now() installed globally.");
+
+            } catch (e) {
+                console.error("[Polyfill] Failed to install monotonic timer:", e);
+            }
+        })();
+    </script>
+
+    <script>
+        // Debug Native Registration
+        window.addEventListener('load', function () {
+            setTimeout(function () {
+                const natives = window.CheerpJ_LWJGL_Natives || {};
+                const keys = Object.keys(natives).filter(k => k.includes("Sys") || k.includes("nanoTime"));
+                console.log("[DEBUG] Registered Sys/Time Natives:", keys);
+            }, 5000);
+        });
+    </script>
+
+    <script>
+        (function () {
+            if (typeof WebAssembly === 'undefined') return;
+
+            const originalInstantiate = WebAssembly.instantiate;
+            const originalInstantiateStreaming = WebAssembly.instantiateStreaming;
+            const originalInstance = WebAssembly.Instance;
+
+            const globalRoot = (typeof globalThis !== 'undefined') ? globalThis : (typeof self !== 'undefined' ? self : window);
+
+            if (typeof globalRoot.__syscall_pipe2 !== 'function') {
+                const stub = function (fds, flags) {
+                    try {
+                        const maybePipe = globalRoot && globalRoot.__syscall_pipe;
+                        if (typeof maybePipe === 'function') return maybePipe(fds);
+                    } catch (e) { }
+                    console.warn('[CheerpJ WASM SHIM] global __syscall_pipe2 called');
+                    return -38; // ENOSYS
+                };
+                globalRoot.__syscall_pipe2 = stub;
+                // Aggressively attach to standard globals to ensure visibility
+                try { window.__syscall_pipe2 = stub; } catch (e) { }
+                try { self.__syscall_pipe2 = stub; } catch (e) { }
+            }
+
+            const pipe2ShimDebug = { logged: false };
+
+            function cloneObject(obj) {
+                if (!obj || (typeof obj !== 'object' && typeof obj !== 'function')) return {};
+                try {
+                    return Object.create(Object.getPrototypeOf(obj), Object.getOwnPropertyDescriptors(obj));
+                } catch (e) {
+                    try {
+                        return Object.assign({}, obj);
+                    } catch (e2) {
+                        return {};
+                    }
+                }
+            }
+
+            function ensurePipe2(importObject) {
+                // Use a Proxy to trap ALL accesses to the import object
+                // and inject __syscall_pipe2 into ANY module requested.
+                const realImport = importObject || {};
+
+                return new Proxy(realImport, {
+                    get: function (target, prop, receiver) {
+                        // Get the actual value (the module object, e.g. 'env')
+                        const val = Reflect.get(target, prop, receiver);
+
+                        // If accessing a symbol or purely internal prop, return as is
+                        if (typeof prop !== 'string') return val;
+
+                        // Retrieve the existing module object, or create a dummy one if missing.
+                        // We must wrap it in a proxy to intercept the '__syscall_pipe2' lookup.
+                        const moduleTarget = (val && typeof val === 'object') ? val : {};
+
+                        return new Proxy(moduleTarget, {
+                            get: function (modTarget, modProp, modReceiver) {
+                                if (modProp === '__syscall_pipe2') {
+                                    if (!pipe2ShimDebug.logged) {
+                                        console.log(`[CheerpJ WASM SHIM] Intercepted __syscall_pipe2 request on module '${prop}'`);
+                                        pipe2ShimDebug.logged = true;
+                                    }
+                                    return globalRoot.__syscall_pipe2;
+                                }
+                                // Fallback to the real value
+                                return Reflect.get(modTarget, modProp, modReceiver);
+                            }
+                        });
+                    }
+                });
+            }
+
+            WebAssembly.instantiate = function (source, importObject) {
+                // console.log('[CheerpJ WASM] Instantiate called with:', importObject ? Object.keys(importObject) : 'null');
+                return originalInstantiate.call(WebAssembly, source, ensurePipe2(importObject)).catch(function (e) {
+                    console.error('[CheerpJ WASM] instantiate failed', e);
+                    throw e;
+                });
+            };
+
+            if (typeof originalInstantiateStreaming === 'function') {
+                WebAssembly.instantiateStreaming = function (source, importObject) {
+                    const loggedSource = Promise.resolve(source).then(function (r) {
+                        try {
+                            console.log('[CheerpJ WASM] instantiateStreaming', (r && r.url) ? r.url : r);
+                        } catch (e) { }
+                        return r;
+                    });
+                    return originalInstantiateStreaming.call(WebAssembly, loggedSource, ensurePipe2(importObject)).catch(function (e) {
+                        console.error('[CheerpJ WASM] instantiateStreaming failed', e);
+                        throw e;
+                    });
+                };
+            }
+
+            try {
+                WebAssembly.Instance = function (module, importObject) {
+                    try {
+                        return Reflect.construct(originalInstance, [module, ensurePipe2(importObject)]);
+                    } catch (e) {
+                        console.error('[CheerpJ WASM] Instance failed', e);
+                        throw e;
+                    }
+                };
+                WebAssembly.Instance.prototype = originalInstance.prototype;
+            } catch (e) { }
+
+            try {
+                const instantiatePatched = WebAssembly.instantiate !== originalInstantiate;
+                const streamingPatched = (typeof originalInstantiateStreaming === 'function') ? (WebAssembly.instantiateStreaming !== originalInstantiateStreaming) : true;
+                const instancePatched = WebAssembly.Instance !== originalInstance;
+                console.log('[CheerpJ WASM] shim active', instantiatePatched, streamingPatched, instancePatched);
+            } catch (e) { }
+        })();
+    </script>
+
+    <script>
+        (function () {
+            if (typeof Worker === 'undefined') return;
+
+            const OriginalWorker = Worker;
+
+            function installPipe2WasmShim() {
+                if (typeof WebAssembly === 'undefined') return;
+
+                const originalInstantiate = WebAssembly.instantiate;
+                const originalInstantiateStreaming = WebAssembly.instantiateStreaming;
+                const originalInstance = WebAssembly.Instance;
+
+                const globalRoot = (typeof globalThis !== 'undefined') ? globalThis : (typeof self !== 'undefined' ? self : this);
+
+                if (typeof globalRoot.__syscall_pipe2 !== 'function') {
+                    globalRoot.__syscall_pipe2 = function (fds, flags) {
+                        try {
+                            const maybePipe = globalRoot && globalRoot.__syscall_pipe;
+                            if (typeof maybePipe === 'function') return maybePipe(fds);
+                        } catch (e) { }
+                        try {
+                            (globalRoot.console || console).warn('[CheerpJ WASM SHIM] global __syscall_pipe2 called');
+                        } catch (e) { }
+                        return -38;
+                    };
+                }
+
+                function cloneObject(obj) {
+                    if (!obj || (typeof obj !== 'object' && typeof obj !== 'function')) return {};
+                    try {
+                        return Object.create(Object.getPrototypeOf(obj), Object.getOwnPropertyDescriptors(obj));
+                    } catch (e) {
+                        try {
+                            return Object.assign({}, obj);
+                        } catch (e2) {
+                            return {};
+                        }
+                    }
+                }
+
+                function ensurePipe2(importObject) {
+                    const base = (importObject && (typeof importObject === 'object' || typeof importObject === 'function')) ? importObject : {};
+                    const out = cloneObject(base);
+
+                    const baseEnv = (base.env && (typeof base.env === 'object' || typeof base.env === 'function')) ? base.env : {};
+                    const env = cloneObject(baseEnv);
+                    env.__syscall_pipe2 = globalRoot.__syscall_pipe2;
+                    out.env = env;
+
+                    const baseWasi1 = (base.wasi_snapshot_preview1 && (typeof base.wasi_snapshot_preview1 === 'object' || typeof base.wasi_snapshot_preview1 === 'function'))
+                        ? base.wasi_snapshot_preview1
+                        : {};
+                    const wasi1 = cloneObject(baseWasi1);
+                    wasi1.__syscall_pipe2 = env.__syscall_pipe2;
+                    out.wasi_snapshot_preview1 = wasi1;
+
+                    const baseWasi2 = (base.wasi_unstable && (typeof base.wasi_unstable === 'object' || typeof base.wasi_unstable === 'function'))
+                        ? base.wasi_unstable
+                        : {};
+                    const wasi2 = cloneObject(baseWasi2);
+                    wasi2.__syscall_pipe2 = env.__syscall_pipe2;
+                    out.wasi_unstable = wasi2;
+
+                    return out;
+                }
+
+                WebAssembly.instantiate = function (source, importObject) {
+                    return originalInstantiate.call(WebAssembly, source, ensurePipe2(importObject));
+                };
+
+                if (typeof originalInstantiateStreaming === 'function') {
+                    WebAssembly.instantiateStreaming = function (source, importObject) {
+                        return originalInstantiateStreaming.call(WebAssembly, source, ensurePipe2(importObject));
+                    };
+                }
+
+                try {
+                    WebAssembly.Instance = function (module, importObject) {
+                        return Reflect.construct(originalInstance, [module, ensurePipe2(importObject)]);
+                    };
+                    WebAssembly.Instance.prototype = originalInstance.prototype;
+                } catch (e) { }
+            }
+
+            function absolutizeWorkerUrl(url) {
+                try {
+                    return new URL(String(url), window.location.href).href;
+                } catch (e) {
+                    try { return String(url); } catch (e2) { return url; }
+                }
+            }
+
+            function buildWorkerBootstrapSource(scriptURL, options) {
+                const absUrl = absolutizeWorkerUrl(scriptURL);
+                const urlLit = JSON.stringify(absUrl);
+                const shimLit = '(' + installPipe2WasmShim.toString() + ')();';
+                const type = (options && options.type) ? options.type : 'classic';
+
+                if (type === 'module') return `${shimLit}\nimport(${urlLit});`;
+                return `${shimLit}\nimportScripts(${urlLit});`;
+            }
+
+            function PatchedWorker(scriptURL, options) {
+                let blobUrl;
+                try {
+                    const source = buildWorkerBootstrapSource(scriptURL, options);
+                    blobUrl = URL.createObjectURL(new Blob([source], { type: 'application/javascript' }));
+                } catch (e) {
+                    return new OriginalWorker(scriptURL, options);
+                }
+
+                try {
+                    console.log('[CheerpJ Worker] wrapping', scriptURL);
+                } catch (e) { }
+
+                const w = new OriginalWorker(blobUrl, options);
+
+                setTimeout(function () {
+                    try { URL.revokeObjectURL(blobUrl); } catch (e) { }
+                }, 30000);
+
+                return w;
+            }
+
+            PatchedWorker.prototype = OriginalWorker.prototype;
+
+            try {
+                Object.setPrototypeOf(PatchedWorker, OriginalWorker);
+            } catch (e) { }
+
+            try {
+                Worker = PatchedWorker;
+            } catch (e) {
+                try { window.Worker = PatchedWorker; } catch (e2) { }
+            }
+
+            if (typeof SharedWorker !== 'undefined') {
+                const OriginalSharedWorker = SharedWorker;
+
+                function PatchedSharedWorker(scriptURL, optionsOrName) {
+                    let blobUrl;
+                    let options;
+                    try {
+                        options = (optionsOrName && typeof optionsOrName === 'object') ? optionsOrName : undefined;
+                    } catch (e) {
+                        options = undefined;
+                    }
+
+                    try {
+                        const source = buildWorkerBootstrapSource(scriptURL, options);
+                        blobUrl = URL.createObjectURL(new Blob([source], { type: 'application/javascript' }));
+                    } catch (e) {
+                        return new OriginalSharedWorker(scriptURL, optionsOrName);
+                    }
+
+                    try {
+                        console.log('[CheerpJ SharedWorker] wrapping', scriptURL);
+                    } catch (e) { }
+
+                    const sw = new OriginalSharedWorker(blobUrl, optionsOrName);
+
+                    setTimeout(function () {
+                        try { URL.revokeObjectURL(blobUrl); } catch (e) { }
+                    }, 30000);
+
+                    return sw;
+                }
+
+                PatchedSharedWorker.prototype = OriginalSharedWorker.prototype;
+
+                try {
+                    Object.setPrototypeOf(PatchedSharedWorker, OriginalSharedWorker);
+                } catch (e) { }
+
+                try {
+                    SharedWorker = PatchedSharedWorker;
+                } catch (e) {
+                    try { window.SharedWorker = PatchedSharedWorker; } catch (e2) { }
+                }
+
+                try {
+                    console.log('[CheerpJ SharedWorker] shim active');
+                } catch (e) { }
+            }
+
+            try {
+                console.log('[CheerpJ Worker] shim active');
+            } catch (e) { }
+        })();
+    </script>
+
+    <!-- CheerpJ 3.0 Runtime -->
+    <script src="/cheerpj-3.0/cj3loader.js"
+        onload="console.log('[CheerpJ 3.0] cj3loader.js loaded successfully. CHEERPJ_3_0_ACTIVE=true'); window.CHEERPJ_3_0 = true;"
+        onerror="console.error('[CheerpJ 3.0] cj3loader.js FAILED to load.')"></script>
+
+    <!-- LWJGL2 JavaScript Bridge for CheerpJ -->
+    <!-- LWJGL2 JavaScript Bridge for CheerpJ (Removed - using native stubs) -->
+    <!-- <script src="lwjgl-bridge.js"></script> -->
+    <script src="/cheerpj-natives/natives/javajpeg.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+    </style>
+
+    <!-- LWJGL Shim - MOVED TO HEAD -->
+    <script>
+        console.log("[Setup] HEAD Script Start");
+        try { document.documentElement.style.border = "5px solid blue"; } catch (e) { }
+    </script>
+    <script src="/cheerpj-natives/natives/lwjgl.js?v=head_fix_zip"></script>
+    <script>
+        if (window.CheerpJ_LWJGL_Natives) {
+            console.log("[Setup] SUCCESS: CheerpJ_LWJGL_Natives found in HEAD.", Object.keys(window.CheerpJ_LWJGL_Natives));
+
+            // CJ3 Requirement: Expose natives globally
+            Object.assign(window, window.CheerpJ_LWJGL_Natives);
+            console.log("[Setup] Exposed CheerpJ_LWJGL_Natives to GLOBAL window for CJ3.");
+
+            try { document.documentElement.style.border = "5px solid green"; } catch (e) { }
+        } else {
+            console.error("[Setup] FAILURE: CheerpJ_LWJGL_Natives NOT found in HEAD.");
+            try { document.documentElement.style.border = "5px solid red"; } catch (e) { }
+        }
+    </script>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+
+html,
+body {
+width: 100%;
+height: 100%;
+background: #000;
+overflow: hidden;
+}
+
+/* Game Container */
+#game-container {
+width: 100%;
+height: 100%;
+display: flex;
+align-items: center;
+justify-content: center;
+background: radial-gradient(ellipse at center, #0d1b2a 0%, #000 100%);
+}
+
+/* Loading Screen */
+#loading-screen {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: linear-gradient(135deg, #0a0a15 0%, #1a1a2e 50%, #0d1b2a 100%);
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+z-index: 1000;
+transition: opacity 0.5s ease;
+}
+
+#loading-screen.hidden {
+opacity: 0;
+pointer-events: none;
+}
+
+.loading-logo {
+font-size: 3rem;
+font-weight: 700;
+color: #64b5f6;
+letter-spacing: 5px;
+text-transform: uppercase;
+margin-bottom: 40px;
+text-shadow: 0 0 30px rgba(100, 181, 246, 0.5);
+}
+
+.loading-bar-container {
+width: 400px;
+max-width: 80%;
+height: 6px;
+background: rgba(255, 255, 255, 0.1);
+border-radius: 3px;
+overflow: hidden;
+margin-bottom: 20px;
+}
+
+.loading-bar {
+height: 100%;
+width: 0%;
+background: linear-gradient(90deg, #1565c0, #42a5f5, #64b5f6);
+border-radius: 3px;
+transition: width 0.3s ease;
+animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+
+0%,
+100% {
+opacity: 1;
+}
+
+50% {
+opacity: 0.7;
+}
+}
+
+.loading-status {
+color: #90a4ae;
+font-size: 0.9rem;
+letter-spacing: 1px;
+}
+
+.loading-substatus {
+color: #546e7a;
+font-size: 0.8rem;
+margin-top: 8px;
+}
+
+/* Top Bar */
+#top-bar {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+height: 40px;
+background: rgba(10, 10, 20, 0.9);
+border-bottom: 1px solid rgba(100, 150, 255, 0.2);
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: 0 20px;
+z-index: 100;
+opacity: 0;
+transition: opacity 0.3s;
+}
+
+#top-bar.visible {
+opacity: 1;
+}
+
+.top-bar-title {
+color: #64b5f6;
+font-weight: 600;
+letter-spacing: 2px;
+font-size: 0.9rem;
+}
+
+.top-bar-controls {
+display: flex;
+gap: 15px;
+}
+
+.control-btn {
+background: rgba(255, 255, 255, 0.1);
+border: 1px solid rgba(255, 255, 255, 0.2);
+color: #90a4ae;
+padding: 6px 12px;
+border-radius: 6px;
+font-size: 0.8rem;
+cursor: pointer;
+transition: all 0.2s;
+}
+
+.control-btn:hover {
+background: rgba(255, 255, 255, 0.2);
+color: #fff;
+}
+
+.control-btn.danger:hover {
+background: rgba(244, 67, 54, 0.3);
+border-color: rgba(244, 67, 54, 0.5);
+color: #ef5350;
+}
+
+/* Error Display */
+#error-display {
+display: none;
+position: fixed;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+background: rgba(20, 20, 30, 0.95);
+border: 1px solid rgba(244, 67, 54, 0.3);
+border-radius: 16px;
+padding: 40px;
+max-width: 500px;
+text-align: center;
+z-index: 2000;
+}
+
+#error-display.visible {
+display: block;
+}
+
+#error-display h2 {
+color: #ef5350;
+margin-bottom: 15px;
+}
+
+#error-display p {
+color: #90a4ae;
+margin-bottom: 20px;
+line-height: 1.6;
+}
+
+#error-display pre {
+background: rgba(0, 0, 0, 0.5);
+color: #78909c;
+padding: 15px;
+border-radius: 8px;
+font-size: 0.8rem;
+text-align: left;
+overflow-x: auto;
+max-height: 150px;
+}
+
+/* CheerpJ Canvas Styles */
+.cheerpj-display {
+width: 100% !important;
+height: 100% !important;
+}
+</style>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loading-logo">Starsector</div>
+        <div class="loading-bar-container">
+            <div class="loading-bar" id="loading-bar"></div>
+        </div>
+        <div class="loading-status" id="loading-status">Initializing CheerpJ Runtime...</div>
+        <div class="loading-substatus" id="loading-substatus">This may take a moment on first load</div>
+    </div>
+
+    <!-- DEBUG OVERLAY -->
+    <div id="debug-log-overlay"
+        style="position: fixed; bottom: 0; left: 0; width: 100%; height: 200px; background: rgba(0,0,0,0.8); color: lime; font-family: monospace; font-size: 10px; overflow-y: auto; z-index: 9999; padding: 10px; pointer-events: none; border-top: 1px solid lime;">
+        <div>Debug Log Initialized...</div>
+    </div>
+
+    <!-- Top Control Bar -->
+    <div id="top-bar">
+        <div class="top-bar-title">STARSECTOR // BROWSER EDITION</div>
+        <div class="top-bar-controls">
+            <button class="control-btn" onclick="toggleFullscreen()"> Fullscreen</button>
+            <button class="control-btn danger" onclick="logout()"> Logout</button>
+        </div>
+    </div>
+
+    <!-- Game Container -->
+    <div id="game-container"></div>
+
+    <!-- Error Display -->
+    <div id="error-display">
+        <h2>Launch Failed</h2>
+        <p id="error-message">An error occurred while starting Starsector.</p>
+        <pre id="error-details"></pre>
+        <button class="control-btn" onclick="location.reload()" style="margin-top: 20px;">Retry</button>
+    </div>
+
+    <script src="starsector-auth.js"></script>
+    <script>
+        // Authentication check
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Wait for auth system
+            await new Promise(r => setTimeout(r, 200));
+
+            /*
+            if (!StarsectorAuth.isAuthenticated()) {
+                window.location.href = 'starsector-login.html';
+                return;
+            }
+            */
+
+            // Start loading Starsector
+            try {
+                if (typeof navigator !== 'undefined' && Boolean(navigator.webdriver)) {
+                    return;
+                }
+            } catch (e) { }
+            initStarsector();
+        });
+
+        function updateLoadingProgress(percent, status, substatus) {
+            document.getElementById('loading-bar').style.width = percent + '%';
+            if (status) document.getElementById('loading-status').textContent = status;
+            if (substatus) document.getElementById('loading-substatus').textContent = substatus;
+        }
+
+        function formatErrorDetails(err) {
+            try {
+                if (err == null) return '';
+                if (typeof err === 'string') return err;
+                if (typeof err !== 'object' && typeof err !== 'function') return String(err);
+
+                const lines = [];
+                const name = err.name || (err.constructor && err.constructor.name) || '';
+                if (name) lines.push(`name: ${name}`);
+                if (err.message) lines.push(`message: ${err.message}`);
+                if (err.stack) lines.push(`stack:\n${err.stack}`);
+
+                let keys = [];
+                try {
+                    keys = Object.keys(err).filter(k => k !== 'name' && k !== 'message' && k !== 'stack');
+                } catch (e) {
+                    keys = [];
+                }
+
+                for (const k of keys.slice(0, 25)) {
+                    let v;
+                    try {
+                        const raw = err[k];
+                        if (typeof raw === 'string') v = raw;
+                        else if (raw == null) v = String(raw);
+                        else v = JSON.stringify(raw);
+                    } catch (e) {
+                        try {
+                            v = String(err[k]);
+                        } catch (e2) {
+                            v = '[unprintable]';
+                        }
+                    }
+                    lines.push(`${k}: ${v}`);
+                }
+
+                if (!lines.length) {
+                    try { return String(err); } catch (e) { return 'Unknown error'; }
+                }
+
+                return lines.join('\n');
+            } catch (e) {
+                try { return String(err); } catch (e2) { return 'Unknown error'; }
+            }
+        }
+
+        function showError(message, details) {
+            let detailsText = '';
+            try {
+                detailsText = formatErrorDetails(details);
+            } catch (e) {
+                try { detailsText = String(details || ''); } catch (e2) { detailsText = ''; }
+            }
+
+            try { console.error('[Starsector] showError', message, details); } catch (e) { }
+            try { if (detailsText) console.error(detailsText); } catch (e) { }
+
+            try {
+                const loading = document.getElementById('loading-screen');
+                if (loading) loading.classList.add('hidden');
+                const errorMsg = document.getElementById('error-message');
+                if (errorMsg) errorMsg.textContent = message;
+                const errorDetails = document.getElementById('error-details');
+                if (errorDetails) errorDetails.textContent = detailsText;
+                const errorDisplay = document.getElementById('error-display');
+                if (errorDisplay) errorDisplay.classList.add('visible');
+            } catch (e) { }
+        }
+
+        (function () {
+            const prevOnError = window.onerror;
+            window.onerror = function (msg, url, line, col, err) {
+                try {
+                    const m = (msg && msg.toString) ? msg.toString() : String(msg);
+                    showError('Unhandled error', err || m);
+                } catch (e) { }
+
+                if (typeof prevOnError === 'function') {
+                    try { return prevOnError.apply(this, arguments); } catch (e) { }
+                }
+
+                return false;
+            };
+
+            window.addEventListener('unhandledrejection', (ev) => {
+                try {
+                    showError('Unhandled promise rejection', ev && ev.reason);
+                } catch (e) { }
+            });
+        })();
+
+        async function initStarsector() {
+            try {
+                updateLoadingProgress(5, 'Loading CheerpJ 3.0 Runtime...', 'Downloading WebAssembly runtime');
+
+                // CRITICAL CJ3 FIX: Wait for cheerpjInit to be defined
+                const maxWait = 30000;
+                const startTime = Date.now();
+                while (typeof cheerpjInit !== 'function') {
+                    if (Date.now() - startTime > maxWait) {
+                        throw new Error("CheerpJ 3.0 initialization timed out. 'cheerpjInit' not found.");
+                    }
+                    console.log("Waiting for cheerpjInit...");
+                    await new Promise(r => setTimeout(r, 500));
+                }
+                console.log("CheerpJ 3.0 initialized successfully.");
+
+                // Create LWJGL canvas for WebGL rendering
+                const lwjglCanvas = document.createElement('canvas');
+                lwjglCanvas.id = 'lwjgl';
+                lwjglCanvas.width = 1280;
+                lwjglCanvas.height = 768;
+                lwjglCanvas.style.width = '100%';
+                lwjglCanvas.style.height = '100%';
+                lwjglCanvas.tabIndex = 0; // Make canvas focusable for keyboard input
+                document.getElementById('game-container').appendChild(lwjglCanvas);
+
+                // Set the canvas for LWJGL
+                window.lwjglCanvasElement = lwjglCanvas;
+                console.log('LWJGL canvas created:', lwjglCanvas);
+
+                // --- API PROBE (Direct Fetch) ---
+                console.log("=== API PROBE START ===");
+                const cKeys = Object.keys(window).filter(k => k.toLowerCase().startsWith('c'));
+
+                // --- API PROBE (Fatal Error Method) ---
+                // --- API PROBE (Disabling Fatal Probe) ---
+                console.log("=== API PROBE FINISHED ===");
+
+                const rangeProbe = async (url) => {
+                    try {
+                        const resp = await fetch(url, {
+                            method: "GET",
+                            headers: {
+                                Range: "bytes=0-15"
+                            }
+                        });
+                        await resp.arrayBuffer();
+                        console.log(
+                            `[API PROBE] Range ${url} -> ${resp.status} content-range=${resp.headers.get("content-range")} accept-ranges=${resp.headers.get("accept-ranges")} content-length=${resp.headers.get("content-length")} content-type=${resp.headers.get("content-type")}`
+                        );
+                    } catch (e) {
+                        console.error(`[API PROBE] Range ${url} failed`, e);
+                    }
+                };
+
+                await rangeProbe("/Starsector/starsector-core/starfarer_obf_v2.jar");
+                await rangeProbe("/Starsector/starsector-core/lwjgl.jar");
+                await rangeProbe("/Starsector/starsector-core/log4j-1.2.9.jar");
+                await rangeProbe("/cheerpj-natives/lwjgl-fixed.jar");
+
+                // Initialize CheerpJ 4.2
+                console.log("Initializing CheerpJ...");
+                await cheerpjInit({
+                    version: 8,
+                    enableInput: true,
+                    clipboardMode: "permission",
+                    execCallback: function (cmdPath, argsArray) {
+                        try {
+                            const cmd = String(cmdPath || "");
+                            if (cmd.includes('jspawnhelper')) return;
+                            console.log('Unsupported external command:', cmdPath, argsArray);
+                        } catch (e) {
+                            try { console.log('Unsupported external command:', cmdPath); } catch (e2) { }
+                        }
+                    },
+                    javaProperties: [
+                        "java.awt.headless=false",
+                        // "sun.boot.library.path=/app/cheerpj-natives/natives", // Duplicate
+                        "java.library.path=/app/cheerpj-natives/natives",
+                        "java.library.path=/app/cheerpj-natives/natives",
+                        // "sun.boot.library.path=/app/cheerpj-natives/natives", // DISABLED: Causing 'no zip' error by hiding standard libs
+                        "org.lwjgl.librarypath=/app/cheerpj-natives/natives",
+                        "user.dir=/app/Starsector",
+                        "fs.game.dir=/app/Starsector",
+                        "fs.mod.dir=/app/Starsector/mods_clean/", // Point to clean mods dir
+                        "starsector.mods.dir=/app/Starsector/mods_clean/",
+                        "com.fs.starfarer.settings.paths.mods=/app/Starsector/mods_clean/",
+                        "com.fs.starfarer.settings.paths.saves=/app/Starsector/saves",
+                        "com.fs.starfarer.settings.paths.screenshots=/app/Starsector/screenshots"
+                    ],
+                    // --- CRITICAL FIX: Monotonic High-Res Timer ---
+                    // CheerpJ's System.nanoTime appears to use performance.now() directly, bypassing JNI overrides.
+                    // Starsector crashes with dt=0 if time doesn't advance between frames (infinite FPS in loop).
+                    // We force performance.now() to ALWAYS strictly increase.
+                    // This shim must be active before CheerpJ initializes its internal time sources.
+                    beforeLoad: function () {
+                        const _realNow = performance.now.bind(performance);
+                        let _lastNow = _realNow();
+
+                        performance.now = function () {
+                            let now = _realNow();
+                            if (now <= _lastNow) {
+                                now = _lastNow + 0.001;
+                            }
+                            _lastNow = now;
+                            return now;
+                        };
+
+                        const _realDateNow = Date.now.bind(Date);
+                        let _lastDateNow = _realDateNow();
+                        Date.now = function () {
+                            let now = _realDateNow();
+                            if (now <= _lastDateNow) {
+                                // Forced increment to prevent dt=0
+                                now = _lastDateNow + 1;
+                            }
+                            _lastDateNow = now;
+                            return now;
+                        };
+
+                        console.log("[Polyfill] Monotonic performance.now() AND Date.now() installed.");
+                    },
+                    natives: {
+                        // Hardcoded Debug Test
+                        "Java_org_lwjgl_opengl_Display_create": function (lib, pixelFormat, contextAttribs) {
+                            console.log("[HARDCODED NATIVE] Display.create HIT!");
+                        },
+                        // Stub for generic "natives" variable if referenced elsewhere
+                        // Relying entirely on window.CheerpJ_LWJGL_Natives from lwjgl.js
+                        ...(window.CheerpJ_LWJGL_Natives || {})
+                    }
+                });
+
+                // [Done] Removed cheerpDef mocks (unavailable in 4.2). 
+                // Natives injected above in cheerpjInit handle Sys timing.
+
+
+                console.log('CheerpJ 3.0 initialized (Log Verified).');
+
+                // Full Classpath - With CACHE-BUSTED jars
+                const classPath = [
+                    "/app/overrides.jar", // MOVED TO TOP: Bundled overrides to avoid 404 spam
+                    "/app/cheerpj-natives/lwjgl-fixed.jar", // ENABLED: Needed for class definitions
+                    "/app/Starsector/starsector-core/starfarer_obf_v2.jar",
+                    "/app/Starsector/starsector-core/fs.common_obf.jar",
+                    "/app/Starsector/starsector-core/fs.sound_obf.jar",
+                    "/app/Starsector/starsector-core/starfarer.api_v2.jar",
+                    "/app/Starsector/starsector-core/xstream-1.4.10.jar",
+                    "/app/Starsector/starsector-core/janino.jar",
+                    "/app/Starsector/starsector-core/commons-compiler.jar",
+                    "/app/Starsector/starsector-core/commons-compiler-jdk.jar",
+                    "/app/Starsector/starsector-core/jogg-0.0.7.jar",
+                    "/app/Starsector/starsector-core/jorbis-0.0.15.jar",
+                    "/app/Starsector/starsector-core/json.jar",
+                    "/app/Starsector/starsector-core/lwjgl_renamed.jar", // RENAMED to bypass CheerpJ internal logic
+                    "/app/Starsector/starsector-core/lwjgl_util.jar",
+                    "/app/Starsector/starsector-core/log4j-1.2.9.jar",
+                    "/app/Starsector/starsector-core/jinput.jar",
+                    "/app/Starsector/",
+                    "/app/Starsector/starsector-core/", // Restored to end
+                    "/app/stubs/"
+                ].join(':');
+
+                console.log(' Classpath Restored (No LWJGL):', classPath);
+
+                // --- ROBUST JS MOCKS FOR LWJGL ---
+                console.log("[Setup] Re-enabling Legacy JS Mocks (Fallback for missing natives)");
+
+                const cjDisplay = cheerpjCreateDisplay(lwjglCanvas.width, lwjglCanvas.height, document.getElementById('game-container'));
+                console.log('CheerpJ display created:', cjDisplay);
+
+                updateLoadingProgress(60, 'Starting JVM...', 'Launching Starsector Main Class');
+
+                // Run Main
+                updateLoadingProgress(100, 'Starsector Running...', '');
+                setTimeout(() => {
+                    document.getElementById('loading-screen').classList.add('hidden');
+                    document.getElementById('top-bar').classList.add('visible');
+                }, 500);
+
+                const exitCode = await cheerpjRunMain(
+                    'com.fs.starfarer.StarfarerLauncher',
+                    classPath
+                );
+
+                if (exitCode !== 0) { console.warn('Starsector exited with code:', exitCode); }
+
+            } catch (error) {
+                console.error('Starsector launch error:', error);
+                showError('Failed to launch Starsector.', error);
+            }
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(e => {
+                    console.warn('Fullscreen not supported:', e);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                // StarsectorAuth.logout();
+                window.location.reload();
+            }
+        }
+    </script>
+</body>
+
+</html>

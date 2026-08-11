@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Radio | WebTransport</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+        body {
+            margin: 0;
+            background: #1a1a2e;
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .radio-container {
+            margin-top: 10vh;
+            width: 80%;
+            height: 60vh;
+            background: #000;
+            border: 2px solid #fbbf24;
+            border-radius: 20px;
+            position: relative;
+            box-shadow: 0 0 30px rgba(251, 191, 36, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .knob {
+            width: 60px;
+            height: 60px;
+            background: #333;
+            border-radius: 50%;
+            border: 2px solid #555;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .knob::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            width: 4px;
+            height: 15px;
+            background: #fbbf24;
+            transform: translateX(-50%);
+        }
+
+        .status {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #fbbf24;
+            font-size: 0.8rem;
+        }
+
+        h1 {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            margin: 0;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+        }
+    </style>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+
+<body>
+    <a href="../../index.html">
+        <img src="../../images/ita_logo.png" alt="ITA Logo" class="ita-logo">
+    </a>
+
+    <a href="../../projects.html"
+        style="position: absolute; top: 20px; left: 20px; color: #aaa; text-decoration: none; z-index: 10;">← BACK</a>
+
+    <div class="radio-container">
+        <h1>INTERSTELLAR RADIO</h1>
+        <div class="status">SIGNAL: <span id="signal-strength">WAITING...</span></div>
+        <canvas id="viz"></canvas>
+    </div>
+
+    <div class="controls">
+        <div class="knob" id="knob-freq" title="Frequency"></div>
+        <div class="knob" id="knob-gain" title="Gain"></div>
+    </div>
+
+    <p style="color: #888; margin-top: 20px; max-width: 600px; text-align: center;">
+        Simulating ultra-low latency WebTransport datagrams. Open multiple tabs to see the "radio waves" sync securely
+        across peer nodes.
+    </p>
+
+    <script type="module">
+        import { P2PManager } from './p2p-core.js';
+
+        const canvas = document.getElementById('viz');
+        const ctx = canvas.getContext('2d');
+        const manager = new P2PManager();
+
+        // Resize
+        function resize() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        let dataPoints = new Array(100).fill(0);
+
+        // Viz Loop
+        function draw() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height / 2);
+
+            for (let i = 0; i < dataPoints.length; i++) {
+                const x = (i / dataPoints.length) * canvas.width;
+                const y = (canvas.height / 2) + dataPoints[i] * 50;
+                ctx.lineTo(x, y);
+            }
+
+            ctx.strokeStyle = '#fbbf24';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            requestAnimationFrame(draw);
+        }
+        draw();
+
+        // Listen for Radio waves
+        manager.onRadioReceived = (nodeId, data) => {
+            document.getElementById('signal-strength').textContent = `RX: -${Math.floor(Math.random() * 20 + 30)}dBm`;
+            // Blend remote data with local visual
+            if (Array.isArray(data)) {
+                dataPoints = data;
+            }
+        };
+
+        // Auto-broadcast noise for simulation
+        setInterval(() => {
+            const freq = Math.sin(Date.now() / 200);
+            const noise = new Array(100).fill(0).map((_, i) => Math.sin(i * 0.1 + Date.now() / 100) * freq * Math.random());
+
+            manager.broadcastRadio(noise);
+
+            // Visualize our own transmission if we are idle/broadcasting
+            // (If we were receiving, we might want to show that instead, but for this demo, mixing is fine)
+            if (document.getElementById('signal-strength').textContent.includes('WAITING') ||
+                document.getElementById('signal-strength').textContent.includes('BROADCASTING')) {
+
+                document.getElementById('signal-strength').textContent = 'TX: BROADCASTING';
+                document.getElementById('signal-strength').style.color = '#fbbf24'; // Orange for TX
+                dataPoints = noise;
+            }
+        }, 50); // 20Hz update
+
+    </script>
+</body>
+
+</html>

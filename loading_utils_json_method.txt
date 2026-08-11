@@ -1,0 +1,189 @@
+  public static org.json.JSONObject Í00000(java.lang.String, java.lang.String) throws java.io.IOException, org.json.JSONException;
+
+    Code:
+
+       0: new           #111                // class java/lang/StringBuffer
+
+       3: dup
+
+       4: invokespecial #113                // Method java/lang/StringBuffer."<init>":()V
+
+       7: astore_2
+
+       8: iconst_0
+
+       9: istore_3
+
+      10: iconst_0
+
+      11: istore        4
+
+      13: iconst_0
+
+      14: istore        5
+
+      16: goto          113
+
+      19: aload_1
+
+      20: iload         5
+
+      22: invokevirtual #114                // Method java/lang/String.charAt:(I)C
+
+      25: istore        6
+
+      27: iload         6
+
+      29: bipush        34
+
+      31: if_icmpne     46
+
+      34: iload         4
+
+      36: ifeq          43
+
+      39: iconst_0
+
+      40: goto          44
+
+      43: iconst_1
+
+      44: istore        4
+
+      46: iload         6
+
+      48: bipush        10
+
+      50: if_icmpeq     60
+
+      53: iload         6
+
+      55: bipush        13
+
+      57: if_icmpne     82
+
+      60: iconst_0
+
+      61: istore_3
+
+      62: iconst_0
+
+      63: istore        4
+
+      65: iload         6
+
+      67: bipush        10
+
+      69: if_icmpne     110
+
+      72: aload_2
+
+      73: bipush        10
+
+      75: invokevirtual #120                // Method java/lang/StringBuffer.append:(C)Ljava/lang/StringBuffer;
+
+      78: pop
+
+      79: goto          110
+
+      82: iload         6
+
+      84: bipush        35
+
+      86: if_icmpne     99
+
+      89: iload         4
+
+      91: ifne          99
+
+      94: iconst_1
+
+      95: istore_3
+
+      96: goto          110
+
+      99: iload_3
+
+     100: ifne          110
+
+     103: aload_2
+
+     104: iload         6
+
+     106: invokevirtual #120                // Method java/lang/StringBuffer.append:(C)Ljava/lang/StringBuffer;
+
+     109: pop
+
+     110: iinc          5, 1
+
+     113: iload         5
+
+     115: aload_1
+
+     116: invokevirtual #123                // Method java/lang/String.length:()I
+
+     119: if_icmplt     19
+
+     122: new           #127                // class org/json/JSONObject
+
+     125: dup
+
+     126: aload_2
+
+     127: invokevirtual #129                // Method java/lang/StringBuffer.toString:()Ljava/lang/String;
+
+     130: invokespecial #130                // Method org/json/JSONObject."<init>":(Ljava/lang/String;)V
+
+     133: astore        5
+
+     135: aload         5
+
+     137: areturn
+
+     138: astore_2
+
+     139: new           #75                 // class java/lang/StringBuilder
+
+     142: dup
+
+     143: aload_0
+
+     144: invokestatic  #131                // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+
+     147: invokespecial #79                 // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+
+     150: ldc           #135                // String \n
+
+     152: invokevirtual #81                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+     155: aload_2
+
+     156: invokevirtual #137                // Method org/json/JSONException.getMessage:()Ljava/lang/String;
+
+     159: invokevirtual #81                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+     162: invokevirtual #87                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+
+     165: astore_3
+
+     166: new           #73                 // class org/json/JSONException
+
+     169: dup
+
+     170: aload_3
+
+     171: invokespecial #140                // Method org/json/JSONException."<init>":(Ljava/lang/String;)V
+
+     174: astore_2
+
+     175: aload_2
+
+     176: athrow
+
+    Exception table:
+
+       from    to  target type
+
+           0   137   138   Class org/json/JSONException
+
+

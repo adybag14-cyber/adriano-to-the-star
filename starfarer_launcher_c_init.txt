@@ -1,0 +1,260 @@
+      71: ldc           #135                // String Starting Starsector 0.98a-RC8 launcher
+      73: invokevirtual #137                // Method org/apache/log4j/Logger.info:(Ljava/lang/Object;)V
+      76: getstatic     #42                 // Field Ë00000:Lorg/apache/log4j/Logger;
+      79: new           #141                // class java/lang/StringBuilder
+      82: dup
+      83: ldc           #143                // String Running in
+      85: invokespecial #145                // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+      88: ldc           #146                // String user.dir
+      90: invokestatic  #22                 // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+      93: invokevirtual #148                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      96: invokevirtual #152                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      99: invokevirtual #137                // Method org/apache/log4j/Logger.info:(Ljava/lang/Object;)V
+     102: getstatic     #42                 // Field Ë00000:Lorg/apache/log4j/Logger;
+     105: new           #141                // class java/lang/StringBuilder
+     108: dup
+     109: ldc           #155                // String OS:
+     111: invokespecial #145                // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+     114: ldc           #157                // String os.name
+     116: invokestatic  #22                 // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+     119: invokevirtual #148                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     122: ldc           #159                // String
+     124: invokevirtual #148                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     127: ldc           #161                // String os.version
+     129: invokestatic  #22                 // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+     132: invokevirtual #148                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     135: invokevirtual #152                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     138: invokevirtual #137                // Method org/apache/log4j/Logger.info:(Ljava/lang/Object;)V
+     141: getstatic     #42                 // Field Ë00000:Lorg/apache/log4j/Logger;
+     144: new           #141                // class java/lang/StringBuilder
+     147: dup
+     148: ldc           #163                // String Java version:
+     150: invokespecial #145                // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+     153: ldc           #165                // String java.version
+     155: invokestatic  #22                 // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+     158: invokevirtual #148                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     161: ldc           #167                // String  (
+     163: invokevirtual #148                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     166: ldc           #169                // String sun.arch.data.model
+     168: invokestatic  #22                 // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+     171: invokevirtual #148                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     174: ldc           #171                // String -bit)
+     176: invokevirtual #148                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     179: invokevirtual #152                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     182: invokevirtual #137                // Method org/apache/log4j/Logger.info:(Ljava/lang/Object;)V
+     185: invokestatic  #173                // Method java/lang/Runtime.getRuntime:()Ljava/lang/Runtime;
+     188: invokevirtual #179                // Method java/lang/Runtime.maxMemory:()J
+     191: ldc2_w        #183                // long 1048576l
+     194: ldiv
+     195: lstore_2
+     196: getstatic     #42                 // Field Ë00000:Lorg/apache/log4j/Logger;
+     199: new           #141                // class java/lang/StringBuilder
+     202: dup
+     203: ldc           #185                // String Max memory:
+     205: invokespecial #145                // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+     208: lload_2
+     209: invokevirtual #187                // Method java/lang/StringBuilder.append:(J)Ljava/lang/StringBuilder;
+     212: ldc           #190                // String MB
+     214: invokevirtual #148                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     217: invokevirtual #152                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     220: invokevirtual #137                // Method org/apache/log4j/Logger.info:(Ljava/lang/Object;)V
+     223: invokestatic  #192                // Method com/fs/util/C.Ë00000:()Lcom/fs/util/C;
+     226: invokevirtual #198                // Method com/fs/util/C.class:()V
+     229: invokestatic  #192                // Method com/fs/util/C.Ë00000:()Lcom/fs/util/C;
+     232: ldc           #201                // String ../starfarer.res/res
+     234: invokevirtual #203                // Method com/fs/util/C.class:(Ljava/lang/String;)V
+     237: invokestatic  #192                // Method com/fs/util/C.Ë00000:()Lcom/fs/util/C;
+     240: invokevirtual #206                // Method com/fs/util/C.new:()V
+     243: invokestatic  #209                // Method com/fs/starfarer/launcher/ModManager.getInstance:()Lcom/fs/starfarer/launcher/ModManager;
+     246: pop
+     247: invokestatic  #214                // Method com/fs/starfarer/settings/StarfarerSettings.÷È0000:()V
+     250: ldc           #217                // String cjkMode
+     252: invokestatic  #219                // Method com/fs/starfarer/settings/StarfarerSettings.class:(Ljava/lang/String;)Z
+     255: putstatic     #223                // Field com/fs/graphics/A/ooOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO.ÈË0000:Z
+     258: ldc           #228                // String devMode
+     260: invokestatic  #219                // Method com/fs/starfarer/settings/StarfarerSettings.class:(Ljava/lang/String;)Z
+     263: istore_2
+     264: ldc           #230                // String resolutionOverride
+     266: invokestatic  #232                // Method com/fs/starfarer/settings/StarfarerSettings.null:(Ljava/lang/String;)Ljava/lang/String;
+     269: astore_3
+     270: ldc           #235                // String forceAspectRatio
+     272: fconst_0
+     273: invokestatic  #237                // Method com/fs/starfarer/settings/StarfarerSettings.o00000:(Ljava/lang/String;F)F
+     276: fstore        4
+     278: ldc           #241                // String startRes
+     280: invokestatic  #22                 // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+     283: astore        5
+     285: aload         5
+     287: ifnull        301
+     290: aload         5
+     292: invokevirtual #243                // Method java/lang/String.isEmpty:()Z
+     295: ifne          301
+     298: aload         5
+     300: astore_3
+     301: ldc           #248                // String allowAnyJavaVersion
+     303: invokestatic  #219                // Method com/fs/starfarer/settings/StarfarerSettings.class:(Ljava/lang/String;)Z
+     306: istore        6
+     308: iload         6
+     310: ifne          374
+     313: ldc           #165                // String java.version
+     315: invokestatic  #22                 // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+     318: astore        7
+     320: aload         7
+     322: ldc           #250                // String 1.7.
+     324: invokevirtual #252                // Method java/lang/String.startsWith:(Ljava/lang/String;)Z
+     327: ifne          374
+     330: new           #255                // class java/lang/RuntimeException
+     333: dup
+     334: new           #141                // class java/lang/StringBuilder
+     337: dup
+     338: ldc_w         #257                // String Java 7 is the only supported version of Java. Trying to use version: [
+     341: invokespecial #145                // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+     344: aload         7
+     346: invokevirtual #148                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     349: ldc_w         #259                // String ].\n\n
+     352: invokevirtual #148                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     355: ldc_w         #261                // String See allowAnyJavaVersion in settings.json if you really want to do this,
+     358: invokevirtual #148                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     361: ldc_w         #263                // String but it\'s probably a bad idea. Random crashes, incompatibility with other mods, etc may result.
+     364: invokevirtual #148                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     367: invokevirtual #152                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     370: invokespecial #265                // Method java/lang/RuntimeException."<init>":(Ljava/lang/String;)V
+     373: athrow
+     374: invokestatic  #266                // Method com/fs/starfarer/settings/StarfarerSettings.Ï10000:()Z
+     377: ifeq          451
+     380: invokestatic  #269                // Method com/fs/starfarer/launcher/ooOO.Ë00000:()Lcom/fs/starfarer/launcher/ooOO;
+     383: invokevirtual #274                // Method com/fs/starfarer/launcher/ooOO.Í00000:()Z
+     386: istore        7
+     388: iload         7
+     390: ifeq          450
+     393: aload         5
+     395: ldc_w         #277                // String x
+     398: invokevirtual #279                // Method java/lang/String.split:(Ljava/lang/String;)[Ljava/lang/String;
+     401: iconst_0
+     402: aaload
+     403: astore        8
+     405: aload         5
+     407: ldc_w         #277                // String x
+     410: invokevirtual #279                // Method java/lang/String.split:(Ljava/lang/String;)[Ljava/lang/String;
+     413: iconst_1
+     414: aaload
+     415: astore        9
+     417: ldc_w         #283                // String startFS
+     420: invokestatic  #22                 // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+     423: invokestatic  #285                // Method java/lang/Boolean.parseBoolean:(Ljava/lang/String;)Z
+     426: istore        10
+     428: ldc_w         #290                // String startSound
+     431: invokestatic  #22                 // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+     434: invokestatic  #285                // Method java/lang/Boolean.parseBoolean:(Ljava/lang/String;)Z
+     437: istore        11
+     439: iload         10
+     441: iload         11
+     443: aload         8
+     445: aload         9
+     447: invokestatic  #292                // Method o00000:(ZZLjava/lang/String;Ljava/lang/String;)V
+     450: return
+     451: ldc_w         #296                // String legacyLauncher
+     454: invokestatic  #219                // Method com/fs/starfarer/settings/StarfarerSettings.class:(Ljava/lang/String;)Z
+     457: ifeq          531
+     460: ldc_w         #298                // String queryMaxAASamples
+     463: invokestatic  #219                // Method com/fs/starfarer/settings/StarfarerSettings.class:(Ljava/lang/String;)Z
+     466: ifeq          516
+     469: invokestatic  #300                // Method o00000:()I
+     472: putstatic     #302                // Field com/fs/starfarer/settings/StarfarerSettings.÷Ï0000:I
+     475: getstatic     #302                // Field com/fs/starfarer/settings/StarfarerSettings.÷Ï0000:I
+     478: ldc_w         #306                // String maxAASamples
+     481: invokestatic  #308                // Method com/fs/starfarer/settings/StarfarerSettings.÷00000:(Ljava/lang/String;)F
+     484: f2i
+     485: invokestatic  #312                // Method java/lang/Math.min:(II)I
+     488: putstatic     #302                // Field com/fs/starfarer/settings/StarfarerSettings.÷Ï0000:I
+     491: getstatic     #42                 // Field Ë00000:Lorg/apache/log4j/Logger;
+     494: new           #141                // class java/lang/StringBuilder
+     497: dup
+     498: ldc_w         #318                // String Maximum anti-aliasing samples:
+     501: invokespecial #145                // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+     504: getstatic     #302                // Field com/fs/starfarer/settings/StarfarerSettings.÷Ï0000:I
+     507: invokevirtual #320                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     510: invokevirtual #152                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     513: invokevirtual #137                // Method org/apache/log4j/Logger.info:(Ljava/lang/Object;)V
+     516: aload_0
+     517: aload_0
+     518: iload_2
+     519: aload_3
+     520: fload         4
+     522: invokestatic  #323                // Method com/fs/starfarer/launcher/StarfarerLauncherUI.o00000:(Ljava/awt/event/ActionListener;ZLjava/lang/String;F)Lcom/fs/starfarer/launcher/opengl/F;
+     525: putfield      #329                // Field È00000:Lcom/fs/starfarer/launcher/opengl/F;
+     528: goto          543
+     531: aload_0
+     532: aload_0
+     533: iload_2
+     534: aload_3
+     535: fload         4
+     537: invokestatic  #331                // Method com/fs/starfarer/launcher/opengl/GLLauncher.createUI:(Ljava/awt/event/ActionListener;ZLjava/lang/String;F)Lcom/fs/starfarer/launcher/opengl/F;
+     540: putfield      #329                // Field È00000:Lcom/fs/starfarer/launcher/opengl/F;
+     543: invokestatic  #269                // Method com/fs/starfarer/launcher/ooOO.Ë00000:()Lcom/fs/starfarer/launcher/ooOO;
+     546: invokevirtual #274                // Method com/fs/starfarer/launcher/ooOO.Í00000:()Z
+     549: istore        7
+     551: iload         7
+     553: ifeq          565
+     556: aload_0
+     557: getfield      #329                // Field È00000:Lcom/fs/starfarer/launcher/opengl/F;
+     560: invokeinterface #334,  1          // InterfaceMethod com/fs/starfarer/launcher/opengl/F.switchToLaunch:()V
+     565: aload_0
+     566: getfield      #329                // Field È00000:Lcom/fs/starfarer/launcher/opengl/F;
+     569: invokeinterface #339,  1          // InterfaceMethod com/fs/starfarer/launcher/opengl/F.preCenter:()V
+     574: aload_0
+     575: invokevirtual #342                // Method new:()V
+     578: aload_0
+     579: getfield      #329                // Field È00000:Lcom/fs/starfarer/launcher/opengl/F;
+     582: invokeinterface #345,  1          // InterfaceMethod com/fs/starfarer/launcher/opengl/F.show:()V
+     587: iload         7
+     589: ifeq          604
+     592: aload_0
+     593: getfield      #329                // Field È00000:Lcom/fs/starfarer/launcher/opengl/F;
+     596: invokeinterface #348,  1          // InterfaceMethod com/fs/starfarer/launcher/opengl/F.focusOnResComboBox:()V
+     601: goto          651
+     604: aload_0
+     605: getfield      #329                // Field È00000:Lcom/fs/starfarer/launcher/opengl/F;
+     608: invokeinterface #351,  1          // InterfaceMethod com/fs/starfarer/launcher/opengl/F.focusOnFirstInputField:()V
+     613: goto          651
+     616: astore_2
+     617: getstatic     #42                 // Field Ë00000:Lorg/apache/log4j/Logger;
+     620: aload_2
+     621: aload_2
+     622: invokevirtual #354                // Method org/apache/log4j/Logger.error:(Ljava/lang/Object;Ljava/lang/Throwable;)V
+     625: ldc_w         #358                // String Starsector 0.98a-RC8
+     628: new           #141                // class java/lang/StringBuilder
+     631: dup
+     632: ldc_w         #360                // String Fatal:
+     635: invokespecial #145                // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+     638: aload_2
+     639: invokevirtual #362                // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+     642: invokevirtual #148                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     645: invokevirtual #152                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     648: invokestatic  #367                // Method org/lwjgl/Sys.alert:(Ljava/lang/String;Ljava/lang/String;)V
+     651: return
+    Exception table:
+       from    to  target type
+          34    48    51   Class java/lang/Exception
+          56   450   616   Class java/lang/Throwable
+         451   613   616   Class java/lang/Throwable
+
+  private void o00000(javax.swing.JComponent);
+    Code:
+       0: aload_1
+       1: new           #109                // class java/awt/Color
+       4: dup
+       5: iconst_0
+       6: iconst_0
+       7: iconst_0
+       8: iconst_0
+       9: invokespecial #111                // Method java/awt/Color."<init>":(IIII)V
+      12: invokevirtual #392                // Method javax/swing/JComponent.setBackground:(Ljava/awt/Color;)V
+      15: aload_1
+      16: iconst_0
+      17: invokevirtual #398                // Method javax/swing/JComponent.setOpaque:(Z)V
+      20: return
+
+  private void new();
+    Code:
+       0: invokestatic  #403                // Method java/awt/Toolkit.getDefaultToolkit:()Ljava/awt/Toolkit;

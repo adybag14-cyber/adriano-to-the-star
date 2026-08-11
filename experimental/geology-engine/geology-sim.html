@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geological & Surface Engine | Adriano to the Stars</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Fira+Code&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+        body { margin: 0; background: #000; overflow: hidden; color: #fff; font-family: 'Inter', sans-serif; }
+        canvas { width: 100vw; height: 100vh; display: block; }
+        .hud {
+            position: fixed; top: 2rem; right: 2rem;
+            background: rgba(15, 10, 5, 0.9); border: 1px solid #ba944f;
+            padding: 2rem; border-radius: 12px; backdrop-filter: blur(15px);
+            min-width: 350px; z-index: 100;
+        }
+        .roadmap-status {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+            margin-top: 1.5rem; font-size: 0.75rem; border-top: 1px solid rgba(186, 148, 79, 0.3);
+            padding-top: 1rem;
+        }
+        .item-chip {
+            background: rgba(186, 148, 79, 0.15); color: #ba944f;
+            padding: 0.3rem 0.6rem; border-radius: 4px; border: 1px solid rgba(186, 148, 79, 0.3);
+        }
+        .control-group { margin-bottom: 1.5rem; }
+        label { display: block; font-size: 0.8rem; opacity: 0.7; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 1px; }
+        input[type="range"] { width: 100%; accent-color: #ba944f; }
+        .btn-action {
+            background: #ba944f; color: #000; border: none; padding: 0.8rem; width: 100%;
+            font-family: 'Orbitron'; font-weight: 900; border-radius: 4px; cursor: pointer;
+            margin-top: 1rem; transition: transform 0.2s;
+        }
+        .btn-action:active { transform: scale(0.95); }
+    </style>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+
+<body>
+    <canvas id="geology-canvas"></canvas>
+
+    <div class="hud">
+        <h2 style="margin: 0 0 0.5rem 0; font-family: 'Orbitron'; letter-spacing: 3px; color: #ba944f;">GEOLOGICAL MASTER</h2>
+        <p style="font-size: 0.85rem; opacity: 0.6; margin-bottom: 2rem;">Tectonic & Surface Evolution Suite</p>
+
+        <div class="control-group">
+            <label>Tectonic Stress (Item #10)</label>
+            <input type="range" id="tectonics" min="0" max="1" step="0.01" value="0.2">
+        </div>
+
+        <div class="control-group">
+            <label>Erosion Rate (Item #17)</label>
+            <input type="range" id="erosion" min="0" max="1" step="0.01" value="0.5">
+        </div>
+
+        <button class="btn-action" onclick="window.triggerImpact()">INITIATE IMPACT (#13)</button>
+
+        <div class="roadmap-status">
+            <div class="item-chip">#10 Tectonics</div>
+            <div class="item-chip">#13 Cratering</div>
+            <div class="item-chip">#17 Erosion</div>
+            <div class="item-chip">#33 Fractal Terrain</div>
+            <div class="item-chip">#46 Rocks</div>
+            <div class="item-chip">#47 Crystals</div>
+            <div class="item-chip">#69 Tessellation</div>
+            <div class="item-chip">#79 Outcrops</div>
+        </div>
+    </div>
+
+    <script type="module" src="geology-sim.js"></script>
+</body>
+
+</html>

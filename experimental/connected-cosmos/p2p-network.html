@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P2P Data Mesh | Connected Cosmos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+        body {
+            margin: 0;
+            background: #050510;
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin-top: 50px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .panel {
+            background: rgba(20, 20, 30, 0.8);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            height: 400px;
+            overflow-y: auto;
+        }
+
+        h1 {
+            color: #4ade80;
+            text-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+        }
+
+        h2 {
+            border-bottom: 1px solid #444;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        .peer-node {
+            background: #111;
+            padding: 10px;
+            margin-bottom: 5px;
+            border-left: 3px solid #4ade80;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .log-entry {
+            font-family: monospace;
+            font-size: 0.9em;
+            color: #aaa;
+            margin-bottom: 4px;
+        }
+
+        .log-entry.rx {
+            color: #60a5fa;
+        }
+
+        .log-entry.tx {
+            color: #facc15;
+        }
+
+        .btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-family: inherit;
+            cursor: pointer;
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+
+<body>
+    <a href="../../projects.html"
+        style="position: absolute; top: 20px; left: 20px; color: #aaa; text-decoration: none;">← BACK TO LAB</a>
+
+    <div class="container">
+        <h1>DECENTRALIZED DATA MESH</h1>
+        <p>Open this page in multiple tabs to simulate a P2P cluster.</p>
+
+        <div class="grid">
+            <div class="panel">
+                <h2>Active Peers</h2>
+                <div id="peer-list"></div>
+            </div>
+
+            <div class="panel">
+                <h2>Data Stream Log</h2>
+                <div id="data-log"></div>
+            </div>
+        </div>
+
+        <div style="margin-top: 20px; text-align: center;">
+            <button class="btn" id="broadcast-btn">Broadcast Planet Data Chunk</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { P2PManager } from './p2p-core.js';
+
+        const logPanel = document.getElementById('data-log');
+        const peerList = document.getElementById('peer-list');
+
+        function log(msg, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `log-entry ${type}`;
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            logPanel.prepend(div);
+        }
+
+        const manager = new P2PManager({ log: (msg) => log(msg) });
+
+        // Listen for new peers
+        window.addEventListener('peer-connected', (e) => {
+            const peerId = e.detail.peerId;
+            const div = document.createElement('div');
+            div.className = 'peer-node';
+            div.id = `peer-${peerId}`;
+            div.innerHTML = `<strong>NODE:</strong> ${peerId} <span style="float:right; color:#4ade80">● ONLINE</span>`;
+            peerList.appendChild(div);
+        });
+
+        // Listen for data
+        manager.onDataReceived = (nodeId, data) => {
+            log(`Received Data Chunk: ${JSON.stringify(data).substring(0, 50)}...`, 'rx');
+        };
+
+        // Broadcast Button
+        document.getElementById('broadcast-btn').addEventListener('click', () => {
+            const mockPlanetData = {
+                id: Math.floor(Math.random() * 1000),
+                name: `Kepler-${Math.floor(Math.random() * 5000)}b`,
+                temp: Math.random() * 1000 + 200,
+                hash: crypto.randomUUID()
+            };
+
+            manager.broadcastData(mockPlanetData);
+            log(`Broadcasting Chunk: ${mockPlanetData.name}`, 'tx');
+        });
+
+        // Set own ID
+        document.querySelector('h1').textContent += ` [NODE: ${manager.nodeId}]`;
+    </script>
+</body>
+
+</html>

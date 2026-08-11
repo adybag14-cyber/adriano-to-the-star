@@ -1,0 +1,30 @@
+PRELOAD_RESOURCES = [
+    ["/liblwjgl.so", "/liblwjgl.so"],
+    ["/log4j_debug.properties", "/app/log4j_debug.properties"],
+    ["/log4j.xml", "/app/log4j.xml"],
+    ["/log4j.dtd", "/app/log4j.dtd"],
+    ["/Starsector/starsector-core/commons-compiler-jdk.jar", "/app/commons-compiler-jdk.jar"],
+    ["/Starsector/starsector-core/commons-compiler.jar", "/app/commons-compiler.jar"],
+    ["/Starsector/starsector-core/fs.common_obf.jar", "/app/fs.common_obf.jar"],
+    ["/Starsector/starsector-core/fs.sound_obf.jar", "/app/fs.sound_obf.jar"],
+    ["/Starsector/starsector-core/janino.jar", "/app/janino.jar"],
+    ["/Starsector/starsector-core/jaxb-api-2.4.0-b180830.0359-sources.jar", "/app/jaxb-api-2.4.0-b180830.0359-sources.jar"],
+    ["/Starsector/starsector-core/jaxb-api-2.4.0-b180830.0359.jar", "/app/jaxb-api-2.4.0-b180830.0359.jar"],
+    ["/Starsector/starsector-core/jinput.jar", "/app/jinput.jar"],
+    ["/Starsector/starsector-core/jogg-0.0.7.jar", "/app/jogg-0.0.7.jar"],
+    ["/Starsector/starsector-core/jorbis-0.0.15.jar", "/app/jorbis-0.0.15.jar"],
+    ["/Starsector/starsector-core/json.jar", "/app/json.jar"],
+    ["/Starsector/starsector-core/log4j-1.2.9.jar", "/app/log4j-1.2.9.jar"],
+    ["/Starsector/starsector-core/lwjgl.jar", "/app/lwjgl.jar"],
+    ["/Starsector/starsector-core/lwjgl_renamed.jar", "/app/lwjgl_renamed.jar"],
+    ["/Starsector/starsector-core/lwjgl_util.jar", "/app/lwjgl_util.jar"],
+    ["/Starsector/starsector-core/starfarer.api.jar", "/app/starfarer.api.jar"],
+    ["/Starsector/starsector-core/starfarer_obf_unsigned.jar", "/app/starfarer_obf_unsigned.jar"],
+    ["/Starsector/starsector-core/txw2-3.0.2.jar", "/app/txw2-3.0.2.jar"],
+    ["/Starsector/starsector-core/webp-imageio-0.1.6.jar", "/app/webp-imageio-0.1.6.jar"],
+    ["/Starsector/starsector-core/xstream-1.4.10.jar", "/app/xstream-1.4.10.jar"],
+    ["/Starsector/starsector-core/starfarer_obf_unsigned.jar", "/app/starfarer_obf_unsigned.jar"],
+]
+
+CLASSPATH:
+/app/commons-compiler-jdk.jar:/app/commons-compiler.jar:/app/fs.common_obf.jar:/app/fs.sound_obf.jar:/app/janino.jar:/app/jaxb-api-2.4.0-b180830.0359-sources.jar:/app/jaxb-api-2.4.0-b180830.0359.jar:/app/jinput.jar:/app/jogg-0.0.7.jar:/app/jorbis-0.0.15.jar:/app/json.jar:/app/log4j-1.2.9.jar:/app/lwjgl.jar:/app/lwjgl_renamed.jar:/app/lwjgl_util.jar:/app/starfarer.api.jar:/app/starfarer_obf_unsigned.jar:/app/txw2-3.0.2.jar:/app/webp-imageio-0.1.6.jar:/app/xstream-1.4.10.jar:/app/starfarer_obf_unsigned.jar:.:/app

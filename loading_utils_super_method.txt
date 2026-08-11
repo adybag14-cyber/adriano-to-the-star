@@ -1,0 +1,41 @@
+  public static org.json.JSONObject super(java.lang.String, java.io.InputStream) throws java.io.IOException, org.json.JSONException;
+
+    Code:
+
+       0: getstatic     #18                 // Field Ê00000:Lorg/apache/log4j/Logger;
+
+       3: new           #75                 // class java/lang/StringBuilder
+
+       6: dup
+
+       7: ldc           #77                 // String Loading JSON from [
+
+       9: invokespecial #79                 // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+
+      12: aload_0
+
+      13: invokevirtual #81                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+      16: ldc           #85                 // String ]
+
+      18: invokevirtual #81                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+      21: invokevirtual #87                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+
+      24: invokevirtual #91                 // Method org/apache/log4j/Logger.info:(Ljava/lang/Object;)V
+
+      27: aload_1
+
+      28: invokestatic  #105                // Method Ê00000:(Ljava/io/InputStream;)Ljava/lang/String;
+
+      31: astore_2
+
+      32: aload_0
+
+      33: aload_2
+
+      34: invokestatic  #99                 // Method Í00000:(Ljava/lang/String;Ljava/lang/String;)Lorg/json/JSONObject;
+
+      37: areturn
+
+

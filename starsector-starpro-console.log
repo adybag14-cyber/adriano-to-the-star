@@ -1,0 +1,44 @@
+[log] Console logging active and mapped to overlay.
+[log] [Polyfill] Monotonic performance.now() installed globally.
+[log] [Polyfill] Monotonic Date.now() installed globally.
+[log] [CheerpJ WASM] shim active true true true
+[log] [CheerpJ SharedWorker] shim active
+[log] [CheerpJ Worker] shim active
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[log] [Setup] HEAD Script Start
+[error] !!! LWJGL SCRIPT RUNNING !!!
+[log] LWJGL Native JS Module Loading... VERIFIED RELOAD 1768146810146
+[log] [LWJGL] Registered natives count = 160
+[log] [Setup] SUCCESS: CheerpJ_LWJGL_Natives found in HEAD. [Java_org_lwjgl_DefaultSysImplementation_getPointerSize, Java_org_lwjgl_opengl_LinuxEvent_createEventBuffer, Java_org_lwjgl_DefaultSysImplementation_getJNIVersion, Java_org_lwjgl_DefaultSysImplementation_setDebug, Java_org_lwjgl_DefaultSysImplementation_getTimerResolution, Java_org_lwjgl_DefaultSysImplementation_getTime, Java_org_lwjgl_LinuxSysImplementation_nGetTime, Java_org_lwjgl_LinuxSysImplementation_getTimerResolution, Java_org_lwjgl_opengl_LinuxSysImplementation_nGetTime, Java_java_lang_System_currentTimeMillis, Java_java_lang_System_nanoTime, Java_org_lwjgl_opengl_LinuxDisplay_nLockAWT, Java_org_lwjgl_opengl_LinuxDisplay_nUnlockAWT, Java_org_lwjgl_opengl_LinuxDisplay_setErrorHandler, Java_org_lwjgl_opengl_LinuxDisplay_nSetClassHint, Java_org_lwjgl_opengl_LinuxDisplay_openDisplay, Java_org_lwjgl_opengl_LinuxDisplay_nInternAtom, Java_org_lwjgl_opengl_LinuxDisplay_nIsXrandrSupported, Java_org_lwjgl_opengl_LinuxDisplay_nIsXF86VidModeSupported, Java_org_lwjgl_opengl_LinuxDisplay_nGetDefaultScreen, Java_org_lwjgl_opengl_LinuxDisplay_nGetAvailableDisplayModes, Java_org_lwjgl_opengl_Display_getAvailableDisplayModes, Java_org_lwjgl_opengl_Display_update, Java_org_lwjgl_opengl_Display_getWidth, Java_org_lwjgl_opengl_Display_getHeight, Java_org_lwjgl_opengl_LinuxDisplay_nGetCurrentGammaRamp, Java_org_lwjgl_opengl_LinuxPeerInfo_createHandle, Java_org_lwjgl_opengl_GLContext_nLoadOpenGLLibrary, Java_org_lwjgl_opengl_LinuxDisplayPeerInfo_initDefaultPeerInfo, Java_org_lwjgl_opengl_LinuxDisplayPeerInfo_initDrawable, Java_org_lwjgl_opengl_AWTSurfaceLock_createHandle, Java_org_lwjgl_opengl_AWTSurfaceLock_lockAndInitHandle, Java_org_lwjgl_opengl_LinuxAWTGLCanvasPeerInfo_getScreenFromSurfaceInfo, Java_org_lwjgl_opengl_LinuxAWTGLCanvasPeerInfo_nInitHandle, Java_org_lwjgl_opengl_AWTSurfaceLock_nUnlock, Java_org_lwjgl_opengl_LinuxPeerInfo_nGetDrawable, Java_org_lwjgl_opengl_LinuxDisplay_nCreateWindow, Java_org_lwjgl_opengl_LinuxDisplay_mapRaised, Java_org_lwjgl_opengl_LinuxDisplay_nCreateBlankCursor, Java_org_lwjgl_opengl_LinuxDisplay_nSetTitle, Java_org_lwjgl_opengl_LinuxMouse_nGetButtonCount, Java_org_lwjgl_opengl_LinuxMouse_nQueryPointer, Java_org_lwjgl_opengl_LinuxMouse_nGetWindowHeight, Java_org_lwjgl_opengl_LinuxKeyboard_getModifierMapping, Java_org_lwjgl_opengl_LinuxKeyboard_nSetDetectableKeyRepeat, Java_org_lwjgl_opengl_LinuxKeyboard_openIM, Java_org_lwjgl_opengl_LinuxKeyboard_allocateComposeStatus, Java_org_lwjgl_opengl_LinuxContextImplementation_nCreate, Java_org_lwjgl_opengl_LinuxContextImplementation_nMakeCurrent, Java_org_lwjgl_opengl_LinuxContextImplementation_nIsCurrent, Java_org_lwjgl_opengl_GLContext_ngetFunctionAddress, Java_org_lwjgl_opengl_GL11_nglGetString, Java_org_lwjgl_opengl_GL11_nglGetIntegerv, Java_org_lwjgl_opengl_GL11_nglGetError, Java_org_lwjgl_opengl_LinuxContextImplementation_nSetSwapInterval, Java_org_lwjgl_opengl_GL11_nglClearColor, Java_org_lwjgl_opengl_GL11_nglClear, Java_org_lwjgl_opengl_LinuxContextImplementation_nSwapBuffers, Java_org_lwjgl_opengl_LinuxEvent_getPending, Java_org_lwjgl_opengl_GL11_nglMatrixMode, Java_org_lwjgl_opengl_GL11_nglLoadIdentity, Java_org_lwjgl_opengl_GL11_nglOrtho, Java_org_lwjgl_opengl_GL11_nglTranslatef, Java_org_lwjgl_opengl_GL11_nglViewport, Java_org_lwjgl_opengl_GL11_nglDisable, Java_org_lwjgl_opengl_GL11_nglEnable, Java_org_lwjgl_opengl_GL11_nglGenTextures, Java_org_lwjgl_opengl_GL11_nglBindTexture, Java_org_lwjgl_opengl_GL11_nglTexParameteri, Java_org_lwjgl_opengl_GL11_nglTexImage2D, Java_org_lwjgl_opengl_GL11_nglTexCoordPointer, Java_org_lwjgl_opengl_GL11_nglEnableClientState, Java_org_lwjgl_opengl_GL11_nglColorPointer, Java_org_lwjgl_opengl_GL11_nglVertexPointer, Java_org_lwjgl_opengl_GL11_nglDrawArrays, Java_org_lwjgl_opengl_GL11_nglDisableClientState, Java_org_lwjgl_opengl_GL11_nglColor4f, Java_org_lwjgl_opengl_GL11_nglColor4ub, Java_org_lwjgl_opengl_GL11_nglAlphaFunc, Java_org_lwjgl_opengl_GL11_nglGenLists, Java_org_lwjgl_opengl_GL11_nglNewList, Java_org_lwjgl_opengl_GL11_nglEndList, Java_org_lwjgl_opengl_GL11_nglColor3f, Java_org_lwjgl_opengl_LinuxDisplay_nGetNativeCursorCapabilities, Java_org_lwjgl_opengl_GL11_nglShadeModel, Java_org_lwjgl_opengl_GL11_nglClearDepth, Java_org_lwjgl_opengl_GL11_nglDepthFunc, Java_org_lwjgl_opengl_GL11_nglCullFace, Java_org_lwjgl_opengl_GL11_nglPushAttrib, Java_org_lwjgl_opengl_GL11_nglPopAttrib, Java_org_lwjgl_opengl_GL11_nglPushMatrix, Java_org_lwjgl_opengl_GL11_nglPopMatrix, Java_org_lwjgl_opengl_GL11_nglMultMatrixf, Java_org_lwjgl_opengl_GL11_nglRotatef, Java_org_lwjgl_opengl_GL11_nglDepthMask, Java_org_lwjgl_opengl_GL11_nglBlendFunc, Java_org_lwjgl_opengl_GL11_nglColorMask, Java_org_lwjgl_opengl_GL11_nglCopyTexSubImage2D, Java_org_lwjgl_opengl_GL11_nglScalef, Java_org_lwjgl_opengl_GL11_nglCallLists]
+[error] [Starsector] showError Unhandled error SyntaxError: The requested module '/cj3.js' does not provide an export named 'cheerpjInit'
+[error] name: SyntaxError
+message: The requested module '/cj3.js' does not provide an export named 'cheerpjInit'
+stack:
+SyntaxError: The requested module '/cj3.js' does not provide an export named 'cheerpjInit'
+[ERROR] The requested module '/cj3.js' does not provide an export named 'cheerpjInit'
+[log] LWJGL canvas created: JSHandle@node
+[log] === API PROBE START ===
+[log] === API PROBE FINISHED ===
+[log] [API PROBE] Range /starfarer_obf.jar -> 206 content-range=bytes 0-15/6016541 accept-ranges=bytes content-length=16 content-type=application/java-archive
+[log] [API PROBE] Range /cheerpj-natives/natives/lwjgl.js?v=debug52 -> 206 content-range=bytes 0-15/41233 accept-ranges=bytes content-length=16 content-type=text/javascript
+[log] [API PROBE] Range /cheerpj-natives/lwjgl-fixed.jar -> 206 content-range=bytes 0-15/1062228 accept-ranges=bytes content-length=16 content-type=application/java-archive
+[log] [API PROBE] Range /lwjgl.jar -> 206 content-range=bytes 0-15/1053471 accept-ranges=bytes content-length=16 content-type=application/java-archive
+[log] [API PROBE] Range /log4j-1.2.9.jar -> 206 content-range=bytes 0-15/352291 accept-ranges=bytes content-length=16 content-type=application/java-archive
+[log] CheerpJ 4.2 initialized.
+[log] [Interop] TEST: Executing org.lwjgl.Version...
+[log] CheerpJ runtime ready
+[log] [DEBUG] Registered Sys/Time Natives: [Java_org_lwjgl_DefaultSysImplementation_getPointerSize, Java_org_lwjgl_DefaultSysImplementation_getJNIVersion, Java_org_lwjgl_DefaultSysImplementation_setDebug, Java_org_lwjgl_DefaultSysImplementation_getTimerResolution, Java_org_lwjgl_DefaultSysImplementation_getTime, Java_org_lwjgl_LinuxSysImplementation_nGetTime, Java_org_lwjgl_LinuxSysImplementation_getTimerResolution, Java_org_lwjgl_opengl_LinuxSysImplementation_nGetTime, Java_java_lang_System_currentTimeMillis, Java_java_lang_System_nanoTime, Java_org_lwjgl_Sys_alert]

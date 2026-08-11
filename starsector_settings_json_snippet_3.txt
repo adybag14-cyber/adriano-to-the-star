@@ -1,0 +1,50 @@
+  public static void o00000(float, int);
+    Code:
+       0: fload_0
+       1: putstatic     #200                // Field ÷Í0000:F
+       4: getstatic     #200                // Field ÷Í0000:F
+       7: putstatic     #202                // Field com/fs/graphics/A/ooOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO.OË0000:F
+      10: iload_1
+      11: putstatic     #328                // Field com/fs/graphics/A/ooOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO."while.new":I
+      14: return
+
+  private static org.json.JSONObject null.new() throws java.io.IOException, org.json.JSONException;
+    Code:
+       0: new           #340                // class java/util/HashSet
+       3: dup
+       4: invokespecial #342                // Method java/util/HashSet."<init>":()V
+       7: astore_0
+       8: aload_0
+       9: ldc_w         #343                // String vsync
+      12: invokevirtual #345                // Method java/util/HashSet.add:(Ljava/lang/Object;)Z
+      15: pop
+      16: aload_0
+      17: ldc_w         #349                // String refreshRate
+      20: invokevirtual #345                // Method java/util/HashSet.add:(Ljava/lang/Object;)Z
+      23: pop
+      24: aload_0
+      25: ldc_w         #351                // String fps
+      28: invokevirtual #345                // Method java/util/HashSet.add:(Ljava/lang/Object;)Z
+      31: pop
+      32: aload_0
+      33: ldc_w         #353                // String devMode
+      36: invokevirtual #345                // Method java/util/HashSet.add:(Ljava/lang/Object;)Z
+      39: pop
+      40: aload_0
+      41: ldc_w         #355                // String godMode
+      44: invokevirtual #345                // Method java/util/HashSet.add:(Ljava/lang/Object;)Z
+      47: pop
+      48: aload_0
+      49: ldc_w         #357                // String playtestingMode
+      52: invokevirtual #345                // Method java/util/HashSet.add:(Ljava/lang/Object;)Z
+      55: pop
+      56: aload_0
+      57: ldc_w         #359                // String colorblindMode
+      60: invokevirtual #345                // Method java/util/HashSet.add:(Ljava/lang/Object;)Z
+      63: pop
+      64: aload_0
+      65: ldc_w         #361                // String resolutionOverride
+      68: invokevirtual #345                // Method java/util/HashSet.add:(Ljava/lang/Object;)Z
+      71: pop
+      72: aload_0
+      73: ldc_w         #363                // String forceAspectRatio

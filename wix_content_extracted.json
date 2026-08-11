@@ -1,0 +1,723 @@
+{
+  "home": {
+    "page_title": "Buy Celestial Bodies in Andromeda Galaxy - Adriano To The Star",
+    "headings": [
+      {
+        "level": "h2",
+        "text": "SPONSORED BY ELON MUSK AND DONALD TRUMP"
+      },
+      {
+        "level": "h2",
+        "text": "SPONSORED BY ELON MUSK AND DONALD TRUMP"
+      },
+      {
+        "level": "h2",
+        "text": "RELEASING SOON**The cryptographic keys that I will work on and calculate from the chosen object disposition from the database have been scheduled for release later in Q1 2025."
+      },
+      {
+        "level": "h1",
+        "text": "I.T.A"
+      },
+      {
+        "level": "h1",
+        "text": "I.T.A"
+      },
+      {
+        "level": "h1",
+        "text": "I.T.A"
+      },
+      {
+        "level": "h2",
+        "text": "SPONSORED BY ELON MUSK AND DONALD TRUMP"
+      },
+      {
+        "level": "h1",
+        "text": "My apologies"
+      },
+      {
+        "level": "h1",
+        "text": "The title was designed for 1440p resolution displays at an aspect 16:9"
+      },
+      {
+        "level": "h2",
+        "text": "SPONSORED BY ELON MUSK AND DONALD TRUMP"
+      },
+      {
+        "level": "h1",
+        "text": "I.T.A"
+      },
+      {
+        "level": "h1",
+        "text": "I.T.A"
+      },
+      {
+        "level": "h1",
+        "text": "I.T.A"
+      },
+      {
+        "level": "h1",
+        "text": "I. Interstellar"
+      },
+      {
+        "level": "h1",
+        "text": "T. Travel"
+      },
+      {
+        "level": "h1",
+        "text": "GALACTIC TITLES AVAILABLE"
+      },
+      {
+        "level": "h1",
+        "text": "A.Agency"
+      },
+      {
+        "level": "h1",
+        "text": "I.T.A"
+      },
+      {
+        "level": "h1",
+        "text": "I.T.A"
+      },
+      {
+        "level": "h1",
+        "text": "I.T.A"
+      },
+      {
+        "level": "h1",
+        "text": "I.T.A"
+      },
+      {
+        "level": "h1",
+        "text": "I.T.A"
+      },
+      {
+        "level": "h1",
+        "text": "I.T.A"
+      },
+      {
+        "level": "h1",
+        "text": "I.T.A"
+      },
+      {
+        "level": "h1",
+        "text": "I.T.A"
+      },
+      {
+        "level": "h1",
+        "text": "I.T.A"
+      },
+      {
+        "level": "h1",
+        "text": "I.T.A"
+      },
+      {
+        "level": "h1",
+        "text": "I.T.A"
+      },
+      {
+        "level": "h1",
+        "text": "I.T.A"
+      },
+      {
+        "level": "h1",
+        "text": "I.T.A"
+      },
+      {
+        "level": "h1",
+        "text": "I.T.A"
+      },
+      {
+        "level": "h1",
+        "text": "I.T.A"
+      },
+      {
+        "level": "h1",
+        "text": "I.T.A"
+      },
+      {
+        "level": "h1",
+        "text": "I.T.A"
+      },
+      {
+        "level": "h1",
+        "text": "I.T.A"
+      },
+      {
+        "level": "h1",
+        "text": "WELCOME"
+      },
+      {
+        "level": "h2",
+        "text": "SERVICES"
+      },
+      {
+        "level": "h2",
+        "text": "ABOUT"
+      },
+      {
+        "level": "h2",
+        "text": "GALLERY"
+      },
+      {
+        "level": "h2",
+        "text": "FOLLOW US"
+      }
+    ],
+    "paragraphs": [
+      "On a small note, I have decided to engage in a conflict of interest by planning to open a new educational institution. Ok, this sounds bad but what's it about?",
+      "It is completely free to read and see and open to the entire internet because if I have a good business idea that I cannot physically complete. Still, it will undercut current market leaders, I will post a preview of the concept on a different page on my site.",
+      "Embark on a cosmic adventure",
+      "IF YOU HAVE TIME READ THIS,https://v3.pebblepad.co.uk/spa/#/public/cbwW6hMr55dMxg96HRkw6y4mxW",
+      "Bro, trust me. If I were you, I'd agree that it is a scam. However, because I'm the business owner, I cannot legally call myself a scam because that would let you sue me.",
+      "In my honest opinion, if you like the concept, you can buy one. If not, please move along and visit another website.",
+      "ADRIANO TO THE STAR provides a revolutionary opportunity for individuals to own celestial bodies within the Andromeda galaxy. Our platform, inspired by the wonders of the cosmos, enables the buying and selling of licenses for stars, planets, and large Kepler objects. We aim to redefine the space industry by offering a unique and personalized experience for all space enthusiasts.",
+      "We will update the list of contact information later. \n\nI will list the database for the list of kepler objects currently known to api.nasa.gov",
+      "I will provide documentation on how I retrieved the request of constellations and kepler objects fromhttps://api.nasa.gov/here.",
+      "import osimport requests",
+      "# Function to fetch data from NASA Exoplanet Archive APIdef fetch_nasa_exoplanet_data(api_key):try:url = f\"https://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=cumulative&select=kepid,kepoi_name,kepler_name,koi_disposition,koi_pdisposition,koi_score,koi_fpflag_nt&format=json&api_key={api_key}\"response = requests.get(url)response.raise_for_status()return response.json()except requests.exceptions.RequestException as e:print(f\"Failed to fetch data from NASA: {e}\")return []",
+      "# Function to classify stars and exoplanetsdef classify_objects(data):classifications = []for obj in data:classification = {\"kepid\": obj.get(\"kepid\", \"Unknown\"),\"kepoi_name\": obj.get(\"kepoi_name\", \"Unknown\"),\"kepler_name\": obj.get(\"kepler_name\", \"Unknown\"),\"koi_disposition\": obj.get(\"koi_disposition\", \"Unknown\"),\"koi_pdisposition\": obj.get(\"koi_pdisposition\", \"Unknown\"),\"koi_score\": obj.get(\"koi_score\", \"Unknown\"),\"koi_fpflag_nt\": obj.get(\"koi_fpflag_nt\", \"Unknown\")}classifications.append(classification)return classifications",
+      "# Main functiondef main():# Fetch API key from environment variablesnasa_api_key = os.getenv(\"NASA_API_KEY\")# Fetch data from NASAcombined_data = fetch_nasa_exoplanet_data(nasa_api_key)# Classify objects based on their constellationclassifications = classify_objects(combined_data)# Write the classifications to a text fileoutput_file = \"REDACTED\\REDACTEDt\"with open(output_file, \"w\") as file:for classification in classifications:file.write(f\"{classification}\\n\")print(f\"Output written to {output_file}\")",
+      "if __name__ == \"__main__\":main()"
+    ],
+    "lists": [],
+    "images": [
+      {
+        "src": "https://static.wixstatic.com/media/11062b_70065676b32f49e69bb6fa390f0ab468~mv2.jpg/v1/fill/w_192,h_253,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Portrait.jpg",
+        "alt": "Tropical Island"
+      },
+      {
+        "src": "https://static.wixstatic.com/media/11062b_3ad7636a1bb34d7aa039c11a72cf255b~mv2.jpg/v1/fill/w_230,h_230,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/BG.jpg",
+        "alt": "Luxury Beach Resort"
+      },
+      {
+        "src": "https://static.wixstatic.com/media/11062b_566bc9122e1a4c1d86618be148c495d9~mv2.jpg/v1/fill/w_192,h_192,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Portrait.jpg",
+        "alt": "Leaning On Palm Tree"
+      },
+      {
+        "src": "https://static.wixstatic.com/media/11062b_89844d6db90346fd975fa79a8a088f50~mv2.jpg/v1/fill/w_140,h_140,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Portrait.jpg",
+        "alt": "On the Edge of Swimming Pool"
+      },
+      {
+        "src": "https://static.wixstatic.com/media/11062b_b9238c84529e4d6ca688c09de5d0e2b2~mv2.jpg/v1/fill/w_140,h_140,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Portrait.jpg",
+        "alt": "Two Surfers"
+      },
+      {
+        "src": "https://static.wixstatic.com/media/11062b_16a2b9a692ff4965bf5e0888304f789f~mv2.jpg/v1/fill/w_230,h_192,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/BG.jpg",
+        "alt": "Peaceful Reading"
+      },
+      {
+        "src": "https://static.wixstatic.com/media/11062b_46d70bc597b84d2784ac6f64791cd859~mv2.jpg/v1/fill/w_140,h_140,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/BG.jpg",
+        "alt": "Wooden Fishing Boat"
+      },
+      {
+        "src": "https://static.wixstatic.com/media/11062b_16a2b9a692ff4965bf5e0888304f789f~mv2.jpg/v1/crop/x_0,y_827,w_3307,h_3307/fill/w_240,h_240,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Portrait.jpg",
+        "alt": "Peaceful Reading"
+      }
+    ],
+    "links": [
+      {
+        "text": "https://v3.pebblepad.co.uk/spa/#/public/cbwW6hMr55dMxg96HRkw6y4mxW",
+        "href": "https://v3.pebblepad.co.uk/spa/#/public/cbwW6hMr55dMxg96HRkw6y4mxW"
+      },
+      {
+        "text": "https://api.nasa.gov/",
+        "href": "https://api.nasa.gov/"
+      }
+    ]
+  },
+  "business-promise": {
+    "page_title": "Education | Adriano To The Star",
+    "headings": [
+      {
+        "level": "h1",
+        "text": "My free accessible educative ideas and research.A nerd's treasure trove."
+      },
+      {
+        "level": "h2",
+        "text": "Starting strong. Here we have the equilibrium of pure water in itself reacting with itself at different temperatures. This is the delta change in Gibbs free energy over the temperature in kelvin."
+      },
+      {
+        "level": "h3",
+        "text": "List Title"
+      },
+      {
+        "level": "h3",
+        "text": "List Title"
+      },
+      {
+        "level": "h3",
+        "text": "List Title"
+      },
+      {
+        "level": "h3",
+        "text": "List Title"
+      }
+    ],
+    "paragraphs": [
+      "I, The Megamind nerd would like to show off possible product designs that will challenge all market leaders into financially being undercut.",
+      "This is a Paragraph. Click on \"Edit Text\" or double click on the text box to start editing the content and make sure to add any relevant details or information that you want to share with your visitors.",
+      "This is a Paragraph. Click on \"Edit Text\" or double click on the text box to start editing the content and make sure to add any relevant details or information that you want to share with your visitors.",
+      "This is a Paragraph. Click on \"Edit Text\" or double click on the text box to start editing the content and make sure to add any relevant details or information that you want to share with your visitors.",
+      "This is a Paragraph. Click on \"Edit Text\" or double click on the text box to start editing the content and make sure to add any relevant details or information that you want to share with your visitors."
+    ],
+    "lists": [],
+    "images": [],
+    "links": []
+  },
+  "education": {
+    "page_title": "Education | Adriano To The Star",
+    "headings": [
+      {
+        "level": "h1",
+        "text": "My free accessible educative ideas and research.A nerd's treasure trove."
+      },
+      {
+        "level": "h2",
+        "text": "Starting strong. Here we have the equilibrium of pure water in itself reacting with itself at different temperatures. This is the delta change in Gibbs free energy over the temperature in kelvin."
+      },
+      {
+        "level": "h3",
+        "text": "List Title"
+      },
+      {
+        "level": "h3",
+        "text": "List Title"
+      },
+      {
+        "level": "h3",
+        "text": "List Title"
+      },
+      {
+        "level": "h3",
+        "text": "List Title"
+      }
+    ],
+    "paragraphs": [
+      "I, The Megamind nerd would like to show off possible product designs that will challenge all market leaders into financially being undercut.",
+      "This is a Paragraph. Click on \"Edit Text\" or double click on the text box to start editing the content and make sure to add any relevant details or information that you want to share with your visitors.",
+      "This is a Paragraph. Click on \"Edit Text\" or double click on the text box to start editing the content and make sure to add any relevant details or information that you want to share with your visitors.",
+      "This is a Paragraph. Click on \"Edit Text\" or double click on the text box to start editing the content and make sure to add any relevant details or information that you want to share with your visitors.",
+      "This is a Paragraph. Click on \"Edit Text\" or double click on the text box to start editing the content and make sure to add any relevant details or information that you want to share with your visitors."
+    ],
+    "lists": [],
+    "images": [],
+    "links": []
+  },
+  "projects": {
+    "page_title": "Projects | Adriano To The Star",
+    "headings": [
+      {
+        "level": "h2",
+        "text": "So, you are curious?"
+      }
+    ],
+    "paragraphs": [
+      "Defensive intellectual properties were produced by the creator of Adrianotothestar.com"
+    ],
+    "lists": [],
+    "images": [
+      {
+        "src": "https://static.wixstatic.com/media/7c0898_c2f82c214807412ab1e1a266c9b67978~mv2.jpg/v1/fill/w_600,h_338,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Screenshot%202024-11-23%20123029_edited_edit.jpg",
+        "alt": "Screenshot 2024-11-23 123029_edited_edit"
+      },
+      {
+        "src": "https://static.wixstatic.com/media/7c0898_2eaf3910ab1244f5a262a3a70ff53143~mv2.jpg/v1/fill/w_600,h_340,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Screenshot%202024-11-23%20123107_edited_edit.jpg",
+        "alt": "Screenshot 2024-11-23 123107_edited_edit"
+      },
+      {
+        "src": "https://static.wixstatic.com/media/7c0898_fd7770e58477445e8207da4c3bd4a983~mv2.jpg/v1/fill/w_600,h_337,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Screenshot%202024-11-23%20123124_edited.jpg",
+        "alt": "Screenshot 2024-11-23 123124_edited.jpg"
+      },
+      {
+        "src": "https://static.wixstatic.com/media/7c0898_b9a9412d20b44cde9a530a5ae18268f0~mv2.jpg/v1/fill/w_600,h_336,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Screenshot%202024-11-23%20123149_edited.jpg",
+        "alt": "Screenshot 2024-11-23 123149_edited.jpg"
+      }
+    ],
+    "links": []
+  },
+  "about": {
+    "page_title": "About me | Adriano To The Star",
+    "headings": [
+      {
+        "level": "h1",
+        "text": "Hello Stranger."
+      },
+      {
+        "level": "h2",
+        "text": "My Story"
+      },
+      {
+        "level": "h2",
+        "text": "Contact"
+      }
+    ],
+    "paragraphs": [
+      "II don't like talking about myself however, I must give some explanation about who I am and what I want.",
+      "I am an average everyday undergraduate at a university institution in Great Britain. To take advantage of the educational system in the UK you must, 1. Have over 4 A-levels accredited and then 2. Every year finish an undergraduate at a different university across the United Kingdom or if you are at Oxford University or Cambridge University ask to change undergraduate course to a different programme of study so that you can prolong your studies for as long as possible and exploit your student membership at prestigious universities and the debt pays for itself because of the current prime minister he has made it that every programme of study that is as long as or longer than medicine which is a 5-year accreditation programme must have an affordable student tuition so that all the Junior Doctors can earn more than other people therefore if your major is in arts or music find something super similar and switch to it or be insane like me and switch entire disciplines for fun. I went from Biomedical Sciences integrated biological sciences taught master's at a Russel group university to a Chemistry Bachelor of Science programme at a physical sciences and mathematics facility.",
+      "My vocation is to seek the truth behind the scenes and know what is happening and why it is occurring. I accidentally landed myself in some mischief and tomfoolery however I have no criminal record and I have the full database access and accreditation of the entire Metropolitan Police of the UNITED KINGDOM, I AM EQUIPPED WITH EVERY secret at EVERY MAJOR BRANCH OF THE BRITISH SECRET SERVICE, I HAVE FULL ACCESS AND IMPARTIAL VIEW OF EVERY INTELLIGENCE HEADQUARTERS IN THE UK. MI6, MI5, AND MI4. There are some newer branches of these secret services however they are just derivatives of the major Cold War secret intelligence of the British Empire.",
+      "If you do want to get in touch I do not auction the secrets at this time of year, normally I sell them during summer time.",
+      "I need to buy a new sim for the trollers."
+    ],
+    "lists": [],
+    "images": [
+      {
+        "src": "https://static.wixstatic.com/media/0fdef751204647a3bbd7eaa2827ed4f9.png/v1/fill/w_24,h_24,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/0fdef751204647a3bbd7eaa2827ed4f9.png",
+        "alt": "Facebook"
+      },
+      {
+        "src": "https://static.wixstatic.com/media/c7d035ba85f6486680c2facedecdcf4d.png/v1/fill/w_24,h_24,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/c7d035ba85f6486680c2facedecdcf4d.png",
+        "alt": "Twitter"
+      },
+      {
+        "src": "https://static.wixstatic.com/media/6ea5b4a88f0b4f91945b40499aa0af00.png/v1/fill/w_24,h_24,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/6ea5b4a88f0b4f91945b40499aa0af00.png",
+        "alt": "LinkedIn"
+      },
+      {
+        "src": "https://static.wixstatic.com/media/01c3aff52f2a4dffa526d7a9843d46ea.png/v1/fill/w_24,h_24,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/01c3aff52f2a4dffa526d7a9843d46ea.png",
+        "alt": "Instagram"
+      }
+    ],
+    "links": [
+      {
+        "text": "adybag14@gmail.com",
+        "href": "mailto:info@mysite.com"
+      }
+    ]
+  },
+  "database": {
+    "page_title": "DATABASE | Adriano To The Star",
+    "headings": [],
+    "paragraphs": [
+      "https://api.nasa.gov/",
+      "The database of the kepler confirmed objects by api.nasa.gov",
+      "Furthermore, I will construct an esoteric quantum information repository and name the database ITASTARADRIANO.",
+      "For any updates regarding the Andromeda Galaxy M31."
+    ],
+    "lists": [],
+    "images": [],
+    "links": []
+  },
+  "book-online": {
+    "page_title": "Book Online | Adriano To The Star",
+    "headings": [],
+    "paragraphs": [],
+    "lists": [],
+    "images": [],
+    "links": []
+  },
+  "loyalty": {
+    "page_title": "Loyalty | Adriano To The Star",
+    "headings": [],
+    "paragraphs": [],
+    "lists": [],
+    "images": [],
+    "links": []
+  },
+  "events": {
+    "page_title": "Events | Adriano To The Star",
+    "headings": [
+      {
+        "level": "h1",
+        "text": "Upcoming Events"
+      }
+    ],
+    "paragraphs": [],
+    "lists": [
+      [
+        "Andromeda Star Kepler Object Opening CeremonyFri 31 JanOnlineMore infoDetails"
+      ]
+    ],
+    "images": [
+      {
+        "src": "https://static.wixstatic.com/media/7c0898_2371efbf053249228a87cb5b555d85b8~mv2.png/v1/fill/w_49,h_28,al_c,q_85,usm_0.66_1.00_0.01,blur_2,enc_auto/7c0898_2371efbf053249228a87cb5b555d85b8~mv2.png",
+        "alt": "Andromeda Star Kepler Object Opening Ceremony"
+      },
+      {
+        "src": "https://static.wixstatic.com/media/7c0898_2371efbf053249228a87cb5b555d85b8~mv2.png/v1/fill/w_49,h_28,al_c,q_85,usm_0.66_1.00_0.01,blur_2,enc_auto/7c0898_2371efbf053249228a87cb5b555d85b8~mv2.png",
+        "alt": "Andromeda Star Kepler Object Opening Ceremony"
+      }
+    ],
+    "links": [
+      {
+        "text": "Andromeda Star Kepler Object Opening Ceremony",
+        "href": "https://adrianobaggiano.wixsite.com/adriano-to-the-star/event-details/andromeda-star-kepler-object-opening-ceremony"
+      },
+      {
+        "text": "Details",
+        "href": "https://adrianobaggiano.wixsite.com/adriano-to-the-star/event-details/andromeda-star-kepler-object-opening-ceremony"
+      }
+    ]
+  },
+  "shop": {
+    "page_title": "All Products | Adriano To The Star",
+    "headings": [
+      {
+        "level": "h2",
+        "text": "Browse by"
+      },
+      {
+        "level": "h2",
+        "text": "Filter by"
+      },
+      {
+        "level": "h1",
+        "text": "All Products"
+      }
+    ],
+    "paragraphs": [
+      "Andromedian Free Pirate"
+    ],
+    "lists": [
+      [
+        "All Products",
+        "Andromeda Pirates"
+      ],
+      [
+        "Product typeAndromeda Pirates"
+      ],
+      [
+        "Pirate of AndromedaAndromedian Free PiratePrice£0.00"
+      ]
+    ],
+    "images": [],
+    "links": [
+      {
+        "text": "All Products",
+        "href": "https://adrianobaggiano.wixsite.com/adriano-to-the-star/category/all-products"
+      },
+      {
+        "text": "Andromeda Pirates",
+        "href": "https://adrianobaggiano.wixsite.com/adriano-to-the-star/category/andromeda-pirates"
+      },
+      {
+        "text": "Pirate of Andromeda",
+        "href": "https://adrianobaggiano.wixsite.com/adriano-to-the-star/product-page/andromedian-free-pirate"
+      },
+      {
+        "text": "Andromedian Free PiratePrice£0.00",
+        "href": "https://adrianobaggiano.wixsite.com/adriano-to-the-star/product-page/andromedian-free-pirate"
+      }
+    ]
+  },
+  "groups": {
+    "page_title": "Groups | Adriano To The Star",
+    "headings": [
+      {
+        "level": "h1",
+        "text": "Groups Feed"
+      }
+    ],
+    "paragraphs": [
+      "View groups and posts below.",
+      "This post is from a suggested group",
+      "Welcome to our groupAdriano To The Star Group! A space for us to connect and share with each other. Start by posting your thoughts, sharing media, or creating a poll."
+    ],
+    "lists": [],
+    "images": [],
+    "links": [
+      {
+        "text": "December 11, 2024",
+        "href": "https://adrianobaggiano.wixsite.com/adriano-to-the-star/group/adriano-to-the-star-group/discussion/d2f489dc-7daa-4096-b975-313760a0e2fc"
+      },
+      {
+        "text": "Adriano To The Star Group",
+        "href": "https://adrianobaggiano.wixsite.com/adriano-to-the-star/group/adriano-to-the-star-group"
+      }
+    ]
+  },
+  "members": {
+    "page_title": "Members | Adriano To The Star",
+    "headings": [],
+    "paragraphs": [],
+    "lists": [],
+    "images": [],
+    "links": []
+  },
+  "followers": {
+    "page_title": "Followers | Adriano To The Star",
+    "headings": [],
+    "paragraphs": [],
+    "lists": [],
+    "images": [],
+    "links": []
+  },
+  "forum": {
+    "page_title": "Forum | Adriano To The Star",
+    "headings": [
+      {
+        "level": "h1",
+        "text": "Forum"
+      },
+      {
+        "level": "h2",
+        "text": "General Discussion"
+      },
+      {
+        "level": "h2",
+        "text": "Questions & Answers"
+      }
+    ],
+    "paragraphs": [
+      "Welcome! Have a look around and join the discussions.",
+      "Share stories, ideas, pictures and more!",
+      "Get answers and share knowledge."
+    ],
+    "lists": [
+      [
+        "General DiscussionShare stories, ideas, pictures and more!subcategory-list-item.viewssubcategory-list-item.posts3Follow",
+        "Questions & AnswersGet answers and share knowledge.subcategory-list-item.viewssubcategory-list-item.posts0Follow"
+      ],
+      [
+        "Adriano BaggianoDec 11, 2024Welcome to the ForumGeneral DiscussionShare your thoughts. Feel free to add GIFs, videos, hashtags and more to your posts and comments. Get started by commenting below.Like0",
+        "Adriano BaggianoDec 11, 2024Introduce yourselfGeneral DiscussionWe'd love to get to know you better. Take a moment to say hi to the community in the comments.Like0",
+        "Adriano BaggianoDec 11, 2024Forum rulesGeneral DiscussionWe want everyone to get the most out of this community, so we ask that you please read and follow these guidelines: \n • Respect each other \n • Keep posts relevant to the forum topic \n • No spammingLike0"
+      ]
+    ],
+    "images": [],
+    "links": [
+      {
+        "text": "General Discussion",
+        "href": "https://adrianobaggiano.wixsite.com/adriano-to-the-star/forum/general-discussion"
+      },
+      {
+        "text": "Questions & Answers",
+        "href": "https://adrianobaggiano.wixsite.com/adriano-to-the-star/forum/questions-answers"
+      },
+      {
+        "text": "Adriano BaggianoDec 11, 2024",
+        "href": "https://adrianobaggiano.wixsite.com/adriano-to-the-star//profile/adrianobaggiano//profile"
+      },
+      {
+        "text": "Welcome to the Forum",
+        "href": "https://adrianobaggiano.wixsite.com/adriano-to-the-star/forum/general-discussion/welcome-to-the-forum-1"
+      },
+      {
+        "text": "Adriano BaggianoDec 11, 2024",
+        "href": "https://adrianobaggiano.wixsite.com/adriano-to-the-star//profile/adrianobaggiano//profile"
+      },
+      {
+        "text": "Introduce yourself",
+        "href": "https://adrianobaggiano.wixsite.com/adriano-to-the-star/forum/general-discussion/introduce-yourself-1"
+      },
+      {
+        "text": "Adriano BaggianoDec 11, 2024",
+        "href": "https://adrianobaggiano.wixsite.com/adriano-to-the-star//profile/adrianobaggiano//profile"
+      },
+      {
+        "text": "Forum rules",
+        "href": "https://adrianobaggiano.wixsite.com/adriano-to-the-star/forum/general-discussion/forum-rules-1"
+      }
+    ]
+  },
+  "blog": {
+    "page_title": "Blog | Adriano To The Star",
+    "headings": [
+      {
+        "level": "h1",
+        "text": "All Posts"
+      },
+      {
+        "level": "h2",
+        "text": "Own a piece of Andromeda with ADRIANO TO THE STAR"
+      },
+      {
+        "level": "h2",
+        "text": "Invest in the Andromeda Galaxy with ADRIANO TO THE STAR"
+      },
+      {
+        "level": "h2",
+        "text": "Unique Kepler Object Licenses Available at ADRIANO TO THE STAR"
+      }
+    ],
+    "paragraphs": [],
+    "lists": [],
+    "images": [
+      {
+        "src": "https://static.wixstatic.com/media/7c0898_cecd577c835c4595a94f55ab1f828e55~mv2.png/v1/fill/w_333,h_250,fp_0.50_0.50,q_35,blur_30,enc_avif,quality_auto/7c0898_cecd577c835c4595a94f55ab1f828e55~mv2.webp",
+        "alt": "Own a piece of Andromeda with ADRIANO TO THE STAR"
+      },
+      {
+        "src": "https://static.wixstatic.com/media/7c0898_cecd577c835c4595a94f55ab1f828e55~mv2.png/v1/fill/w_454,h_341,fp_0.50_0.50,q_95,enc_avif,quality_auto/7c0898_cecd577c835c4595a94f55ab1f828e55~mv2.webp",
+        "alt": "Own a piece of Andromeda with ADRIANO TO THE STAR"
+      },
+      {
+        "src": "https://static.wixstatic.com/media/7c0898_a4d895464002422f8d2787c507828721~mv2.png/v1/fill/w_333,h_250,fp_0.50_0.50,q_35,blur_30,enc_avif,quality_auto/7c0898_a4d895464002422f8d2787c507828721~mv2.webp",
+        "alt": "Invest in the Andromeda Galaxy with ADRIANO TO THE STAR"
+      },
+      {
+        "src": "https://static.wixstatic.com/media/7c0898_a4d895464002422f8d2787c507828721~mv2.png/v1/fill/w_454,h_341,fp_0.50_0.50,q_95,enc_avif,quality_auto/7c0898_a4d895464002422f8d2787c507828721~mv2.webp",
+        "alt": "Invest in the Andromeda Galaxy with ADRIANO TO THE STAR"
+      },
+      {
+        "src": "https://static.wixstatic.com/media/7c0898_2be07935d7544cd8854e308f21b2824b~mv2.png/v1/fill/w_333,h_250,fp_0.50_0.50,q_35,blur_30,enc_avif,quality_auto/7c0898_2be07935d7544cd8854e308f21b2824b~mv2.webp",
+        "alt": "Unique Kepler Object Licenses Available at ADRIANO TO THE STAR"
+      },
+      {
+        "src": "https://static.wixstatic.com/media/7c0898_2be07935d7544cd8854e308f21b2824b~mv2.png/v1/fill/w_454,h_341,fp_0.50_0.50,q_95,enc_avif,quality_auto/7c0898_2be07935d7544cd8854e308f21b2824b~mv2.webp",
+        "alt": "Unique Kepler Object Licenses Available at ADRIANO TO THE STAR"
+      }
+    ],
+    "links": [
+      {
+        "text": "Own a piece of Andromeda with ADRIANO TO THE STAR",
+        "href": "https://adrianobaggiano.wixsite.com/adriano-to-the-star/post/own-a-piece-of-andromeda-with-adriano-to-the-star"
+      },
+      {
+        "text": "Adriano Baggiano",
+        "href": "https://adrianobaggiano.wixsite.com/adriano-to-the-star/profile/adrianobaggiano/profile"
+      },
+      {
+        "text": "Invest in the Andromeda Galaxy with ADRIANO TO THE STAR",
+        "href": "https://adrianobaggiano.wixsite.com/adriano-to-the-star/post/invest-in-the-andromeda-galaxy-with-adriano-to-the-star"
+      },
+      {
+        "text": "Adriano Baggiano",
+        "href": "https://adrianobaggiano.wixsite.com/adriano-to-the-star/profile/adrianobaggiano/profile"
+      },
+      {
+        "text": "Unique Kepler Object Licenses Available at ADRIANO TO THE STAR",
+        "href": "https://adrianobaggiano.wixsite.com/adriano-to-the-star/post/unique-kepler-object-licenses-available-at-adriano-to-the-star"
+      },
+      {
+        "text": "Adriano Baggiano",
+        "href": "https://adrianobaggiano.wixsite.com/adriano-to-the-star/profile/adrianobaggiano/profile"
+      }
+    ]
+  },
+  "team": {
+    "page_title": "Business Promise | Adriano To The Star",
+    "headings": [
+      {
+        "level": "h1",
+        "text": "My business plan and promise"
+      }
+    ],
+    "paragraphs": [
+      "My company will revolutionize modern economies across the world, I will be hiring for negative-hour contracts, these contracts work by Me the Employer charging you a base fee of £20 a month for being an employee at my business but because of the nature of my business you do not work a single shift nor hour the £20 goes to me the employer to ensure I continue working for the benefit of the company such as you the employee or the communities and stakeholders that my company targets.",
+      "We run a negative profit margin and will be 100% transparent about all insider trading knowledge and predictions that can harm and cause other businesses to fail or collapse due to the negligence of their management. And hopefully, any returns I make on your £20 can be paid back by the time you pay your next £20 for your contract renewal. This is paid back with the gains I make from this insider trading knowledge therefore the more valuable your negative hour contract the more you can expect as a return and anything above the £20 that is made that month is also given to you as an average across all employee's this is the \"negative profit bonus\" I as the employer cannot have a negative profit bonus but you can make an interest return from your indebted negative hour contract.",
+      "I absolve all employees from any criminal activity since you do not know about the acquisition of the intelligence that lets me trade valuable assets to enhance the value of the company and with it harm companies that harm the planet, nature, or other humans. I only can be incarcerated or prosecuted for utilising the existing free public market offerings as a method of a financial price war.",
+      "This destroys the current era of companies and businesses because the power is completely given to the employees, who own the company financially."
+    ],
+    "lists": [],
+    "images": [
+      {
+        "src": "https://static.wixstatic.com/media/0fdef751204647a3bbd7eaa2827ed4f9.png/v1/fill/w_25,h_25,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/0fdef751204647a3bbd7eaa2827ed4f9.png",
+        "alt": "Facebook"
+      },
+      {
+        "src": "https://static.wixstatic.com/media/c7d035ba85f6486680c2facedecdcf4d.png/v1/fill/w_25,h_25,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/c7d035ba85f6486680c2facedecdcf4d.png",
+        "alt": "Twitter"
+      },
+      {
+        "src": "https://static.wixstatic.com/media/6ea5b4a88f0b4f91945b40499aa0af00.png/v1/fill/w_25,h_25,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/6ea5b4a88f0b4f91945b40499aa0af00.png",
+        "alt": "LinkedIn"
+      }
+    ],
+    "links": [
+      {
+        "text": "adybag14@gmail.com",
+        "href": "mailto:info@mysite.com"
+      }
+    ]
+  }
+}

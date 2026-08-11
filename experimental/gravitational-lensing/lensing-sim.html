@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-time Gravitational Lensing | Adriano to the Stars</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+        body { margin: 0; background: #000; overflow: hidden; font-family: 'Inter', sans-serif; }
+        canvas { width: 100vw; height: 100vh; display: block; }
+        .ui {
+            position: fixed; top: 2rem; left: 2rem;
+            background: rgba(0,0,0,0.8); border: 1px solid #ba944f;
+            padding: 1.5rem; border-radius: 8px; backdrop-filter: blur(10px);
+        }
+        .roadmap-badge { background: #ba944f; color: #000; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 900; }
+    </style>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+
+<body>
+    <canvas id="lensing-canvas"></canvas>
+    <div class="ui">
+        <span class="roadmap-badge">ITEM #40</span>
+        <h3 style="margin: 0.5rem 0; color: #ba944f; font-family: 'Orbitron';">Relativistic Lensing</h3>
+        <p style="font-size: 0.8rem; opacity: 0.7; max-width: 250px;">Simulating light curvature near a Schwarzschild black hole using WebGPU.</p>
+        <div style="margin-top: 1rem;">
+            <label style="font-size: 0.7rem;">Mass (Solar Masses)</label>
+            <input type="range" id="mass-slider" min="1" max="50" step="0.1" value="10" style="width: 100%;">
+        </div>
+    </div>
+    <script type="module" src="lensing-sim.js"></script>
+</body>
+
+</html>

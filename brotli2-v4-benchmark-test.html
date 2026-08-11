@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brotli2 v4 Benchmark</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        #output {
+            background-color: #252526;
+            padding: 15px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            margin-top: 20px;
+            border: 1px solid #3c3c3c;
+        }
+        .success { color: #4CAF50; }
+        .error { color: #f44336; }
+        .info { color: #2196F3; }
+    </style>
+</head>
+<body>
+    <h1>Brotli2 v4 Benchmark</h1>
+    <button onclick="runBenchmark()" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">Run Benchmark</button>
+    <div id="output"></div>
+
+    <script src="brotli2-prototype-v3.js"></script>
+    <script src="brotli2-prototype-v4.js"></script>
+    <script src="brotli2-v4-benchmark.js"></script>
+    <script>
+        function runBenchmark() {
+            const output = document.getElementById('output');
+            output.innerHTML = '<div class="info">Running benchmark...</div>';
+            
+            setTimeout(() => {
+                try {
+                    const benchmark = new Brotli2V4Benchmark();
+                    benchmark.runBenchmark();
+                    output.innerHTML = '<div class="success">Benchmark completed! Check console for results.</div>';
+                } catch (error) {
+                    output.innerHTML = '<div class="error">Error: ' + error.message + '</div>';
+                    console.error(error);
+                }
+            }, 100);
+        }
+    </script>
+</body>
+</html>

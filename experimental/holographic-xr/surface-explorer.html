@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surface Explorer VR | Holodeck</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+        body {
+            margin: 0;
+            background: #000;
+            overflow: hidden;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        #info {
+            position: absolute;
+            top: 20px;
+            width: 100%;
+            text-align: center;
+            color: #fff;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 4px;
+            pointer-events: auto;
+            z-index: 101;
+        }
+
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #4ade80;
+            font-size: 1.2rem;
+        }
+    </style>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+
+<body>
+    <a href="../../index.html">
+        <img src="../../images/ita_logo.png" alt="ITA Logo" class="ita-logo">
+    </a>
+
+    <a href="../../projects.html" class="back-btn">← EXIT SIMULATION</a>
+    <div id="info">
+        <h1>SURFACE EXPLORER VR</h1>
+        <p>Put on your headset to walk on Kepler-186f</p>
+    </div>
+
+    <div id="container"></div>
+
+    <script type="module">
+        import { XRManager } from './xr-core.js';
+
+        // Init VR Scene
+        const manager = new XRManager('container', 'VR');
+
+        // Hide UI when entering VR
+        const renderer = manager.renderer;
+        renderer.xr.addEventListener('sessionstart', () => {
+            document.getElementById('info').style.display = 'none';
+            document.querySelector('.back-btn').style.display = 'none';
+        });
+
+        renderer.xr.addEventListener('sessionend', () => {
+            document.getElementById('info').style.display = 'block';
+            document.querySelector('.back-btn').style.display = 'block';
+        });
+    </script>
+</body>
+
+</html>

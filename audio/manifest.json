@@ -1,0 +1,101 @@
+{
+    "updatedAt": "2025-11-22T00:00:00.000Z",
+    "tracks": [
+        {
+            "name": "Track 1: Cosmic Journey",
+            "filename": "cosmic-journey.mp3",
+            "description": "Deep space ambience"
+        },
+        {
+            "name": "Track 2: Stellar Voyage",
+            "filename": "stellar-voyage.mp3",
+            "description": "Gliding across the stars"
+        },
+        {
+            "name": "Track 3: Galactic Odyssey",
+            "filename": "galactic-odyssey.mp3",
+            "description": "Epic sci-fi score"
+        },
+        {
+            "name": "Track 4: Celestial Harmony",
+            "filename": "track-4.mp3",
+            "description": "Soft harmonic waves"
+        },
+        {
+            "name": "Track 5: Stellar Dreams",
+            "filename": "track-5.mp3",
+            "description": "Dreamy synth pads"
+        },
+        {
+            "name": "Track 6: Cosmic Resonance",
+            "filename": "track-6.mp3",
+            "description": "Vibrant cosmic pulses"
+        },
+        {
+            "name": "Track 7: Nebula Waves",
+            "filename": "track-7.mp3",
+            "description": "Slow-moving nebula swells"
+        },
+        {
+            "name": "Track 8: Interstellar Echo",
+            "filename": "track-8.mp3",
+            "description": "Echoes from distant systems"
+        },
+        {
+            "name": "Track 9: Galactic Pulse",
+            "filename": "track-9.mp3",
+            "description": "Energetic pulse progression"
+        },
+        {
+            "name": "Track 10: Cosmic Drift",
+            "filename": "track-10.mp3",
+            "description": "Floating through quiet space"
+        },
+        {
+            "name": "Track 11: Stellar Winds",
+            "filename": "track-11.mp3",
+            "description": "Gentle winds over synth fields"
+        },
+        {
+            "name": "Track 12: Nebula Dreams",
+            "filename": "track-12.mp3",
+            "description": "Dreaming inside a nebula"
+        },
+        {
+            "name": "Track 13: Galactic Currents",
+            "filename": "track-13.mp3",
+            "description": "Flowing arpeggiated lines"
+        },
+        {
+            "name": "Track 14: Cosmic Tides",
+            "filename": "track-14.mp3",
+            "description": "Oceanic cosmic ambience"
+        },
+        {
+            "name": "Track 15: Stellar Flow",
+            "filename": "track-15.mp3",
+            "description": "Flowing melodic textures"
+        },
+        {
+            "name": "Track 16: Nebula Stream",
+            "filename": "track-16.mp3",
+            "description": "Gentle electronic stream"
+        },
+        {
+            "name": "Track 17: Galactic Waves",
+            "filename": "track-17.mp3",
+            "description": "Layered waveforms and pads"
+        },
+        {
+            "name": "Track 18: Cosmic Horizon",
+            "filename": "track-18.mp3",
+            "description": "Closing credits among the stars"
+        },
+        {
+            "name": "Track 19: Was Ist Dein Lieblingsfach",
+            "filename": "was-ist-dein-lieblingsfach.mp3",
+            "description": "German educational track"
+        }
+    ]
+}
+

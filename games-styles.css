@@ -1,0 +1,377 @@
+/* Games Page Styles */
+
+.games-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1;
+    min-width: 250px;
+}
+
+.game-search-input {
+    flex: 1;
+    padding: 12px 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(186, 148, 79, 0.3);
+    border-radius: 8px;
+    color: #ffffff;
+    font-family: 'Raleway', sans-serif;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.game-search-input:focus {
+    border-color: rgba(186, 148, 79, 0.6);
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.game-search-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.clear-search-btn {
+    padding: 12px 20px;
+    background: rgba(186, 148, 79, 0.2);
+    border: 2px solid rgba(186, 148, 79, 0.3);
+    border-radius: 8px;
+    color: #ffffff;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.clear-search-btn:hover {
+    background: rgba(186, 148, 79, 0.4);
+    border-color: rgba(186, 148, 79, 0.6);
+}
+
+.games-stats {
+    color: rgba(255, 255, 255, 0.8);
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.game-card {
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(186, 148, 79, 0.2);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    animation: fadeInUp 0.5s ease backwards;
+}
+
+.game-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(186, 148, 79, 0.5);
+    background: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 10px 30px rgba(186, 148, 79, 0.2);
+}
+
+.game-card-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.game-card-content {
+    flex: 1;
+    width: 100%;
+}
+
+.game-card-title {
+    font-family: 'Raleway', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.4;
+}
+
+.game-card-category {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0 0 1rem 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.game-card-play-btn {
+    width: 100%;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, rgba(186, 148, 79, 0.3), rgba(186, 148, 79, 0.1));
+    border: 2px solid rgba(186, 148, 79, 0.5);
+    border-radius: 8px;
+    color: #ffffff;
+    font-family: 'Raleway', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.game-card-play-btn:hover {
+    background: linear-gradient(135deg, rgba(186, 148, 79, 0.5), rgba(186, 148, 79, 0.3));
+    border-color: rgba(186, 148, 79, 0.8);
+    transform: scale(1.05);
+}
+
+.games-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(186, 148, 79, 0.2);
+    border-top-color: rgba(186, 148, 79, 0.8);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.no-games-found {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-family: 'Raleway', sans-serif;
+}
+
+/* Game Modal */
+.game-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    animation: fadeIn 0.3s ease;
+}
+
+.game-modal-content {
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid rgba(186, 148, 79, 0.3);
+    border-radius: 15px;
+    width: 100%;
+    max-width: 1200px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.game-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    border-bottom: 2px solid rgba(186, 148, 79, 0.2);
+}
+
+.game-modal-header h2 {
+    font-family: 'Raleway', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0;
+}
+
+.close-modal-btn {
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 2rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.close-modal-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: rotate(90deg);
+}
+
+.game-modal-body {
+    flex: 1;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    position: relative;
+    overflow: auto;
+}
+
+.game-container {
+    width: 100%;
+    height: 100%;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+}
+
+.game-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.game-error {
+    text-align: center;
+    padding: 2rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-family: 'Raleway', sans-serif;
+}
+
+.game-error h3 {
+    color: #ba944f;
+    margin-bottom: 1rem;
+}
+
+.game-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding: 1.5rem 2rem;
+    border-top: 2px solid rgba(186, 148, 79, 0.2);
+}
+
+.fullscreen-btn,
+.close-game-btn {
+    padding: 12px 24px;
+    background: rgba(186, 148, 79, 0.2);
+    border: 2px solid rgba(186, 148, 79, 0.5);
+    border-radius: 8px;
+    color: #ffffff;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.fullscreen-btn:hover,
+.close-game-btn:hover {
+    background: rgba(186, 148, 79, 0.4);
+    border-color: rgba(186, 148, 79, 0.8);
+}
+
+.close-game-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.close-game-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .games-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .games-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .game-modal-content {
+        max-width: 100%;
+        max-height: 100vh;
+        border-radius: 0;
+    }
+
+    .game-modal-header,
+    .game-modal-footer {
+        padding: 1rem;
+    }
+
+    .game-modal-body {
+        padding: 1rem;
+        min-height: 300px;
+    }
+
+    .game-container {
+        min-height: 400px;
+    }
+}
+

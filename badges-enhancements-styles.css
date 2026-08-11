@@ -1,0 +1,101 @@
+/* Badges Enhancements Styles */
+
+.badge-progress-section {
+    margin-bottom: 3rem;
+    padding: 2rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    border: 1px solid rgba(186, 148, 79, 0.2);
+}
+
+.progress-tracker-card {
+    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+    background: rgba(186, 148, 79, 0.05);
+    border-radius: 8px;
+    border-left: 3px solid #ba944f;
+}
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.progress-category {
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.progress-current {
+    color: #ba944f;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.progress-bar-container {
+    width: 100%;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ba944f, #d4af37);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.progress-next {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.85rem;
+    font-style: italic;
+}
+
+.progress-complete {
+    color: #4ade80;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.seasonal-badge {
+    position: relative;
+    animation: seasonal-glow 2s ease-in-out infinite;
+}
+
+.seasonal-badge::before {
+    content: '✨';
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    font-size: 1.2rem;
+    animation: sparkle 1.5s ease-in-out infinite;
+}
+
+@keyframes seasonal-glow {
+    0%, 100% { box-shadow: 0 0 10px rgba(186, 148, 79, 0.3); }
+    50% { box-shadow: 0 0 20px rgba(186, 148, 79, 0.6); }
+}
+
+@keyframes sparkle {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+.badge-category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.badge-count {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+}
+

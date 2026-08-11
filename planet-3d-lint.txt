@@ -1,0 +1,38 @@
+
+C:\Users\adyba\adriano-to-the-star-clean\planet-3d-viewer.js
+    60:5   warning  Refactor this function to reduce its Cognitive Complexity from 23 to the 15 allowed      sonarjs/cognitive-complexity
+    60:5   warning  Method 'createModal' has a complexity of 24. Maximum allowed is 20                       complexity
+    60:16  warning  Method 'createModal' has too many statements (53). Maximum allowed is 30                 max-statements
+   152:53  warning  Arrow function should not return assignment                                              no-return-assign
+   153:53  warning  Arrow function should not return assignment                                              no-return-assign
+   162:47  warning  Define a constant instead of duplicating this literal 4 times                            sonarjs/no-duplicate-string
+   164:71  warning  Define a constant instead of duplicating this literal 3 times                            sonarjs/no-duplicate-string
+   168:71  warning  Define a constant instead of duplicating this literal 3 times                            sonarjs/no-duplicate-string
+   322:51  warning  Define a constant instead of duplicating this literal 5 times                            sonarjs/no-duplicate-string
+   376:5   warning  Refactor this function to reduce its Cognitive Complexity from 16 to the 15 allowed      sonarjs/cognitive-complexity
+   381:47  warning  Define a constant instead of duplicating this literal 3 times                            sonarjs/no-duplicate-string
+   397:16  warning  Method 'initThreeJS' has too many statements (36). Maximum allowed is 30                 max-statements
+   509:5   warning  Refactor this function to reduce its Cognitive Complexity from 28 to the 15 allowed      sonarjs/cognitive-complexity
+   509:5   warning  Method 'visualizePlanet' has a complexity of 21. Maximum allowed is 20                   complexity
+   509:20  warning  Method 'visualizePlanet' has too many statements (35). Maximum allowed is 30             max-statements
+   584:5   warning  Refactor this function to reduce its Cognitive Complexity from 26 to the 15 allowed      sonarjs/cognitive-complexity
+   584:5   warning  Method 'getPlanetMaterial' has a complexity of 25. Maximum allowed is 20                 complexity
+   611:15  warning  'useStandard' is assigned a value but never used. Allowed unused vars must match /^_/u   no-unused-vars
+   631:18  warning  'err' is defined but never used. Allowed unused args must match /^_/u                    no-unused-vars
+   673:9   warning  'texture' is never reassigned. Use 'const' instead                                       prefer-const
+   692:5   warning  Refactor this function to reduce its Cognitive Complexity from 43 to the 15 allowed      sonarjs/cognitive-complexity
+   692:5   warning  Method 'generateProceduralTexture' has a complexity of 22. Maximum allowed is 20         complexity
+   692:30  warning  Method 'generateProceduralTexture' has too many statements (123). Maximum allowed is 30  max-statements
+   926:13  warning  Method 'addRings' has too many statements (36). Maximum allowed is 30                    max-statements
+  1000:5   warning  Refactor this function to reduce its Cognitive Complexity from 40 to the 15 allowed      sonarjs/cognitive-complexity
+  1000:5   warning  Method 'render' has a complexity of 26. Maximum allowed is 20                            complexity
+  1000:11  warning  Method 'render' has too many statements (42). Maximum allowed is 30                      max-statements
+  1036:19  warning  'effects' is assigned a value but never used. Allowed unused vars must match /^_/u       no-unused-vars
+  1249:10  warning  Method 'close' has too many statements (31). Maximum allowed is 30                       max-statements
+  1304:22  warning  Async method 'enterVRMode' has too many statements (31). Maximum allowed is 30           max-statements
+  1322:53  warning  Define a constant instead of duplicating this literal 3 times                            sonarjs/no-duplicate-string
+  1564:35  warning  'controller' is defined but never used. Allowed unused args must match /^_/u             no-unused-vars
+  1570:33  warning  'hand' is defined but never used. Allowed unused args must match /^_/u                   no-unused-vars
+
+Ô£û 33 problems (0 errors, 33 warnings)
+

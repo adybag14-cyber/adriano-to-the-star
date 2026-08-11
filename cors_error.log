@@ -1,0 +1,4 @@
+X [ERROR] The CORS configuration file must contain a 'rules' array as expected by the request body of the CORS API: https://developers.cloudflare.com/api/operations/r2-put-bucket-cors-policy
+
+
+­ƒ¬Á  Logs were written to "C:\Users\adyba\.wrangler\logs\wrangler-2025-12-28_15-44-39_287.log"

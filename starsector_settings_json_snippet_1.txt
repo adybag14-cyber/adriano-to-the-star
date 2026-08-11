@@ -1,0 +1,49 @@
+  private static boolean §o0000;
+
+  private static boolean OÊ0000;
+
+  private static int new.super;
+
+  private static volatile com.fs.starfarer.settings.A ÈO0000;
+
+  private static org.json.JSONObject §Ï0000;
+
+  private static org.json.JSONObject §Ë0000;
+
+  private static org.json.JSONObject oÏ0000;
+
+  private static boolean null.class;
+
+  private static boolean O10000;
+
+  private static boolean OÏ0000;
+
+  private static boolean while;
+
+  private static boolean null.return;
+
+  private static boolean ÷00000;
+
+  private static boolean Ï¶0000;
+
+  private static boolean OÈ0000;
+
+  private static boolean class.class;
+
+  private static boolean §00000;
+
+  private static boolean o¶0000;
+
+  private static boolean new;
+
+  private static boolean class;
+
+  private static boolean ÷Ê0000;
+
+  private static float Ë00000;
+
+  private static java.lang.String interface.class;
+
+  public static boolean ÍÊ0000;
+
+  private static volatile float §È0000;

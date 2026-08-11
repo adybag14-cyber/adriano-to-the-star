@@ -1,0 +1,160 @@
+ÿþpublic class com.fs.util.C {
+  private static com.fs.util.C Ë00000;
+
+  private java.util.List<com.fs.util.C$Oo> Ê00000;
+
+  private java.lang.String String;
+
+  public static boolean super;
+
+  private static volatile int[] 100000;
+
+  static {};
+    Code:
+       0: aconst_null
+       1: putstatic     #20                 // Field Ë00000:Lcom/fs/util/C;
+       4: iconst_0
+       5: putstatic     #22                 // Field super:Z
+       8: return
+
+  public com.fs.util.C();
+    Code:
+       0: aload_0
+       1: invokespecial #27                 // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: new           #29                 // class java/util/ArrayList
+       8: dup
+       9: invokespecial #31                 // Method java/util/ArrayList."<init>":()V
+      12: putfield      #32                 // Field Ê00000:Ljava/util/List;
+      15: aload_0
+      16: aconst_null
+      17: putfield      #34                 // Field String:Ljava/lang/String;
+      20: return
+
+  public static synchronized com.fs.util.C Ë00000();
+    Code:
+       0: getstatic     #20                 // Field Ë00000:Lcom/fs/util/C;
+       3: ifnonnull     16
+       6: new           #1                  // class com/fs/util/C
+       9: dup
+      10: invokespecial #39                 // Method "<init>":()V
+      13: putstatic     #20                 // Field Ë00000:Lcom/fs/util/C;
+      16: getstatic     #20                 // Field Ë00000:Lcom/fs/util/C;
+      19: areturn
+
+  public synchronized void class(java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #32                 // Field Ê00000:Ljava/util/List;
+       4: new           #43                 // class com/fs/util/C$Oo
+       7: dup
+       8: getstatic     #45                 // Field com/fs/util/C$o.È00000:Lcom/fs/util/C$o;
+      11: aload_1
+      12: invokespecial #51                 // Method com/fs/util/C$Oo."<init>":(Lcom/fs/util/C$o;Ljava/lang/String;)V
+      15: invokeinterface #54,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      20: pop
+      21: return
+
+  public synchronized void o00000(java.lang.String, boolean, java.lang.Object);
+    Code:
+       0: aload_0
+       1: getfield      #32                 // Field Ê00000:Ljava/util/List;
+       4: iconst_0
+       5: new           #43                 // class com/fs/util/C$Oo
+       8: dup
+       9: getstatic     #45                 // Field com/fs/util/C$o.È00000:Lcom/fs/util/C$o;
+      12: aload_1
+      13: iload_2
+      14: aload_3
+      15: invokespecial #63                 // Method com/fs/util/C$Oo."<init>":(Lcom/fs/util/C$o;Ljava/lang/String;ZLjava/lang/Object;)V
+      18: invokeinterface #66,  3           // InterfaceMethod java/util/List.add:(ILjava/lang/Object;)V
+      23: return
+
+  public synchronized void new();
+    Code:
+       0: aload_0
+       1: getfield      #32                 // Field Ê00000:Ljava/util/List;
+       4: new           #43                 // class com/fs/util/C$Oo
+       7: dup
+       8: getstatic     #73                 // Field com/fs/util/C$o.o00000:Lcom/fs/util/C$o;
+      11: aconst_null
+      12: invokespecial #51                 // Method com/fs/util/C$Oo."<init>":(Lcom/fs/util/C$o;Ljava/lang/String;)V
+      15: invokeinterface #54,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      20: pop
+      21: return
+
+  public synchronized void class();
+    Code:
+       0: aload_0
+       1: getfield      #32                 // Field Ê00000:Ljava/util/List;
+       4: new           #43                 // class com/fs/util/C$Oo
+       7: dup
+       8: getstatic     #77                 // Field com/fs/util/C$o.Object:Lcom/fs/util/C$o;
+      11: aconst_null
+      12: invokespecial #51                 // Method com/fs/util/C$Oo."<init>":(Lcom/fs/util/C$o;Ljava/lang/String;)V
+      15: invokeinterface #54,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      20: pop
+      21: return
+
+  public synchronized java.util.List<com.fs.util.C$Oo> È00000();
+    Code:
+       0: aload_0
+       1: getfield      #32                 // Field Ê00000:Ljava/util/List;
+       4: areturn
+
+  public synchronized java.io.InputStream È00000(java.lang.String) throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: iconst_1
+       3: invokevirtual #88                 // Method Ë00000:(Ljava/lang/String;Z)Ljava/io/InputStream;
+       6: areturn
+
+  public synchronized void Í00000(java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #34                 // Field String:Ljava/lang/String;
+       5: return
+
+  public synchronized java.io.InputStream Ë00000(java.lang.String, boolean) throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: getfield      #34                 // Field String:Ljava/lang/String;
+       4: astore_3
+       5: aload_0
+       6: aconst_null
+       7: putfield      #34                 // Field String:Ljava/lang/String;
+      10: getstatic     #22                 // Field super:Z
+      13: ifeq          22
+      16: iconst_0
+      17: istore_2
+      18: iconst_0
+      19: putstatic     #22                 // Field super:Z
+      22: ldc           #94                 // String
+      24: astore        4
+      26: aload_0
+      27: getfield      #32                 // Field Ê00000:Ljava/util/List;
+      30: invokeinterface #96,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      35: astore        6
+      37: goto          209
+      40: aload         6
+      42: invokeinterface #100,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      47: checkcast     #43                 // class com/fs/util/C$Oo
+      50: astore        5
+      52: iload_2
+      53: ifne          67
+      56: aload         5
+      58: getfield      #106                // Field com/fs/util/C$Oo.String:Z
+      61: ifeq          67
+      64: goto          209
+      67: invokestatic  #108                // Method o00000:()[I
+      70: aload         5
+      72: getfield      #111                // Field com/fs/util/C$Oo.super:Lcom/fs/util/C$o;
+      75: invokevirtual #114                // Method com/fs/util/C$o.ordinal:()I
+      78: iaload
+      79: tableswitch   { // 1 to 3
+
+                     1: 132
+
+                     2: 104

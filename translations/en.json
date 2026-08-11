@@ -1,0 +1,91 @@
+{
+  "nav": {
+    "home": "Home",
+    "starmap": "Starmap",
+    "database": "World database",
+    "about": "About",
+    "routes": "Routes",
+    "maps": "Star maps",
+    "projects": "Projects",
+    "begin": "Begin exploration"
+  },
+  "database": {
+    "title": "EXOPLANET DATABASE",
+    "subtitle": "Explore 9,564+ Celestial Bodies from the Kepler Archive"
+  },
+  "hero": {
+    "title": "Explore the Cosmos",
+    "subtitle": "Journey through the stars and discover new worlds.",
+    "eyebrow": "Interstellar Travel Agency · Flight systems online",
+    "line1": "THE UNIVERSE IS",
+    "line2": "NOW A DESTINATION.",
+    "lead": "Step inside a living atlas of distant worlds. Compare exoplanets, trace future routes, and experience the research systems that could guide humanity beyond Earth.",
+    "primary": "Enter the world database",
+    "soundtrack": "Launch soundtrack",
+    "scroll": "Scroll to traverse"
+  },
+  "features": {
+    "visualization": "3D Visualization",
+    "data": "Scientific Data",
+    "community": "Community"
+  },
+  "retreat": "RETREAT",
+  "stats": {
+    "worlds": "catalogued objects",
+    "soundtracks": "mission soundscapes",
+    "horizon": "possible horizons"
+  },
+  "stage": {
+    "window": "Departure window open",
+    "distance": "Distance",
+    "status": "Status",
+    "simulated": "SIMULATED",
+    "caption": "Concept route visualisation"
+  },
+  "routes": {
+    "title": "Every journey begins with a system.",
+    "lead": "I.T.A connects scientific data, route intelligence, and human imagination into one navigable interstellar experience.",
+    "databaseKicker": "WORLD INTELLIGENCE",
+    "databaseTitle": "Exoplanet Database",
+    "databaseText": "Filter thousands of celestial records, compare planetary conditions, and identify worlds worth a closer look.",
+    "openDatabase": "Open database",
+    "mapsKicker": "SPATIAL CARTOGRAPHY",
+    "mapsTitle": "Interactive Star Maps",
+    "mapsText": "Move through connected systems and see how distance, neighbourhood, and stellar context shape a route.",
+    "openMaps": "Plot a route",
+    "aiKicker": "MISSION INTELLIGENCE",
+    "aiTitle": "Stellar AI",
+    "aiText": "Ask questions, interpret astronomical data, and turn a vast catalogue into a focused mission briefing.",
+    "openAi": "Open mission AI"
+  },
+  "passage": {
+    "line1": "Not a list of planets.",
+    "line2": "A sense of arrival.",
+    "text": "The future of space travel will be measured in more than velocity. It will be orientation, confidence, wonder, and the feeling that an impossible distance has become understandable.",
+    "discovery": "Discovery",
+    "clarity": "Clarity",
+    "immersion": "Immersion"
+  },
+  "mission": {
+    "title": "From signal to destination.",
+    "step1Title": "Discover",
+    "step1Text": "Search a scientific catalogue built around the questions travellers actually ask.",
+    "step2Title": "Understand",
+    "step2Text": "Translate raw measurements into climate, scale, risk, and possibility.",
+    "step3Title": "Traverse",
+    "step3Text": "Follow a coherent route through maps, simulations, and future-facing projects."
+  },
+  "manifesto": {
+    "quote": "The first interstellar journey begins long before launch. It begins when the universe becomes legible."
+  },
+  "final": {
+    "title": "Choose your first world.",
+    "text": "The catalogue is open. Your route begins with one question, one signal, and one destination.",
+    "cta": "Start the expedition"
+  },
+  "footer": {
+    "tagline": "An independent interstellar travel concept, research platform, and invitation to look further.",
+    "privacy": "Privacy",
+    "online": "Agency systems online"
+  }
+}

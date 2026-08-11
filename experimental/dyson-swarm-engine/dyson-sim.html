@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dyson Swarm & Optimization Master | Adriano to the Stars</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Fira+Code&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+        body { margin: 0; background: #000; overflow: hidden; color: #fff; font-family: 'Inter', sans-serif; }
+        canvas { width: 100vw; height: 100vh; display: block; }
+        .hud {
+            position: fixed; top: 2rem; left: 2rem;
+            background: rgba(10, 10, 10, 0.9); border: 1px solid #ffd700;
+            padding: 2rem; border-radius: 8px; backdrop-filter: blur(15px);
+            min-width: 350px; z-index: 100;
+        }
+        .roadmap-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+        .chip {
+            background: rgba(255, 215, 0, 0.1); color: #ffd700;
+            padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.7rem; border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        .stat-val { color: #ffd700; font-family: 'Fira Code'; font-weight: 900; }
+    </style>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+
+<body>
+    <canvas id="dyson-canvas"></canvas>
+
+    <div class="hud">
+        <h2 style="margin: 0 0 1rem 0; font-family: 'Orbitron'; color: #ffd700;">ORBITAL SWARM CONTROL</h2>
+        <div style="font-size: 0.85rem; opacity: 0.7;">
+            Active Satellites: <span class="stat-val">100,000+ (#151)</span><br>
+            LOD Levels: <span class="stat-val">4 Layers</span><br>
+            Culling: <span class="stat-val">GPU INDIRECT (#160)</span>
+        </div>
+
+        <div class="roadmap-grid">
+            <div class="chip">#151 Multi-LOD</div>
+            <div class="chip">#152 Simplification</div>
+            <div class="chip">#160 GPU Culling</div>
+            <div class="chip">#164 Streaming</div>
+            <div class="chip">#184 GPU States</div>
+            <div class="chip">#188 Compute Mesh</div>
+            <div class="chip">#196 Sparse Textures</div>
+            <div class="chip">#206 Texture Cache</div>
+        </div>
+    </div>
+
+    <script type="module" src="dyson-sim.js"></script>
+</body>
+
+</html>

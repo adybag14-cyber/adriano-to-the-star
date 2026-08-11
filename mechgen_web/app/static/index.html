@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>MechGen Web</title>
+    <style>
+      :root {
+        --bg: #0a0a0a;
+        --card-bg: rgba(255, 255, 255, 0.05);
+        --text: #e0e0e0;
+        --text-muted: #aaaaaa;
+        --accent: #ba944f;
+        --accent-glow: rgba(186, 148, 79, 0.3);
+        --border: rgba(255, 255, 255, 0.1);
+        --error: #ff5555;
+        --success: #55ff55;
+      }
+      body { 
+        font-family: 'Raleway', system-ui, -apple-system, sans-serif; 
+        background: var(--bg);
+        color: var(--text);
+        margin: 24px; 
+        max-width: 1000px; 
+        line-height: 1.6;
+      }
+      h1, h2, h3 { font-weight: 300; letter-spacing: 1px; text-transform: uppercase; color: var(--accent); }
+      label { display: block; font-weight: 600; margin: 16px 0 6px; font-size: 0.9rem; color: var(--text-muted); }
+      textarea, input, select { 
+        width: 100%; 
+        padding: 12px; 
+        border: 1px solid var(--border); 
+        border-radius: 10px; 
+        box-sizing: border-box; 
+        background: rgba(0,0,0,0.3);
+        color: #fff;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      textarea:focus, input:focus, select:focus { border-color: var(--accent); }
+      button { 
+        padding: 12px 24px; 
+        border: 1px solid var(--accent); 
+        border-radius: 10px; 
+        background: var(--accent-glow); 
+        color: var(--accent); 
+        cursor: pointer; 
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.2s;
+      }
+      button:hover:not(:disabled) { background: var(--accent); color: #000; }
+      button:disabled { opacity: 0.5; cursor: not-allowed; }
+      .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+      .badge { display: inline-block; padding: 6px 14px; border-radius: 999px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+      .badge.ok { background: rgba(85, 255, 85, 0.1); color: #55ff55; border: 1px solid rgba(85, 255, 85, 0.3); }
+      .badge.warn { background: rgba(186, 148, 79, 0.1); color: #ba944f; border: 1px solid rgba(186, 148, 79, 0.3); }
+      .badge.bad { background: rgba(255, 85, 85, 0.2); color: #ff5555; border: 2px solid #ff5555; font-size: 14px; padding: 8px 20px; }
+      .card; { 
+        border: 1px solid var(--border); 
+        border-radius: 16px; 
+        padding: 20px; 
+        margin-top: 20px; 
+        background: var(--card-bg);
+        backdrop-filter: blur(10px);
+      }
+      #errors { color: #ff5555; font-weight: bold; border-left: 4px solid #ff5555; }
+      .muted { color: var(--text-muted); font-size: 0.85rem; }
+      .alert {
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 16px;
+        font-size: 0.9rem;
+      }
+      .alert-warn { background: rgba(186, 148, 79, 0.15); border: 1px solid var(--accent); color: var(--accent); }
+    </style>
+      <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+  <body>
+    <h1>MechGen <span style="font-weight:100; opacity:0.5;">Engine</span></h1>
+    <div class="muted">Organic chemistry mechanism generator and visualizer.</div>
+
+    <div id="rdkit-warning" class="alert alert-warn" style="display:none;">
+      <b>Warning:</b> RDKit is not detected on the server. Mechanism drawings cannot be generated. 
+      Please install RDKit: <code>pip install rdkit</code>
+    </div>
+
+    <div class="card">
+      <div class="row">
+        <div>
+          <label>Operation Mode</label>
+          <select id="mode">
+            <option value="predict">Predict (reactants &rarr; products + mechanism)</option>
+            <option value="explain">Explain (reactants + products &rarr; mechanism)</option>
+          </select>
+        </div>
+        <div>
+          <label>Input Format</label>
+          <select id="input_kind">
+            <option value="auto">Auto-detect</option>
+            <option value="smiles">SMILES strings</option>
+            <option value="english">English Names</option>
+          </select>
+        </div>
+      </div>
+
+      <label>Reactants</label>
+      <textarea id="reactants" rows="3" placeholder="e.g. CC(=O)C=C + [OH-] or: Methyl vinyl ketone + hydroxide"></textarea>
+
+      <div id="products_wrap">
+        <label>Target Products</label>
+        <textarea id="products" rows="3" placeholder="SMILES or English names of expected products"></textarea>
+      </div>
+
+      <label>Reaction Conditions</label>
+      <input id="conditions" placeholder="e.g. NaOH, H2O, 25°C" />
+
+      <div style="margin-top: 24px; display: flex; gap: 16px; align-items: center;">
+        <button id="submit">Generate Mechanism</button>
+        <span id="status_badge"></span>
+        <span id="job_id" class="muted"></span>
+      </div>
+    </div>
+
+    <div id="result" class="card" style="display:none;">
+      <div style="display:flex; justify-content: space-between; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 20px;">
+        <h2 style="margin:0;">Analysis Result</h2>
+        <div style="display:flex; gap: 8px; align-items: center;">
+            <span id="engine_version" class="muted"></span>
+            <a id="result_link" href="#" target="_blank" class="muted" style="text-decoration:none; border: 1px solid var(--border); padding: 4px 10px; border-radius: 6px;">View raw JSON</a>
+        </div>
+      </div>
+
+      <div id="predicted_products"></div>
+
+      <div id="errors_section">
+        <h3>Insights & Warnings</h3>
+        <pre id="errors"></pre>
+      </div>
+
+      <h3>Mechanism Steps</h3>
+      <div id="steps" class="steps"></div>
+    </div>
+
+    <script>
+      const modeEl = document.getElementById('mode');
+      const productsWrap = document.getElementById('products_wrap');
+      const submitBtn = document.getElementById('submit');
+      const statusBadge = document.getElementById('status_badge');
+      const jobIdEl = document.getElementById('job_id');
+      const resultCard = document.getElementById('result');
+      const errorsEl = document.getElementById('errors');
+      const stepsEl = document.getElementById('steps');
+      const predictedProductsEl = document.getElementById('predicted_products');
+      const resultLinkEl = document.getElementById('result_link');
+      const rdkitWarning = document.getElementById('rdkit-warning');
+
+      function setBadge(kind, text) {
+        statusBadge.innerHTML = `<span class="badge ${kind}">${text}</span>`;
+      }
+
+      function syncModeUI() {
+        const mode = modeEl.value;
+        productsWrap.style.display = (mode === 'explain') ? 'block' : 'none';
+      }
+      modeEl.addEventListener('change', syncModeUI);
+      syncModeUI();
+
+      async function checkHealth() {
+        try {
+          const res = await fetch('/api/health');
+          const data = await res.json();
+          if (!data.rdkit_available) {
+            rdkitWarning.style.display = 'block';
+          }
+        } catch (e) {}
+      }
+      checkHealth();
+
+      async function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+      async function pollJob(jobId) {
+        while (true) {
+          const res = await fetch(`/api/jobs/${jobId}`);
+          if (!res.ok) throw new Error(`status failed: ${res.status}`);
+          const s = await res.json();
+          if (s.state === 'queued') setBadge('warn', 'Queued');
+          if (s.state === 'running') setBadge('warn', 'Processing');
+          if (s.state === 'succeeded' || s.state === 'failed') return s;
+          await sleep(1000);
+        }
+      }
+
+      function renderResult(r) {
+        resultCard.style.display = 'block';
+        resultLinkEl.href = `/api/jobs/${r.job_id}/result.json`;
+        document.getElementById('engine_version').textContent = r.diagnostics?.version || '';
+
+        const badgeText = r.verified ? 'Verified' : (r.status === 'fatal' ? 'Execution Error' : 'Unverified Draft');
+        const badgeKind = r.verified ? 'ok' : (r.status === 'fatal' ? 'bad' : 'warn');
+        setBadge(badgeKind, badgeText);
+
+        const pp = (r.predicted_products || []).filter(Boolean);
+        predictedProductsEl.innerHTML = pp.length ? `<h3>Predicted Main Products</h3><pre>${pp.join('\n')}</pre>` : '';
+
+        const errs = (r.errors || []).join('\n\n');
+        if (errs) {
+            document.getElementById('errors_section').style.display = 'block';
+            errorsEl.textContent = errs;
+        } else {
+            document.getElementById('errors_section').style.display = 'none';
+        }
+
+        stepsEl.innerHTML = '';
+        (r.steps || []).forEach(st => {
+          const div = document.createElement('div');
+          div.className = 'card step-card';
+          const imgUrl = st.image_url ? (st.image_url + `?t=${Date.now()}`) : '';
+          div.innerHTML = `
+            <div style="display:flex; justify-content: space-between; align-items: center;">
+                <div class="badge warn" style="background: rgba(186,148,79,0.05);">Step ${st.index + 1}</div>
+                <div class="muted">${st.title || 'Intermediate'}</div>
+            </div>
+            <div style="margin: 12px 0; font-size: 1.1rem;">${st.description || ''}</div>
+            ${imgUrl ? `<img src="${imgUrl}" alt="Mechanism drawing" />` : '<div class="muted">No drawing available for this step.</div>'}
+          `;
+          stepsEl.appendChild(div);
+        });
+
+        resultCard.scrollIntoView({ behavior: 'smooth' });
+      }
+
+      submitBtn.addEventListener('click', async () => {
+        try {
+          submitBtn.disabled = true;
+          setBadge('warn', 'Submitting');
+          resultCard.style.display = 'none';
+          stepsEl.innerHTML = '';
+          errorsEl.textContent = '';
+          predictedProductsEl.innerHTML = '';
+
+          const mode = modeEl.value;
+          const payload = {
+            reactants: document.getElementById('reactants').value,
+            products: document.getElementById('products').value,
+            conditions: document.getElementById('conditions').value,
+            input_kind: document.getElementById('input_kind').value,
+          };
+
+          if (mode === 'predict') delete payload.products;
+
+          const res = await fetch(`/api/${mode}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          if (!res.ok) {
+            const t = await res.text();
+            throw new Error(`Submission failed: ${res.status} ${t}`);
+          }
+
+          const j = await res.json();
+          const jobId = j.job_id;
+          jobIdEl.textContent = `JOB ID: ${jobId.substring(0, 8)}...`;
+
+          await pollJob(jobId);
+
+          const rres = await fetch(`/api/jobs/${jobId}/result.json`);
+          if (!rres.ok) throw new Error(`Result retrieval failed: ${rres.status}`);
+          const r = await rres.json();
+          renderResult(r);
+        } catch (e) {
+          setBadge('bad', 'Error');
+          jobIdEl.textContent = '';
+          resultCard.style.display = 'block';
+          errorsEl.textContent = String(e);
+        } finally {
+          submitBtn.disabled = false;
+        }
+      });
+    </script>
+  </body>
+</html>

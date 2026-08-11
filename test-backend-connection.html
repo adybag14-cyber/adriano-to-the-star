@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backend Connection Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #2a2a2a;
+            border-radius: 8px;
+        }
+        .success { color: #4caf50; }
+        .error { color: #f44336; }
+        .info { color: #2196f3; }
+        button {
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #45a049; }
+        #log {
+            background: #000;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+    </style>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+<body>
+    <h1>🔌 Backend Connection Test</h1>
+    
+    <div class="test-section">
+        <h2>1. Health Check</h2>
+        <button onclick="testHealth()">Test Health Endpoint</button>
+        <div id="health-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. WebSocket Connection</h2>
+        <button onclick="testWebSocket()">Test WebSocket Proxy</button>
+        <button onclick="closeWebSocket()">Close Connection</button>
+        <div id="ws-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. Gemini API Test (via Backend)</h2>
+        <button onclick="testGeminiAPI()">Test Gemini Live API</button>
+        <div id="gemini-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Log Output</h2>
+        <div id="log"></div>
+    </div>
+
+    <script>
+        const BACKEND_URL = 'http://localhost:3001';
+        let ws = null;
+
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type === 'error' ? 'error' : type === 'success' ? 'success' : 'info';
+            logDiv.innerHTML += `<span class="${className}">[${timestamp}] ${message}</span>\n`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        async function testHealth() {
+            const resultDiv = document.getElementById('health-result');
+            resultDiv.innerHTML = '<p class="info">Testing...</p>';
+            log('Testing health endpoint...', 'info');
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/health`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `<p class="success">✅ Health check passed!</p><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                    log('Health check: SUCCESS', 'success');
+                } else {
+                    resultDiv.innerHTML = `<p class="error">❌ Health check failed: ${response.status}</p>`;
+                    log(`Health check: FAILED (${response.status})`, 'error');
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<p class="error">❌ Error: ${error.message}</p>`;
+                log(`Health check: ERROR - ${error.message}`, 'error');
+            }
+        }
+
+        function testWebSocket() {
+            const resultDiv = document.getElementById('ws-result');
+            resultDiv.innerHTML = '<p class="info">Connecting...</p>';
+            log('Connecting to WebSocket proxy...', 'info');
+
+            try {
+                // Connect to backend WebSocket proxy
+                // Convert http://localhost:3001 to ws://localhost:3001/api/gemini-live
+                const wsUrl = BACKEND_URL.replace(/^https?:\/\//, '').replace(/^/, 'ws://') + '/api/gemini-live';
+                log(`Connecting to: ${wsUrl}`, 'info');
+                ws = new WebSocket(wsUrl);
+
+                ws.onopen = () => {
+                    resultDiv.innerHTML = '<p class="success">✅ WebSocket connected!</p>';
+                    log('WebSocket: CONNECTED', 'success');
+                    
+                    // Send a test setup message
+                    const setupMessage = {
+                        setup: {
+                            model: "models/gemini-2.5-flash-live",
+                            generationConfig: {
+                                temperature: 0.7,
+                                maxOutputTokens: 8192,
+                                responseModalities: ["TEXT"]
+                            }
+                        }
+                    };
+                    ws.send(JSON.stringify(setupMessage));
+                    log('WebSocket: Sent setup message', 'info');
+                };
+
+                ws.onmessage = (event) => {
+                    try {
+                        const data = JSON.parse(event.data);
+                        log(`WebSocket: Received message - ${JSON.stringify(data).substring(0, 100)}...`, 'info');
+                        
+                        if (data.setupComplete) {
+                            resultDiv.innerHTML += '<p class="success">✅ Setup complete!</p>';
+                            log('WebSocket: Setup complete', 'success');
+                            
+                            // Send a test message
+                            const clientMessage = {
+                                clientContent: {
+                                    parts: [{ text: "Hello! Say 'Connection test successful' if you can read this." }]
+                                }
+                            };
+                            ws.send(JSON.stringify(clientMessage));
+                            log('WebSocket: Sent test message', 'info');
+                        } else if (data.serverContent) {
+                            let text = '';
+                            if (data.serverContent.parts) {
+                                text = data.serverContent.parts.map(p => p.text || '').join('');
+                            } else if (data.serverContent.modelTurn && data.serverContent.modelTurn.parts) {
+                                text = data.serverContent.modelTurn.parts.map(p => p.text || '').join('');
+                            }
+                            
+                            if (text) {
+                                resultDiv.innerHTML += `<p class="success">✅ Response: ${text}</p>`;
+                                log(`WebSocket: Response received - ${text}`, 'success');
+                            }
+                        }
+                    } catch (e) {
+                        log(`WebSocket: Error parsing message - ${e.message}`, 'error');
+                    }
+                };
+
+                ws.onerror = (error) => {
+                    resultDiv.innerHTML += '<p class="error">❌ WebSocket error occurred</p>';
+                    log(`WebSocket: ERROR - ${error.message || 'Unknown error'}`, 'error');
+                };
+
+                ws.onclose = (event) => {
+                    resultDiv.innerHTML += `<p class="info">WebSocket closed (code: ${event.code}, reason: ${event.reason || 'None'})</p>`;
+                    log(`WebSocket: CLOSED (code: ${event.code})`, 'info');
+                };
+            } catch (error) {
+                resultDiv.innerHTML = `<p class="error">❌ Error: ${error.message}</p>`;
+                log(`WebSocket: ERROR - ${error.message}`, 'error');
+            }
+        }
+
+        function closeWebSocket() {
+            if (ws) {
+                ws.close();
+                ws = null;
+                log('WebSocket: Manually closed', 'info');
+            }
+        }
+
+        async function testGeminiAPI() {
+            const resultDiv = document.getElementById('gemini-result');
+            resultDiv.innerHTML = '<p class="info">Testing Gemini API via backend...</p>';
+            log('Testing Gemini API...', 'info');
+
+            try {
+                // Test via WebSocket through backend
+                testWebSocket();
+                
+                // Also test REST endpoint if available
+                const response = await fetch(`${BACKEND_URL}/api/test-gemini`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        prompt: "Say 'Backend connection successful' if you can read this."
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    resultDiv.innerHTML += `<p class="success">✅ REST API test: ${JSON.stringify(data)}</p>`;
+                    log('REST API: SUCCESS', 'success');
+                } else {
+                    log(`REST API: Not available (${response.status})`, 'info');
+                }
+            } catch (error) {
+                log(`Gemini API test: ERROR - ${error.message}`, 'error');
+            }
+        }
+
+        // Auto-test health on load
+        window.addEventListener('load', () => {
+            log('Page loaded. Ready to test connections.', 'info');
+            testHealth();
+        });
+    </script>
+</body>
+</html>
+
+

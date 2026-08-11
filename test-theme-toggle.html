@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test: Theme Toggle</title>
+    <link rel="stylesheet" href="fonts/fonts.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="loader-minimal.css">
+    <link rel="stylesheet" href="mailing-list.css">
+    <link rel="stylesheet" href="theme-styles.css">
+    <link rel="stylesheet" href="accessibility-styles.css">
+    <link rel="stylesheet" href="i18n-styles.css">
+    
+    <!-- Debug System -->
+    <script>
+        try {
+            (function() {
+                'use strict';
+                const log = (msg, type) => {
+                    try {
+                        console.log(`[DEBUG ${type || 'LOG'}] ${msg}`);
+                    } catch(e) {}
+                };
+                log('🔍 DEBUG SYSTEM STARTING', 'INFO');
+                const debugOverlay = document.createElement('div');
+                debugOverlay.id = 'debug-overlay';
+                debugOverlay.style.cssText = 'position:fixed!important;top:0!important;left:0!important;width:100%!important;height:200px!important;background:rgba(0,0,0,0.95)!important;color:#0f0!important;font-family:monospace!important;font-size:12px!important;padding:10px!important;overflow-y:auto!important;z-index:999999!important;pointer-events:auto!important;border-bottom:2px solid #0f0!important;';
+                try {
+                    if (document.body) {
+                        document.body.appendChild(debugOverlay);
+                    } else if (document.head) {
+                        document.head.appendChild(debugOverlay);
+                    } else {
+                        document.documentElement.appendChild(debugOverlay);
+                    }
+                } catch(e) {
+                    log('Failed to append debug overlay: ' + e.message, 'ERROR');
+                }
+                const logToOverlay = (msg, type = 'log') => {
+                    try {
+                        const line = document.createElement('div');
+                        line.style.cssText = `color:${type === 'error' ? '#f00' : type === 'warn' ? '#ff0' : '#0f0'}!important;margin:2px 0!important;white-space:pre-wrap!important;`;
+                        line.textContent = `[${new Date().toLocaleTimeString()}] [${type.toUpperCase()}] ${msg}`;
+                        debugOverlay.appendChild(line);
+                        debugOverlay.scrollTop = debugOverlay.scrollHeight;
+                    } catch(e) {
+                        log('Failed to log to overlay: ' + e.message, 'ERROR');
+                    }
+                };
+                window.addEventListener('error', e => {
+                    log(`ERROR: ${e.message} at ${e.filename}:${e.lineno}:${e.colno}`, 'error');
+                    logToOverlay(`ERROR: ${e.message}`, 'error');
+                }, true);
+                window.addEventListener('unhandledrejection', e => {
+                    log(`PROMISE REJECTION: ${e.reason}`, 'error');
+                    logToOverlay(`PROMISE REJECTION: ${e.reason}`, 'error');
+                });
+                log('🔍 INLINE DEBUG SYSTEM ACTIVE', 'info');
+                logToOverlay('🔍 INLINE DEBUG SYSTEM ACTIVE', 'info');
+                window.debugLog = logToOverlay;
+            })();
+        } catch(e) {
+            console.error('CRITICAL: Debug system failed to initialize:', e);
+        }
+    </script>
+    
+    <!-- TESTING: theme-toggle.js -->
+    <script src="loader.js"></script>
+    <script src="theme-toggle.js" defer async></script>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+<body class="loaded">
+    <h1>Test: theme-toggle.js</h1>
+    <p>If you see this and page is clickable, theme-toggle.js works!</p>
+</body>
+</html>
+
+

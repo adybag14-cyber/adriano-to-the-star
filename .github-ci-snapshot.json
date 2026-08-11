@@ -1,0 +1,301 @@
+{
+  "schema": 1,
+  "source": "gitlab.com/adybag14-group/starisdons",
+  "sourceRef": "ae64deb2dc77925f9636958eebd328b348e994e6",
+  "sourceSha": "ae64deb2dc77925f9636958eebd328b348e994e6",
+  "maxBlobBytes": 5242880,
+  "includedFiles": 8342,
+  "includedBytes": 233233285,
+  "excludedFiles": 50149,
+  "excludedBytes": 5988834780,
+  "excludedPrefixes": [
+    "public/",
+    "node_modules/",
+    "total-war-2/",
+    "mods_full_backup/",
+    "files/",
+    "overrides/",
+    "cheerpj_dist/",
+    "cheerpj-3.0/",
+    "swf/",
+    "usr/",
+    "data_backup/",
+    "test-results-smoke/",
+    "tbench/",
+    "tbench_workspace/",
+    "experimental/sentient-browser/models/",
+    "assets/models_backup/"
+  ],
+  "excludedPaths": [
+    ".env",
+    "GEMINI-API-KEY-SETUP.md",
+    "GET-SUPABASE-CREDENTIALS.md",
+    "GITLAB-API-KEYS-SETUP.md",
+    "Printout.mht",
+    "REQUIRED-API-KEYS-GITLAB.md",
+    "SETUP-API-KEYS.md",
+    "UPDATE-GEMINI-API-KEY.md",
+    "backend/LIVE-API-WITH-API-KEY-SUPPORT.md",
+    "graphics.zip",
+    "inject-api-keys.ps1",
+    "jre8u271-linux-x64.tar.gz",
+    "lint_errors.json",
+    "localhost3.har",
+    "localhost4.har",
+    "merged_game.jar",
+    "overrides.jar",
+    "tmp_shard.bin"
+  ],
+  "largestExcluded": [
+    {
+      "path": "total-war-2/Medieval II - Total War/packs/data_0.pack",
+      "size": 1013426292,
+      "reason": "excluded-prefix"
+    },
+    {
+      "path": "total-war-2/Medieval II - Total War/packs/data_1.pack",
+      "size": 726802234,
+      "reason": "excluded-prefix"
+    },
+    {
+      "path": "experimental/sentient-browser/models/t5_gemma2-q4f16_1/params_shard_1.bin",
+      "size": 83886080,
+      "reason": "excluded-prefix"
+    },
+    {
+      "path": "experimental/sentient-browser/models/t5_gemma2-q4f16_1/params_shard_2.bin",
+      "size": 83886080,
+      "reason": "excluded-prefix"
+    },
+    {
+      "path": "experimental/sentient-browser/models/t5_gemma2-q4f16_1/params_shard_3.bin",
+      "size": 83886080,
+      "reason": "excluded-prefix"
+    },
+    {
+      "path": "experimental/sentient-browser/models/t5_gemma2-q4f16_1/resolve/main/params_shard_1.bin",
+      "size": 83886080,
+      "reason": "excluded-prefix"
+    },
+    {
+      "path": "experimental/sentient-browser/models/t5_gemma2-q4f16_1/resolve/main/params_shard_2.bin",
+      "size": 83886080,
+      "reason": "excluded-prefix"
+    },
+    {
+      "path": "experimental/sentient-browser/models/t5_gemma2-q4f16_1/resolve/main/params_shard_3.bin",
+      "size": 83886080,
+      "reason": "excluded-prefix"
+    },
+    {
+      "path": "overrides.jar",
+      "size": 76957697,
+      "reason": "explicit-runtime-or-diagnostic"
+    },
+    {
+      "path": "graphics.zip",
+      "size": 73945428,
+      "reason": "explicit-runtime-or-diagnostic"
+    },
+    {
+      "path": "jre8u271-linux-x64.tar.gz",
+      "size": 59819900,
+      "reason": "explicit-runtime-or-diagnostic"
+    },
+    {
+      "path": "assets/models/ships/viper.glb",
+      "size": 57474288,
+      "reason": "blob-over-5242880"
+    },
+    {
+      "path": "assets/models_backup/ships/viper.glb",
+      "size": 57474288,
+      "reason": "excluded-prefix"
+    },
+    {
+      "path": "files/sounds/music/music.bin",
+      "size": 53996039,
+      "reason": "excluded-prefix"
+    },
+    {
+      "path": "assets/models/props/bridge_table.glb",
+      "size": 42977928,
+      "reason": "blob-over-5242880"
+    },
+    {
+      "path": "localhost3.har",
+      "size": 42770582,
+      "reason": "explicit-runtime-or-diagnostic"
+    },
+    {
+      "path": "localhost4.har",
+      "size": 40427132,
+      "reason": "explicit-runtime-or-diagnostic"
+    },
+    {
+      "path": "lint_errors.json",
+      "size": 38084847,
+      "reason": "explicit-runtime-or-diagnostic"
+    },
+    {
+      "path": "cheerpj_dist/4.2/17/lib/modules",
+      "size": 38077827,
+      "reason": "excluded-prefix"
+    },
+    {
+      "path": "cheerpj_dist/4.2/modules",
+      "size": 38077827,
+      "reason": "excluded-prefix"
+    },
+    {
+      "path": "experimental/sentient-browser/models/t5_gemma2-q4f16_1/params_shard_5.bin",
+      "size": 33367040,
+      "reason": "excluded-prefix"
+    },
+    {
+      "path": "experimental/sentient-browser/models/t5_gemma2-q4f16_1/resolve/main/params_shard_5.bin",
+      "size": 33367040,
+      "reason": "excluded-prefix"
+    },
+    {
+      "path": "experimental/sentient-browser/models/t5_gemma2-q4f16_1/params_shard_0.bin",
+      "size": 33216000,
+      "reason": "excluded-prefix"
+    },
+    {
+      "path": "experimental/sentient-browser/models/t5_gemma2-q4f16_1/resolve/main/params_shard_0.bin",
+      "size": 33216000,
+      "reason": "excluded-prefix"
+    },
+    {
+      "path": "tmp_shard.bin",
+      "size": 33216000,
+      "reason": "explicit-runtime-or-diagnostic"
+    },
+    {
+      "path": "merged_game.jar",
+      "size": 29838995,
+      "reason": "explicit-runtime-or-diagnostic"
+    },
+    {
+      "path": "files/starsector.log",
+      "size": 28037750,
+      "reason": "excluded-prefix"
+    },
+    {
+      "path": "experimental/sentient-browser/models/t5_gemma2-q4f16_1/params_shard_4.bin",
+      "size": 27616000,
+      "reason": "excluded-prefix"
+    },
+    {
+      "path": "experimental/sentient-browser/models/t5_gemma2-q4f16_1/resolve/main/params_shard_4.bin",
+      "size": 27616000,
+      "reason": "excluded-prefix"
+    },
+    {
+      "path": "cheerpj-3.0/8/jre/lib/rt.jar",
+      "size": 26793950,
+      "reason": "excluded-prefix"
+    },
+    {
+      "path": "assets/models/ruins/relic.glb",
+      "size": 24229904,
+      "reason": "blob-over-5242880"
+    },
+    {
+      "path": "assets/models_backup/ruins/relic.glb",
+      "size": 24229904,
+      "reason": "excluded-prefix"
+    },
+    {
+      "path": "total-war-2/Medieval II - Total War/medieval2.exe",
+      "size": 19673088,
+      "reason": "excluded-prefix"
+    },
+    {
+      "path": "audio/track-6.mp3",
+      "size": 19111725,
+      "reason": "blob-over-5242880"
+    },
+    {
+      "path": "public/audio/track-6.mp3",
+      "size": 19111725,
+      "reason": "excluded-prefix"
+    },
+    {
+      "path": "assets/models/habitats/outpost_tower.glb",
+      "size": 17540348,
+      "reason": "blob-over-5242880"
+    },
+    {
+      "path": "assets/models/science/telescope.glb",
+      "size": 17540348,
+      "reason": "blob-over-5242880"
+    },
+    {
+      "path": "assets/models_backup/habitats/outpost_tower.glb",
+      "size": 17540348,
+      "reason": "excluded-prefix"
+    },
+    {
+      "path": "assets/models_backup/science/telescope.glb",
+      "size": 17540348,
+      "reason": "excluded-prefix"
+    },
+    {
+      "path": "experimental/sentient-browser/models/t5_gemma2-q4f16_1/params_shard_6.bin",
+      "size": 16979200,
+      "reason": "excluded-prefix"
+    },
+    {
+      "path": "experimental/sentient-browser/models/t5_gemma2-q4f16_1/resolve/main/params_shard_6.bin",
+      "size": 16979200,
+      "reason": "excluded-prefix"
+    },
+    {
+      "path": "audio/track-8.mp3",
+      "size": 16511085,
+      "reason": "blob-over-5242880"
+    },
+    {
+      "path": "public/audio/track-8.mp3",
+      "size": 16511085,
+      "reason": "excluded-prefix"
+    },
+    {
+      "path": "assets/models/characters/pioneer_suit.glb",
+      "size": 13491364,
+      "reason": "blob-over-5242880"
+    },
+    {
+      "path": "assets/models_backup/characters/pioneer_suit.glb",
+      "size": 13491364,
+      "reason": "excluded-prefix"
+    },
+    {
+      "path": "total-war-2/_Redist/dxnt.cab",
+      "size": 13265040,
+      "reason": "excluded-prefix"
+    },
+    {
+      "path": "assets/models/fauna/sky_whale.glb",
+      "size": 12488144,
+      "reason": "blob-over-5242880"
+    },
+    {
+      "path": "assets/models_backup/fauna/sky_whale.glb",
+      "size": 12488144,
+      "reason": "excluded-prefix"
+    },
+    {
+      "path": "total-war-2/Medieval II - Total War/data/world/maps/battle/norman_prologue/battle_of_hastings/map.wfc",
+      "size": 12458148,
+      "reason": "excluded-prefix"
+    },
+    {
+      "path": "swf/f93116386publicfileschaos-faction-2-REMOTE.SWF",
+      "size": 12337577,
+      "reason": "excluded-prefix"
+    }
+  ]
+}

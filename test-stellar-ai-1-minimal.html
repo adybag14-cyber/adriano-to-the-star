@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test 1: Minimal Stellar AI</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #000 !important; color: #fff !important; font-family: Arial, sans-serif; padding: 2rem; display: block !important; visibility: visible !important; opacity: 1 !important; }
+        .test-info { background: rgba(186, 148, 79, 0.2); padding: 1rem; margin-bottom: 2rem; border: 1px solid rgba(186, 148, 79, 0.5); border-radius: 8px; }
+        button { background: rgba(186, 148, 79, 0.3); border: 2px solid rgba(186, 148, 79, 0.5); color: #ba944f; padding: 1rem 2rem; margin: 0.5rem; border-radius: 8px; cursor: pointer; font-size: 1rem; }
+        button:hover { background: rgba(186, 148, 79, 0.5); }
+        .status { margin-top: 2rem; padding: 1rem; background: rgba(0, 255, 0, 0.1); border: 1px solid rgba(0, 255, 0, 0.3); border-radius: 8px; }
+    </style>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+<body>
+    <div class="test-info">
+        <h1> Test 1: Minimal HTML (No Scripts)</h1>
+        <p>This page has NO JavaScript - just HTML and CSS. If buttons work here, the issue is with JavaScript.</p>
+    </div>
+    <h2>Test Buttons:</h2>
+    <button onclick="alert('Button 1 clicked!')">Test Button 1</button>
+    <button onclick="alert('Button 2 clicked!')">Test Button 2</button>
+    <button onclick="alert('Button 3 clicked!')">Test Button 3</button>
+    <button id="test-btn-4">Test Button 4</button>
+    <div class="status" id="status"><strong>Status:</strong> Click buttons above to test.</div>
+    <script>
+        document.getElementById('test-btn-4').addEventListener('click', function() {
+            document.getElementById('status').innerHTML = '<strong>Status:</strong>  Button 4 clicked!';
+            alert('Button 4 clicked!');
+        });
+        document.body.style.display = 'block';
+        document.body.style.visibility = 'visible';
+        console.log(' Test 1 loaded');
+    </script>
+</body>
+</html>

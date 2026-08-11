@@ -1,0 +1,36 @@
+starsector_log.md
+
+# Large Total War Assets
+*.pack
+*.dat
+*.bik
+
+# Cloudflare Wrangler Local State
+.wrangler/
+
+# Build Manifests
+**/build/
+*.class
+backend/stellar-ai-key.json
+**/stellar-ai-key.json
+gcp-sa-key.json
+**/gcp-sa-key.json
+GCP_KEY_FOR_GITLAB.md
+GCP_KEY_BASE64.md
+
+# Google Drive Sync
+.tmp.driveupload/
+.tmp.drivedownload/
+
+# Development patterns
+coverage/
+node_modules/
+.nyc_output/
+.env
+dist/
+.DS_Store
+public/
+
+.git
+.gemini
+node_modules

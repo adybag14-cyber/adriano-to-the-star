@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Starsector - Browser Edition</title>
+    <link rel="icon" type="image/x-icon" href="images/ita_logo.png">
+
+    <!-- CheerpJ 4.2 Runtime (Java 17 support) -->
+    <script src="https://cjrtnc.leaningtech.com/4.2/loader.js"></script>
+
+    <!-- LWJGL2 JavaScript Bridge for CheerpJ -->
+    <script src="lwjgl-bridge.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background: #000;
+            overflow: hidden;
+        }
+
+        /* Game Container */
+        #game-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(ellipse at center, #0d1b2a 0%, #000 100%);
+        }
+
+        /* Loading Screen */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a0a15 0%, #1a1a2e 50%, #0d1b2a 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease;
+        }
+
+        #loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-logo {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #64b5f6;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            text-shadow: 0 0 30px rgba(100, 181, 246, 0.5);
+        }
+
+        .loading-bar-container {
+            width: 400px;
+            max-width: 80%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .loading-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #1565c0, #42a5f5, #64b5f6);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .loading-status {
+            color: #90a4ae;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .loading-substatus {
+            color: #546e7a;
+            font-size: 0.8rem;
+            margin-top: 8px;
+        }
+
+        /* Top Bar */
+        #top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: rgba(10, 10, 20, 0.9);
+            border-bottom: 1px solid rgba(100, 150, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        #top-bar.visible {
+            opacity: 1;
+        }
+
+        .top-bar-title {
+            color: #64b5f6;
+            font-weight: 600;
+            letter-spacing: 2px;
+            font-size: 0.9rem;
+        }
+
+        .top-bar-controls {
+            display: flex;
+            gap: 15px;
+        }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #90a4ae;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .control-btn.danger:hover {
+            background: rgba(244, 67, 54, 0.3);
+            border-color: rgba(244, 67, 54, 0.5);
+            color: #ef5350;
+        }
+
+        /* Error Display */
+        #error-display {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(20, 20, 30, 0.95);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 500px;
+            text-align: center;
+            z-index: 2000;
+        }
+
+        #error-display.visible {
+            display: block;
+        }
+
+        #error-display h2 {
+            color: #ef5350;
+            margin-bottom: 15px;
+        }
+
+        #error-display p {
+            color: #90a4ae;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        #error-display pre {
+            background: rgba(0, 0, 0, 0.5);
+            color: #78909c;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            text-align: left;
+            overflow-x: auto;
+            max-height: 150px;
+        }
+
+        /* CheerpJ Canvas Styles */
+        .cheerpj-display {
+            width: 100% !important;
+            height: 100% !important;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loading-logo">Starsector</div>
+        <div class="loading-bar-container">
+            <div class="loading-bar" id="loading-bar"></div>
+        </div>
+        <div class="loading-status" id="loading-status">Initializing CheerpJ Runtime...</div>
+        <div class="loading-substatus" id="loading-substatus">This may take a moment on first load</div>
+    </div>
+
+    <!-- Top Control Bar -->
+    <div id="top-bar">
+        <div class="top-bar-title">STARSECTOR // BROWSER EDITION</div>
+        <div class="top-bar-controls">
+            <button class="control-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+            <button class="control-btn danger" onclick="logout()">⏻ Logout</button>
+        </div>
+    </div>
+
+    <!-- Game Container -->
+    <div id="game-container"></div>
+
+    <!-- Error Display -->
+    <div id="error-display">
+        <h2>Launch Failed</h2>
+        <p id="error-message">An error occurred while starting Starsector.</p>
+        <pre id="error-details"></pre>
+        <button class="control-btn" onclick="location.reload()" style="margin-top: 20px;">Retry</button>
+    </div>
+
+    <script src="starsector-auth.js"></script>
+    <script>
+        // Authentication check
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Wait for auth system
+            await new Promise(r => setTimeout(r, 200));
+
+            if (!StarsectorAuth.isAuthenticated()) {
+                window.location.href = 'starsector-login.html';
+                return;
+            }
+
+            // Start loading Starsector
+            initStarsector();
+        });
+
+        function updateLoadingProgress(percent, status, substatus) {
+            document.getElementById('loading-bar').style.width = percent + '%';
+            if (status) document.getElementById('loading-status').textContent = status;
+            if (substatus) document.getElementById('loading-substatus').textContent = substatus;
+        }
+
+        function showError(message, details) {
+            document.getElementById('loading-screen').classList.add('hidden');
+            document.getElementById('error-message').textContent = message;
+            document.getElementById('error-details').textContent = details || '';
+            document.getElementById('error-display').classList.add('visible');
+        }
+
+        async function initStarsector() {
+            try {
+                updateLoadingProgress(5, 'Loading CheerpJ 4.2 Runtime...', 'Downloading WebAssembly runtime with Java 17 + LWJGL support');
+
+                // Create LWJGL canvas for WebGL rendering
+                const lwjglCanvas = document.createElement('canvas');
+                lwjglCanvas.id = 'lwjgl';
+                lwjglCanvas.width = 1280;
+                lwjglCanvas.height = 720;
+                lwjglCanvas.style.width = '100%';
+                lwjglCanvas.style.height = '100%';
+                lwjglCanvas.tabIndex = 0; // Make canvas focusable for keyboard input
+                document.getElementById('game-container').appendChild(lwjglCanvas);
+
+                // Set the canvas for LWJGL (required by cheerpj-natives/lwjgl.js)
+                window.lwjglCanvasElement = lwjglCanvas;
+                console.log('LWJGL canvas created:', lwjglCanvas);
+
+                // Debug: file accessibility check
+                fetch('/cheerpj-natives/natives/liblwjgl.so').then(r => {
+                    console.log(`[Debug] Fetch liblwjgl.so status: ${r.status}`);
+                }).catch(e => console.error('[Debug] Fetch liblwjgl.so failed:', e));
+
+                // Force JVM_LoadLibrary globally
+                window.JVM_LoadLibrary = async function (lib, name) {
+                    console.log(`[Global Hook] JVM_LoadLibrary called: ${name}`);
+                    return { address: 1 };
+                };
+
+                // Initialize CheerpJ 4.2 with Java 17 and LWJGL natives
+                console.log("Initializing CheerpJ...");
+                await cheerpjInit({
+                    version: 17,
+                    clipboardMode: "permission",
+                    natives: {
+                        // TEST STUB: Confirm overrides work
+                        async Java_java_lang_System_nanoTime(lib) {
+                            console.log("[STUB] System.nanoTime called (Override confirmed)");
+                            return BigInt(Date.now() * 1000000);
+                        },
+
+                        // JVM_LoadLibrary variations - attempting to hit the linker's expected signature
+                        async JVM_LoadLibrary(lib, name) {
+                            console.log(`[STUB] JVM_LoadLibrary(2) called: ${name}`);
+                            return { address: 1 };
+                        },
+                        async JVM_LoadLibrary_1(lib, name) { // 1 arg?
+                            console.log(`[STUB] JVM_LoadLibrary(1) called: ${name}`);
+                            return { address: 1 };
+                        },
+                        async JVM_LoadLibrary_3(lib, name, extra) { // 3 args
+                            console.log(`[STUB] JVM_LoadLibrary(3) called: ${name}`);
+                            return { address: 1 };
+                        },
+                        async _JVM_LoadLibrary(lib, name) { // Underscore
+                            console.log(`[STUB] _JVM_LoadLibrary called: ${name}`);
+                            return { address: 1 };
+                        },
+
+                        // Known working stub
+                        async JVM_FindLibraryEntry(lib, handle, name) {
+                            console.log(`[STUB] JVM_FindLibraryEntry called: ${name}`);
+                            return { address: 1 };
+                        },
+
+                        // Java 17 Specific Stubs for NativeLibraries
+                        async Java_jdk_internal_loader_NativeLibraries_00024NativeLibraryImpl_load(lib, self, name, isBuiltin, isJNI) {
+                            console.log(`[STUB] JDK17 NativeLibraryImpl.load called: ${name}`);
+                            return true;
+                        },
+                        async Java_jdk_internal_loader_NativeLibraries_load(lib, self, name, isBuiltin, isJNI) {
+                            console.log(`[STUB] JDK17 NativeLibraries.load called: ${name}`);
+                            return true;
+                        },
+                        async Java_java_lang_ClassLoader_00024NativeLibrary_load0(lib, self, name, isBuiltin) {
+                            console.log(`[STUB] NativeLibrary.load0 called: ${name}`);
+                            return true; // Success
+                        },
+
+                        // Spread the rest from the bridge
+                        ...(window.CheerpJ_LWJGL_Natives || {})
+                    },
+                    javaProperties: [
+                        "sun.nio.MaxDirectMemorySize=268435456", // 256MB Direct Memory for LWJGL/NIO
+                        "java.library.path=/app/cheerpj-natives/natives",
+                        "user.dir=/app/Starsector",
+                        "fs.game.dir=/app/Starsector",
+                        "fs.mod.dir=/app/Starsector/mods",
+                        "starsector.mods.dir=/app/Starsector/mods",
+                        "com.fs.starfarer.settings.paths.mods=/app/Starsector/mods",
+                        "com.fs.starfarer.settings.paths.saves=/app/Starsector/saves",
+                        "com.fs.starfarer.settings.paths.screenshots=/app/Starsector/screenshots",
+                        "user.home=/app/Starsector", // Match game dir to avoid confusion
+                        "user.name=CheerpJUser"
+                    ]
+                });
+                console.log('CheerpJ 4.2 (Java 17 + LWJGL natives) initialized');
+
+                // --- LWJGL JS MOCK INJECTION ---
+                console.log("[Setup] Defines pure JS mocks for LWJGL...");
+
+                // MOCK: org.lwjgl.Sys (Bypasses native load)
+                if (window.cheerpjDef) {
+                    await cheerpjDef("org.lwjgl.Sys", class {
+                        static getVersion() { return "2.9.3-cheerpj"; }
+                        static getTimerResolution() { return 1000; }
+                        static getTime() { return BigInt(Date.now()); }
+                        static alert(title, message) { console.warn(`[LWJGL Alert] ${title}: ${message}`); }
+                        static initialize() { console.log("[LWJGL Mock] Sys.initialize() called"); }
+                    });
+
+                    // MOCK: org.lwjgl.opengl.Display
+                    await cheerpjDef("org.lwjgl.opengl.Display", class {
+                        static setDisplayMode(mode) { console.log(`[LWJGL Mock] Set Display Mode: ${mode}`); }
+                        static setFullscreen(fullscreen) { console.log(`[LWJGL Mock] Set Fullscreen: ${fullscreen}`); }
+                        static create() {
+                            console.log("[LWJGL Mock] Display.create() called");
+                        }
+                        static isCloseRequested() { return false; }
+                        static update() { return; }
+                        static sync(fps) { return; }
+                        static setTitle(title) { document.title = title; }
+                        static isCreated() { return true; }
+                        static getDisplayMode() { return null; }
+                        static getAvailableDisplayModes() { return null; }
+                    });
+
+                    // MOCK: org.lwjgl.opengl.DisplayMode
+                    await cheerpjDef("org.lwjgl.opengl.DisplayMode", class {
+                        constructor(w, h) { this.width = w; this.height = h; }
+                        getWidth() { return this.width; }
+                        getHeight() { return this.height; }
+                    });
+                    console.log("[Setup] LWJGL Mocks Ready.");
+                } else {
+                    console.error("[Setup] cheerpjDef missing! Mocks failed.");
+                }
+                // -------------------------------
+
+                // DIAGNOSTIC: Check if lwjgl.jar is still haunting us (Cache/VFS)
+                try {
+                    const magicCheck = await fetch('/Starsector/starsector-core/lwjgl.jar');
+                    if (magicCheck.ok) {
+                        console.error("👻 FATAL: lwjgl.jar IS STILL LOADABLE! Browser Cache is active. Please Clear Site Data.");
+                    } else {
+                        console.log("✅ Good: lwjgl.jar is gone (404/Error). Mocks should take over.");
+                    }
+                } catch (e) {
+                    console.log("✅ Good: lwjgl.jar fetch failed:", e);
+                }
+
+                updateLoadingProgress(40, 'Loading LWJGL WebAssembly Modules...', 'Downloading OpenGL to WebGL translation layers');
+
+                // Extended classpath with all Starsector JARs and CORE DIRECTORY for resources
+                const classPath = [
+                    "/app/Starsector/starsector-core/starfarer_obf.jar",
+                    "/app/Starsector/starsector-core/starfarer.api.jar",
+                    "/app/Starsector/starsector-core/fs.common_obf.jar",
+                    "/app/Starsector/starsector-core/fs.sound_obf.jar",
+                    // "/app/Starsector/starsector-core/lwjgl.jar", // DISABLED to bypass native loading
+                    "/app/Starsector/starsector-core/lwjgl_util.jar",
+                    "/app/Starsector/starsector-core/jinput.jar",
+                    "/app/Starsector/starsector-core/json.jar",
+                    "/app/Starsector/starsector-core/xstream-1.4.10.jar",
+                    "/app/Starsector/starsector-core/log4j-1.2.9.jar",
+                    "/app/Starsector/starsector-core/janino.jar",
+                    "/app/Starsector/starsector-core/commons-compiler.jar",
+                    "/app/Starsector/starsector-core/commons-compiler-jdk.jar",
+                    "/app/Starsector/starsector-core/jogg-0.0.7.jar",
+                    "/app/Starsector/starsector-core/jorbis-0.0.15.jar",
+                    "/app/Starsector/",
+                    "/app/Starsector/starsector-core"
+                ].join(':');
+
+                updateLoadingProgress(60, 'Creating Display...', 'Setting up WebGL canvas for OpenGL rendering');
+
+                // Create display element (fullscreen)
+                cheerpjCreateDisplay(-1, -1, document.getElementById('game-container'));
+
+                updateLoadingProgress(80, 'Starting Starsector...', 'Launching main class (this may take 30-60 seconds)');
+
+                // Logging for debugging
+                console.log('📦 Classpath:', classPath);
+                console.log('🚀 Launching com.fs.starfarer.StarfarerLauncher...');
+                console.log('💾 Heap Size: 2GB');
+
+                // --- CRITICAL: INJECT MOCKS JUST BEFORE LAUNCH ---
+                if (window.cheerpjDef) {
+                    console.log("[Setup] Late-stage Mock Injection...");
+                    await cheerpjDef("org.lwjgl.Sys", class {
+                        static getVersion() { return "2.9.3-cheerpj"; }
+                        static getTimerResolution() { return 1000; }
+                        static getTime() { return BigInt(Date.now()); }
+                        static alert(title, message) { console.warn(`[LWJGL Alert] ${title}: ${message}`); }
+                        static initialize() { console.log("[LWJGL Mock] Sys.initialize() called"); }
+                    });
+
+                    await cheerpjDef("org.lwjgl.opengl.Display", class {
+                        static setDisplayMode(mode) { console.log(`[LWJGL Mock] Set Display Mode: ${mode}`); }
+                        static setFullscreen(fullscreen) { console.log(`[LWJGL Mock] Set Fullscreen: ${fullscreen}`); }
+                        static create() { console.log("[LWJGL Mock] Display.create() called"); }
+                        static isCloseRequested() { return false; }
+                        static update() { return; }
+                        static sync(fps) { return; }
+                        static setTitle(title) { document.title = title; }
+                        static isCreated() { return true; }
+                        static getDisplayMode() { return null; }
+                        static getAvailableDisplayModes() { return null; }
+                    });
+
+                    await cheerpjDef("org.lwjgl.opengl.DisplayMode", class {
+                        constructor(w, h) { this.width = w; this.height = h; }
+                        getWidth() { return this.width; }
+                        getHeight() { return this.height; }
+                    });
+                    console.log("[Setup] Late-stage Mocks Injected.");
+                } else {
+                    console.error("FATAL: cheerpjDef missing before launch!");
+                }
+                // ------------------------------------------------
+
+                console.log('⚠️ Note: This is experimental. LWJGL2 support depends on the WebAssembly modules.');
+
+                // Try to run Starsector's main launcher
+                const exitCode = await cheerpjRunMain(
+                    'com.fs.starfarer.StarfarerLauncher',
+                    classPath
+                );
+
+                if (exitCode !== 0) {
+                    console.warn('Starsector exited with code:', exitCode);
+                }
+
+                // Hide loading, show controls
+                updateLoadingProgress(100, 'Starsector Launched!', '');
+                setTimeout(() => {
+                    document.getElementById('loading-screen').classList.add('hidden');
+                    document.getElementById('top-bar').classList.add('visible');
+                }, 500);
+
+            } catch (error) {
+                console.error('Starsector launch error:', error);
+
+                // Detailed error analysis
+                const errorMsg = error?.message || String(error) || 'Unknown error';
+                let errorDetails = `Error: ${errorMsg}\n\n`;
+
+                if (errorMsg.includes('Range')) {
+                    errorDetails += `HTTP Server Issue:\n`;
+                    errorDetails += `Python's simple HTTP server doesn't support Range headers.\n`;
+                    errorDetails += `CheerpJ requires a server with Range support.\n\n`;
+                    errorDetails += `Solution: Use one of these servers instead:\n`;
+                    errorDetails += `1. npx http-server -p 5501 --cors\n`;
+                    errorDetails += `2. Live Server VS Code extension\n`;
+                    errorDetails += `3. Any production HTTP server (nginx, Apache)\n`;
+                } else if (errorMsg.includes('natives') || errorMsg.includes('wasm')) {
+                    errorDetails += `LWJGL WebAssembly Issue:\n`;
+                    errorDetails += `The LWJGL2 WebAssembly modules may not be compatible with Starsector.\n`;
+                } else if (errorMsg.includes('class') || errorMsg.includes('method') || errorMsg.includes('version')) {
+                    errorDetails += `Java Version Issue:\n`;
+                    errorDetails += `Starsector may need specific Java version configuration.\n`;
+                } else {
+                    errorDetails += `Possible causes:\n`;
+                    errorDetails += `1. HTTP server doesn't support Range headers\n`;
+                    errorDetails += `2. LWJGL2 OpenGL calls not fully translated\n`;
+                    errorDetails += `3. Missing native library implementations\n`;
+                }
+
+                errorDetails += `\n\n📋 Technical Details:\n`;
+                errorDetails += `Stack: ${error?.stack || 'N/A'}`;
+
+                showError(
+                    'Failed to launch Starsector in browser.',
+                    errorDetails
+                );
+            }
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(e => {
+                    console.warn('Fullscreen not supported:', e);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                StarsectorAuth.logout();
+            }
+        }
+    </script>
+</body>
+
+</html>

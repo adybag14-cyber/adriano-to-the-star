@@ -1,0 +1,12 @@
+[warning] Failed to execute 'postMessage' on 'DOMWindow': The target origin provided ('https://cjrtnc.leaningtech.com') does not match the recipient window's origin ('null').
+[log]               ____ _                              _
+             / ___| |__   ___  ___ _ __ _ __     | |
+            | |   | '_ \ / _ \/ _ \ '__| '_ \ _  | |
+            | |___| | | |  __/  __/ |  | |_) | |_| |
+             \____|_| |_|\___|\___|_|  | .__/ \___/
+                                       |_|
+
+ CHEERPJ COMMUNITY EDITION - FOR PERSONAL AND NON-BUSINESS USE ONLY
+Any other use requires a license: https://cheerpj.com/docs/licensing
+
+[log] Classpath: /app/commons-compiler-jdk.jar:/app/commons-compiler.jar:/app/fs.common_obf.jar:/app/fs.sound_obf.jar:/app/janino.jar:/app/jaxb-api-2.4.0-b180830.0359-sources.jar:/app/jaxb-api-2.4.0-b180830.0359.jar:/app/jinput.jar:/app/jogg-0.0.7.jar:/app/jorbis-0.0.15.jar:/app/json.jar:/app/log4j-1.2.9.jar:/app/lwjgl.jar:/app/lwjgl_util.jar:/app/starfarer.api.jar:/app/starfarer_obf.jar:/app/txw2-3.0.2.jar:/app/webp-imageio-0.1.6.jar:/app/xstream-1.4.10.jar

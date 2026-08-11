@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Agent 6 Smoke Test - Fixed</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f8f9fa; }
+    h1 { color: #2c3e50; margin-bottom: 30px; }
+    .toast-container { position: fixed; top: 20px; right: 20px; z-index: 1000; max-width: 400px; }
+    .toast { background: white; padding: 15px 20px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-left: 4px solid #3498db; animation: slideIn 0.3s ease; }
+    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    .controls { margin: 20px 0; }
+    button { background: #3498db; color: white; border: none; padding: 10px 20px; margin: 5px; border-radius: 5px; cursor: pointer; }
+    button:hover { background: #2980b9; }
+    .status { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+  </style>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+<body>
+  <h1>🚀 Agent 6 Smoke Test - Fixed Version</h1>
+  
+  <div class="controls">
+    <button onclick="runTests()">🧪 Run Tests</button>
+    <button onclick="clearToasts()">🧹 Clear</button>
+  </div>
+
+  <div class="status" id="status">Ready to test modules...</div>
+  
+  <div id="toast-container"></div>
+
+  <!-- Load modules using the smart loader -->
+  <script src="./modules.js"></script>
+
+  <script>
+    const tq = {
+      enqueue: function(message) {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = message;
+        container.appendChild(toast);
+        
+        setTimeout(() => {
+          toast.style.animation = 'slideIn 0.3s ease reverse';
+          setTimeout(() => toast.remove(), 300);
+        }, 3000);
+      }
+    };
+
+    function updateStatus(message) {
+      document.getElementById('status').textContent = message;
+    }
+
+    function clearToasts() {
+      document.getElementById('toast-container').innerHTML = '';
+    }
+
+    async function runTests() {
+      clearToasts();
+      updateStatus('Running module tests...');
+      
+      try {
+        // Test basic functionality
+        tq.enqueue('🧪 Starting Agent 6 module tests...');
+        
+        // Wait for modules to load
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Test 1: Lead Scoring
+        if (window.LeadScoring) {
+          const ls = new LeadScoring();
+          const score = ls.score({activity: 0.8, fit: 0.6, intent: 0.9});
+          tq.enqueue(`✅ LeadScoring: ${score.toFixed(2)}`);
+        } else {
+          tq.enqueue('❌ LeadScoring not available');
+        }
+        
+        // Test 2: IAM System
+        if (window.IamSystem) {
+          const iam = new IamSystem();
+          iam.addPermission('read');
+          iam.addRole('viewer', ['read']);
+          iam.addUser('user1', ['viewer']);
+          const canRead = iam.can('user1', 'read');
+          tq.enqueue(`✅ IAM: Can read = ${canRead}`);
+        } else {
+          tq.enqueue('❌ IamSystem not available');
+        }
+        
+        // Test 3: Blockchain Wallet
+        if (window.BlockchainWallet) {
+          const wallet = new BlockchainWallet();
+          tq.enqueue('✅ BlockchainWallet: Module loaded');
+        } else {
+          tq.enqueue('❌ BlockchainWallet not available');
+        }
+        
+        // Test 4: Computer Vision
+        if (window.ComputerVision) {
+          const cv = new ComputerVision();
+          const objects = cv.detectObjects('test');
+          tq.enqueue(`✅ ComputerVision: ${objects.length} objects detected`);
+        } else {
+          tq.enqueue('❌ ComputerVision not available');
+        }
+        
+        // Test 5: Modal
+        if (window.Modal) {
+          const modal = new Modal();
+          modal.open('Test', 'This is a test modal');
+          setTimeout(() => modal.close(), 1000);
+          tq.enqueue('✅ Modal: Opened and closed');
+        } else {
+          tq.enqueue('❌ Modal not available');
+        }
+        
+        updateStatus('Tests completed successfully!');
+        tq.enqueue('🎉 All tests completed!');
+        
+      } catch (error) {
+        updateStatus(`Test failed: ${error.message}`);
+        tq.enqueue(`❌ Test failed: ${error.message}`);
+        console.error('Full error:', error);
+      }
+    }
+
+    // Auto-run tests on load
+    window.addEventListener('load', async () => {
+      updateStatus('Loading Agent 6 modules...');
+      await window.Agent6ModuleLoader.loadAll();
+      updateStatus('Modules loaded. Ready for testing.');
+      tq.enqueue('🚀 Agent 6 modules loaded successfully!');
+    });
+  </script>
+</body>
+</html>

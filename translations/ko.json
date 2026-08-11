@@ -1,0 +1,222 @@
+{
+  "common": {
+    "home": "홈",
+    "database": "데이터베이스",
+    "games": "게임",
+    "shop": "쇼핑",
+    "about": "소개",
+    "blog": "블로그",
+    "contact": "연락처",
+    "login": "로그인",
+    "logout": "로그아웃",
+    "register": "등록",
+    "search": "검색",
+    "filter": "필터",
+    "submit": "제출",
+    "cancel": "취소",
+    "save": "저장",
+    "delete": "삭제",
+    "edit": "편집",
+    "close": "닫기",
+    "loading": "로딩 중...",
+    "error": "오류",
+    "success": "성공",
+    "back": "뒤로",
+    "next": "다음",
+    "previous": "이전"
+  },
+  "home": {
+    "title": "Adriano To The Star",
+    "subtitle": "성간 여행 대행사",
+    "sponsored": "ELON MUSK와 DONALD TRUMP 후원",
+    "releasingSoon": "곧 출시*",
+    "releasingNote": "*데이터베이스에서 선택한 객체 배치에서 작업하고 계산할 암호화 키는 2025년 1분기 후반에 출시 예정입니다.",
+    "about": "소개",
+    "mission": "우리의 사명",
+    "missionText": "ADRIANO TO THE STAR는 개인이 안드로메다 은하 내의 천체를 소유할 수 있는 혁신적인 기회를 제공합니다. 우주의 경이로움에서 영감을 받은 우리 플랫폼은 별, 행성 및 대형 케플러 객체에 대한 라이선스의 구매 및 판매를 가능하게 합니다. 우리는 모든 우주 애호가를 위한 독특하고 개인화된 경험을 제공하여 우주 산업을 재정의하는 것을 목표로 합니다.",
+    "learnMore": "더 알아보기",
+    "gallery": "갤러리",
+    "follow": "팔로우"
+  },
+  "database": {
+    "title": "외계 행성 데이터베이스",
+    "subtitle": "케플러 아카이브에서 9,564개 이상의 천체 탐색",
+    "searchPlaceholder": "행성 검색...",
+    "filterBy": "필터",
+    "planetType": "행성 유형",
+    "discoveryMethod": "발견 방법",
+    "status": "상태",
+    "claimed": "청구됨",
+    "available": "사용 가능",
+    "claimPlanet": "행성 청구",
+    "alreadyClaimed": "이미 청구됨",
+    "planetDetails": "행성 세부 정보",
+    "discoveryYear": "발견 연도",
+    "distance": "거리",
+    "temperature": "온도",
+    "aboutDatabase": "데이터베이스 정보",
+    "dataSource": "데이터 소스",
+    "nasaExoplanetArchive": "NASA 외계 행성 아카이브 API"
+  },
+  "stellarAI": {
+    "title": "STELLAR AI",
+    "subtitle": "당신의 지능형 우주 동반자",
+    "chatHistory": "채팅 기록",
+    "newChat": "새 채팅",
+    "clearChat": "채팅 지우기",
+    "exportChat": "채팅 내보내기",
+    "selectModel": "AI 모델 선택",
+    "askAnything": "Stellar AI에게 무엇이든 물어보세요...",
+    "send": "보내기",
+    "welcome": "Stellar AI에 오신 것을 환영합니다",
+    "welcomeText": "고급 AI로 구동되는 지능형 우주 동반자",
+    "features": {
+      "conversations": "자연스러운 대화",
+      "imageAnalysis": "이미지 분석",
+      "knowledgeBase": "지식 베이스",
+      "saveHistory": "기록 저장"
+    }
+  },
+  "marketplace": {
+    "title": "행성 마켓플레이스",
+    "subtitle": "외계 행성 청구 구매, 판매 및 거래",
+    "buy": "구매",
+    "sell": "판매",
+    "trade": "거래",
+    "price": "가격",
+    "seller": "판매자",
+    "buyer": "구매자",
+    "createListing": "목록 만들기",
+    "myListings": "내 목록"
+  },
+  "messaging": {
+    "title": "다이렉트 메시지",
+    "subtitle": "다른 회원과의 비공개 대화",
+    "loginRequired": "로그인 필요",
+    "loginPrompt": "다이렉트 메시지를 보내고 받으려면 로그인하세요.",
+    "conversations": "대화",
+    "newMessage": "새 메시지",
+    "selectConversation": "대화 선택",
+    "selectConversationText": "사이드바에서 대화를 선택하거나 새 대화를 시작하세요",
+    "typeMessage": "메시지 입력...",
+    "send": "보내기"
+  },
+  "badges": {
+    "title": "배지 및 업적",
+    "subtitle": "업적을 잠금 해제하고 우주 여정을 소개하세요",
+    "reputation": "평판",
+    "points": "포인트",
+    "level": "레벨",
+    "unlocked": "잠금 해제됨",
+    "locked": "잠김"
+  },
+  "analytics": {
+    "title": "분석 대시보드",
+    "subtitle": "우주 여정과 플랫폼 통계 추적",
+    "totalClaims": "총 청구 수",
+    "totalUsers": "총 사용자 수",
+    "totalPlanets": "총 행성 수",
+    "recentActivity": "최근 활동"
+  },
+  "newsletter": {
+    "title": "뉴스레터",
+    "subtitle": "최신 우주 뉴스 및 기능으로 최신 상태 유지",
+    "subscribe": "구독",
+    "email": "이메일 주소",
+    "subscribeButton": "뉴스레터 구독",
+    "unsubscribe": "구독 취소",
+    "subscribed": "구독됨",
+    "subscriptionSuccess": "뉴스레터 구독에 성공했습니다!"
+  },
+  "calendar": {
+    "title": "우주 이벤트 캘린더",
+    "subtitle": "발사, 발견 및 우주 이벤트 추적",
+    "upcoming": "예정",
+    "past": "과거",
+    "today": "오늘",
+    "thisWeek": "이번 주",
+    "thisMonth": "이번 달"
+  },
+  "education": {
+    "title": "우주 교육",
+    "subtitle": "외계 행성, 천문학 및 우주 탐사에 대해 알아보기",
+    "courses": "과정",
+    "tutorials": "튜토리얼",
+    "simulations": "시뮬레이션",
+    "games": "게임"
+  },
+  "nav": {
+    "routes": "항로",
+    "database": "월드 데이터베이스",
+    "maps": "성도",
+    "projects": "프로젝트",
+    "begin": "탐사 시작"
+  },
+  "hero": {
+    "eyebrow": "인터스텔라 여행사 · 비행 시스템 온라인",
+    "line1": "우주는 이제",
+    "line2": "하나의 목적지다.",
+    "lead": "먼 세계를 담은 살아 있는 아틀라스로 들어오세요. 외계행성을 비교하고 미래 항로를 그리며 인류를 지구 너머로 이끌 수 있는 연구 시스템을 경험하세요.",
+    "primary": "월드 데이터베이스 입장",
+    "soundtrack": "사운드트랙 시작",
+    "scroll": "스크롤하여 이동"
+  },
+  "stats": {
+    "worlds": "등록 천체",
+    "soundtracks": "미션 사운드스케이프",
+    "horizon": "가능한 지평선"
+  },
+  "stage": {
+    "window": "출발 창 열림",
+    "distance": "거리",
+    "status": "상태",
+    "simulated": "시뮬레이션",
+    "caption": "개념 항로 시각화"
+  },
+  "routes": {
+    "title": "모든 여행은 시스템에서 시작된다.",
+    "lead": "I.T.A는 과학 데이터, 항로 인텔리전스, 인간의 상상력을 하나의 탐색 가능한 성간 경험으로 연결합니다.",
+    "databaseKicker": "월드 인텔리전스",
+    "databaseTitle": "외계행성 데이터베이스",
+    "databaseText": "수천 개의 천체 기록을 필터링하고 행성 환경을 비교해 더 자세히 볼 가치가 있는 세계를 찾아보세요.",
+    "openDatabase": "데이터베이스 열기",
+    "mapsKicker": "공간 지도학",
+    "mapsTitle": "인터랙티브 성도",
+    "mapsText": "연결된 항성계를 이동하며 거리, 주변 환경, 항성 맥락이 항로를 어떻게 만드는지 살펴보세요.",
+    "openMaps": "항로 그리기",
+    "aiKicker": "미션 인텔리전스",
+    "aiTitle": "Stellar AI",
+    "aiText": "질문하고 천문 데이터를 해석해 거대한 카탈로그를 집중된 미션 브리핑으로 바꿉니다.",
+    "openAi": "미션 AI 열기"
+  },
+  "passage": {
+    "line1": "행성 목록이 아니다.",
+    "line2": "도착의 감각이다.",
+    "text": "미래의 우주여행은 속도만으로 측정되지 않습니다. 방향감, 확신, 경이로움, 그리고 불가능해 보이던 거리가 이해 가능한 것이 되는 감각입니다.",
+    "discovery": "발견",
+    "clarity": "명료함",
+    "immersion": "몰입"
+  },
+  "mission": {
+    "title": "신호에서 목적지까지.",
+    "step1Title": "발견",
+    "step1Text": "여행자가 실제로 묻는 질문을 중심으로 만든 과학 카탈로그를 검색합니다.",
+    "step2Title": "이해",
+    "step2Text": "원시 측정값을 기후, 규모, 위험, 가능성으로 해석합니다.",
+    "step3Title": "항해",
+    "step3Text": "성도, 시뮬레이션, 미래 지향 프로젝트를 하나의 일관된 항로로 따라갑니다."
+  },
+  "manifesto": {
+    "quote": "첫 번째 성간 여행은 발사 훨씬 전부터 시작된다. 우주가 읽을 수 있는 것이 되는 순간부터."
+  },
+  "final": {
+    "title": "첫 번째 세계를 선택하세요.",
+    "text": "카탈로그가 열려 있습니다. 당신의 항로는 하나의 질문, 하나의 신호, 하나의 목적지에서 시작됩니다.",
+    "cta": "원정 시작"
+  },
+  "footer": {
+    "tagline": "독립적인 성간 여행 콘셉트이자 연구 플랫폼, 그리고 더 멀리 바라보라는 초대.",
+    "privacy": "개인정보 보호",
+    "online": "여행사 시스템 온라인"
+  }
+}

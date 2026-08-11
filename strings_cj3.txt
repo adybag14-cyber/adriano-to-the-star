@@ -1,0 +1,22 @@
+Extracting strings from cheerpj\4.2\cj3.js (643549 bytes)...
+;(function(){
+    var _realNow = performance.now.bind(performance);
+    var _lastNow = _realNow();
+    Object.defineProperty(performance, 'now', {
+      value: function() {
+        var now = _realNow();
+        if (now <= _lastNow) { now = _lastNow + 0.01; }
+        _lastNow = now;
+        return now;
+      writable: true, configurable: true
+    var _realDateNow = Date.now.bind(Date);
+    var _lastDateNow = _realDateNow();
+    Date.now = function() {
+      var now = _realDateNow();
+      // Force monotonic increment for Date.now too, as CheerpJ might use it for nanoTime fallback
+      if (now <= _lastDateNow) { now = _lastDateNow + 1; }
+      _lastDateNow = now;
+      return now;
+    if (self.document) { document.title = "POLYFILL ACTIVE (+Date.now)"; }
+    console.log("[CheerpJ Proxy] Injected Monotonic Timer Polyfill (0.01ms + Date.now)");
+  } catch(e) { console.error("[CheerpJ Proxy] Timer injection failed", e); }

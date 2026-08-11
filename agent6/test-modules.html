@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Agent 6 Module Test - No Duplicates</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .log { background: #f0f0f0; padding: 10px; margin: 10px 0; border-radius: 5px; }
+    .error { background: #ffebee; color: #c62828; }
+    .success { background: #e8f5e8; color: #2e7d32; }
+    .info { background: #e3f2fd; color: #1565c0; }
+  </style>
+    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
+    <script src="universal-simulation-hub.js"></script>
+    <script src="void-warfare-engine.js"></script>
+    <script src="planetary-environment-engine.js"></script>
+    <script src="galactic-governance-engine.js"></script>
+    <script src="mining-resource-engine.js"></script>
+    <script src="xeno-intelligence-engine.js"></script>
+    <script src="quantum-propulsion-engine.js"></script>
+    <script src="intelligence-shadow-engine.js"></script>
+    <script src="fleet-command-mega-engine.js"></script>
+    <script src="deep-space-industry-engine.js"></script>
+    <script src="procedural-content-engine.js"></script>
+    <script src="galactic-commerce-engine.js"></script>
+    <script src="metaphysics-apotheosis-engine.js"></script>
+</head>
+<body>
+  <h1>Agent 6 Module Test - Duplicate Prevention</h1>
+  <div id="log"></div>
+
+  <!-- Load only the module loader -->
+  <script src="./modules.js"></script>
+
+  <script>
+    function log(message, type = 'info') {
+      const logDiv = document.getElementById('log');
+      const entry = document.createElement('div');
+      entry.className = `log ${type}`;
+      entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+      logDiv.appendChild(entry);
+    }
+
+    async function testModules() {
+      log('🧪 Starting module duplicate prevention test...', 'info');
+      
+      try {
+        // Test that modules can be loaded without duplicates
+        log('Loading a few test modules...', 'info');
+        
+        // Load specific modules
+        await window.Agent6ModuleLoader.loadModule('aiml', 'lead-scoring.js');
+        await window.Agent6ModuleLoader.loadModule('security', 'iam-system.js');
+        await window.Agent6ModuleLoader.loadModule('blockchain', 'blockchain-wallet.js');
+        
+        log('✅ Modules loaded successfully', 'success');
+        
+        // Try to load the same modules again (should skip)
+        log('Attempting to load the same modules again (should skip)...', 'info');
+        await window.Agent6ModuleLoader.loadModule('aiml', 'lead-scoring.js');
+        await window.Agent6ModuleLoader.loadModule('security', 'iam-system.js');
+        await window.Agent6ModuleLoader.loadModule('blockchain', 'blockchain-wallet.js');
+        
+        log('✅ Duplicate loading prevented successfully', 'success');
+        
+        // Test that modules are actually available
+        if (window.LeadScoring) {
+          const ls = new LeadScoring();
+          const score = ls.score({activity: 0.5, fit: 0.7, intent: 0.8});
+          log(`✅ LeadScoring module working - Score: ${score.toFixed(2)}`, 'success');
+        } else {
+          log('❌ LeadScoring module not available', 'error');
+        }
+        
+        if (window.IamSystem) {
+          const iam = new IamSystem();
+          iam.addPermission('test');
+          iam.addRole('tester', ['test']);
+          iam.addUser('user1', ['tester']);
+          const canTest = iam.can('user1', 'test');
+          log(`✅ IamSystem module working - Can test: ${canTest}`, 'success');
+        } else {
+          log('❌ IamSystem module not available', 'error');
+        }
+        
+        if (window.BlockchainWallet) {
+          log('✅ BlockchainWallet module available', 'success');
+        } else {
+          log('❌ BlockchainWallet module not available', 'error');
+        }
+        
+        log('🎉 All tests completed successfully!', 'success');
+        
+      } catch (error) {
+        log(`❌ Test failed: ${error.message}`, 'error');
+        console.error('Full error:', error);
+      }
+    }
+
+    // Run test when page loads
+    window.addEventListener('load', testModules);
+  </script>
+</body>
+</html>

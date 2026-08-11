@@ -1,0 +1,19 @@
+
+arc-dataset\apps\js\testing_interface.js:3:var CURRENT_INPUT_GRID = new Grid(3, 3);
+arc-dataset\apps\js\testing_interface.js:4:var CURRENT_OUTPUT_GRID = new Grid(3, 3);
+arc-dataset\apps\js\testing_interface.js:5:var TEST_PAIRS = new Array();
+arc-dataset\apps\js\testing_interface.js:6:var CURRENT_TEST_PAIR_INDEX = 0;
+arc-dataset\apps\js\testing_interface.js:7:var COPY_PASTE_DATA = new Array();
+arc-dataset\apps\js\testing_interface.js:10:var EDITION_GRID_HEIGHT = 500;
+arc-dataset\apps\js\testing_interface.js:11:var EDITION_GRID_WIDTH = 500;
+arc-dataset\apps\js\testing_interface.js:12:var MAX_CELL_SIZE = 100;
+arc-dataset\apps\js\testing_interface.js:91:    var pairSlot = $('#pair_preview_' + pairId);
+arc-dataset\apps\js\testing_interface.js:97:    var jqInputGrid = pairSlot.find('.input_preview');
+arc-dataset\apps\js\testing_interface.js:102:    var jqOutputGrid = pairSlot.find('.output_preview');
+arc-dataset\apps\js\testing_interface.js:151:    var file = e.target.files[0];
+arc-dataset\apps\js\testing_interface.js:156:    var reader = new FileReader();
+arc-dataset\apps\js\testing_interface.js:158:        var contents = e.target.result;
+arc-dataset\apps\js\testing_interface.js:177:    var subset = "training";
+arc-dataset\apps\js\testing_interface.js:179:        var task_index = Math.floor(Math.random() * tasks.length)
+arc-dataset\apps\js\testing_interface.js:180:        var task = tasks[task_index];
+

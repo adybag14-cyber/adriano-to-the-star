@@ -1,0 +1,222 @@
+{
+  "common": {
+    "home": "ホーム",
+    "database": "データベース",
+    "games": "ゲーム",
+    "shop": "ショップ",
+    "about": "について",
+    "blog": "ブログ",
+    "contact": "お問い合わせ",
+    "login": "ログイン",
+    "logout": "ログアウト",
+    "register": "登録",
+    "search": "検索",
+    "filter": "フィルター",
+    "submit": "送信",
+    "cancel": "キャンセル",
+    "save": "保存",
+    "delete": "削除",
+    "edit": "編集",
+    "close": "閉じる",
+    "loading": "読み込み中...",
+    "error": "エラー",
+    "success": "成功",
+    "back": "戻る",
+    "next": "次へ",
+    "previous": "前へ"
+  },
+  "home": {
+    "title": "Adriano To The Star",
+    "subtitle": "恒星間旅行代理店",
+    "sponsored": "ELON MUSKとDONALD TRUMPがスポンサー",
+    "releasingSoon": "まもなくリリース*",
+    "releasingNote": "*データベースから選択したオブジェクトの配置から作業し、計算する暗号鍵は、2025年第1四半期の後半にリリース予定です。",
+    "about": "について",
+    "mission": "私たちの使命",
+    "missionText": "ADRIANO TO THE STARは、個人がアンドロメダ銀河内の天体を所有する革命的な機会を提供します。宇宙の驚異に触発された私たちのプラットフォームは、星、惑星、大型ケプラーオブジェクトのライセンスの購入と販売を可能にします。私たちは、すべての宇宙愛好家にユニークでパーソナライズされた体験を提供することで、宇宙産業を再定義することを目指しています。",
+    "learnMore": "詳細を見る",
+    "gallery": "ギャラリー",
+    "follow": "フォローする"
+  },
+  "database": {
+    "title": "太陽系外惑星データベース",
+    "subtitle": "ケプラーアーカイブから9,564以上の天体を探索",
+    "searchPlaceholder": "惑星を検索...",
+    "filterBy": "フィルター",
+    "planetType": "惑星タイプ",
+    "discoveryMethod": "発見方法",
+    "status": "ステータス",
+    "claimed": "請求済み",
+    "available": "利用可能",
+    "claimPlanet": "惑星を請求",
+    "alreadyClaimed": "既に請求済み",
+    "planetDetails": "惑星の詳細",
+    "discoveryYear": "発見年",
+    "distance": "距離",
+    "temperature": "温度",
+    "aboutDatabase": "データベースについて",
+    "dataSource": "データソース",
+    "nasaExoplanetArchive": "NASA太陽系外惑星アーカイブAPI"
+  },
+  "stellarAI": {
+    "title": "STELLAR AI",
+    "subtitle": "あなたのインテリジェントな宇宙の仲間",
+    "chatHistory": "チャット履歴",
+    "newChat": "新しいチャット",
+    "clearChat": "チャットをクリア",
+    "exportChat": "チャットをエクスポート",
+    "selectModel": "AIモデルを選択",
+    "askAnything": "Stellar AIに何でも聞いてください...",
+    "send": "送信",
+    "welcome": "Stellar AIへようこそ",
+    "welcomeText": "高度なAIによって動力を得たインテリジェントな宇宙の仲間",
+    "features": {
+      "conversations": "自然な会話",
+      "imageAnalysis": "画像分析",
+      "knowledgeBase": "知識ベース",
+      "saveHistory": "履歴を保存"
+    }
+  },
+  "marketplace": {
+    "title": "惑星マーケットプレイス",
+    "subtitle": "太陽系外惑星の請求を購入、販売、取引",
+    "buy": "購入",
+    "sell": "販売",
+    "trade": "取引",
+    "price": "価格",
+    "seller": "売り手",
+    "buyer": "買い手",
+    "createListing": "リストを作成",
+    "myListings": "マイリスト"
+  },
+  "messaging": {
+    "title": "ダイレクトメッセージ",
+    "subtitle": "他のメンバーとのプライベートな会話",
+    "loginRequired": "ログインが必要",
+    "loginPrompt": "ダイレクトメッセージを送受信するには、ログインしてください。",
+    "conversations": "会話",
+    "newMessage": "新しいメッセージ",
+    "selectConversation": "会話を選択",
+    "selectConversationText": "サイドバーから会話を選択するか、新しい会話を開始してください",
+    "typeMessage": "メッセージを入力...",
+    "send": "送信"
+  },
+  "badges": {
+    "title": "バッジと実績",
+    "subtitle": "実績を解除して宇宙の旅を紹介",
+    "reputation": "評判",
+    "points": "ポイント",
+    "level": "レベル",
+    "unlocked": "解除済み",
+    "locked": "ロック済み"
+  },
+  "analytics": {
+    "title": "分析ダッシュボード",
+    "subtitle": "宇宙の旅とプラットフォーム統計を追跡",
+    "totalClaims": "総請求数",
+    "totalUsers": "総ユーザー数",
+    "totalPlanets": "総惑星数",
+    "recentActivity": "最近の活動"
+  },
+  "newsletter": {
+    "title": "ニュースレター",
+    "subtitle": "最新の宇宙ニュースと機能を最新の状態に保つ",
+    "subscribe": "購読",
+    "email": "メールアドレス",
+    "subscribeButton": "ニュースレターを購読",
+    "unsubscribe": "購読を解除",
+    "subscribed": "購読済み",
+    "subscriptionSuccess": "ニュースレターへの購読に成功しました！"
+  },
+  "calendar": {
+    "title": "宇宙イベントカレンダー",
+    "subtitle": "打ち上げ、発見、宇宙イベントを追跡",
+    "upcoming": "今後の予定",
+    "past": "過去",
+    "today": "今日",
+    "thisWeek": "今週",
+    "thisMonth": "今月"
+  },
+  "education": {
+    "title": "宇宙教育",
+    "subtitle": "太陽系外惑星、天文学、宇宙探査について学ぶ",
+    "courses": "コース",
+    "tutorials": "チュートリアル",
+    "simulations": "シミュレーション",
+    "games": "ゲーム"
+  },
+  "nav": {
+    "routes": "航路",
+    "database": "ワールドデータベース",
+    "maps": "星図",
+    "projects": "プロジェクト",
+    "begin": "探索を開始"
+  },
+  "hero": {
+    "eyebrow": "インターステラ旅行社 · フライトシステム稼働中",
+    "line1": "宇宙は今、",
+    "line2": "目的地になる。",
+    "lead": "遠い世界を収めた生きたアトラスへ。系外惑星を比較し、未来の航路を描き、人類を地球の外へ導くかもしれない研究システムを体験してください。",
+    "primary": "ワールドデータベースへ",
+    "soundtrack": "サウンドトラックを再生",
+    "scroll": "スクロールして進む"
+  },
+  "stats": {
+    "worlds": "登録天体",
+    "soundtracks": "ミッション・サウンドスケープ",
+    "horizon": "可能な地平線"
+  },
+  "stage": {
+    "window": "出発ウィンドウ開放中",
+    "distance": "距離",
+    "status": "状態",
+    "simulated": "シミュレーション",
+    "caption": "コンセプト航路ビジュアライゼーション"
+  },
+  "routes": {
+    "title": "すべての旅は、システムから始まる。",
+    "lead": "I.T.A は科学データ、航路インテリジェンス、人間の想像力をひとつの航行可能な星間体験へ結びます。",
+    "databaseKicker": "ワールド・インテリジェンス",
+    "databaseTitle": "系外惑星データベース",
+    "databaseText": "数千件の天体データを絞り込み、惑星環境を比較し、さらに詳しく見る価値のある世界を見つけます。",
+    "openDatabase": "データベースを開く",
+    "mapsKicker": "空間カートグラフィー",
+    "mapsTitle": "インタラクティブ星図",
+    "mapsText": "つながった恒星系を移動し、距離・近傍・恒星環境が航路をどう形作るか確認します。",
+    "openMaps": "航路を描く",
+    "aiKicker": "ミッション・インテリジェンス",
+    "aiTitle": "Stellar AI",
+    "aiText": "質問し、天文データを読み解き、巨大なカタログを明確なミッションブリーフへ変換します。",
+    "openAi": "ミッションAIを開く"
+  },
+  "passage": {
+    "line1": "惑星の一覧ではない。",
+    "line2": "到着する感覚だ。",
+    "text": "未来の宇宙旅行は速度だけでは測れません。方向感覚、確信、驚き、そして不可能に見えた距離が理解できるようになる感覚です。",
+    "discovery": "発見",
+    "clarity": "明瞭さ",
+    "immersion": "没入感"
+  },
+  "mission": {
+    "title": "信号から目的地へ。",
+    "step1Title": "発見",
+    "step1Text": "旅行者が本当に知りたい問いを中心に構築された科学カタログを検索します。",
+    "step2Title": "理解",
+    "step2Text": "生の観測値を気候、規模、リスク、可能性へ翻訳します。",
+    "step3Title": "航行",
+    "step3Text": "星図、シミュレーション、未来志向のプロジェクトを一貫した航路でたどります。"
+  },
+  "manifesto": {
+    "quote": "最初の星間旅行は打ち上げよりずっと前に始まる。宇宙が「読めるもの」になった瞬間から。"
+  },
+  "final": {
+    "title": "最初の世界を選ぶ。",
+    "text": "カタログは開いています。あなたの航路は、ひとつの問い、ひとつの信号、ひとつの目的地から始まります。",
+    "cta": "遠征を開始"
+  },
+  "footer": {
+    "tagline": "独立した星間旅行コンセプト、研究プラットフォーム、そしてさらに遠くを見るための招待状。",
+    "privacy": "プライバシー",
+    "online": "エージェンシーシステム稼働中"
+  }
+}

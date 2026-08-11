@@ -1,0 +1,110 @@
+
+> adriano-to-the-star@1.0.0 lint:all
+> eslint . --ext .js
+
+
+C:\Users\adyba\adriano-to-the-star\auth-supabase.js
+  161:18  warning  '_e' is defined but never used                                               no-unused-vars
+  167:5   warning  Async method 'register' has a complexity of 29. Maximum allowed is 20        complexity
+  167:19  warning  Async method 'register' has too many statements (54). Maximum allowed is 30  max-statements
+  292:5   warning  Async method 'login' has a complexity of 25. Maximum allowed is 20           complexity
+  292:16  warning  Async method 'login' has too many statements (50). Maximum allowed is 30     max-statements
+  487:26  warning  '_e' is defined but never used                                               no-unused-vars
+
+C:\Users\adyba\adriano-to-the-star\auth.js
+  103:18  warning  '_e' is defined but never used                                               no-unused-vars
+  117:5   warning  Async method 'register' has a complexity of 21. Maximum allowed is 20        complexity
+  117:19  warning  Async method 'register' has too many statements (54). Maximum allowed is 30  max-statements
+  205:26  warning  '_e' is defined but never used                                               no-unused-vars
+  241:16  warning  Async method 'login' has too many statements (47). Maximum allowed is 30     max-statements
+  308:26  warning  '_e' is defined but never used                                               no-unused-vars
+  361:19  warning  Async method 'loadUser' has too many statements (34). Maximum allowed is 30  max-statements
+  384:30  warning  '_e' is defined but never used                                               no-unused-vars
+
+C:\Users\adyba\adriano-to-the-star\backend\auth-server.js
+   45:26  warning  'req' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+   81:18  warning  '_e' is defined but never used                                         no-unused-vars
+   98:18  warning  '_e' is defined but never used                                         no-unused-vars
+  126:18  warning  '_e' is defined but never used                                         no-unused-vars
+
+C:\Users\adyba\adriano-to-the-star\booking-system.js
+  321:5  warning  'bookingSystem' is assigned a value but never used. Allowed unused vars must match /^_/u  no-unused-vars
+
+C:\Users\adyba\adriano-to-the-star\broadband-checker.js
+  235:5   warning  Method 'findProviderWebsite' has a complexity of 21. Maximum allowed is 20  complexity
+  555:44  warning  'e' is defined but never used. Allowed unused args must match /^_/u         no-unused-vars
+  738:12  warning  Method 'cleanup' has too many statements (32). Maximum allowed is 30        max-statements
+
+C:\Users\adyba\adriano-to-the-star\cosmic-music-player.js
+  208:12  warning  Method 'cleanup' has too many statements (35). Maximum allowed is 30           max-statements
+  359:21  warning  Async method 'initPlayer' has too many statements (32). Maximum allowed is 30  max-statements
+  646:22  warning  '_err' is defined but never used                                               no-unused-vars
+
+C:\Users\adyba\adriano-to-the-star\database-advanced.js
+  283:5  warning  Method 'createPlanetCard' has a complexity of 27. Maximum allowed is 20                complexity
+  492:5  warning  'advancedDB' is assigned a value but never used. Allowed unused vars must match /^_/u  no-unused-vars
+
+C:\Users\adyba\adriano-to-the-star\database-optimized.js
+   294:25  warning  Async method 'loadUserClaims' has too many statements (31). Maximum allowed is 30      max-statements
+   368:26  warning  Async method 'loadLocalClaims' has too many statements (36). Maximum allowed is 30     max-statements
+   859:29  warning  Method 'updatePaginationControls' has too many statements (31). Maximum allowed is 30  max-statements
+  1020:1   warning  Async function 'claimPlanet' has too many statements (49). Maximum allowed is 30       max-statements
+  1020:1   warning  Async function 'claimPlanet' has a complexity of 22. Maximum allowed is 20             complexity
+  1131:1   warning  Async function 'claimPlanetLocal' has too many statements (72). Maximum allowed is 30  max-statements
+  1131:1   warning  Async function 'claimPlanetLocal' has a complexity of 52. Maximum allowed is 20        complexity
+
+C:\Users\adyba\adriano-to-the-star\file-storage.js
+   6:7   warning  'FileStorageManager' is defined but never used. Allowed unused vars must match /^_/u  no-unused-vars
+  24:23  warning  'authManager' is not modified in this loop                                            no-unmodified-loop-condition
+
+C:\Users\adyba\adriano-to-the-star\groups-manager.js
+  552:5  warning  'groupsManager' is assigned a value but never used. Allowed unused vars must match /^_/u  no-unused-vars
+
+C:\Users\adyba\adriano-to-the-star\large-exoplanet-loader.js
+  22:27  warning  Async method 'loadLargeDataset' has too many statements (52). Maximum allowed is 30  max-statements
+  75:29  warning  Blocks are nested too deeply (6). Maximum allowed is 5                               max-depth
+  81:34  warning  '_e' is defined but never used                                                       no-unused-vars
+  95:26  warning  '_e' is defined but never used                                                       no-unused-vars
+
+C:\Users\adyba\adriano-to-the-star\navigation.js
+  182:47  warning  Arrow function has too many lines (230). Maximum allowed is 200  max-lines-per-function
+
+C:\Users\adyba\adriano-to-the-star\shop.js
+  152:26  warning  Async method 'downloadProduct' has too many statements (52). Maximum allowed is 30   max-statements
+  173:23  warning  'basePath' is assigned a value but never used. Allowed unused vars must match /^_/u  no-unused-vars
+
+C:\Users\adyba\adriano-to-the-star\stellar-ai-cli\index.js
+    16:5   warning  'puterInstance' is assigned a value but never used. Allowed unused vars must match /^_/u  no-unused-vars
+    16:5   warning  'puterInstance' is never reassigned. Use 'const' instead                                  prefer-const
+    50:14  warning  '_error' is defined but never used                                                        no-unused-vars
+    83:5   warning  Method 'initializeTools' has too many lines (276). Maximum allowed is 200                 max-lines-per-function
+   255:34  warning  '_e' is defined but never used                                                            no-unused-vars
+   452:5   warning  Async method 'handleCommand' has a complexity of 38. Maximum allowed is 25                complexity
+   452:24  warning  Async method 'handleCommand' has too many statements (41). Maximum allowed is 40          max-statements
+   590:5   warning  Async method 'handleLogin' has a complexity of 27. Maximum allowed is 25                  complexity
+   590:22  warning  Async method 'handleLogin' has too many statements (75). Maximum allowed is 40            max-statements
+   617:22  warning  '_e' is defined but never used                                                            no-unused-vars
+   828:18  warning  '_e' is defined but never used                                                            no-unused-vars
+   837:18  warning  '_e' is defined but never used                                                            no-unused-vars
+   934:22  warning  'e' is defined but never used                                                             no-unused-vars
+  1012:18  warning  '_error' is defined but never used                                                        no-unused-vars
+  1021:5   warning  Async method 'callAIAPI' has a complexity of 32. Maximum allowed is 25                    complexity
+  1141:26  warning  'e' is defined but never used                                                             no-unused-vars
+  1188:18  warning  '_e' is defined but never used                                                            no-unused-vars
+  1207:26  warning  'e' is defined but never used                                                             no-unused-vars
+  1213:18  warning  '_e' is defined but never used                                                            no-unused-vars
+  1354:29  warning  Blocks are nested too deeply (6). Maximum allowed is 5                                    max-depth
+
+C:\Users\adyba\adriano-to-the-star\stellar-ai.js
+    53:29  warning  Blocks are nested too deeply (6). Maximum allowed is 5                            max-depth
+    72:24  warning  Method 'setupEventListeners' has too many statements (38). Maximum allowed is 30  max-statements
+   243:22  warning  Async method 'sendMessage' has too many statements (38). Maximum allowed is 30    max-statements
+   823:22  warning  Async method 'downloadCLI' has too many statements (31). Maximum allowed is 30    max-statements
+   848:26  warning  '_e' is defined but never used                                                    no-unused-vars
+  1091:34  warning  '_e' is defined but never used                                                    no-unused-vars
+  1091:38  warning  Empty block statement                                                             no-empty
+  1093:26  warning  '_e' is defined but never used                                                    no-unused-vars
+
+Ô£û 72 problems (0 errors, 72 warnings)
+  0 errors and 1 warning potentially fixable with the `--fix` option.
+

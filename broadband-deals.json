@@ -1,0 +1,183 @@
+{
+    "BT": {
+        "provider": "BT",
+        "deals": [
+            {
+                "speed": "Full Fibre 100",
+                "price": "29.99",
+                "contract": "24 months"
+            },
+            {
+                "speed": "Full Fibre 500",
+                "price": "39.99",
+                "contract": "24 months"
+            },
+            {
+                "speed": "Full Fibre 900",
+                "price": "49.99",
+                "contract": "24 months"
+            }
+        ],
+        "url": "https://www.bt.com/broadband",
+        "status": "active",
+        "last_checked": "2025-11-25T20:50:50"
+    },
+    "Sky": {
+        "provider": "Sky",
+        "deals": [
+            {
+                "speed": "Superfast",
+                "price": "25.00",
+                "contract": "24 months"
+            },
+            {
+                "speed": "Ultrafast",
+                "price": "29.00",
+                "contract": "24 months"
+            },
+            {
+                "speed": "Gigafast",
+                "price": "45.00",
+                "contract": "24 months"
+            }
+        ],
+        "url": "https://www.sky.com/broadband",
+        "status": "active",
+        "last_checked": "2025-11-25T20:50:54"
+    },
+    "Virgin Media": {
+        "provider": "Virgin Media",
+        "deals": [
+            {
+                "speed": "132 Mbps",
+                "price": "22.99",
+                "contract": "24 months"
+            },
+            {
+                "speed": "264 Mbps",
+                "price": "24.99",
+                "contract": "24 months"
+            },
+            {
+                "speed": "264 Mbps",
+                "price": "27.99",
+                "contract": "24 months"
+            },
+            {
+                "speed": "362 Mbps",
+                "price": "28.99",
+                "contract": "24 months"
+            },
+            {
+                "speed": "516 Mbps",
+                "price": "28.99",
+                "contract": "24 months"
+            },
+            {
+                "speed": "132 Mbps",
+                "price": "30.99",
+                "contract": "24 months"
+            },
+            {
+                "speed": "1136 Mbps",
+                "price": "32.99",
+                "contract": "24 months"
+            },
+            {
+                "speed": "362 Mbps",
+                "price": "32.99",
+                "contract": "24 months"
+            },
+            {
+                "speed": "264 Mbps",
+                "price": "35.99",
+                "contract": "24 months"
+            },
+            {
+                "speed": "362 Mbps",
+                "price": "36.99",
+                "contract": "24 months"
+            },
+            {
+                "speed": "264 Mbps",
+                "price": "36.99",
+                "contract": "24 months"
+            },
+            {
+                "speed": "516 Mbps",
+                "price": "36.99",
+                "contract": "24 months"
+            },
+            {
+                "speed": "1136 Mbps",
+                "price": "40.99",
+                "contract": "24 months"
+            },
+            {
+                "speed": "516 Mbps",
+                "price": "44.99",
+                "contract": "24 months"
+            },
+            {
+                "speed": "362 Mbps",
+                "price": "46.99",
+                "contract": "24 months"
+            },
+            {
+                "speed": "516 Mbps",
+                "price": "54.99",
+                "contract": "24 months"
+            },
+            {
+                "speed": "362 Mbps",
+                "price": "56.99",
+                "contract": "24 months"
+            },
+            {
+                "speed": "516 Mbps",
+                "price": "64.99",
+                "contract": "24 months"
+            },
+            {
+                "speed": "516 Mbps",
+                "price": "66.99",
+                "contract": "24 months"
+            },
+            {
+                "speed": "1130 Mbps",
+                "price": "74.99",
+                "contract": "24 months"
+            },
+            {
+                "speed": "516 Mbps",
+                "price": "84.99",
+                "contract": "24 months"
+            }
+        ],
+        "status": "active",
+        "last_checked": "2024-07-28T10:30:00"
+    },
+    "TalkTalk": {
+        "provider": "TalkTalk",
+        "deals": [
+            {
+                "speed": "Fibre 65",
+                "price": "28.00",
+                "contract": "18 months"
+            },
+            {
+                "speed": "Full Fibre 150",
+                "price": "29.95",
+                "contract": "18 months"
+            },
+            {
+                "speed": "Full Fibre 900",
+                "price": "39.95",
+                "contract": "18 months"
+            }
+        ],
+        "url": "https://www.talktalk.co.uk/broadband",
+        "status": "active",
+        "last_checked": "2025-11-25T20:52:49"
+    }
+}

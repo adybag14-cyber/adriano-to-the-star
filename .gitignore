@@ -1,0 +1,70 @@
+starsector_log.md
+
+# Large Total War Assets
+*.pack
+*.dat
+*.bik
+
+# Cloudflare Wrangler Local State
+.wrangler/
+logs/
+
+# Build Manifests
+**/build/
+*.class
+backend/stellar-ai-key.json
+**/stellar-ai-key.json
+gcp-sa-key.json
+**/gcp-sa-key.json
+GCP_KEY_FOR_GITLAB.md
+GCP_KEY_BASE64.md
+
+# Google Drive Sync
+.tmp.driveupload/
+.tmp.drivedownload/
+
+# Development patterns
+coverage/
+node_modules/
+.nyc_output/
+.env
+dist/
+.DS_Store
+starsector-debug*.png
+
+# Exclude Starsector game directories (keep only 0.97a-RC11)
+Starsector/
+Starsector-0.8.1a-RC8/
+
+# AI Models and Tokenizers (Hosted in R2)
+experimental/sentient-browser/models/
+
+# LWJGL natives - served from R2 bucket
+cheerpj-natives/
+
+# Game JAR files (large binaries)
+*.jar
+
+# Game mods and assets
+mods_full_backup/
+mods/
+
+# Large binary files
+*.bin
+*.iso
+*.img
+*.pak
+
+# LWJGL native libraries
+*.so
+*.dll
+*.dylib
+
+# Test results and screenshots
+test-results/
+screenshots/
+
+# Game data files
+*.data
+*.pak
+

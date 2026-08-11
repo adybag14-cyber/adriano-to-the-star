@@ -1,0 +1,20 @@
+[Unit]
+Description=LiveKit Gemini Voice Agent
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/path/to/your/project
+Environment="LIVEKIT_URL=wss://gemini-integration-pxcg6ngt.livekit.cloud"
+EnvironmentFile=-/etc/livekit-agent.env
+Environment="PATH=/usr/local/bin:/usr/bin:/bin"
+ExecStart=/usr/bin/python3 /path/to/your/project/livekit_agent.py dev
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+

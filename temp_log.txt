@@ -1,0 +1,50 @@
+
+[LOG] 10585 [Thread-0] ERROR com.fs.starfarer.StarfarerLauncher  - java.lang.UnsatisfiedLinkError: Java_org_lwjgl_opengl_Display_getAvailableDisplayModes
+java.lang.UnsatisfiedLinkError: Java_org_lwjgl_opengl_Display_getAvailableDisplayModes
+	at com.fs.graphics.DisplayManager.Ò00000(Unknown Source)
+	at com.fs.starfarer.launcher.opengl.GLLauncher.detectResolutions(Unknown Source)
+	at com.fs.starfarer.launcher.opengl.GLLauncher.<init>(Unknown Source)
+	at com.fs.starfarer.launcher.opengl.GLLauncher.createUI(Unknown Source)
+	at com.fs.starfarer.StarfarerLauncher.<init>(Unknown Source)
+	at com.fs.starfarer.StarfarerLauncher.<init>(Unknown Source)
+	at com.fs.starfarer.StarfarerLauncher.main(Unknown Source)
+
+[LOG] Exception in thread "Thread-0" 
+[LOG] java.lang.UnsatisfiedLinkError: Java_org_lwjgl_Sys_alert
+
+[LOG] === API PROBE START ===
+[LOG] === API PROBE FINISHED ===
+[LOG] Initializing CheerpJ...
+[LOG] CheerpJ 4.2 initialized.
+[LOG] 📦 Classpath Restored (No LWJGL): /app/stubs/:/app/Starsector/starsector-core/starfarer_obf_v2.jar:/app/Starsector/starsector-core/fs.common_obf.jar:/app/Starsector/starsector-core/fs.sound_obf.jar:/app/Starsector/starsector-core/starfarer.api_v2.jar:/app/Starsector/starsector-core/xstream-1.4.10.jar:/app/Starsector/starsector-core/janino.jar:/app/Starsector/starsector-core/commons-compiler.jar:/app/Starsector/starsector-core/commons-compiler-jdk.jar:/app/Starsector/starsector-core/jogg-0.0.7.jar:/app/Starsector/starsector-core/jorbis-0.0.15.jar:/app/Starsector/starsector-core/json.jar:/app/Starsector/starsector-core/lwjgl_util.jar:/app/Starsector/starsector-core/log4j-1.2.9.jar:/app/Starsector/starsector-core/jinput.jar:/app/Starsector/:/app/Starsector/starsector-core
+[LOG] [Setup] Re-enabling Legacy JS Mocks (Fallback for missing natives)
+[LOG] CheerpJ runtime ready
+[LOG] java.io.FileNotFoundException: /starsector.log (No such file or directory)
+
+[LOG] 0    [Thread-0] INFO  com.fs.starfarer.StarfarerLauncher  - Starting Starsector 0.98a-RC8 launcher
+
+[LOG] 204  [Thread-0] INFO  com.fs.starfarer.StarfarerLauncher  - Running in /app/Starsector
+
+[LOG] 8971 [Thread-0] ERROR com.fs.starfarer.StarfarerLauncher  - java.lang.UnsatisfiedLinkError: Java_org_lwjgl_opengl_Display_getAvailableDisplayModes
+java.lang.UnsatisfiedLinkError: Java_org_lwjgl_opengl_Display_getAvailableDisplayModes
+	at com.fs.graphics.DisplayManager.Ò00000(Unknown Source)
+	at com.fs.starfarer.launcher.opengl.GLLauncher.detectResolutions(Unknown Source)
+	at com.fs.starfarer.launcher.opengl.GLLauncher.<init>(Unknown Source)
+	at com.fs.starfarer.launcher.opengl.GLLauncher.createUI(Unknown Source)
+	at com.fs.starfarer.StarfarerLauncher.<init>(Unknown Source)
+	at com.fs.starfarer.StarfarerLauncher.<init>(Unknown Source)
+	at com.fs.starfarer.StarfarerLauncher.main(Unknown Source)
+
+[LOG] Exception in thread "Thread-0" 
+[LOG] java.lang.UnsatisfiedLinkError: Java_org_lwjgl_Sys_alert
+
+[FATAL] Uncaught: Uncaught SyntaxError: Unexpected token 'export' @ http://localhost:8093/cheerpj-natives/natives/lwjgl.js:1179
+[LOG] === API PROBE START ===
+[LOG] === API PROBE FINISHED ===
+[LOG] Initializing CheerpJ...
+[LOG] CheerpJ 4.2 initialized.
+[LOG] 📦 Classpath Restored (No LWJGL): /app/stubs/:/app/Starsector/starsector-core/starfarer_obf_v2.jar:/app/Starsector/starsector-core/fs.common_obf.jar:/app/Starsector/starsector-core/fs.sound_obf.jar:/app/Starsector/starsector-core/starfarer.api_v2.jar:/app/Starsector/starsector-core/xstream-1.4.10.jar:/app/Starsector/starsector-core/janino.jar:/app/Starsector/starsector-core/commons-compiler.jar:/app/Starsector/starsector-core/commons-compiler-jdk.jar:/app/Starsector/starsector-core/jogg-0.0.7.jar:/app/Starsector/starsector-core/jorbis-0.0.15.jar:/app/Starsector/starsector-core/json.jar:/app/Starsector/starsector-core/lwjgl_util.jar:/app/Starsector/starsector-core/log4j-1.2.9.jar:/app/Starsector/starsector-core/jinput.jar:/app/Starsector/:/app/Starsector/starsector-core
+[LOG] [Setup] Re-enabling Legacy JS Mocks (Fallback for missing natives)
+[LOG] CheerpJ runtime ready
+[LOG] java.io.FileNotFoundException: /starsector.log (No such file or directory)
+

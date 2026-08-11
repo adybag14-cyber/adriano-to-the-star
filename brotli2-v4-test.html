@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brotli2 v4 Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        .status {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196F3;
+        }
+        .status.success {
+            background-color: #e8f5e9;
+            border-left-color: #4CAF50;
+        }
+        .status.error {
+            background-color: #ffebee;
+            border-left-color: #f44336;
+        }
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        .btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .metric {
+            display: inline-block;
+            margin: 10px 20px 10px 0;
+            padding: 10px 15px;
+            background-color: #e3f2fd;
+            border-radius: 4px;
+        }
+        .metric-label {
+            font-weight: bold;
+            color: #333;
+        }
+        .metric-value {
+            color: #2196F3;
+            font-size: 18px;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Brotli2 v4 - High-Performance Compression Test</h1>
+        
+        <div class="status" id="status">
+            Ready to test Brotli2 v4 with hash-based LZ77 matching and ANS entropy coding.
+        </div>
+        
+        <div>
+            <button class="btn" id="runTest" onclick="runBenchmark()">Run Benchmark</button>
+            <button class="btn" id="runComparison" onclick="runComparison()">Run Comparison (v3 vs v4)</button>
+        </div>
+        
+        <div id="metrics" style="display: none;">
+            <h2>Performance Metrics</h2>
+            <div class="metric">
+                <span class="metric-label">Compression Ratio:</span>
+                <span class="metric-value" id="ratio">-</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Compression Time:</span>
+                <span class="metric-value" id="compTime">-</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Decompression Time:</span>
+                <span class="metric-value" id="decompTime">-</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Dictionary Hits:</span>
+                <span class="metric-value" id="dictHits">-</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Long Matches:</span>
+                <span class="metric-value" id="longMatches">-</span>
+            </div>
+        </div>
+        
+        <div id="results" class="results" style="display: none;">
+            <h2>Results</h2>
+            <div id="resultsContent"></div>
+        </div>
+        
+        <div id="console" class="results" style="display: none;">
+            <h2>Console Output</h2>
+            <pre id="consoleOutput"></pre>
+        </div>
+    </div>
+
+    <script src="brotli2-prototype-v4.js"></script>
+    <script>
+        let consoleOutput = [];
+        
+        // Override console.log to capture output
+        const originalLog = console.log;
+        console.log = function(...args) {
+            const message = args.map(arg => 
+                typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
+            ).join(' ');
+            consoleOutput.push(message);
+            originalLog.apply(console, args);
+        };
+        
+        function generateTestData(type, size) {
+            switch(type) {
+                case 'html':
+                    return generateHTML(size);
+                case 'javascript':
+                    return generateJavaScript(size);
+                case 'json':
+                    return generateJSON(size);
+                case 'text':
+                    return generateText(size);
+                default:
+                    return generateText(size);
+            }
+        }
+        
+        function generateHTML(size) {
+            let html = '<!DOCTYPE html><html><head><title>Test</title></head><body>';
+            while (html.length < size) {
+                html += '<div class="container"><h1>Header</h1><p>Paragraph text</p></div>';
+            }
+            html += '</body></html>';
+            return new TextEncoder().encode(html.slice(0, size));
+        }
+        
+        function generateJavaScript(size) {
+            let js = 'function test() { const data = [];';
+            while (js.length < size) {
+                js += 'data.push({value: Math.random(), name: "test"});';
+            }
+            js += 'return data; }';
+            return new TextEncoder().encode(js.slice(0, size));
+        }
+        
+        function generateJSON(size) {
+            let json = '{"data":[';
+            while (json.length < size) {
+                json += '{"id":1,"name":"test","value":123},';
+            }
+            json = json.slice(0, -1) + ']}';
+            return new TextEncoder().encode(json.slice(0, size));
+        }
+        
+        function generateText(size) {
+            const words = ['the', 'quick', 'brown', 'fox', 'jumps', 'over', 'lazy', 'dog', 
+                          'compression', 'algorithm', 'brotli', 'prototype', 'research'];
+            let text = '';
+            while (text.length < size) {
+                text += words[Math.floor(Math.random() * words.length)] + ' ';
+            }
+            return new TextEncoder().encode(text.slice(0, size));
+        }
+        
+        function updateStatus(message, type = 'info') {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = message;
+            statusEl.className = 'status ' + type;
+        }
+        
+        function runBenchmark() {
+            const btn = document.getElementById('runTest');
+            btn.disabled = true;
+            consoleOutput = [];
+            
+            updateStatus('Running benchmark...', 'info');
+            
+            setTimeout(() => {
+                try {
+                    const brotli2 = new Brotli2V4();
+                    const testCases = [
+                        { type: 'html', size: 10000 },
+                        { type: 'javascript', size: 10000 },
+                        { type: 'json', size: 10000 },
+                        { type: 'text', size: 10000 }
+                    ];
+                    
+                    const results = [];
+                    
+                    for (const testCase of testCases) {
+                        const data = generateTestData(testCase.type, testCase.size);
+                        const compressed = brotli2.compress(data);
+                        const decompressed = brotli2.decompress(compressed);
+                        const stats = brotli2.getStats();
+                        
+                        const verified = data.length === decompressed.length &&
+                            data.every((byte, i) => byte === decompressed[i]);
+                        
+                        results.push({
+                            type: testCase.type,
+                            originalSize: data.length,
+                            compressedSize: compressed.length,
+                            compressionRatio: data.length / compressed.length,
+                            compressionTime: stats.compressionTime,
+                            decompressionTime: stats.decompressionTime,
+                            verified: verified,
+                            dictionaryHits: stats.dictionaryHits,
+                            longMatches: stats.longMatches
+                        });
+                        
+                        console.log(`\n${testCase.type.toUpperCase()} Results:`);
+                        console.log(`  Original: ${data.length} bytes`);
+                        console.log(`  Compressed: ${compressed.length} bytes`);
+                        console.log(`  Ratio: ${(data.length / compressed.length).toFixed(2)}x`);
+                        console.log(`  Verified: ${verified ? '✓' : '✗'}`);
+                    }
+                    
+                    displayResults(results);
+                    updateStatus('Benchmark completed successfully!', 'success');
+                } catch (error) {
+                    console.error('Benchmark error:', error);
+                    updateStatus('Benchmark failed: ' + error.message, 'error');
+                }
+                
+                btn.disabled = false;
+            }, 100);
+        }
+        
+        function runComparison() {
+            const btn = document.getElementById('runComparison');
+            btn.disabled = true;
+            consoleOutput = [];
+            
+            updateStatus('Running comparison between v3 and v4...', 'info');
+            
+            setTimeout(() => {
+                try {
+                    // Load v3 if available
+                    if (typeof Brotli2V3 === 'undefined') {
+                        updateStatus('Brotli2 v3 not available. Please load brotli2-prototype-v3.js first.', 'error');
+                        btn.disabled = false;
+                        return;
+                    }
+                    
+                    const v3 = new Brotli2V3();
+                    const v4 = new Brotli2V4();
+                    
+                    const testCases = [
+                        { type: 'html', size: 10000 },
+                        { type: 'javascript', size: 10000 },
+                        { type: 'text', size: 10000 }
+                    ];
+                    
+                    const results = [];
+                    
+                    for (const testCase of testCases) {
+                        const data = generateTestData(testCase.type, testCase.size);
+                        
+                        // Test v3
+                        const v3Start = performance.now();
+                        const v3Compressed = v3.compress(data);
+                        const v3CompTime = performance.now() - v3Start;
+                        const v3Decompressed = v3.decompress(v3Compressed);
+                        const v3DecompTime = v3.getStats().decompressionTime;
+                        const v3Ratio = data.length / v3Compressed.length;
+                        
+                        // Test v4
+                        const v4Start = performance.now();
+                        const v4Compressed = v4.compress(data);
+                        const v4CompTime = performance.now() - v4Start;
+                        const v4Decompressed = v4.decompress(v4Compressed);
+                        const v4DecompTime = v4.getStats().decompressionTime;
+                        const v4Ratio = data.length / v4Compressed.length;
+                        
+                        results.push({
+                            type: testCase.type,
+                            v3: {
+                                ratio: v3Ratio,
+                                compTime: v3CompTime,
+                                decompTime: v3DecompTime,
+                                compressedSize: v3Compressed.length
+                            },
+                            v4: {
+                                ratio: v4Ratio,
+                                compTime: v4CompTime,
+                                decompTime: v4DecompTime,
+                                compressedSize: v4Compressed.length
+                            },
+                            improvement: {
+                                ratio: ((v4Ratio - v3Ratio) / v3Ratio * 100).toFixed(1),
+                                compTime: ((v3CompTime - v4CompTime) / v3CompTime * 100).toFixed(1),
+                                decompTime: ((v3DecompTime - v4DecompTime) / v3DecompTime * 100).toFixed(1)
+                            }
+                        });
+                        
+                        console.log(`\n${testCase.type.toUpperCase()} Comparison:`);
+                        console.log(`  v3 - Ratio: ${v3Ratio.toFixed(2)}x, Comp: ${v3CompTime.toFixed(2)}ms, Decomp: ${v3DecompTime.toFixed(2)}ms`);
+                        console.log(`  v4 - Ratio: ${v4Ratio.toFixed(2)}x, Comp: ${v4CompTime.toFixed(2)}ms, Decomp: ${v4DecompTime.toFixed(2)}ms`);
+                    }
+                    
+                    displayComparisonResults(results);
+                    updateStatus('Comparison completed successfully!', 'success');
+                } catch (error) {
+                    console.error('Comparison error:', error);
+                    updateStatus('Comparison failed: ' + error.message, 'error');
+                }
+                
+                btn.disabled = false;
+            }, 100);
+        }
+        
+        function displayResults(results) {
+            const resultsDiv = document.getElementById('results');
+            const contentDiv = document.getElementById('resultsContent');
+            const metricsDiv = document.getElementById('metrics');
+            
+            let html = '<table><tr><th>Type</th><th>Original</th><th>Compressed</th><th>Ratio</th><th>Comp Time</th><th>Decomp Time</th><th>Verified</th></tr>';
+            
+            let totalRatio = 0;
+            let totalCompTime = 0;
+            let totalDecompTime = 0;
+            let totalDictHits = 0;
+            let totalLongMatches = 0;
+            
+            for (const result of results) {
+                html += `<tr>
+                    <td>${result.type}</td>
+                    <td>${result.originalSize}</td>
+                    <td>${result.compressedSize}</td>
+                    <td>${result.compressionRatio.toFixed(2)}x</td>
+                    <td>${result.compressionTime.toFixed(2)}ms</td>
+                    <td>${result.decompressionTime.toFixed(2)}ms</td>
+                    <td>${result.verified ? '✓' : '✗'}</td>
+                </tr>`;
+                
+                totalRatio += result.compressionRatio;
+                totalCompTime += result.compressionTime;
+                totalDecompTime += result.decompressionTime;
+                totalDictHits += result.dictionaryHits;
+                totalLongMatches += result.longMatches;
+            }
+            
+            html += '</table>';
+            contentDiv.innerHTML = html;
+            
+            // Update metrics
+            document.getElementById('ratio').textContent = (totalRatio / results.length).toFixed(2) + 'x';
+            document.getElementById('compTime').textContent = (totalCompTime / results.length).toFixed(2) + 'ms';
+            document.getElementById('decompTime').textContent = (totalDecompTime / results.length).toFixed(2) + 'ms';
+            document.getElementById('dictHits').textContent = totalDictHits;
+            document.getElementById('longMatches').textContent = totalLongMatches;
+            
+            resultsDiv.style.display = 'block';
+            metricsDiv.style.display = 'block';
+            
+            // Display console output
+            const consoleDiv = document.getElementById('console');
+            const consoleOutputDiv = document.getElementById('consoleOutput');
+            consoleOutputDiv.textContent = consoleOutput.join('\n');
+            consoleDiv.style.display = 'block';
+        }
+        
+        function displayComparisonResults(results) {
+            const resultsDiv = document.getElementById('results');
+            const contentDiv = document.getElementById('resultsContent');
+            const metricsDiv = document.getElementById('metrics');
+            
+            let html = '<table><tr><th>Type</th><th>v3 Ratio</th><th>v4 Ratio</th><th>Improvement</th><th>v3 Comp Time</th><th>v4 Comp Time</th><th>Speedup</th></tr>';
+            
+            for (const result of results) {
+                const ratioColor = result.improvement.ratio > 0 ? 'green' : 'red';
+                const speedColor = result.improvement.compTime > 0 ? 'green' : 'red';
+                
+                html += `<tr>
+                    <td>${result.type}</td>
+                    <td>${result.v3.ratio.toFixed(2)}x</td>
+                    <td>${result.v4.ratio.toFixed(2)}x</td>
+                    <td style="color: ${ratioColor}">${result.improvement.ratio}%</td>
+                    <td>${result.v3.compTime.toFixed(2)}ms</td>
+                    <td>${result.v4.compTime.toFixed(2)}ms</td>
+                    <td style="color: ${speedColor}">${result.improvement.compTime}%</td>
+                </tr>`;
+            }
+            
+            html += '</table>';
+            contentDiv.innerHTML = html;
+            
+            resultsDiv.style.display = 'block';
+            metricsDiv.style.display = 'none';
+            
+            // Display console output
+            const consoleDiv = document.getElementById('console');
+            const consoleOutputDiv = document.getElementById('consoleOutput');
+            consoleOutputDiv.textContent = consoleOutput.join('\n');
+            consoleDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

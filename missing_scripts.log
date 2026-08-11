@@ -1,0 +1,4 @@
+Checking 150 script references...
+MISSING: large-exoplanet-loader-core-minimal.js
+MISSING: pwa-loader-core-minimal.js
+Found 2 missing scripts.

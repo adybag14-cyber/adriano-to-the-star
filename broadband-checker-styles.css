@@ -1,0 +1,1416 @@
+/* Broadband Checker Styles */
+
+.broadband-search-section {
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(186, 148, 79, 0.3);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.search-container {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.search-input {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid rgba(186, 148, 79, 0.3);
+    border-radius: 10px;
+    color: #ffffff;
+    font-family: 'Raleway', sans-serif;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    border-color: rgba(186, 148, 79, 0.6);
+    box-shadow: 0 0 20px rgba(186, 148, 79, 0.2);
+}
+
+.search-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.search-button,
+.check-button,
+.clear-button,
+.refresh-all-button {
+    padding: 1rem 2rem;
+    background: rgba(186, 148, 79, 0.2);
+    border: 2px solid rgba(186, 148, 79, 0.5);
+    border-radius: 10px;
+    color: #ba944f;
+    font-family: 'Raleway', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.search-button:hover,
+.check-button:hover,
+.clear-button:hover,
+.refresh-all-button:hover:not(:disabled) {
+    background: rgba(186, 148, 79, 0.3);
+    border-color: rgba(186, 148, 79, 0.7);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(186, 148, 79, 0.3);
+}
+
+.refresh-all-button {
+    background: rgba(74, 222, 128, 0.2);
+    border-color: rgba(74, 222, 128, 0.5);
+    color: #4ade80;
+    position: relative;
+}
+
+.refresh-all-button:hover:not(:disabled) {
+    background: rgba(74, 222, 128, 0.3);
+    border-color: rgba(74, 222, 128, 0.7);
+    box-shadow: 0 5px 20px rgba(74, 222, 128, 0.3);
+}
+
+.refresh-all-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Refresh Progress Indicator */
+.refresh-progress {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(74, 222, 128, 0.3);
+    border-radius: 10px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4ade80, #22c55e);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+    width: 0%;
+    animation: pulse-progress 2s ease-in-out infinite;
+}
+
+@keyframes pulse-progress {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.8;
+    }
+}
+
+.progress-text {
+    color: rgba(255, 255, 255, 0.8);
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+/* Toast Notifications */
+.toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    padding: 1rem 2rem;
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid rgba(186, 148, 79, 0.5);
+    border-radius: 10px;
+    color: #ffffff;
+    font-family: 'Raleway', sans-serif;
+    font-size: 1rem;
+    z-index: 10000;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    max-width: 400px;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast-success {
+    border-color: rgba(74, 222, 128, 0.5);
+    background: rgba(0, 0, 0, 0.95);
+}
+
+.toast-success::before {
+    content: '✅ ';
+    margin-right: 0.5rem;
+}
+
+.toast-error {
+    border-color: rgba(239, 68, 68, 0.5);
+    background: rgba(0, 0, 0, 0.95);
+}
+
+.toast-error::before {
+    content: '❌ ';
+    margin-right: 0.5rem;
+}
+
+.toast-info {
+    border-color: rgba(59, 130, 246, 0.5);
+    background: rgba(0, 0, 0, 0.95);
+}
+
+.toast-info::before {
+    content: 'ℹ️ ';
+    margin-right: 0.5rem;
+}
+
+.filter-container {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.filter-container label {
+    color: rgba(255, 255, 255, 0.8);
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.9rem;
+}
+
+.filter-select {
+    padding: 0.75rem 1rem;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid rgba(186, 148, 79, 0.3);
+    border-radius: 8px;
+    color: #ffffff;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-select:hover {
+    border-color: rgba(186, 148, 79, 0.5);
+}
+
+.filter-select option {
+    background: #000000;
+    color: #ffffff;
+}
+
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(186, 148, 79, 0.3);
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    border-color: rgba(186, 148, 79, 0.6);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(186, 148, 79, 0.2);
+}
+
+.stat-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem;
+    font-weight: 600;
+    color: #ba944f;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.provider-results {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.provider-card {
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(186, 148, 79, 0.3);
+    border-radius: 15px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.provider-card:hover {
+    border-color: rgba(186, 148, 79, 0.6);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(186, 148, 79, 0.2);
+}
+
+.provider-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.provider-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #ba944f;
+    flex: 1;
+    min-width: 0;
+}
+
+.gigabit-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: linear-gradient(135deg, rgba(74, 222, 128, 0.2), rgba(34, 197, 94, 0.2));
+    border: 2px solid rgba(74, 222, 128, 0.5);
+    border-radius: 20px;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #4ade80;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.4);
+    }
+
+    50% {
+        box-shadow: 0 0 0 8px rgba(74, 222, 128, 0);
+    }
+}
+
+.provider-type {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: rgba(186, 148, 79, 0.2);
+    border: 1px solid rgba(186, 148, 79, 0.3);
+    border-radius: 5px;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.75rem;
+    color: #ba944f;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+}
+
+.provider-info {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+.provider-deals {
+    margin: 1rem 0;
+    padding: 1rem;
+    background: rgba(74, 222, 128, 0.1);
+    border: 2px solid rgba(74, 222, 128, 0.3);
+    border-radius: 10px;
+}
+
+.deal-card {
+    text-align: center;
+}
+
+.deal-speed {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #4ade80;
+    margin-bottom: 0.5rem;
+}
+
+.deal-price {
+    font-family: 'Raleway', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ba944f;
+    margin-bottom: 0.25rem;
+}
+
+.deal-note {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+}
+
+.deal-card.generic-deal {
+    background: rgba(74, 222, 128, 0.05);
+}
+
+.deal-card.generic-deal .deal-speed {
+    color: rgba(74, 222, 128, 0.8);
+}
+
+/* Real-time Price Styles */
+.realtime-deals {
+    position: relative;
+    border: 2px solid rgba(74, 222, 128, 0.4);
+    background: rgba(74, 222, 128, 0.05);
+    border-radius: 10px;
+    padding: 0.5rem;
+}
+
+.realtime-badge {
+    position: absolute;
+    top: -10px;
+    left: 10px;
+    background: linear-gradient(135deg, #4ade80, #22c55e);
+    color: #000;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+    0%, 100% {
+        box-shadow: 0 0 5px rgba(74, 222, 128, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(74, 222, 128, 0.8);
+    }
+}
+
+.realtime-deals .deal-card {
+    background: rgba(0, 0, 0, 0.3);
+    margin-top: 0.75rem;
+}
+
+.realtime-deals .deal-price {
+    color: #4ade80;
+    font-weight: 700;
+}
+
+.check-price-btn {
+    width: 100%;
+    padding: 0.75rem;
+    margin-top: 0.5rem;
+    background: linear-gradient(135deg, rgba(74, 222, 128, 0.2), rgba(34, 197, 94, 0.2));
+    border: 2px solid rgba(74, 222, 128, 0.4);
+    border-radius: 8px;
+    color: #4ade80;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.check-price-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, rgba(74, 222, 128, 0.3), rgba(34, 197, 94, 0.3));
+    border-color: rgba(74, 222, 128, 0.6);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(74, 222, 128, 0.3);
+}
+
+.check-price-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.check-price-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.provider-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.provider-link {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background: rgba(186, 148, 79, 0.2);
+    border: 2px solid rgba(186, 148, 79, 0.5);
+    border-radius: 8px;
+    color: #ba944f;
+    text-decoration: none;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border: none;
+}
+
+.provider-view-btn {
+    background: rgba(186, 148, 79, 0.3);
+}
+
+.provider-external-btn {
+    background: rgba(186, 148, 79, 0.2);
+}
+
+.provider-link:hover {
+    background: rgba(186, 148, 79, 0.4);
+    border-color: rgba(186, 148, 79, 0.7);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(186, 148, 79, 0.3);
+}
+
+/* Provider Viewer Modal */
+.provider-viewer-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+    animation: fadeIn 0.3s ease;
+}
+
+.viewer-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(5px);
+}
+
+.viewer-container {
+    position: relative;
+    width: 95%;
+    height: 95%;
+    max-width: 1400px;
+    max-height: 90vh;
+    margin: 2.5% auto;
+    background: rgba(0, 0, 0, 0.95);
+    border: 2px solid rgba(186, 148, 79, 0.5);
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+    z-index: 10001;
+}
+
+.viewer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    border-bottom: 2px solid rgba(186, 148, 79, 0.3);
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 15px 15px 0 0;
+}
+
+.viewer-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #ba944f;
+    margin: 0;
+}
+
+.viewer-controls {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.viewer-btn {
+    padding: 0.5rem 1rem;
+    background: rgba(186, 148, 79, 0.2);
+    border: 2px solid rgba(186, 148, 79, 0.5);
+    border-radius: 8px;
+    color: #ba944f;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Raleway', sans-serif;
+}
+
+.viewer-btn:hover {
+    background: rgba(186, 148, 79, 0.4);
+    border-color: rgba(186, 148, 79, 0.7);
+    transform: scale(1.1);
+}
+
+.close-btn:hover {
+    background: rgba(255, 107, 107, 0.3);
+    border-color: rgba(255, 107, 107, 0.7);
+    color: #ff6b6b;
+}
+
+.iframe-container {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    border-radius: 0 0 15px 15px;
+}
+
+.provider-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: #ffffff;
+}
+
+.iframe-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.8);
+    color: rgba(255, 255, 255, 0.7);
+    font-family: 'Raleway', sans-serif;
+    z-index: 10;
+}
+
+.iframe-loading p {
+    margin-top: 1rem;
+    font-size: 1.1rem;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Fullscreen mode */
+.viewer-container:fullscreen {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    margin: 0;
+    border-radius: 0;
+}
+
+.viewer-container:-webkit-full-screen {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    margin: 0;
+    border-radius: 0;
+}
+
+.viewer-container:-moz-full-screen {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    margin: 0;
+    border-radius: 0;
+}
+
+.viewer-container:-ms-fullscreen {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    margin: 0;
+    border-radius: 0;
+}
+
+.loading-message {
+    text-align: center;
+    padding: 3rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.spinner {
+    border: 3px solid rgba(186, 148, 79, 0.3);
+    border-top: 3px solid #ba944f;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.no-results {
+    text-align: center;
+    padding: 3rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-family: 'Raleway', sans-serif;
+    font-size: 1.1rem;
+}
+
+.postcode-checker {
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(186, 148, 79, 0.3);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-top: 2rem;
+}
+
+.postcode-input-container {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.postcode-input {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid rgba(186, 148, 79, 0.3);
+    border-radius: 10px;
+    color: #ffffff;
+    font-family: 'Raleway', sans-serif;
+    font-size: 1rem;
+    text-transform: uppercase;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.postcode-input:focus {
+    border-color: rgba(186, 148, 79, 0.6);
+    box-shadow: 0 0 20px rgba(186, 148, 79, 0.2);
+}
+
+.postcode-results {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    min-height: 100px;
+}
+
+@media (max-width: 768px) {
+
+    .search-container,
+    .postcode-input-container {
+        flex-direction: column;
+    }
+
+    .filter-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .provider-results {
+        grid-template-columns: 1fr;
+    }
+
+    .stats-container {
+        grid-template-columns: 1fr;
+    }
+
+    .provider-actions {
+        flex-direction: column;
+    }
+
+    .provider-link {
+        width: 100%;
+        text-align: center;
+    }
+
+    .viewer-container {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        border-radius: 0;
+    }
+
+    .viewer-header {
+        padding: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .viewer-title {
+        font-size: 1.2rem;
+        flex: 1;
+        min-width: 100%;
+        margin-bottom: 0.5rem;
+    }
+
+    .viewer-controls {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Provider Status Styles */
+.provider-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.2);
+    width: fit-content;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-active .status-dot {
+    background-color: #4ade80;
+    box-shadow: 0 0 5px #4ade80;
+}
+
+.status-active {
+    color: #4ade80;
+    border: 1px solid rgba(74, 222, 128, 0.2);
+}
+
+.status-offline .status-dot {
+    background-color: #ff6b6b;
+    box-shadow: 0 0 5px #ff6b6b;
+}
+
+.status-offline {
+    color: #ff6b6b;
+    border: 1px solid rgba(255, 107, 107, 0.2);
+}
+
+.status-ceased .status-dot {
+    background-color: #9ca3af;
+    box-shadow: 0 0 5px #9ca3af;
+}
+
+.status-ceased {
+    color: #9ca3af;
+    border: 1px solid rgba(156, 163, 175, 0.2);
+    background: rgba(156, 163, 175, 0.05);
+}
+
+.status-unknown .status-dot {
+    background-color: #fbbf24;
+}
+
+
+.viewer-container:-ms-fullscreen {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    margin: 0;
+    border-radius: 0;
+}
+
+.loading-message {
+    text-align: center;
+    padding: 3rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.spinner {
+    border: 3px solid rgba(186, 148, 79, 0.3);
+    border-top: 3px solid #ba944f;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.no-results {
+    text-align: center;
+    padding: 3rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-family: 'Raleway', sans-serif;
+    font-size: 1.1rem;
+}
+
+.postcode-checker {
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(186, 148, 79, 0.3);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-top: 2rem;
+}
+
+.postcode-input-container {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.postcode-input {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid rgba(186, 148, 79, 0.3);
+    border-radius: 10px;
+    color: #ffffff;
+    font-family: 'Raleway', sans-serif;
+    font-size: 1rem;
+    text-transform: uppercase;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.postcode-input:focus {
+    border-color: rgba(186, 148, 79, 0.6);
+    box-shadow: 0 0 20px rgba(186, 148, 79, 0.2);
+}
+
+.postcode-results {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    min-height: 100px;
+}
+
+@media (max-width: 768px) {
+
+    .search-container,
+    .postcode-input-container {
+        flex-direction: column;
+    }
+
+    .filter-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .provider-results {
+        grid-template-columns: 1fr;
+    }
+
+    .stats-container {
+        grid-template-columns: 1fr;
+    }
+
+    .provider-actions {
+        flex-direction: column;
+    }
+
+    .provider-link {
+        width: 100%;
+        text-align: center;
+    }
+
+    .viewer-container {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        border-radius: 0;
+    }
+
+    .viewer-header {
+        padding: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .viewer-title {
+        font-size: 1.2rem;
+        flex: 1;
+        min-width: 100%;
+        margin-bottom: 0.5rem;
+    }
+
+    .viewer-controls {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Provider Status Styles */
+.provider-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.2);
+    width: fit-content;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-active .status-dot {
+    background-color: #4ade80;
+    box-shadow: 0 0 5px #4ade80;
+}
+
+.status-active {
+    color: #4ade80;
+    border: 1px solid rgba(74, 222, 128, 0.2);
+}
+
+.status-offline .status-dot {
+    background-color: #ff6b6b;
+    box-shadow: 0 0 5px #ff6b6b;
+}
+
+.status-offline {
+    color: #ff6b6b;
+    border: 1px solid rgba(255, 107, 107, 0.2);
+}
+
+.status-ceased .status-dot {
+    background-color: #9ca3af;
+    box-shadow: 0 0 5px #9ca3af;
+}
+
+.status-ceased {
+    color: #9ca3af;
+    border: 1px solid rgba(156, 163, 175, 0.2);
+    background: rgba(156, 163, 175, 0.05);
+}
+
+.status-unknown .status-dot,
+.status-unknown .status-icon {
+    background-color: #fbbf24;
+    color: #fbbf24;
+}
+
+.status-unknown {
+    color: #fbbf24;
+    border: 1px solid rgba(251, 191, 36, 0.2);
+}
+
+/* Warning status (connection issues, needs verification) */
+.status-warning .status-dot,
+.status-warning .status-icon {
+    background-color: #f59e0b;
+    color: #f59e0b;
+}
+
+.status-warning {
+    color: #f59e0b;
+    border: 1px solid rgba(245, 158, 11, 0.2);
+    background: rgba(245, 158, 11, 0.05);
+}
+
+/* Rebranded status */
+.status-rebranded .status-dot,
+.status-rebranded .status-icon {
+    background-color: #8b5cf6;
+    color: #8b5cf6;
+}
+
+.status-rebranded {
+    color: #8b5cf6;
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    background: rgba(139, 92, 246, 0.05);
+}
+
+/* Parked domain status */
+.status-parked .status-dot,
+.status-parked .status-icon {
+    background-color: #6b7280;
+    color: #6b7280;
+}
+
+.status-parked {
+    color: #6b7280;
+    border: 1px solid rgba(107, 114, 128, 0.2);
+    background: rgba(107, 114, 128, 0.05);
+}
+
+/* Maintenance status */
+.status-maintenance .status-dot,
+.status-maintenance .status-icon {
+    background-color: #3b82f6;
+    color: #3b82f6;
+}
+
+.status-maintenance {
+    color: #3b82f6;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    background: rgba(59, 130, 246, 0.05);
+}
+
+/* Status icon styling */
+.status-icon {
+    font-size: 0.9rem;
+    margin-right: 0.25rem;
+}
+
+.last-checked {
+    font-size: 0.7rem;
+    opacity: 0.7;
+    margin-left: 0.5rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Price highlight when available */
+.provider-card.has-price {
+    border-color: rgba(74, 222, 128, 0.4);
+}
+
+.provider-card.has-price:hover {
+    border-color: rgba(74, 222, 128, 0.6);
+}
+
+/* More deals button */
+.more-deals {
+    margin-top: 0.75rem;
+    text-align: center;
+}
+
+.show-all-deals-btn {
+    background: transparent;
+    border: 1px solid rgba(186, 148, 79, 0.5);
+    color: #ba944f;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+}
+
+.show-all-deals-btn:hover {
+    background: rgba(186, 148, 79, 0.2);
+    border-color: #ba944f;
+}
+
+/* Check price button */
+.check-price-btn {
+    background: rgba(186, 148, 79, 0.2);
+    border: 1px solid rgba(186, 148, 79, 0.5);
+    color: #ba944f;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.85rem;
+    margin-top: 0.75rem;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.check-price-btn:hover:not(:disabled) {
+    background: rgba(186, 148, 79, 0.3);
+    border-color: #ba944f;
+}
+
+.check-price-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Refresh prices button */
+.refresh-prices-btn {
+    background: rgba(74, 222, 128, 0.2);
+    border: 2px solid rgba(74, 222, 128, 0.5);
+    color: #4ade80;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.refresh-prices-btn:hover {
+    background: rgba(74, 222, 128, 0.3);
+    border-color: #4ade80;
+    transform: translateY(-2px);
+}
+
+/* Deal item in modal */
+.deal-item {
+    transition: all 0.3s ease;
+}
+
+.deal-item:hover {
+    border-color: rgba(186, 148, 79, 0.6) !important;
+    transform: translateX(5px);
+}
+
+/* New Features Styles */
+
+.section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    color: #ba944f;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(186, 148, 79, 0.3);
+    padding-bottom: 0.5rem;
+}
+
+/* Bookmark Button */
+.provider-bookmark-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.provider-bookmark-btn:hover {
+    transform: scale(1.2);
+    color: rgba(186, 148, 79, 0.6);
+}
+
+.provider-bookmark-btn.active {
+    color: #ba944f;
+    text-shadow: 0 0 10px rgba(186, 148, 79, 0.5);
+}
+
+/* Compare Checkbox */
+.compare-container {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.compare-checkbox {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(186, 148, 79, 0.5);
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.compare-checkbox:checked {
+    background: #ba944f;
+    border-color: #ba944f;
+}
+
+.compare-checkbox:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #000;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.compare-label {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+}
+
+/* Comparison Bar */
+.comparison-bar {
+    position: fixed;
+    bottom: -100px; /* Hidden by default */
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    border-top: 2px solid #ba944f;
+    padding: 1rem;
+    z-index: 9000;
+    transition: bottom 0.3s ease;
+    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5);
+}
+
+.comparison-bar.visible {
+    bottom: 0;
+}
+
+.comparison-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.comparison-count {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    color: #ba944f;
+}
+
+.comparison-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.compare-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.compare-btn.primary {
+    background: #ba944f;
+    color: #000;
+    border: none;
+}
+
+.compare-btn.primary:hover {
+    background: #d4a755;
+    transform: translateY(-2px);
+}
+
+.compare-btn.secondary {
+    background: transparent;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.compare-btn.secondary:hover {
+    border-color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Comparison Modal */
+.comparison-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Max 3 columns */
+    gap: 1rem;
+    padding: 2rem;
+    overflow-x: auto;
+}
+
+.comparison-column {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(186, 148, 79, 0.3);
+    border-radius: 10px;
+    padding: 1.5rem;
+    min-width: 250px;
+}
+
+.comparison-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.comparison-row {
+    margin-bottom: 1.5rem;
+}
+
+.row-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 0.5rem;
+}
+
+.row-value {
+    font-size: 1.1rem;
+    color: #fff;
+}
+
+.highlight-value {
+    color: #4ade80;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .comparison-grid {
+        grid-template-columns: 1fr; /* Stack on mobile */
+    }
+    
+    .comparison-column {
+        margin-bottom: 1rem;
+    }
+}

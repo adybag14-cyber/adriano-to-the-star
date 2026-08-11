@@ -1,0 +1,5 @@
+# Python dependencies for Gemini Live API
+# Install with: pip install -r requirements.txt
+
+google-genai>=0.2.0>=1.0.0
+

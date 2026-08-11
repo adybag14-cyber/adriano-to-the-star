@@ -1,0 +1,50 @@
+/**
+ * Clipboard Manager Styles
+ */
+
+.copy-code-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: rgba(186, 148, 79, 0.2);
+    border: 1px solid rgba(186, 148, 79, 0.4);
+    border-radius: 6px;
+    color: #ba944f;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0.5rem;
+    transition: all 0.3s ease;
+    z-index: 10;
+    opacity: 0;
+}
+
+pre:hover .copy-code-btn,
+.code-block:hover .copy-code-btn {
+    opacity: 1;
+}
+
+.copy-code-btn:hover {
+    background: rgba(186, 148, 79, 0.3);
+    transform: scale(1.1);
+}
+
+[data-copy] {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+[data-copy]:hover {
+    color: #ba944f;
+    text-decoration: underline;
+}
+
+/* Light theme support */
+.theme-light .copy-code-btn {
+    background: rgba(186, 148, 79, 0.1);
+    border-color: rgba(186, 148, 79, 0.3);
+}
+
+.theme-light .copy-code-btn:hover {
+    background: rgba(186, 148, 79, 0.2);
+}
+
