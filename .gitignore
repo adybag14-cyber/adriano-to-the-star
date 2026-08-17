@@ -61,10 +61,9 @@ mods/
 *.dylib
 
 # Test results and screenshots
-test-results/
+test-results*/
 screenshots/
 
 # Game data files
 *.data
 *.pak
-
