@@ -29,7 +29,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v7
         with:
-          node-version: '22'
+          node-version: '22.12.0'
           cache: npm
 
       - name: Install dependencies
@@ -44,9 +44,28 @@ jobs:
           node --check scripts/minify-pioneer-pages.mjs
           node --check scripts/pioneer-playwright-workload.mjs
           node --check scripts/pioneer-advanced-rendering-smoke.mjs
+          node --check tests/e2e/smoke-functional.spec.js
+          node --check tests/e2e/smoke-ci.spec.js
 
-      - name: Jest regression suite
-        run: npm test -- --runInBand
+      - name: Jest regression suite with coverage
+        run: npm run test:coverage -- --runInBand
+
+      - name: Upload Jest coverage
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: jest-coverage-${{ github.run_id }}
+          path: coverage
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: GitLab lint parity (advisory)
+        continue-on-error: true
+        run: npx eslint auth-supabase.js database-optimized.js i18n.js large-exoplanet-loader.js planet-discovery-notifications.js worker-api.js database-experience.js landing-experience.js
+
+      - name: GitLab dependency audit parity (advisory)
+        continue-on-error: true
+        run: npm audit --audit-level=moderate
 
       - name: Resolve canonical GitLab SHA
         shell: pwsh
@@ -87,6 +106,69 @@ jobs:
           if-no-files-found: error
           retention-days: 2
 
+  site-production-smoke:
+    name: Linux Chromium production artifact smoke
+    needs: pioneer-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out GitHub mirror
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '22.12.0'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+
+      - name: Install Chromium for Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Download Windows-built Pages artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: pioneer-pages-${{ github.run_id }}
+          path: public
+
+      - name: Production artifact browser smoke
+        shell: bash
+        env:
+          BASE_URL: http://127.0.0.1:8095
+        run: |
+          python3 -m http.server 8095 --bind 127.0.0.1 > /tmp/adriano-smoke-server.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          ready=0
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent --show-error "$BASE_URL/index.html" > /dev/null; then
+              ready=1
+              break
+            fi
+            sleep 1
+          done
+          if [ "$ready" -ne 1 ]; then
+            cat /tmp/adriano-smoke-server.log
+            exit 1
+          fi
+          npx playwright test tests/e2e/smoke-ci.spec.js --reporter=line
+
+      - name: Upload production artifact smoke evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: production-artifact-smoke-${{ github.run_id }}
+          path: |
+            test-results/
+            playwright-report/
+          if-no-files-found: warn
+          retention-days: 14
+
   pioneer-browser:
     name: Linux Chromium gameplay workload
     needs: pioneer-build
@@ -102,7 +184,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v7
         with:
-          node-version: '22'
+          node-version: '22.12.0'
           cache: npm
 
       - name: Install dependencies
@@ -145,7 +227,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v7
         with:
-          node-version: '22'
+          node-version: '22.12.0'
           cache: npm
 
       - name: Install dependencies
