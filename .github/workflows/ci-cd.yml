@@ -45,6 +45,7 @@ jobs:
           node --check scripts/pioneer-playwright-workload.mjs
           node --check scripts/pioneer-advanced-rendering-smoke.mjs
           node --check tests/e2e/smoke-functional.spec.js
+          node --check tests/e2e/smoke-ci.spec.js
 
       - name: Jest regression suite with coverage
         run: npm run test:coverage -- --runInBand
@@ -105,11 +106,11 @@ jobs:
           if-no-files-found: error
           retention-days: 2
 
-  site-functional-smoke:
-    name: Linux Chromium core-site functional smoke
+  site-production-smoke:
+    name: Linux Chromium production artifact smoke
     needs: pioneer-build
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
 
     steps:
       - name: Check out GitHub mirror
@@ -135,7 +136,7 @@ jobs:
           name: pioneer-pages-${{ github.run_id }}
           path: public
 
-      - name: Core-site functional smoke
+      - name: Production artifact browser smoke
         shell: bash
         env:
           BASE_URL: http://127.0.0.1:8095
@@ -155,13 +156,13 @@ jobs:
             cat /tmp/adriano-smoke-server.log
             exit 1
           fi
-          npm run test:smoke-functional
+          npx playwright test tests/e2e/smoke-ci.spec.js --reporter=line
 
-      - name: Upload core-site smoke evidence
+      - name: Upload production artifact smoke evidence
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: core-site-functional-smoke-${{ github.run_id }}
+          name: production-artifact-smoke-${{ github.run_id }}
           path: |
             test-results/
             playwright-report/
