@@ -1,2 +1,0 @@
-// Dummy JAWT native library for CheerpJ 4.2
-console.log("CheerpJ: Loaded dummy jawt.js");

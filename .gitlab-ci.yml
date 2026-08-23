@@ -132,7 +132,10 @@ notify_indexnow:windows:
   stage: monitor
   tags: [windows]
   needs:
-    - health_check:windows
+    - job: health_check:windows
+      artifacts: false
+    - job: build:windows
+      artifacts: true
   script:
     - python submit_indexnow.py --submit
   rules:
