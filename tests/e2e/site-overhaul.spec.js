@@ -85,7 +85,12 @@ test.describe('production site overhaul', () => {
 
   test('Earth uses native NASA surface detail with independent clouds and atmosphere', async ({ page }) => {
     await page.goto('/education.html', { waitUntil: 'domcontentloaded' });
-    await page.waitForFunction(() => window.viewer?.currentPlanet === 'Earth' && Boolean(window.viewer?.planetMesh?.userData?.surfaceImage));
+    await page.waitForFunction(() => (
+      window.viewer?.currentPlanet === 'Earth'
+      && Boolean(window.viewer?.planetMesh?.userData?.surfaceImage)
+      && Boolean(window.viewer?.cloudMesh?.material?.map)
+      && Boolean(window.viewer?.atmosphereMesh?.material?.isShaderMaterial)
+    ));
     const state = await page.evaluate(() => ({
       surface: window.viewer.planetMesh.userData.surfaceImage,
       map: Boolean(window.viewer.planetMesh.material.map),
