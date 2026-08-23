@@ -19,6 +19,7 @@ function excludeLargeFiles() {
 }
 
 export default defineConfig({
+  publicDir: false,
   plugins: [
     excludeLargeFiles(),
     legacy({
@@ -62,7 +63,6 @@ export default defineConfig({
     target: 'esnext',
     outDir: 'dist',
     assetsDir: 'assets',
-    publicDir: 'public',
     assetsInclude: ['**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.svg', '**/*.ico', '**/*.json', '**/*.txt'],
     assetsExclude: ['**/*.glb', '**/*.gltf', '**/assets/models/**'],
     sourcemap: false,
@@ -76,9 +76,11 @@ export default defineConfig({
     },
     rollupOptions: {
       output: {
-        manualChunks: {
-          'three-core': ['three'],
-          'supabase': ['@supabase/supabase-js']
+        manualChunks(id) {
+          const normalized = id.replaceAll('\\', '/');
+          if (normalized.includes('/node_modules/three/')) return 'three-core';
+          if (normalized.includes('/node_modules/@supabase/')) return 'supabase';
+          return undefined;
         },
         chunkFileNames: 'assets/[name]-[hash].js',
         entryFileNames: 'assets/[name]-[hash].js',

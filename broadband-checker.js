@@ -929,10 +929,12 @@ class BroadbandChecker {
 
         if (this.filteredProviders.length === 0) {
             resultsContainer.innerHTML = '';
+            noResults.hidden = false;
             noResults.style.display = 'block';
             return;
         }
 
+        noResults.hidden = true;
         noResults.style.display = 'none';
         resultsContainer.innerHTML = this.filteredProviders.map((provider, index) =>
             this.createProviderCardHTML(provider, index)

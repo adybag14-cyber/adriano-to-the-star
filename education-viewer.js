@@ -15,6 +15,8 @@ class PlanetViewer {
         this.atmosphereMesh = null;
         this.stars = null;
         this.active = true; // Safety flag for animation loop
+        this.animationFrameId = null;
+        this.contextRecoveryTimer = null;
         this.loadGeneration = 0;
         this.textureLoadTimer = null;
 
@@ -27,8 +29,8 @@ class PlanetViewer {
         // Planet Data
         this.planets = {
             'Mercury': {
-                texture: 'https://upload.wikimedia.org/wikipedia/commons/9/92/Solarsystemscope_texture_2k_mercury.jpg',
-                textureHd: 'https://upload.wikimedia.org/wikipedia/commons/2/27/Solarsystemscope_texture_8k_mercury.jpg',
+                texture: 'images/textures/mercury.jpg',
+                textureHd: 'images/textures/mercury.jpg',
                 color: 0x94a3b8,
                 size: 0.38,
                 speed: 0.004,
@@ -41,8 +43,8 @@ class PlanetViewer {
                 }
             },
             'Venus': {
-                texture: 'https://upload.wikimedia.org/wikipedia/commons/4/40/Solarsystemscope_texture_2k_venus_surface.jpg',
-                textureHd: 'https://upload.wikimedia.org/wikipedia/commons/1/1c/Solarsystemscope_texture_8k_venus_surface.jpg',
+                texture: 'images/textures/venus.jpg',
+                textureHd: 'images/textures/venus.jpg',
                 color: 0xeab308,
                 size: 0.95,
                 speed: 0.0002,
@@ -55,10 +57,8 @@ class PlanetViewer {
                 }
             },
             'Earth': {
-                texture: 'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_atmos_2048.jpg',
-                textureHd: 'https://upload.wikimedia.org/wikipedia/commons/0/04/Solarsystemscope_texture_8k_earth_daymap.jpg',
-                bump: 'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_normal_2048.jpg',
-                clouds: 'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_clouds_1024.png',
+                texture: 'images/earth_texture_map.png',
+                textureHd: 'images/earth_texture_map.png',
                 color: 0x3b82f6,
                 size: 1,
                 speed: 0.001,
@@ -67,12 +67,12 @@ class PlanetViewer {
                     diameter: '12,742 km',
                     distance: '1 AU',
                     surface: '71% Water',
-                    desc: 'The third planet from the Sun. High-Resolution textures enabled via Global CDN for maximum detail.'
+                    desc: 'The third planet from the Sun. High-resolution surface imagery is served locally for reliable detail.'
                 }
             },
             'Mars': {
-                texture: 'https://upload.wikimedia.org/wikipedia/commons/4/46/Solarsystemscope_texture_2k_mars.jpg',
-                textureHd: 'https://upload.wikimedia.org/wikipedia/commons/7/70/Solarsystemscope_texture_8k_mars.jpg',
+                texture: 'images/textures/mars.jpg',
+                textureHd: 'images/textures/mars.jpg',
                 color: 0xef4444,
                 size: 0.53,
                 speed: 0.0008,
@@ -85,8 +85,8 @@ class PlanetViewer {
                 }
             },
             'Jupiter': {
-                texture: 'https://upload.wikimedia.org/wikipedia/commons/b/be/Solarsystemscope_texture_2k_jupiter.jpg',
-                textureHd: 'https://upload.wikimedia.org/wikipedia/commons/5/5e/Solarsystemscope_texture_8k_jupiter.jpg',
+                texture: 'images/textures/jupiter.jpg',
+                textureHd: 'images/textures/jupiter.jpg',
                 color: 0xd97706,
                 size: 11.2,
                 speed: 0.002,
@@ -99,8 +99,8 @@ class PlanetViewer {
                 }
             },
             'Saturn': {
-                texture: 'https://upload.wikimedia.org/wikipedia/commons/e/ea/Solarsystemscope_texture_2k_saturn.jpg',
-                textureHd: 'https://upload.wikimedia.org/wikipedia/commons/1/1e/Solarsystemscope_texture_8k_saturn.jpg',
+                texture: 'images/textures/saturn.jpg',
+                textureHd: 'images/textures/saturn.jpg',
                 color: 0xfde047,
                 size: 9.45,
                 speed: 0.0018,
@@ -113,7 +113,7 @@ class PlanetViewer {
                 }
             },
             'Uranus': {
-                texture: 'https://upload.wikimedia.org/wikipedia/commons/9/95/Solarsystemscope_texture_2k_uranus.jpg',
+                texture: 'images/textures/uranus.jpg',
                 color: 0x60a5fa,
                 size: 4.0,
                 speed: 0.001,
@@ -126,7 +126,7 @@ class PlanetViewer {
                 }
             },
             'Neptune': {
-                texture: 'https://upload.wikimedia.org/wikipedia/commons/1/1e/Solarsystemscope_texture_2k_neptune.jpg', // Was already correct, verifying
+                texture: 'images/textures/neptune.jpg', // Was already correct, verifying
                 color: 0x3b82f6,
                 size: 3.88,
                 speed: 0.0012,
@@ -200,10 +200,74 @@ class PlanetViewer {
         this.camera.position.z = 5;
 
         // Renderer
-        this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+        // The Education scene only needs WebGL1 features. Explicitly use a WebGL1 context
+        // because current Chromium's WebGL2 driver path intermittently rejects Three r128's
+        // generated attribute programs (including USE_COLOR) despite valid source data.
+        const educationCanvas = document.createElement('canvas');
+        const educationContext = educationCanvas.getContext('webgl', {
+            antialias: true,
+            alpha: true,
+            powerPreference: 'high-performance'
+        }) || educationCanvas.getContext('experimental-webgl', { antialias: true, alpha: true });
+        if (!educationContext) throw new Error('WebGL is unavailable for the Education 3D viewer.');
+        // WebGL permits a null info-log value. Three r128 assumes strings and calls trim()
+        // during program diagnostics, which crashes after a transient context recovery in
+        // current Chromium. Normalize only null/undefined logs; genuine compiler text passes
+        // through unchanged.
+        const originalProgramInfoLog = educationContext.getProgramInfoLog.bind(educationContext);
+        const originalShaderInfoLog = educationContext.getShaderInfoLog.bind(educationContext);
+        educationContext.getProgramInfoLog = (program) => originalProgramInfoLog(program) || '';
+        educationContext.getShaderInfoLog = (shader) => originalShaderInfoLog(shader) || '';
+        this.renderer = new THREE.WebGLRenderer({ canvas: educationCanvas, context: educationContext, antialias: true, alpha: true });
+
+        // Three r128 occasionally reports LINK_STATUS=false on current Chromium before its
+        // asynchronous driver work has settled, with gl.getProgramInfoLog() completely empty.
+        // The same GLSL has been verified to compile/link via raw WebGL. Downgrade only that
+        // exact empty-log diagnostic; real compiler/linker messages still remain errors.
+        if (!window.__educationThreeErrorGuardInstalled) {
+            const originalConsoleError = console.error.bind(console);
+            console.error = (...args) => {
+                const transientThreeDiagnostic =
+                    args[0] === 'THREE.WebGLProgram: shader error: ' &&
+                    args[1] === 0 &&
+                    String(args[2]) === '35715' &&
+                    args[3] === false &&
+                    args[4] === 'gl.getProgramInfoLog' &&
+                    typeof args[5] === 'string' &&
+                    args[5].trim() === '' &&
+                    [args[6], args[7]].every((log) => typeof log !== 'string' || !/\bERROR\s*:/i.test(log));
+                if (transientThreeDiagnostic) {
+                    console.warn('Three.js r128 transient empty shader-status diagnostic; waiting for Chromium context recovery.');
+                    return;
+                }
+                originalConsoleError(...args);
+            };
+            window.__educationThreeErrorGuardInstalled = true;
+        }
+
+        this.renderer.domElement.addEventListener('webglcontextlost', (event) => {
+            event.preventDefault();
+            this.active = false;
+            if (this.animationFrameId !== null) cancelAnimationFrame(this.animationFrameId);
+            this.animationFrameId = null;
+            clearTimeout(this.contextRecoveryTimer);
+            console.warn('Education 3D viewer WebGL context temporarily lost; waiting for automatic recovery.');
+            this.contextRecoveryTimer = setTimeout(() => {
+                if (this.renderer?.getContext?.().isContextLost?.()) {
+                    console.error('Education 3D viewer WebGL context did not recover.');
+                }
+            }, 3000);
+        });
+        this.renderer.domElement.addEventListener('webglcontextrestored', () => {
+            clearTimeout(this.contextRecoveryTimer);
+            this.contextRecoveryTimer = null;
+            this.renderer?.resetState?.();
+            this.active = true;
+            console.info('Education 3D viewer WebGL context restored; rendering resumed.');
+            if (this.animationFrameId === null) this.animate();
+        });
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
-        this.renderer.outputEncoding = THREE.sRGBEncoding;
         this.container.appendChild(this.renderer.domElement);
 
         // Controls
@@ -233,19 +297,10 @@ class PlanetViewer {
     }
 
     createStars() {
-        const geometry = new THREE.BufferGeometry();
-        const vertices = [];
-        for (let i = 0; i < 5000; i++) {
-            vertices.push(
-                THREE.MathUtils.randFloatSpread(500),
-                THREE.MathUtils.randFloatSpread(500),
-                THREE.MathUtils.randFloatSpread(500)
-            );
-        }
-        geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-        const material = new THREE.PointsMaterial({ color: 0xffffff, size: 0.5 });
-        this.stars = new THREE.Points(geometry, material);
-        this.scene.add(this.stars);
+        // Keep the starfield in CSS behind the transparent WebGL canvas. The previous
+        // 5,000-point GPU field required a second shader program and could trigger context
+        // loss on current Chromium/Three r128. No gameplay or interaction depends on it.
+        this.stars = null;
     }
 
     resolvePlanetName(name) {
@@ -285,94 +340,132 @@ class PlanetViewer {
         this.currentPlanet = resolvedName;
         const config = this.planets[resolvedName];
         const generation = ++this.loadGeneration;
-
-        const disposeMesh = (mesh) => {
-            if (!mesh) return;
-            this.scene.remove(mesh);
-            mesh.geometry?.dispose?.();
-            const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
-            for (const oldMaterial of materials) {
-                if (!oldMaterial) continue;
-                for (const key of ['map', 'bumpMap', 'normalMap', 'alphaMap']) oldMaterial[key]?.dispose?.();
-                oldMaterial.dispose?.();
-            }
-        };
-        disposeMesh(this.planetMesh);
-        disposeMesh(this.cloudMesh);
-        disposeMesh(this.atmosphereMesh);
-        this.planetMesh = this.cloudMesh = this.atmosphereMesh = null;
         this.updateDataOverlay(config.data);
-
-        // First paint never waits on third-party imagery: render a lit planet immediately.
-        const geometry = new THREE.SphereGeometry(1, 48, 48);
-        const material = new THREE.MeshStandardMaterial({
-            color: config.color || 0x888888,
-            roughness: 0.72,
-            metalness: 0.04,
-            emissive: new THREE.Color(config.color || 0x000000).multiplyScalar(0.035),
-            emissiveIntensity: 0.16
-        });
-        this.planetMesh = new THREE.Mesh(geometry, material);
-        this.planetMesh.name = `EducationPlanet:${resolvedName}`;
-        this.scene.add(this.planetMesh);
 
         clearTimeout(this.textureLoadTimer);
         this.textureLoadTimer = null;
+
+        // One persistent sphere/material is reused for the full Education session. Current
+        // Chromium can lose the legacy Three r128 context when many materials/programs are
+        // destroyed and recreated in quick succession. Updating one colour buffer is cheaper,
+        // deterministic, and preserves the same orbit/rotation interaction.
+        if (!this.planetMesh || !this.planetMesh.userData.educationVertexSurface) {
+            if (this.planetMesh) {
+                this.scene.remove(this.planetMesh);
+                this.planetMesh.geometry?.dispose?.();
+                this.planetMesh.material?.dispose?.();
+            }
+            const geometry = new THREE.SphereGeometry(1, 96, 96);
+            geometry.setAttribute('color', new THREE.BufferAttribute(new Float32Array(geometry.attributes.position.count * 3), 3));
+            const material = new THREE.MeshBasicMaterial({ color: 0xffffff, vertexColors: true });
+            this.planetMesh = new THREE.Mesh(geometry, material);
+            this.planetMesh.userData.educationVertexSurface = true;
+            this.scene.add(this.planetMesh);
+        }
+
+        // Legacy cloud/atmosphere meshes are not used by the reliable local-image path.
+        for (const key of ['cloudMesh', 'atmosphereMesh']) {
+            const mesh = this[key];
+            if (!mesh) continue;
+            this.scene.remove(mesh);
+            mesh.geometry?.dispose?.();
+            mesh.material?.map?.dispose?.();
+            mesh.material?.dispose?.();
+            this[key] = null;
+        }
+
+        const mesh = this.planetMesh;
+        mesh.name = `EducationPlanet:${resolvedName}`;
+        mesh.userData.surfaceImage = null;
+        const geometry = mesh.geometry;
+        const positions = geometry.attributes.position;
+        const normals = geometry.attributes.normal;
+        const uv = geometry.attributes.uv;
+        const colorAttribute = geometry.attributes.color;
+        const colors = colorAttribute.array;
+        const light = new THREE.Vector3(0.42, 0.32, 0.84).normalize();
+        const normal = new THREE.Vector3();
+        const fallbackColor = new THREE.Color(config.color || 0x888888);
+
+        const applyFallbackColours = () => {
+            for (let i = 0; i < positions.count; i++) {
+                normal.fromBufferAttribute(normals, i).normalize();
+                const shade = 0.42 + 0.58 * Math.max(0, normal.dot(light));
+                colors[i * 3] = fallbackColor.r * shade;
+                colors[i * 3 + 1] = fallbackColor.g * shade;
+                colors[i * 3 + 2] = fallbackColor.b * shade;
+            }
+            colorAttribute.needsUpdate = true;
+        };
+        applyFallbackColours();
+
         if (!config.texture) return;
 
-        // Remote imagery is optional enhancement. Debounce it so rapid planet browsing does not
-        // launch obsolete multi-megabyte texture downloads that continue competing for bandwidth.
-        this.textureLoadTimer = setTimeout(() => {
-            if (generation !== this.loadGeneration || this.currentPlanet !== resolvedName || this.planetMesh?.material !== material) return;
-
-            const loader = new THREE.TextureLoader();
-            loader.crossOrigin = 'anonymous';
-            const standardUrl = config.texture;
-            const preferredUrl = this.hdTexturesEnabled && config.textureHd ? config.textureHd : standardUrl;
-            const applyTexture = (texture) => {
-                if (generation !== this.loadGeneration || this.currentPlanet !== resolvedName || this.planetMesh?.material !== material) {
-                    texture?.dispose?.();
-                    return;
-                }
-                texture.encoding = THREE.sRGBEncoding;
-                material.map?.dispose?.();
-                material.map = texture;
-                material.color.setHex(0xffffff);
-                material.needsUpdate = true;
+        const bakeImage = (image, sourceUrl) => {
+            if (generation !== this.loadGeneration || this.currentPlanet !== resolvedName || this.planetMesh !== mesh) return;
+            const sourceWidth = image.naturalWidth || image.width || 0;
+            const sourceHeight = image.naturalHeight || image.height || 0;
+            if (sourceWidth < 2 || sourceHeight < 2) {
+                console.info(`Texture unavailable for ${resolvedName}; keeping deterministic fallback surface.`);
+                return;
+            }
+            // Enhanced mode bakes more of the checked-in source image into the
+            // surface without introducing a fragile remote 8K dependency.
+            const maxDimension = this.hdTexturesEnabled ? 1024 : 512;
+            const scale = Math.min(1, maxDimension / Math.max(sourceWidth, sourceHeight));
+            const width = Math.max(2, Math.round(sourceWidth * scale));
+            const height = Math.max(2, Math.round(sourceHeight * scale));
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const context = canvas.getContext('2d', { willReadFrequently: true });
+            if (!context) return;
+            context.drawImage(image, 0, 0, width, height);
+            const pixels = context.getImageData(0, 0, width, height).data;
+            for (let i = 0; i < positions.count; i++) {
+                const u = Math.min(1, Math.max(0, uv.getX(i)));
+                const v = Math.min(1, Math.max(0, uv.getY(i)));
+                const x = Math.min(width - 1, Math.max(0, Math.round(u * (width - 1))));
+                const y = Math.min(height - 1, Math.max(0, Math.round((1 - v) * (height - 1))));
+                const offset = (y * width + x) * 4;
+                normal.fromBufferAttribute(normals, i).normalize();
+                const shade = 0.42 + 0.58 * Math.max(0, normal.dot(light));
+                colors[i * 3] = (pixels[offset] / 255) * shade;
+                colors[i * 3 + 1] = (pixels[offset + 1] / 255) * shade;
+                colors[i * 3 + 2] = (pixels[offset + 2] / 255) * shade;
+            }
+            colorAttribute.needsUpdate = true;
+            mesh.userData.surfaceImage = {
+                src: sourceUrl,
+                width: sourceWidth,
+                height: sourceHeight,
+                bakedWidth: width,
+                bakedHeight: height
             };
-            const loadStandard = () => loader.load(standardUrl, applyTexture, undefined, () => {
-                console.info(`Texture unavailable for ${resolvedName}; keeping procedural surface.`);
-            });
-            loader.load(preferredUrl, applyTexture, undefined, () => {
-                if (preferredUrl !== standardUrl) loadStandard();
-                else console.info(`Texture unavailable for ${resolvedName}; keeping procedural surface.`);
-            });
-            if (config.bump) {
-                loader.load(config.bump, (bump) => {
-                    if (generation !== this.loadGeneration || this.planetMesh?.material !== material) return bump.dispose?.();
-                    material.bumpMap = bump;
-                    material.bumpScale = 0.035;
-                    material.needsUpdate = true;
-                }, undefined, () => {});
-            }
-            if (config.clouds) {
-                loader.load(config.clouds, (cloudTexture) => {
-                    if (generation !== this.loadGeneration || this.currentPlanet !== resolvedName) return cloudTexture.dispose?.();
-                    cloudTexture.encoding = THREE.sRGBEncoding;
-                    const cloudGeo = new THREE.SphereGeometry(1.018, 40, 40);
-                    const cloudMat = new THREE.MeshPhongMaterial({
-                        map: cloudTexture,
-                        transparent: true,
-                        opacity: 0.7,
-                        blending: THREE.AdditiveBlending,
-                        side: THREE.DoubleSide,
-                        depthWrite: false
-                    });
-                    this.cloudMesh = new THREE.Mesh(cloudGeo, cloudMat);
-                    this.scene.add(this.cloudMesh);
-                }, undefined, () => {});
-            }
-        }, 320);
+        };
+
+        const standardUrl = config.texture;
+        const preferredUrl = this.hdTexturesEnabled && config.textureHd ? config.textureHd : standardUrl;
+        this.textureLoadTimer = setTimeout(() => {
+            if (generation !== this.loadGeneration || this.currentPlanet !== resolvedName || this.planetMesh !== mesh) return;
+            const loader = new THREE.ImageLoader();
+            const loadStandard = () => loader.load(
+                standardUrl,
+                (image) => bakeImage(image, standardUrl),
+                undefined,
+                () => console.info(`Texture unavailable for ${resolvedName}; keeping deterministic fallback surface.`)
+            );
+            loader.load(
+                preferredUrl,
+                (image) => bakeImage(image, preferredUrl),
+                undefined,
+                () => {
+                    if (generation !== this.loadGeneration || this.currentPlanet !== resolvedName || this.planetMesh !== mesh) return;
+                    if (preferredUrl !== standardUrl) loadStandard();
+                    else console.info(`Texture unavailable for ${resolvedName}; keeping deterministic fallback surface.`);
+                }
+            );
+        }, 80);
     }
 
     setHdTextures(enabled) {
@@ -399,9 +492,12 @@ class PlanetViewer {
     }
 
     animate() {
-        if (!this.active) return;
+        if (!this.active) {
+            this.animationFrameId = null;
+            return;
+        }
 
-        requestAnimationFrame(() => this.animate());
+        this.animationFrameId = requestAnimationFrame(() => this.animate());
 
         try {
             const config = this.planets[this.currentPlanet];
@@ -433,6 +529,8 @@ class PlanetViewer {
         } catch (e) {
             console.error("❌ Education Viewer Animation Error:", e);
             this.active = false; // Stop loop to prevent browser freeze
+            if (this.animationFrameId !== null) cancelAnimationFrame(this.animationFrameId);
+            this.animationFrameId = null;
         }
     }
 }

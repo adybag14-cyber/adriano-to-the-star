@@ -9,6 +9,7 @@ $ErrorActionPreference = "Stop"
 Set-Location -LiteralPath (Split-Path -Parent $PSScriptRoot)
 
 $Utf8WithoutBom = [System.Text.UTF8Encoding]::new($false)
+$StrictUtf8 = [System.Text.UTF8Encoding]::new($false, $true)
 $UserAgent = "AdrianoToTheStar-PagesBuild/1.0"
 
 function Read-Snapshot {
@@ -32,7 +33,12 @@ function Invoke-JsonFeed {
     if ($response.StatusCode -lt 200 -or $response.StatusCode -ge 300) {
         throw "HTTP $($response.StatusCode)"
     }
-    return $response.Content | ConvertFrom-Json
+    # Windows PowerShell 5.1 treats application/json without a charset as an
+    # ANSI response. Decode the response bytes explicitly so punctuation and
+    # non-ASCII article text cannot be published as mojibake.
+    $contentBytes = $response.RawContentStream.ToArray()
+    $json = $StrictUtf8.GetString($contentBytes)
+    return $json | ConvertFrom-Json
 }
 
 function Get-FallbackByType {
@@ -125,7 +131,7 @@ try {
     $launchData = Invoke-JsonFeed -Url "https://ll.thespacedevs.com/2.2.0/launch/upcoming/?limit=2&mode=detailed"
     foreach ($launch in @($launchData.results | Select-Object -First 2)) {
         $window = if ($launch.window_start) {
-            ([DateTimeOffset]::Parse([string]$launch.window_start)).UtcDateTime.ToString("yyyy-MM-dd HH:mm 'UTC'")
+            ([DateTimeOffset]$launch.window_start).UtcDateTime.ToString("yyyy-MM-dd HH:mm 'UTC'")
         }
         else { "TBD" }
         $pad = if ($launch.pad -and $launch.pad.name) { [string]$launch.pad.name } else { "TBD" }

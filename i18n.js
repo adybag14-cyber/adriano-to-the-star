@@ -4,7 +4,12 @@
   window.__itaI18nLoaded = true;
 
   const sourceScript = document.currentScript;
-  const assetBase = sourceScript?.src ? new URL('.', sourceScript.src) : new URL('.', window.location.href);
+  const sourceUrl = sourceScript?.src ? new URL(sourceScript.src) : null;
+  const assetBase = sourceUrl ? new URL('.', sourceUrl) : new URL('.', window.location.href);
+  // The Pages build versions JavaScript and CSS with the release SHA. Carry that
+  // version into translation requests as well so an edge-cached, older locale file
+  // can never leave the page in a mixed language after switching back to English.
+  const assetVersion = sourceUrl?.searchParams.get('v') || '';
   const LANGUAGES = [
     { code: 'en', name: 'English' }, { code: 'es', name: 'Español' }, { code: 'fr', name: 'Français' },
     { code: 'de', name: 'Deutsch' }, { code: 'it', name: 'Italiano' }, { code: 'pt', name: 'Português' },
@@ -116,6 +121,7 @@
       if (this.translations[language]) return this.translations[language];
       try {
         const url = new URL(`translations/${language}.json`, assetBase);
+        if (assetVersion) url.searchParams.set('v', assetVersion);
         const response = await fetch(url.href, { cache: 'no-store' });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
@@ -219,7 +225,16 @@
           this.applyTranslations(document);
         });
       });
-      this.observer.observe(document.body, { childList: true, subtree: true });
+      const target = document.body;
+      if (!target || typeof target.nodeType !== 'number') return;
+      try {
+        this.observer.observe(target, { childList: true, subtree: true });
+      } catch (error) {
+        // Some embedded-document transitions briefly expose a non-observable body
+        // wrapper. Initial translations are already applied; only dynamic rebinding
+        // is skipped for that page rather than surfacing a global runtime error.
+        console.info('[ITA i18n] Dynamic translation observation is unavailable.', error?.message || error);
+      }
     }
 
     async setLanguage(language) {

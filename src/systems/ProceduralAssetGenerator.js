@@ -1,7 +1,7 @@
 /**
  * 🎨 PROCEDURAL ASSET GENERATOR
  * Era II: The Living Cosmos - Asset Production
- * 
+ *
  * Procedurally generates 3D models, textures, materials, and audio at runtime.
  * Eliminates need for external asset files while maintaining visual quality.
  */
@@ -12,13 +12,13 @@ class ProceduralAssetGenerator {
     constructor(game) {
         this.game = game;
         this.generatedAssets = new Map();
-        
+
         // Texture cache
         this.textureCache = new Map();
-        
+
         // Audio context
         this.audioContext = null;
-        
+
         console.log('🎨 Procedural Asset Generator: Initialized');
     }
 
@@ -47,7 +47,7 @@ class ProceduralAssetGenerator {
      */
     generateModel(type, options = {}) {
         const key = `${type}_${JSON.stringify(options)}`;
-        
+
         if (this.generatedAssets.has(key)) {
             return this.generatedAssets.get(key);
         }
@@ -92,9 +92,9 @@ class ProceduralAssetGenerator {
      */
     generateHabitat(options) {
         const { variant = 'living-quarter', scale = 1 } = options;
-        
+
         const group = new THREE.Group();
-        
+
         // Main structure
         const geometry = new THREE.BoxGeometry(4 * scale, 3 * scale, 4 * scale);
         const material = new THREE.MeshStandardMaterial({
@@ -102,10 +102,10 @@ class ProceduralAssetGenerator {
             roughness: 0.7,
             metalness: 0.3
         });
-        
+
         const main = new THREE.Mesh(geometry, material);
         group.add(main);
-        
+
         // Windows
         const windowGeometry = new THREE.PlaneGeometry(1, 1);
         const windowMaterial = new THREE.MeshStandardMaterial({
@@ -115,7 +115,7 @@ class ProceduralAssetGenerator {
             emissive: 0x88ccff,
             emissiveIntensity: 0.3
         });
-        
+
         for (let i = 0; i < 4; i++) {
             const window = new THREE.Mesh(windowGeometry, windowMaterial);
             window.position.set(
@@ -126,7 +126,7 @@ class ProceduralAssetGenerator {
             window.lookAt(0, 0.5 * scale, 0);
             group.add(window);
         }
-        
+
         // Details based on variant
         if (variant === 'bio-dome') {
             const domeGeometry = new THREE.SphereGeometry(2 * scale, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2);
@@ -136,12 +136,12 @@ class ProceduralAssetGenerator {
                 opacity: 0.3,
                 side: THREE.DoubleSide
             });
-            
+
             const dome = new THREE.Mesh(domeGeometry, domeMaterial);
             dome.position.y = 1.5 * scale;
             group.add(dome);
         }
-        
+
         return group;
     }
 
@@ -150,9 +150,9 @@ class ProceduralAssetGenerator {
      */
     generateShip(options) {
         const { classType = 'interceptor', scale = 1 } = options;
-        
+
         const group = new THREE.Group();
-        
+
         // Hull
         const hullGeometry = new THREE.ConeGeometry(1 * scale, 4 * scale, 8);
         const hullMaterial = new THREE.MeshStandardMaterial({
@@ -160,11 +160,11 @@ class ProceduralAssetGenerator {
             roughness: 0.5,
             metalness: 0.7
         });
-        
+
         const hull = new THREE.Mesh(hullGeometry, hullMaterial);
         hull.rotation.x = Math.PI / 2;
         group.add(hull);
-        
+
         // Cockpit
         const cockpitGeometry = new THREE.SphereGeometry(0.5 * scale, 16, 16);
         const cockpitMaterial = new THREE.MeshStandardMaterial({
@@ -174,11 +174,11 @@ class ProceduralAssetGenerator {
             emissive: 0x88ccff,
             emissiveIntensity: 0.2
         });
-        
+
         const cockpit = new THREE.Mesh(cockpitGeometry, cockpitMaterial);
         cockpit.position.z = 1 * scale;
         group.add(cockpit);
-        
+
         // Engines
         const engineGeometry = new THREE.CylinderGeometry(0.3 * scale, 0.2 * scale, 1 * scale, 8);
         const engineMaterial = new THREE.MeshStandardMaterial({
@@ -186,7 +186,7 @@ class ProceduralAssetGenerator {
             roughness: 0.3,
             metalness: 0.9
         });
-        
+
         for (let i = 0; i < 2; i++) {
             const engine = new THREE.Mesh(engineGeometry, engineMaterial);
             engine.position.x = (i === 0 ? -1 : 1) * 0.5 * scale;
@@ -194,7 +194,7 @@ class ProceduralAssetGenerator {
             engine.rotation.x = Math.PI / 2;
             group.add(engine);
         }
-        
+
         // Engine glow
         const glowGeometry = new THREE.SphereGeometry(0.2 * scale, 8, 8);
         const glowMaterial = new THREE.MeshBasicMaterial({
@@ -202,14 +202,14 @@ class ProceduralAssetGenerator {
             transparent: true,
             opacity: 0.8
         });
-        
+
         for (let i = 0; i < 2; i++) {
             const glow = new THREE.Mesh(glowGeometry, glowMaterial);
             glow.position.x = (i === 0 ? -1 : 1) * 0.5 * scale;
             glow.position.z = -2 * scale;
             group.add(glow);
         }
-        
+
         return group;
     }
 
@@ -218,9 +218,9 @@ class ProceduralAssetGenerator {
      */
     generateCharacter(options) {
         const { type = 'pioneer', scale = 1 } = options;
-        
+
         const group = new THREE.Group();
-        
+
         // Body
         const bodyGeometry = new THREE.CapsuleGeometry(0.3 * scale, 0.6 * scale, 8, 16);
         const bodyMaterial = new THREE.MeshStandardMaterial({
@@ -228,22 +228,22 @@ class ProceduralAssetGenerator {
             roughness: 0.6,
             metalness: 0.4
         });
-        
+
         const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
         body.position.y = 0.6 * scale;
         group.add(body);
-        
+
         // Head
         const headGeometry = new THREE.SphereGeometry(0.25 * scale, 16, 16);
         const headMaterial = new THREE.MeshStandardMaterial({
             color: 0xffcc99,
             roughness: 0.8
         });
-        
+
         const head = new THREE.Mesh(headGeometry, headMaterial);
         head.position.y = 1.2 * scale;
         group.add(head);
-        
+
         // Visor
         const visorGeometry = new THREE.SphereGeometry(0.2 * scale, 16, 16, 0, Math.PI * 2, 0, Math.PI / 2);
         const visorMaterial = new THREE.MeshStandardMaterial({
@@ -254,13 +254,13 @@ class ProceduralAssetGenerator {
             emissiveIntensity: 0.3,
             side: THREE.DoubleSide
         });
-        
+
         const visor = new THREE.Mesh(visorGeometry, visorMaterial);
         visor.position.y = 1.2 * scale;
         visor.position.z = 0.1 * scale;
         visor.rotation.x = -Math.PI / 4;
         group.add(visor);
-        
+
         return group;
     }
 
@@ -269,9 +269,9 @@ class ProceduralAssetGenerator {
      */
     generateProp(options) {
         const { type = 'console', scale = 1 } = options;
-        
+
         const group = new THREE.Group();
-        
+
         // Base
         const baseGeometry = new THREE.BoxGeometry(2 * scale, 0.1 * scale, 1 * scale);
         const baseMaterial = new THREE.MeshStandardMaterial({
@@ -279,10 +279,10 @@ class ProceduralAssetGenerator {
             roughness: 0.5,
             metalness: 0.7
         });
-        
+
         const base = new THREE.Mesh(baseGeometry, baseMaterial);
         group.add(base);
-        
+
         // Screen
         const screenGeometry = new THREE.PlaneGeometry(1.8 * scale, 0.8 * scale);
         const screenMaterial = new THREE.MeshStandardMaterial({
@@ -291,12 +291,12 @@ class ProceduralAssetGenerator {
             emissiveIntensity: 0.5,
             side: THREE.DoubleSide
         });
-        
+
         const screen = new THREE.Mesh(screenGeometry, screenMaterial);
         screen.position.y = 0.5 * scale;
         screen.rotation.x = -Math.PI / 6;
         group.add(screen);
-        
+
         // Holographic projection
         const hologramGeometry = new THREE.ConeGeometry(0.3 * scale, 1 * scale, 8, 1, true);
         const hologramMaterial = new THREE.MeshBasicMaterial({
@@ -305,12 +305,12 @@ class ProceduralAssetGenerator {
             opacity: 0.3,
             side: THREE.DoubleSide
         });
-        
+
         const hologram = new THREE.Mesh(hologramGeometry, hologramMaterial);
         hologram.position.y = 1 * scale;
         hologram.rotation.x = Math.PI;
         group.add(hologram);
-        
+
         return group;
     }
 
@@ -319,41 +319,41 @@ class ProceduralAssetGenerator {
      */
     generateVehicle(options) {
         const { type = 'rover', scale = 1 } = options;
-        
+
         const group = new THREE.Group();
-        
+
         // Chassis
         const chassisGeometry = new THREE.BoxGeometry(2 * scale, 0.5 * scale, 3 * scale);
         const chassisMaterial = new THREE.MeshStandardMaterial({
             color: 0x886644,
             roughness: 0.8
         });
-        
+
         const chassis = new THREE.Mesh(chassisGeometry, chassisMaterial);
         chassis.position.y = 0.5 * scale;
         group.add(chassis);
-        
+
         // Wheels
         const wheelGeometry = new THREE.CylinderGeometry(0.4 * scale, 0.4 * scale, 0.3 * scale, 16);
         const wheelMaterial = new THREE.MeshStandardMaterial({
             color: 0x222222,
             roughness: 0.9
         });
-        
+
         const wheelPositions = [
             [-0.8, 0, -1],
             [0.8, 0, -1],
             [-0.8, 0, 1],
             [0.8, 0, 1]
         ];
-        
+
         for (const pos of wheelPositions) {
             const wheel = new THREE.Mesh(wheelGeometry, wheelMaterial);
             wheel.position.set(pos[0] * scale, pos[1] * scale + 0.4 * scale, pos[2] * scale);
             wheel.rotation.z = Math.PI / 2;
             group.add(wheel);
         }
-        
+
         // Cabin
         const cabinGeometry = new THREE.BoxGeometry(1.5 * scale, 0.8 * scale, 1.5 * scale);
         const cabinMaterial = new THREE.MeshStandardMaterial({
@@ -361,11 +361,11 @@ class ProceduralAssetGenerator {
             transparent: true,
             opacity: 0.7
         });
-        
+
         const cabin = new THREE.Mesh(cabinGeometry, cabinMaterial);
         cabin.position.y = 1 * scale;
         group.add(cabin);
-        
+
         return group;
     }
 
@@ -374,9 +374,9 @@ class ProceduralAssetGenerator {
      */
     generateMegastructure(options) {
         const { type = 'dyson-ring', scale = 1 } = options;
-        
+
         const group = new THREE.Group();
-        
+
         if (type === 'dyson-ring') {
             // Ring segments
             const segmentCount = 12;
@@ -388,27 +388,27 @@ class ProceduralAssetGenerator {
                 emissive: 0x4444aa,
                 emissiveIntensity: 0.2
             });
-            
+
             for (let i = 0; i < segmentCount; i++) {
                 const angle = (i / segmentCount) * Math.PI * 2;
                 const segment = new THREE.Mesh(segmentGeometry, segmentMaterial);
-                
+
                 segment.position.x = Math.cos(angle) * 10 * scale;
                 segment.position.z = Math.sin(angle) * 10 * scale;
                 segment.rotation.y = angle;
-                
+
                 group.add(segment);
             }
-            
+
             // Central star
             const starGeometry = new THREE.SphereGeometry(2 * scale, 32, 32);
             const starMaterial = new THREE.MeshBasicMaterial({
                 color: 0xffff00
             });
-            
+
             const star = new THREE.Mesh(starGeometry, starMaterial);
             group.add(star);
-            
+
             // Star glow
             const glowGeometry = new THREE.SphereGeometry(3 * scale, 32, 32);
             const glowMaterial = new THREE.MeshBasicMaterial({
@@ -416,11 +416,11 @@ class ProceduralAssetGenerator {
                 transparent: true,
                 opacity: 0.3
             });
-            
+
             const glow = new THREE.Mesh(glowGeometry, glowMaterial);
             group.add(glow);
         }
-        
+
         return group;
     }
 
@@ -429,9 +429,9 @@ class ProceduralAssetGenerator {
      */
     generateWeapon(options) {
         const { type = 'laser-rifle', scale = 1 } = options;
-        
+
         const group = new THREE.Group();
-        
+
         // Barrel
         const barrelGeometry = new THREE.CylinderGeometry(0.05 * scale, 0.08 * scale, 2 * scale, 8);
         const barrelMaterial = new THREE.MeshStandardMaterial({
@@ -439,22 +439,22 @@ class ProceduralAssetGenerator {
             roughness: 0.3,
             metalness: 0.9
         });
-        
+
         const barrel = new THREE.Mesh(barrelGeometry, barrelMaterial);
         barrel.rotation.x = Math.PI / 2;
         group.add(barrel);
-        
+
         // Stock
         const stockGeometry = new THREE.BoxGeometry(0.2 * scale, 0.3 * scale, 1 * scale);
         const stockMaterial = new THREE.MeshStandardMaterial({
             color: 0x444444,
             roughness: 0.6
         });
-        
+
         const stock = new THREE.Mesh(stockGeometry, stockMaterial);
         stock.position.z = 1.2 * scale;
         group.add(stock);
-        
+
         // Energy cell
         const cellGeometry = new THREE.BoxGeometry(0.15 * scale, 0.15 * scale, 0.3 * scale);
         const cellMaterial = new THREE.MeshStandardMaterial({
@@ -462,11 +462,11 @@ class ProceduralAssetGenerator {
             emissive: 0x00ff00,
             emissiveIntensity: 0.5
         });
-        
+
         const cell = new THREE.Mesh(cellGeometry, cellMaterial);
         cell.position.y = 0.2 * scale;
         group.add(cell);
-        
+
         return group;
     }
 
@@ -475,37 +475,37 @@ class ProceduralAssetGenerator {
      */
     generateAlien(options) {
         const { type = 'stalker', scale = 1 } = options;
-        
+
         const group = new THREE.Group();
-        
+
         // Body
         const bodyGeometry = new THREE.CapsuleGeometry(0.5 * scale, 1 * scale, 8, 16);
         const bodyMaterial = new THREE.MeshStandardMaterial({
             color: 0x88ff88,
             roughness: 0.7
         });
-        
+
         const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
         body.position.y = 0.8 * scale;
         group.add(body);
-        
+
         // Legs
         const legGeometry = new THREE.CylinderGeometry(0.1 * scale, 0.08 * scale, 0.8 * scale, 8);
         const legMaterial = new THREE.MeshStandardMaterial({
             color: 0x66cc66,
             roughness: 0.8
         });
-        
+
         for (let i = 0; i < 6; i++) {
             const leg = new THREE.Mesh(legGeometry, legMaterial);
             const angle = (i / 6) * Math.PI * 2;
             leg.position.x = Math.cos(angle) * 0.4 * scale;
             leg.position.z = Math.sin(angle) * 0.4 * scale;
             leg.position.y = 0.3 * scale;
-            
+
             group.add(leg);
         }
-        
+
         // Eyes
         const eyeGeometry = new THREE.SphereGeometry(0.1 * scale, 8, 8);
         const eyeMaterial = new THREE.MeshBasicMaterial({
@@ -513,16 +513,16 @@ class ProceduralAssetGenerator {
             emissive: 0xff0000,
             emissiveIntensity: 0.8
         });
-        
+
         for (let i = 0; i < 3; i++) {
             const eye = new THREE.Mesh(eyeGeometry, eyeMaterial);
             eye.position.x = (i - 1) * 0.2 * scale;
             eye.position.y = 1.3 * scale;
             eye.position.z = 0.4 * scale;
-            
+
             group.add(eye);
         }
-        
+
         return group;
     }
 
@@ -531,14 +531,14 @@ class ProceduralAssetGenerator {
      */
     generateDefaultModel(options) {
         const { scale = 1 } = options;
-        
+
         const geometry = new THREE.BoxGeometry(1 * scale, 1 * scale, 1 * scale);
         const material = new THREE.MeshStandardMaterial({
             color: 0x888888,
             roughness: 0.5,
             metalness: 0.5
         });
-        
+
         return new THREE.Mesh(geometry, material);
     }
 
@@ -549,7 +549,7 @@ class ProceduralAssetGenerator {
      */
     generateTexture(type, options = {}) {
         const key = `texture_${type}_${JSON.stringify(options)}`;
-        
+
         if (this.textureCache.has(key)) {
             return this.textureCache.get(key);
         }
@@ -562,10 +562,10 @@ class ProceduralAssetGenerator {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
         const size = options.size || 512;
-        
+
         canvas.width = size;
         canvas.height = size;
-        
+
         switch (type) {
             case 'noise':
                 this.generateNoiseTexture(ctx, size, options);
@@ -591,11 +591,11 @@ class ProceduralAssetGenerator {
             default:
                 this.generateDefaultTexture(ctx, size, options);
         }
-        
+
         const texture = new THREE.CanvasTexture(canvas);
         texture.wrapS = THREE.RepeatWrapping;
         texture.wrapT = THREE.RepeatWrapping;
-        
+
         this.textureCache.set(key, texture);
         return texture;
     }
@@ -605,7 +605,7 @@ class ProceduralAssetGenerator {
      */
     async loadOnlineTexture(source, options) {
         const key = `online_${source}`;
-        
+
         if (this.textureCache.has(key)) {
             return this.textureCache.get(key);
         }
@@ -615,10 +615,10 @@ class ProceduralAssetGenerator {
             const texture = await new Promise((resolve, reject) => {
                 textureLoader.load(source, resolve, undefined, reject);
             });
-            
+
             texture.wrapS = THREE.RepeatWrapping;
             texture.wrapT = THREE.RepeatWrapping;
-            
+
             this.textureCache.set(key, texture);
             return texture;
         } catch (error) {
@@ -633,23 +633,23 @@ class ProceduralAssetGenerator {
      */
     generateNoiseTexture(ctx, size, options) {
         const { scale = 10, octaves = 4 } = options;
-        
+
         const imageData = ctx.createImageData(size, size);
-        
+
         for (let y = 0; y < size; y++) {
             for (let x = 0; x < size; x++) {
                 let value = 0;
                 let amplitude = 1;
                 let frequency = scale;
-                
+
                 for (let o = 0; o < octaves; o++) {
                     value += this.noise(x * frequency / size, y * frequency / size) * amplitude;
                     amplitude *= 0.5;
                     frequency *= 2;
                 }
-                
+
                 value = (value + 1) / 2;
-                
+
                 const i = (y * size + x) * 4;
                 imageData.data[i] = value * 255;
                 imageData.data[i + 1] = value * 255;
@@ -657,7 +657,7 @@ class ProceduralAssetGenerator {
                 imageData.data[i + 3] = 255;
             }
         }
-        
+
         ctx.putImageData(imageData, 0, 0);
     }
 
@@ -666,16 +666,17 @@ class ProceduralAssetGenerator {
      */
     generateMetalTexture(ctx, size, options) {
         const { color = 0x888888, roughness = 0.3 } = options;
-        
+
         const r = (color >> 16) & 255;
         const g = (color >> 8) & 255;
         const b = color & 255;
-        
+        const imageData = ctx.createImageData(size, size);
+
         for (let y = 0; y < size; y++) {
             for (let x = 0; x < size; x++) {
                 const noise = this.noise(x * 20 / size, y * 20 / size);
                 const variation = (noise - 0.5) * roughness * 100;
-                
+
                 const i = (y * size + x) * 4;
                 imageData.data[i] = Math.max(0, Math.min(255, r + variation));
                 imageData.data[i + 1] = Math.max(0, Math.min(255, g + variation));
@@ -683,7 +684,7 @@ class ProceduralAssetGenerator {
                 imageData.data[i + 3] = 255;
             }
         }
-        
+
         ctx.putImageData(imageData, 0, 0);
     }
 
@@ -692,21 +693,21 @@ class ProceduralAssetGenerator {
      */
     generateRockTexture(ctx, size, options) {
         const { color = 0x666666 } = options;
-        
+
         const r = (color >> 16) & 255;
         const g = (color >> 8) & 255;
         const b = color & 255;
-        
+
         const imageData = ctx.createImageData(size, size);
-        
+
         for (let y = 0; y < size; y++) {
             for (let x = 0; x < size; x++) {
                 const noise1 = this.noise(x * 5 / size, y * 5 / size);
                 const noise2 = this.noise(x * 15 / size, y * 15 / size);
-                
+
                 const value = noise1 * 0.7 + noise2 * 0.3;
                 const variation = (value - 0.5) * 80;
-                
+
                 const i = (y * size + x) * 4;
                 imageData.data[i] = Math.max(0, Math.min(255, r + variation));
                 imageData.data[i + 1] = Math.max(0, Math.min(255, g + variation));
@@ -714,7 +715,7 @@ class ProceduralAssetGenerator {
                 imageData.data[i + 3] = 255;
             }
         }
-        
+
         ctx.putImageData(imageData, 0, 0);
     }
 
@@ -723,19 +724,20 @@ class ProceduralAssetGenerator {
      */
     generateFabricTexture(ctx, size, options) {
         const { color = 0x888888 } = options;
-        
+
         const r = (color >> 16) & 255;
         const g = (color >> 8) & 255;
         const b = color & 255;
-        
+        const imageData = ctx.createImageData(size, size);
+
         for (let y = 0; y < size; y++) {
             for (let x = 0; x < size; x++) {
                 const weaveX = Math.sin(x * 0.1) * 0.5 + 0.5;
                 const weaveY = Math.cos(y * 0.1) * 0.5 + 0.5;
                 const value = (weaveX + weaveY) / 2;
-                
+
                 const variation = (value - 0.5) * 30;
-                
+
                 const i = (y * size + x) * 4;
                 imageData.data[i] = Math.max(0, Math.min(255, r + variation));
                 imageData.data[i + 1] = Math.max(0, Math.min(255, g + variation));
@@ -743,7 +745,7 @@ class ProceduralAssetGenerator {
                 imageData.data[i + 3] = 255;
             }
         }
-        
+
         ctx.putImageData(imageData, 0, 0);
     }
 
@@ -752,16 +754,17 @@ class ProceduralAssetGenerator {
      */
     generateEmissiveTexture(ctx, size, options) {
         const { color = 0x00ff00, intensity = 1.0 } = options;
-        
+
         const r = (color >> 16) & 255;
         const g = (color >> 8) & 255;
         const b = color & 255;
-        
+        const imageData = ctx.createImageData(size, size);
+
         for (let y = 0; y < size; y++) {
             for (let x = 0; x < size; x++) {
                 const noise = this.noise(x * 10 / size, y * 10 / size);
                 const pulse = Math.sin(noise * Math.PI * 2) * 0.5 + 0.5;
-                
+
                 const i = (y * size + x) * 4;
                 imageData.data[i] = r * pulse * intensity;
                 imageData.data[i + 1] = g * pulse * intensity;
@@ -769,7 +772,7 @@ class ProceduralAssetGenerator {
                 imageData.data[i + 3] = 255;
             }
         }
-        
+
         ctx.putImageData(imageData, 0, 0);
     }
 
@@ -778,11 +781,11 @@ class ProceduralAssetGenerator {
      */
     generateDefaultTexture(ctx, size, options) {
         const { color = 0xffffff } = options;
-        
+
         const r = (color >> 16) & 255;
         const g = (color >> 8) & 255;
         const b = color & 255;
-        
+
         ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
         ctx.fillRect(0, 0, size, size);
     }
@@ -792,35 +795,35 @@ class ProceduralAssetGenerator {
      */
     generatePolyHavenStyleTexture(ctx, size, options) {
         const { color = 0x888888, roughness = 0.5, metalness = 0.1 } = options;
-        
+
         const r = (color >> 16) & 255;
         const g = (color >> 8) & 255;
         const b = color & 255;
-        
+
         const imageData = ctx.createImageData(size, size);
-        
+
         for (let y = 0; y < size; y++) {
             for (let x = 0; x < size; x++) {
                 // Multi-layer noise for realistic detail
                 let noise = 0;
                 let amplitude = 1;
                 let frequency = 0.02;
-                
+
                 for (let o = 0; o < 6; o++) {
                     noise += this.noise(x * frequency, y * frequency) * amplitude;
                     amplitude *= 0.5;
                     frequency *= 2;
                 }
-                
+
                 // Normalized noise
                 const normalizedNoise = (noise + 1) / 2;
-                
+
                 // Apply roughness variation
                 const roughnessVariation = normalizedNoise * roughness * 50;
-                
+
                 // Apply metalness highlights
                 const metalnessHighlight = metalness > 0.5 ? (normalizedNoise - 0.5) * 30 : 0;
-                
+
                 const i = (y * size + x) * 4;
                 imageData.data[i] = Math.max(0, Math.min(255, r + roughnessVariation - metalnessHighlight));
                 imageData.data[i + 1] = Math.max(0, Math.min(255, g + roughnessVariation - metalnessHighlight));
@@ -828,7 +831,7 @@ class ProceduralAssetGenerator {
                 imageData.data[i + 3] = 255;
             }
         }
-        
+
         ctx.putImageData(imageData, 0, 0);
     }
 
@@ -837,28 +840,28 @@ class ProceduralAssetGenerator {
      */
     generateAmbientCGStyleTexture(ctx, size, options) {
         const { color = 0x886644, type = 'concrete' } = options;
-        
+
         const r = (color >> 16) & 255;
         const g = (color >> 8) & 255;
         const b = color & 255;
-        
+
         const imageData = ctx.createImageData(size, size);
-        
+
         for (let y = 0; y < size; y++) {
             for (let x = 0; x < size; x++) {
                 let noise = 0;
                 let amplitude = 1;
                 let frequency = 0.03;
-                
+
                 for (let o = 0; o < 5; o++) {
                     noise += this.noise(x * frequency, y * frequency) * amplitude;
                     amplitude *= 0.5;
                     frequency *= 2;
                 }
-                
+
                 // Material-specific patterns
                 let variation = 0;
-                
+
                 switch (type) {
                     case 'concrete':
                         // Concrete with subtle grain
@@ -884,7 +887,7 @@ class ProceduralAssetGenerator {
                     default:
                         variation = noise * 25;
                 }
-                
+
                 const i = (y * size + x) * 4;
                 imageData.data[i] = Math.max(0, Math.min(255, r + variation));
                 imageData.data[i + 1] = Math.max(0, Math.min(255, g + variation));
@@ -892,7 +895,7 @@ class ProceduralAssetGenerator {
                 imageData.data[i + 3] = 255;
             }
         }
-        
+
         ctx.putImageData(imageData, 0, 0);
     }
 
@@ -916,12 +919,12 @@ class ProceduralAssetGenerator {
         }
 
         const { duration = 1.0, frequency = 440 } = options;
-        
+
         const sampleRate = this.audioContext.sampleRate;
         const bufferSize = sampleRate * duration;
         const buffer = this.audioContext.createBuffer(1, bufferSize, sampleRate);
         const data = buffer.getChannelData(0);
-        
+
         switch (type) {
             case 'laser':
                 this.generateLaserSound(data, sampleRate, options);
@@ -950,7 +953,7 @@ class ProceduralAssetGenerator {
             default:
                 this.generateDefaultSound(data, sampleRate, options);
         }
-        
+
         return buffer;
     }
 
@@ -959,12 +962,12 @@ class ProceduralAssetGenerator {
      */
     generateLaserSound(data, sampleRate, options) {
         const { frequency = 880, duration = 0.3 } = options;
-        
+
         for (let i = 0; i < data.length; i++) {
             const t = i / sampleRate;
             const envelope = Math.exp(-t * 10);
             const sweep = frequency * (1 - t * 0.5);
-            
+
             data[i] = Math.sin(2 * Math.PI * sweep * t) * envelope * 0.3;
         }
     }
@@ -974,13 +977,13 @@ class ProceduralAssetGenerator {
      */
     generateExplosionSound(data, sampleRate, options) {
         const { duration = 1.0 } = options;
-        
+
         for (let i = 0; i < data.length; i++) {
             const t = i / sampleRate;
             const envelope = Math.exp(-t * 3);
             const noise = (Math.random() - 0.5) * 2;
             const lowpass = Math.sin(2 * Math.PI * 50 * t) * 0.5;
-            
+
             data[i] = (noise + lowpass) * envelope * 0.5;
         }
     }
@@ -990,12 +993,12 @@ class ProceduralAssetGenerator {
      */
     generateEngineSound(data, sampleRate, options) {
         const { frequency = 100 } = options;
-        
+
         for (let i = 0; i < data.length; i++) {
             const t = i / sampleRate;
             const noise = (Math.random() - 0.5) * 2;
             const tone = Math.sin(2 * Math.PI * frequency * t);
-            
+
             data[i] = (noise * 0.3 + tone * 0.7) * 0.2;
         }
     }
@@ -1005,11 +1008,11 @@ class ProceduralAssetGenerator {
      */
     generateUISound(data, sampleRate, options) {
         const { frequency = 880, duration = 0.1 } = options;
-        
+
         for (let i = 0; i < data.length; i++) {
             const t = i / sampleRate;
             const envelope = Math.exp(-t * 20);
-            
+
             data[i] = Math.sin(2 * Math.PI * frequency * t) * envelope * 0.3;
         }
     }
@@ -1019,13 +1022,13 @@ class ProceduralAssetGenerator {
      */
     generateAmbientSound(data, sampleRate, options) {
         const { frequency = 200 } = options;
-        
+
         for (let i = 0; i < data.length; i++) {
             const t = i / sampleRate;
             const noise = (Math.random() - 0.5) * 2;
             const tone1 = Math.sin(2 * Math.PI * frequency * t);
             const tone2 = Math.sin(2 * Math.PI * frequency * 1.5 * t);
-            
+
             data[i] = (noise * 0.2 + tone1 * 0.4 + tone2 * 0.4) * 0.1;
         }
     }
@@ -1044,22 +1047,22 @@ class ProceduralAssetGenerator {
      */
     generateSonnissLaserSound(data, sampleRate, options) {
         const { frequency = 1200, duration = 0.4 } = options;
-        
+
         for (let i = 0; i < data.length; i++) {
             const t = i / sampleRate;
-            
+
             // Multi-layered laser sound
             const envelope = Math.exp(-t * 15) * (1 - Math.exp(-t * 50));
             const sweep = frequency * (1 - t * 0.7);
             const modulation = Math.sin(t * 200 * Math.PI) * 0.3;
-            
+
             // High-frequency carrier
             const carrier = Math.sin(2 * Math.PI * sweep * t);
-            
+
             // Add harmonics
             const harmonic2 = Math.sin(2 * Math.PI * sweep * 2 * t) * 0.3;
             const harmonic3 = Math.sin(2 * Math.PI * sweep * 3 * t) * 0.1;
-            
+
             data[i] = (carrier + harmonic2 + harmonic3 + modulation) * envelope * 0.35;
         }
     }
@@ -1069,19 +1072,19 @@ class ProceduralAssetGenerator {
      */
     generateSonnissImpactSound(data, sampleRate, options) {
         const { duration = 0.5, impactType = 'metal' } = options;
-        
+
         for (let i = 0; i < data.length; i++) {
             const t = i / sampleRate;
-            
+
             // Impact envelope
             const envelope = Math.exp(-t * 20) + Math.exp(-t * 8) * 0.5;
-            
+
             // Noise layer
             const noise = (Math.random() - 0.5) * 2;
-            
+
             // Low-frequency impact
             const impact = Math.sin(2 * Math.PI * 80 * t) * Math.exp(-t * 10);
-            
+
             // Material-specific characteristics
             let resonance = 0;
             switch (impactType) {
@@ -1097,7 +1100,7 @@ class ProceduralAssetGenerator {
                 default:
                     resonance = Math.sin(2 * Math.PI * 250 * t) * Math.exp(-t * 10) * 0.2;
             }
-            
+
             data[i] = (noise * 0.4 + impact * 0.3 + resonance) * envelope * 0.4;
         }
     }
@@ -1107,25 +1110,25 @@ class ProceduralAssetGenerator {
      */
     generateSonnissPowerupSound(data, sampleRate, options) {
         const { duration = 0.8, type = 'collect' } = options;
-        
+
         for (let i = 0; i < data.length; i++) {
             const t = i / sampleRate;
-            
+
             // Rising pitch for powerup
             const baseFreq = 440;
             const pitchRamp = t * 400;
-            
+
             // Envelope
             const envelope = Math.sin(t * Math.PI / duration) * Math.exp(-t * 2);
-            
+
             // Chord-like structure
             const note1 = Math.sin(2 * Math.PI * (baseFreq + pitchRamp) * t);
             const note2 = Math.sin(2 * Math.PI * (baseFreq * 1.25 + pitchRamp) * t) * 0.5;
             const note3 = Math.sin(2 * Math.PI * (baseFreq * 1.5 + pitchRamp) * t) * 0.3;
-            
+
             // Sparkle effect
             const sparkle = Math.sin(2 * Math.PI * 2000 * t) * Math.exp(-t * 10) * 0.2;
-            
+
             // Type-specific variations
             let variation = 0;
             switch (type) {
@@ -1139,7 +1142,7 @@ class ProceduralAssetGenerator {
                     variation = Math.sin(2 * Math.PI * 1100 * t) * 0.25;
                     break;
             }
-            
+
             data[i] = (note1 + note2 + note3 + sparkle + variation) * envelope * 0.3;
         }
     }
@@ -1149,16 +1152,16 @@ class ProceduralAssetGenerator {
      */
     playAudio(buffer, volume = 1.0) {
         if (!this.audioContext || !buffer) return;
-        
+
         const source = this.audioContext.createBufferSource();
         source.buffer = buffer;
-        
+
         const gainNode = this.audioContext.createGain();
         gainNode.gain.value = volume;
-        
+
         source.connect(gainNode);
         gainNode.connect(this.audioContext.destination);
-        
+
         source.start();
     }
 
@@ -1169,12 +1172,12 @@ class ProceduralAssetGenerator {
      */
     generateSkybox(type, options = {}) {
         const { size = 512 } = options;
-        
+
         const cubeRenderTarget = new THREE.WebGLCubeRenderTarget(size);
         const cubeCamera = new THREE.CubeCamera(0.1, 1000, cubeRenderTarget);
-        
+
         const scene = new THREE.Scene();
-        
+
         switch (type) {
             case 'nebula':
                 this.generateNebulaSkybox(scene, options);
@@ -1188,9 +1191,9 @@ class ProceduralAssetGenerator {
             default:
                 this.generateDefaultSkybox(scene, options);
         }
-        
+
         cubeCamera.update(this.game.renderer, scene);
-        
+
         return cubeRenderTarget.texture;
     }
 
@@ -1199,40 +1202,40 @@ class ProceduralAssetGenerator {
      */
     generateNebulaSkybox(scene, options) {
         const { colors = [0xff0088, 0x0088ff, 0x8800ff] } = options;
-        
+
         // Stars
         const starGeometry = new THREE.BufferGeometry();
         const starPositions = [];
         const starColors = [];
-        
+
         for (let i = 0; i < 5000; i++) {
             const theta = Math.random() * Math.PI * 2;
             const phi = Math.acos(2 * Math.random() - 1);
             const r = 500 + Math.random() * 500;
-            
+
             starPositions.push(
                 r * Math.sin(phi) * Math.cos(theta),
                 r * Math.sin(phi) * Math.sin(theta),
                 r * Math.cos(phi)
             );
-            
+
             const color = new THREE.Color(colors[Math.floor(Math.random() * colors.length)]);
             starColors.push(color.r, color.g, color.b);
         }
-        
+
         starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starPositions, 3));
         starGeometry.setAttribute('color', new THREE.Float32BufferAttribute(starColors, 3));
-        
+
         const starMaterial = new THREE.PointsMaterial({
             size: 2,
             vertexColors: true,
             transparent: true,
             opacity: 0.8
         });
-        
+
         const stars = new THREE.Points(starGeometry, starMaterial);
         scene.add(stars);
-        
+
         // Nebula clouds
         const nebulaGeometry = new THREE.SphereGeometry(400, 32, 32);
         const nebulaMaterial = new THREE.ShaderMaterial({
@@ -1260,7 +1263,7 @@ class ProceduralAssetGenerator {
             transparent: true,
             side: THREE.BackSide
         });
-        
+
         const nebula = new THREE.Mesh(nebulaGeometry, nebulaMaterial);
         scene.add(nebula);
     }
@@ -1272,31 +1275,31 @@ class ProceduralAssetGenerator {
         const starGeometry = new THREE.BufferGeometry();
         const starPositions = [];
         const starColors = [];
-        
+
         for (let i = 0; i < 10000; i++) {
             const theta = Math.random() * Math.PI * 2;
             const phi = Math.acos(2 * Math.random() - 1);
             const r = 500 + Math.random() * 1000;
-            
+
             starPositions.push(
                 r * Math.sin(phi) * Math.cos(theta),
                 r * Math.sin(phi) * Math.sin(theta),
                 r * Math.cos(phi)
             );
-            
+
             const brightness = Math.random();
             const color = new THREE.Color().setHSL(0.6, 0.2, brightness);
             starColors.push(color.r, color.g, color.b);
         }
-        
+
         starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starPositions, 3));
         starGeometry.setAttribute('color', new THREE.Float32BufferAttribute(starColors, 3));
-        
+
         const starMaterial = new THREE.PointsMaterial({
             size: 1.5,
             vertexColors: true
         });
-        
+
         const stars = new THREE.Points(starGeometry, starMaterial);
         scene.add(stars);
     }
@@ -1306,17 +1309,17 @@ class ProceduralAssetGenerator {
      */
     generatePlanetarySkybox(scene, options) {
         const { planetColor = 0x4488ff, atmosphereColor = 0x88ccff } = options;
-        
+
         // Planet
         const planetGeometry = new THREE.SphereGeometry(200, 64, 64);
         const planetMaterial = new THREE.MeshStandardMaterial({
             color: planetColor,
             roughness: 0.8
         });
-        
+
         const planet = new THREE.Mesh(planetGeometry, planetMaterial);
         scene.add(planet);
-        
+
         // Atmosphere
         const atmosphereGeometry = new THREE.SphereGeometry(220, 64, 64);
         const atmosphereMaterial = new THREE.ShaderMaterial({
@@ -1341,7 +1344,7 @@ class ProceduralAssetGenerator {
             transparent: true,
             side: THREE.BackSide
         });
-        
+
         const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
         scene.add(atmosphere);
     }
@@ -1360,7 +1363,7 @@ class ProceduralAssetGenerator {
         // Clear cache
         this.generatedAssets.clear();
         this.textureCache.clear();
-        
+
         // Close audio context
         if (this.audioContext) {
             this.audioContext.close();

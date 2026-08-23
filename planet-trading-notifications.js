@@ -19,9 +19,16 @@ class PlanetTradingNotifications {
     }
 
     async init() {
-        if (window.supabase) {
-            const { data: { user } } = await window.supabase.auth.getUser();
-            if (user) this.currentUser = user;
+        const supabaseClient = window.supabaseClient?.auth?.getUser
+            ? window.supabaseClient
+            : (window.supabase?.auth?.getUser ? window.supabase : null);
+        if (supabaseClient) {
+            try {
+                const { data } = await supabaseClient.auth.getUser();
+                this.currentUser = data?.user || null;
+            } catch (error) {
+                console.warn('Optional Supabase session unavailable for notifications:', error);
+            }
         }
         this.loadPreferences();
         this.loadNotifications();

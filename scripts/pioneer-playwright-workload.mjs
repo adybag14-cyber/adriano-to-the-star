@@ -230,8 +230,8 @@ async function touchDragManagedWindow(selector, dx, dy) {
 function windowRectInsideViewport(rect, width, height, tolerance = 2) {
     return rect.x >= -tolerance && rect.y >= -tolerance && rect.right <= width + tolerance && rect.bottom <= height + tolerance;
 }
-async function chooseSurfacePoint(itemType, preferNearTileId = null) {
-    return page.evaluate(({ itemType, preferNearTileId }) => {
+async function chooseSurfacePoint(itemType, preferNearTileId = null, excludedTileIds = []) {
+    return page.evaluate(({ itemType, preferNearTileId, excludedTileIds }) => {
         const g = window.game;
         const canvas = g.renderer.domElement;
         const rect = canvas.getBoundingClientRect();
@@ -240,7 +240,7 @@ async function chooseSurfacePoint(itemType, preferNearTileId = null) {
         g.camera.updateProjectionMatrix();
         const anchor = Number.isInteger(preferNearTileId) ? g.tiles[preferNearTileId] : null;
         const candidates = [];
-        const seenTiles = new Set();
+        const seenTiles = new Set(excludedTileIds);
         const minX = rect.left + 180;
         const maxX = rect.right - 120;
         const minY = rect.top + 105;
@@ -277,21 +277,47 @@ async function chooseSurfacePoint(itemType, preferNearTileId = null) {
         }
         candidates.sort((a, b) => (a.anchorDistance + a.centerPenalty * 6) - (b.anchorDistance + b.centerPenalty * 6));
         return candidates[0] || null;
-    }, { itemType, preferNearTileId });
+    }, { itemType, preferNearTileId, excludedTileIds });
 }
 
 async function placeSelectedStructure(type, { preferNear = true } = {}) {
     const beforeCount = await page.evaluate((type) => window.game.structures.filter((s) => s.type === type).length, type);
-    let point = await chooseSurfacePoint(type, preferNear ? anchorTileId : null);
-    if (!point && preferNear) point = await chooseSurfacePoint(type, null);
-    assert(!!point, `visible valid ${type} placement point exists`);
-    await page.mouse.move(point.x, point.y, { steps: 5 });
-    await page.waitForTimeout(140);
-    const hint = await page.locator('#ep-placement-status').textContent().catch(() => '');
-    log('interaction', { action: 'surface-hover', type, point, hint });
-    await page.mouse.click(point.x, point.y);
-    log('interaction', { action: 'surface-click', type, point });
-    await page.waitForFunction(({ type, beforeCount }) => window.game.structures.filter((s) => s.type === type).length > beforeCount, { type, beforeCount }, { timeout: ciTimeout(8000) });
+    const attemptedTileIds = [];
+    let placementDetected = false;
+    for (let attempt = 1; attempt <= 3 && !placementDetected; attempt += 1) {
+        let point = await chooseSurfacePoint(type, preferNear ? anchorTileId : null, attemptedTileIds);
+        if (!point && preferNear) point = await chooseSurfacePoint(type, null, attemptedTileIds);
+        if (attempt === 1) assert(!!point, `visible valid ${type} placement point exists`);
+        if (!point) break;
+        attemptedTileIds.push(point.tileId);
+        await page.mouse.move(point.x, point.y, { steps: 5 });
+        await page.waitForTimeout(140);
+        const hint = await page.locator('#ep-placement-status').textContent().catch(() => '');
+        log('interaction', { action: 'surface-hover', type, attempt, point, hint });
+        await page.mouse.click(point.x, point.y);
+        log('interaction', { action: 'surface-click', type, attempt, point });
+        placementDetected = await page.waitForFunction(
+            ({ type, beforeCount }) => window.game.structures.filter((s) => s.type === type).length > beforeCount,
+            { type, beforeCount },
+            { timeout: ciTimeout(2500) }
+        ).then(() => true).catch(() => false);
+        if (!placementDetected) {
+            const retryState = await page.evaluate(({ type, beforeCount }) => ({
+                count: window.game.structures.filter((s) => s.type === type).length,
+                beforeCount,
+                selectedInventoryItem: window.game.selectedInventoryItem,
+                placementHint: document.querySelector('#ep-placement-status')?.textContent?.trim() || ''
+            }), { type, beforeCount });
+            log('interaction', { action: 'surface-click-retry', type, attempt, point, retryState });
+        }
+    }
+    const placementState = await page.evaluate(({ type, beforeCount }) => ({
+        count: window.game.structures.filter((s) => s.type === type).length,
+        beforeCount,
+        selectedInventoryItem: window.game.selectedInventoryItem,
+        placementHint: document.querySelector('#ep-placement-status')?.textContent?.trim() || ''
+    }), { type, beforeCount });
+    assert(placementDetected, `${type} placement click creates a structure within three visible surface attempts`, { attemptedTileIds, placementState });
     const placed = await page.evaluate((type) => {
         const list = window.game.structures.filter((s) => s.type === type);
         const s = list[list.length - 1];

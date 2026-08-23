@@ -176,19 +176,19 @@
         }
     </style>
     <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
-    <script src="universal-simulation-hub.js"></script>
-    <script src="void-warfare-engine.js"></script>
-    <script src="planetary-environment-engine.js"></script>
-    <script src="galactic-governance-engine.js"></script>
-    <script src="mining-resource-engine.js"></script>
-    <script src="xeno-intelligence-engine.js"></script>
-    <script src="quantum-propulsion-engine.js"></script>
-    <script src="intelligence-shadow-engine.js"></script>
-    <script src="fleet-command-mega-engine.js"></script>
-    <script src="deep-space-industry-engine.js"></script>
-    <script src="procedural-content-engine.js"></script>
-    <script src="galactic-commerce-engine.js"></script>
-    <script src="metaphysics-apotheosis-engine.js"></script>
+    <script src="/universal-simulation-hub.js"></script>
+    <script src="/void-warfare-engine.js"></script>
+    <script src="/planetary-environment-engine.js"></script>
+    <script src="/galactic-governance-engine.js"></script>
+    <script src="/mining-resource-engine.js"></script>
+    <script src="/xeno-intelligence-engine.js"></script>
+    <script src="/quantum-propulsion-engine.js"></script>
+    <script src="/intelligence-shadow-engine.js"></script>
+    <script src="/fleet-command-mega-engine.js"></script>
+    <script src="/deep-space-industry-engine.js"></script>
+    <script src="/procedural-content-engine.js"></script>
+    <script src="/galactic-commerce-engine.js"></script>
+    <script src="/metaphysics-apotheosis-engine.js"></script>
 </head>
 
 <body>
@@ -347,7 +347,7 @@
 
                 for (int i = 0; i < 8; i++) {
                     float n = snoise(p * frequency + seed);
-                    
+
                     // Ridge transform for first 4 octaves
                     if (i < 4) {
                         n = abs(n);
@@ -358,7 +358,7 @@
                     } else {
                         value += n * amplitude;
                     }
-                    
+
                     amplitude *= 0.5;
                     frequency *= 2.0;
                 }
@@ -397,7 +397,7 @@
             void main() {
                 vUv = uv;
                 vPosition = position;
-                
+
                 // Domain Warping for organic continental shapes
                 vec3 warpOffset = vec3(
                     snoise(position * 2.0 + uSeed),
@@ -416,18 +416,18 @@
                 float ny = fbmRidge((warpedPos + vec3(0.0, eps, 0.0)) * uRoughness, uSeed);
                 float nz = fbmRidge((warpedPos + vec3(0.0, 0.0, eps)) * uRoughness, uSeed);
                 vec3 gradient = vec3(nx - elevation, ny - elevation, nz - elevation) / eps;
-                
+
                 // Compute proper normal from gradient
                 vec3 computedNormal = normalize(normal - gradient * 0.5);
                 vNormal = normalize(normalMatrix * computedNormal);
-                
+
                 // Slope calculation
                 vSlope = length(gradient);
 
                 // Displace vertex
                 float displacement = elevation * 0.12;
                 vec3 newPosition = position + normal * displacement;
-                
+
                 vWorldPosition = (modelMatrix * vec4(newPosition, 1.0)).xyz;
 
                 gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
@@ -452,7 +452,7 @@
             uniform float uTime;             // Added for cloud animation
             uniform float uCloudCoverage;    // Added for cloud shadows
             uniform float uAmbientIntensity; // Added for Day Mode brightness control
-            
+
             // Biome Colors
             uniform vec3 uColorDeepWater;
             uniform vec3 uColorShallowWater;
@@ -470,19 +470,19 @@
                 // --- Lighting ---
                 float NdotL = dot(normal, lightDir);
                 float diff = max(NdotL, 0.0);
-                
+
                 // Soft shadows / ambient occlusion approximation
                 float ao = 1.0 - vSlope * 0.3;
                 ao = max(ao, 0.3);
-                
+
                 // Ambient with hemisphere lighting - controlled by uniform and boosted base
                 float skyFactor = (normal.y * 0.5 + 0.5);
                 vec3 ambientBase = mix(vec3(0.2, 0.2, 0.25), vec3(0.4, 0.45, 0.5), skyFactor); // Boosted base (was 0.15-0.35)
                 vec3 ambient = ambientBase * uAmbientIntensity;
-                
+
                 vec3 color = vec3(0.0);
                 float h = vElevation;
-                
+
                 // Temperature based on latitude
                 float latitude = abs(normalize(vPosition).y);
                 float localTemp = 0.6 - pow(latitude, 1.5) * 1.0;
@@ -494,18 +494,18 @@
                     // Water
                     float depth = (uWaterLevel - h);
                     color = mix(uColorShallowWater, uColorDeepWater, clamp(depth * 8.0, 0.0, 1.0));
-                    
+
                     // Specular highlight on water with Roughness
                     vec3 halfDir = normalize(lightDir + viewDir);
-                    
+
                     // Procedural Roughness
                     float roughness = snoise(vPosition * 20.0); // Simple noise for waves
                     roughness = roughness * 0.5 + 0.5;
-                    
-                    float specPower = mix(200.0, 50.0, roughness); 
+
+                    float specPower = mix(200.0, 50.0, roughness);
                     float spec = pow(max(dot(normal, halfDir), 0.0), specPower);
                     color += vec3(1.0, 0.95, 0.9) * spec * 0.6;
-                    
+
                     // Ice at cold latitudes
                     if (localTemp < 0.15) {
                         float iceBlend = 1.0 - localTemp / 0.15;
@@ -515,10 +515,10 @@
                     // Land
                     float altitude = (h - uWaterLevel) / (1.0 - uWaterLevel);
                     altitude = clamp(altitude, 0.0, 1.0);
-                    
+
                     // Steep slopes get rock
                     float steepness = smoothstep(0.3, 0.8, vSlope);
-                    
+
                     // Base biome color by altitude
                     vec3 biomeColor;
                     if (altitude < 0.05) {
@@ -537,17 +537,17 @@
                         float t = (altitude - 0.5) / 0.5;
                         biomeColor = mix(uColorRock, uColorSnow, t);
                     }
-                    
+
                     // Blend in rock on steep slopes
                     color = mix(biomeColor, uColorRock, steepness);
-                    
+
                     // Snow at cold temperatures or high altitude
                     float snowLine = 0.6 - localTemp * 0.4;
                     if (altitude > snowLine) {
                         float snowBlend = (altitude - snowLine) / (1.0 - snowLine);
                         color = mix(color, uColorSnow, snowBlend * 0.95);
                     }
-                    
+
                     // Polar snow
                     if (localTemp < 0.2) {
                         float polarSnow = 1.0 - localTemp / 0.2;
@@ -565,10 +565,10 @@
                 cloudNoise += snoise(pCloud + uSeed) * 0.5;
                 cloudNoise += snoise(pCloud * 2.0 + uSeed + 50.0) * 0.25;
                 cloudNoise += snoise(pCloud * 4.0 + uSeed + 100.0) * 0.125;
-                
+
                 float cloudDensity = (cloudNoise + 0.5);
                 float shadowThreshold = 1.0 - uCloudCoverage;
-                
+
                 // Shadow mask
                 if (cloudDensity > shadowThreshold) {
                     float shadowIntensity = smoothstep(shadowThreshold, shadowThreshold + 0.1, cloudDensity);
@@ -579,16 +579,16 @@
                 if (uEnableCityLights > 0.5) {
                     float night = 1.0 - max(NdotL, 0.0);
                     night = smoothstep(0.6, 1.0, night);
-                    
+
                     if (h > uWaterLevel && night > 0.0 && localTemp > 0.2 && localTemp < 0.8) {
                         float cities = snoise(vPosition * 40.0 + uSeed * 10.0);
                         cities = smoothstep(0.55, 0.7, cities);
-                        
+
                         // Cluster lights near coasts
                         float coastDist = abs(h - uWaterLevel);
                         float coastFactor = 1.0 - smoothstep(0.0, 0.15, coastDist);
                         cities *= (1.0 + coastFactor * 2.0);
-                        
+
                         vec3 lightColor = vec3(1.0, 0.85, 0.5); // Warm city glow
                         litColor += lightColor * cities * night * 0.6;
                     }
@@ -603,16 +603,16 @@
             varying vec3 vNormal;
             varying vec3 vPosition;
             varying vec3 vWorldPosition;
-            
+
             uniform float uAtmosphereRadius;
 
             void main() {
                 vNormal = normalize(normalMatrix * normal);
                 vPosition = position;
-                
+
                 vec3 scaledPos = position * uAtmosphereRadius;
                 vWorldPosition = (modelMatrix * vec4(scaledPos, 1.0)).xyz;
-                
+
                 gl_Position = projectionMatrix * modelViewMatrix * vec4(scaledPos, 1.0);
             }
         `;
@@ -622,7 +622,7 @@
             varying vec3 vNormal;
             varying vec3 vPosition;
             varying vec3 vWorldPosition;
-            
+
             uniform vec3 uSunDirection;
             uniform float uAtmosphereDensity;
             uniform vec3 uAtmosphereColor;
@@ -631,30 +631,30 @@
                 vec3 viewDir = normalize(cameraPosition - vWorldPosition);
                 vec3 normal = normalize(vNormal);
                 vec3 lightDir = normalize(uSunDirection);
-                
+
                 // Fresnel effect (rim lighting)
                 float fresnel = 1.0 - dot(viewDir, normal);
                 fresnel = pow(fresnel, 3.0);
-                
+
                 // Rayleigh scattering approximation
                 // Blue light scatters more (short wavelength)
                 float sunAngle = dot(normal, lightDir);
                 float scatter = pow(max(sunAngle, 0.0), 0.5);
-                
+
                 // Mie scattering (forward scattering around sun)
                 float viewSun = max(dot(viewDir, -lightDir), 0.0);
                 float mie = pow(viewSun, 8.0) * 0.5;
-                
+
                 // Combined atmosphere color
                 vec3 rayleighColor = uAtmosphereColor * scatter;
                 vec3 mieColor = vec3(1.0, 0.9, 0.7) * mie;
-                
+
                 vec3 finalColor = (rayleighColor + mieColor) * fresnel * uAtmosphereDensity;
-                
+
                 // Alpha based on fresnel and density
                 float alpha = fresnel * uAtmosphereDensity * 0.8;
                 alpha = clamp(alpha, 0.0, 0.9);
-                
+
                 gl_FragColor = vec4(finalColor, alpha);
             }
         `;
@@ -664,16 +664,16 @@
             varying vec3 vNormal;
             varying vec3 vPosition;
             varying vec3 vWorldPosition;
-            
+
             uniform float uCloudAltitude;
 
             void main() {
                 vNormal = normalize(normalMatrix * normal);
                 vPosition = position;
-                
+
                 vec3 scaledPos = position * uCloudAltitude;
                 vWorldPosition = (modelMatrix * vec4(scaledPos, 1.0)).xyz;
-                
+
                 gl_Position = projectionMatrix * modelViewMatrix * vec4(scaledPos, 1.0);
             }
         `;
@@ -685,7 +685,7 @@
             varying vec3 vNormal;
             varying vec3 vPosition;
             varying vec3 vWorldPosition;
-            
+
             uniform float uTime;
             uniform float uCloudCoverage;
             uniform float uSeed;
@@ -695,42 +695,42 @@
                 vec3 normal = normalize(vNormal);
                 vec3 lightDir = normalize(uSunDirection);
                 vec3 viewDir = normalize(cameraPosition - vWorldPosition);
-                
+
                 // Animated cloud noise
                 vec3 p = vPosition * 3.0 + uTime * 0.02;
-                
+
                 // Multi-octave cloud noise
                 float clouds = 0.0;
                 clouds += snoise(p + uSeed) * 0.5;
                 clouds += snoise(p * 2.0 + uSeed + 50.0) * 0.25;
                 clouds += snoise(p * 4.0 + uSeed + 100.0) * 0.125;
                 clouds += snoise(p * 8.0 + uSeed + 150.0) * 0.0625;
-                
+
                 // Remap to coverage
                 clouds = (clouds + 0.5);
                 clouds = smoothstep(1.0 - uCloudCoverage, 1.0, clouds);
-                
+
                 // Cloud lighting
                 float NdotL = dot(normal, lightDir);
                 float light = max(NdotL, 0.0) * 0.8 + 0.2;
-                
+
                 // Silver lining effect
                 float rim = 1.0 - abs(dot(viewDir, normal));
                 rim = pow(rim, 2.0);
-                
+
                 // Self-shadowing (thicker clouds are darker)
                 float shadow = 1.0 - clouds * 0.3;
-                
+
                 vec3 cloudColor = vec3(1.0) * light * shadow;
                 cloudColor += vec3(1.0, 0.95, 0.9) * rim * 0.2;
-                
+
                 // Alpha
                 float alpha = clouds * 0.85;
-                
+
                 // Fade at edges for soft look
                 float edgeFade = 1.0 - pow(abs(dot(viewDir, normal)), 0.5);
                 alpha *= (1.0 - edgeFade * 0.3);
-                
+
                 gl_FragColor = vec4(cloudColor, alpha);
             }
         `;
@@ -757,20 +757,20 @@
 
                 float diff = max(dot(normal, lightDir), 0.0);
                 float ambient = 0.15;
-                
+
                 // Latitude-based banding
                 float y = vPosition.y;
                 float bands = sin(y * 20.0 + snoise(vPosition * 2.0 + uSeed) * 3.0);
                 bands = bands * 0.5 + 0.5;
-                
+
                 // Turbulent storms
                 float storm = snoise(vPosition * 4.0 + uSeed);
                 storm = pow(abs(storm), 0.5) * sign(storm);
-                
+
                 // Color mixing
                 vec3 color = mix(uColor1, uColor2, bands);
                 color = mix(color, uColor3, smoothstep(0.6, 0.8, abs(storm)));
-                
+
                 // Great Red Spot / storm features
                 vec3 stormCenter = vec3(0.5, 0.2, 0.3);
                 float stormDist = distance(normalize(vPosition), normalize(stormCenter));
@@ -778,7 +778,7 @@
                     float stormIntensity = 1.0 - stormDist / 0.15;
                     color = mix(color, vec3(0.8, 0.3, 0.2), stormIntensity * 0.8);
                 }
-                
+
                 // Atmosphere rim
                 float fresnel = pow(1.0 - dot(viewDir, normal), 3.0);
                 color += vec3(0.5, 0.6, 0.8) * fresnel * 0.3;

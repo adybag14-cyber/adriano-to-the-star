@@ -7,11 +7,13 @@ async function waitForTexture(page, predicate, timeoutMs = 60000) {
     while (Date.now() - start < timeoutMs) {
         const info = await page.evaluate(() => {
             const mesh = window.viewer?.planetMesh;
-            const img = mesh?.material?.map?.image;
+            const image = mesh?.userData?.surfaceImage;
             return {
-                url: img?.currentSrc || img?.src || null,
-                width: img?.naturalWidth || img?.width || 0,
-                height: img?.naturalHeight || img?.height || 0,
+                url: image?.src || null,
+                width: image?.width || 0,
+                height: image?.height || 0,
+                bakedWidth: image?.bakedWidth || 0,
+                bakedHeight: image?.bakedHeight || 0,
                 hdTexturesEnabled: window.viewer?.hdTexturesEnabled
             };
         });
@@ -25,11 +27,13 @@ async function waitForTexture(page, predicate, timeoutMs = 60000) {
 
     const last = await page.evaluate(() => {
         const mesh = window.viewer?.planetMesh;
-        const img = mesh?.material?.map?.image;
+        const image = mesh?.userData?.surfaceImage;
         return {
-            url: img?.currentSrc || img?.src || null,
-            width: img?.naturalWidth || img?.width || 0,
-            height: img?.naturalHeight || img?.height || 0,
+            url: image?.src || null,
+            width: image?.width || 0,
+            height: image?.height || 0,
+            bakedWidth: image?.bakedWidth || 0,
+            bakedHeight: image?.bakedHeight || 0,
             hdTexturesEnabled: window.viewer?.hdTexturesEnabled
         };
     });
@@ -53,7 +57,7 @@ async function setHdToggle(page, enabled) {
     }
 }
 
-test('Education: HD textures toggle switches Mercury 2K <-> 8K', async ({ page }) => {
+test('Education: enhanced detail toggle increases the local Mercury texture bake', async ({ page }) => {
     test.setTimeout(3 * 60 * 1000);
 
     await page.goto(`${BASE_URL}/education.html?cb=playwright-hd-toggle`, { waitUntil: 'domcontentloaded' });
@@ -68,7 +72,7 @@ test('Education: HD textures toggle switches Mercury 2K <-> 8K', async ({ page }
 
     const base = await waitForTexture(
         page,
-        (info) => info.width === 2048 && info.height === 1024 && String(info.url || '').includes('texture_2k_mercury') && info.hdTexturesEnabled === false,
+        (info) => info.width > 1000 && info.bakedWidth <= 512 && String(info.url || '').includes('images/textures/mercury.jpg') && info.hdTexturesEnabled === false,
         90000
     );
 
@@ -76,7 +80,7 @@ test('Education: HD textures toggle switches Mercury 2K <-> 8K', async ({ page }
 
     const hd = await waitForTexture(
         page,
-        (info) => info.width === 8192 && info.height === 4096 && String(info.url || '').includes('texture_8k_mercury') && info.hdTexturesEnabled === true,
+        (info) => info.width > 1000 && info.bakedWidth > base.bakedWidth && String(info.url || '').includes('images/textures/mercury.jpg') && info.hdTexturesEnabled === true,
         150000
     );
 
@@ -84,13 +88,12 @@ test('Education: HD textures toggle switches Mercury 2K <-> 8K', async ({ page }
 
     const back = await waitForTexture(
         page,
-        (info) => info.width === 2048 && info.height === 1024 && String(info.url || '').includes('texture_2k_mercury') && info.hdTexturesEnabled === false,
+        (info) => info.width > 1000 && info.bakedWidth === base.bakedWidth && String(info.url || '').includes('images/textures/mercury.jpg') && info.hdTexturesEnabled === false,
         90000
     );
 
-    expect(base.width).toBe(2048);
-    expect(hd.width).toBe(8192);
-    expect(back.width).toBe(2048);
+    expect(base.bakedWidth).toBeLessThan(hd.bakedWidth);
+    expect(back.bakedWidth).toBe(base.bakedWidth);
 });
 
 test('Education: all main buttons work without console errors', async ({ page }) => {
@@ -122,17 +125,6 @@ test('Education: all main buttons work without console errors', async ({ page })
      await page.goto(`${BASE_URL}/education.html?cb=playwright-education-buttons`, { waitUntil: 'domcontentloaded' });
 
      await page.waitForFunction(() => Boolean(window.viewer && typeof window.viewer.loadPlanet === 'function'), null, { timeout: 60000 });
-     await page.waitForFunction(
-         () => Boolean(window.educationalGames && typeof window.educationalGames.createGamesWidget === 'function'),
-         null,
-         { timeout: 60000 }
-     );
-     await page.waitForFunction(
-         () => Boolean(window.astronomyCourses && typeof window.astronomyCourses.renderCourseList === 'function'),
-         null,
-         { timeout: 60000 }
-     );
-
      const sidebar = page.locator('#ui-sidebar');
      const sidebarToggle = page.locator('button.toggle-btn');
      const planetName = page.locator('#planet-name');
@@ -173,6 +165,11 @@ test('Education: all main buttons work without console errors', async ({ page })
      const gamesBtn = page.locator('#ui-sidebar button.planet-btn', { hasText: 'Launch Games' }).first();
      await expect(gamesBtn).toHaveCount(1);
      await gamesBtn.click();
+     await page.waitForFunction(
+         () => Boolean(window.educationalGames && typeof window.educationalGames.createGamesWidget === 'function'),
+         null,
+         { timeout: 60000 }
+     );
 
      const gamesWidget = page.locator('#educational-games-widget');
      await expect(gamesWidget).toHaveCount(1);
@@ -192,6 +189,11 @@ test('Education: all main buttons work without console errors', async ({ page })
      const coursesBtn = page.locator('#ui-sidebar button.planet-btn', { hasText: 'Astronomy Courses' }).first();
      await expect(coursesBtn).toHaveCount(1);
      await coursesBtn.click();
+     await page.waitForFunction(
+         () => Boolean(window.astronomyCourses && typeof window.astronomyCourses.renderCourseList === 'function'),
+         null,
+         { timeout: 60000 }
+     );
 
      const coursesModal = page.locator('#courses-modal');
      await expect(coursesModal).toHaveCount(1);
@@ -206,14 +208,14 @@ test('Education: all main buttons work without console errors', async ({ page })
      await expect(menuToggle).toHaveCount(1);
      await menuToggle.click();
 
-     const menuOverlay = page.locator('#menu-overlay');
+     const menuOverlay = page.locator('#ita-atlas-overlay');
      await expect(menuOverlay).toHaveCount(1);
-     await expect(menuOverlay).toHaveClass(/active/);
+     await expect(menuOverlay).toHaveClass(/is-open/);
 
-     const menuClose = page.locator('#menu-close');
+     const menuClose = menuOverlay.locator('.ita-atlas-close');
      await expect(menuClose).toHaveCount(1);
      await menuClose.click();
-     await expect(menuOverlay).not.toHaveClass(/active/);
+     await expect(menuOverlay).not.toHaveClass(/is-open/);
 
      expect(dialogs, JSON.stringify(dialogs, null, 2)).toEqual([]);
      expect(pageErrors, JSON.stringify(pageErrors, null, 2)).toEqual([]);

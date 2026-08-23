@@ -18,9 +18,18 @@ class NewsletterManager {
             return;
         }
 
-        // Check authentication
-        const { data: { user } } = await this.supabase.auth.getUser();
-        this.currentUser = user;
+        // Check authentication when the optional Supabase backend is available.
+        if (this.supabase?.auth) {
+            try {
+                const { data: { user } } = await this.supabase.auth.getUser();
+                this.currentUser = user;
+            } catch (error) {
+                console.warn('Newsletter authentication unavailable; using local subscriptions.', error);
+                this.currentUser = null;
+            }
+        } else {
+            this.currentUser = null;
+        }
 
         this.render();
         await this.loadSubscriptions();
@@ -45,9 +54,9 @@ class NewsletterManager {
                     <form id="newsletter-form">
                         <div class="form-group">
                             <label for="email">Email Address</label>
-                            <input type="email" id="email" 
-                                   value="${this.currentUser?.email || ''}" 
-                                   ${this.currentUser ? 'readonly' : ''} 
+                            <input type="email" id="email"
+                                   value="${this.currentUser?.email || ''}"
+                                   ${this.currentUser ? 'readonly' : ''}
                                    required>
                             ${this.currentUser ? '<small>Using your account email</small>' : ''}
                         </div>
@@ -138,7 +147,7 @@ class NewsletterManager {
                 .select('id')
                 .eq('email', email)
                 .maybeSingle();
-            
+
             // If table doesn't exist, fallback to localStorage
             if (checkError && checkError.code === '42P01') {
                 console.warn('newsletter_subscriptions table not found, using localStorage');
@@ -213,7 +222,7 @@ class NewsletterManager {
     saveToLocalStorage(email, categories, frequency) {
         const subscriptions = JSON.parse(localStorage.getItem('newsletter_subscriptions') || '[]');
         const existing = subscriptions.findIndex(s => s.email === email);
-        
+
         const subscription = {
             email,
             categories,

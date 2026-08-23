@@ -61,10 +61,165 @@ mods/
 *.dylib
 
 # Test results and screenshots
-test-results/
+test-results*/
 screenshots/
 
 # Game data files
 *.data
 *.pak
 
+# Generated Python and test/diagnostic artifacts
+__pycache__/
+*.py[cod]
+playwright-report/
+*.log
+lint_errors.json
+lint_log*.txt
+test_output*.txt
+test_bidi_output*.txt
+audit_report.txt
+bandit_report.json
+e2e_files.txt
+e2e_names.txt
+
+# Generated GitLab Pages artifact
+public/
+
+# Local-only packaged/runtime archives (not part of Pages production source)
+node_modules/
+total-war-2/
+mods_full_backup/
+files/
+overrides/
+cheerpj_dist/
+cheerpj-3.0/
+swf/
+usr/
+data_backup/
+tbench/
+tbench_workspace/
+experimental/sentient-browser/models/
+assets/models_backup/
+localhost*.har
+tmp_shard.bin
+merged_game.jar
+overrides.jar
+graphics.zip
+jre8u271-linux-x64.tar.gz
+Printout.mht
+# Generated diagnostics, reports, backups and browser-test evidence
+*.log
+*.bak
+*.backup
+*.old
+*.orig
+*.tmp
+*.temp
+*~
+playwright-artifacts/
+eslint-report*.json
+eslint-*-report*.json
+eslint-*-report*.txt
+eslint-final-check.txt
+eslint-recheck.txt
+lint_report.txt
+planet-3d-lint.txt
+methods_audit.txt
+retire_report.json
+deploy_error*.txt
+deploy_output.txt
+deploy_final.txt
+deploy_full.txt
+status_output.txt
+assets_from_har.json
+# Local/generated staging outputs
+cheerpj_temp/
+server_logs.txt
+data.zip
+model.wasm
+index_scraped.html
+temp-music-player-backup.js
+# Reproducible local test/debug evidence
+game-boot-final.png
+realtime-peek-final.png
+final_verification.png
+starsector-final-check*.png
+comprehensive-peek-final.png
+starsector-html-debug.png
+games-manifest.backup.json
+livekit_console_debug*.txt
+curl_debug.txt
+universe_methods_final.txt
+temp_log.txt
+debug_output.txt
+temp_awt.jar
+glab.zip
+__tmp_*.py
+# Local media mirrors / duplicate package output (production uses R2/MEGA/root package)
+games/
+gta-6-videos/
+backend/stellar-ai-cli.zip
+# Local extraction workspaces
+temp_sf_extract/
+tmp_extract/
+# Generated diagnostic/browser evidence
+diagnostic-step-*.png
+two-minute-*.png
+stall-diagnosis.png
+starsector-loading-timeout.png
+starsector-starpro-screenshot.png
+mechgen-direct-result.png
+mechgen-result.png
+play_loader_result.png
+play_browser_logs.txt
+play_network_logs.txt
+server_log.txt
+eslint-issues.txt
+result.bmp
+starsector_console_log.md
+# Local reverse-engineering / scratch outputs
+loading_utils*.txt
+starfarer_settings*.txt
+starsector_settings_json_snippet_*.txt
+*_snippet.txt
+*_strings.txt
+*_methods.txt
+*_methods_list.txt
+methods*.txt
+classes.txt
+main_classes.txt
+jar_classes.txt
+jre_*_contents.txt
+livekit_output*.txt
+livekit_real_output.txt
+livekit_console_output.txt
+server_dbg*.txt
+server_out.txt
+node_server_out.txt
+errors_only.txt
+eslint_undef_errors.txt
+models_list.txt
+var_list.txt
+property_scan.txt
+large_files_cleanup.txt
+remaining-games-list.txt
+launcher_ui.png
+screenshot_to_analyze.png
+mechgen_error*.png
+check_e.swf
+public_test.txt
+test-connection.txt
+test_connection.txt
+header.txt
+hex_key.txt
+sys_hex.txt
+kv_list_output.txt
+# Local/generated research and rendering outputs
+The Overall Size and Scale of the HIV Problem.pdf
+The Overall Size and Scale of the HIV Problem.txt
+planet_surface.png
+planet_clouds.png
+Helium_Grotrian_*.png
+P204_Helium_Grotrian_*.png
+P204_Calibration_*.png
+helium_transitions.png

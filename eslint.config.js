@@ -92,7 +92,13 @@ export default [
             "**/*natives*",
             "cheerpj.js",
             "cheerpj-dom.js",
-            "loader3.js"
+            "loader3.js",
+            "loader.js",
+            "loader_test.js",
+            "lwjgl-official.js",
+            "wasm/brotli/brotli_wasm.js",
+            "**/*benchmark*.js",
+            "**/*fuzz*.js"
         ]
     },
     // Browser/Client-side configuration
@@ -300,6 +306,20 @@ export default [
                 FontFace: "readonly",
                 Node: "readonly",
                 KeyboardEvent: "readonly",
+                matchMedia: "readonly",
+                scrollTo: "readonly",
+                innerHeight: "readonly",
+                innerWidth: "readonly",
+                scrollY: "readonly",
+                addEventListener: "readonly",
+                devicePixelRatio: "readonly",
+                queueMicrotask: "readonly",
+                HTMLCanvasElement: "readonly",
+                crossOriginIsolated: "readonly",
+                clients: "readonly",
+                LocalSystemExplorer: "readonly",
+                PioneerRayTracingRenderer: "readonly",
+                BrotliWasmModule: "readonly",
                 Headers: "readonly",
                 // LiveKit
                 LiveKitVoiceIntegration: "readonly",
@@ -573,6 +593,21 @@ export default [
             "no-redeclare": "off"
         }
     },
+    {
+        files: ["scripts/**/*.mjs"],
+        languageOptions: {
+            globals: {
+                innerWidth: "readonly",
+                innerHeight: "readonly",
+                game: "readonly"
+            }
+        }
+    },
+    {
+        files: ["sw.js"],
+        languageOptions: { globals: { clients: "readonly" } }
+    },
+
     // Test configuration
     {
         files: ["tests/**/*.js", "**/*.spec.js", "**/*.test.js"],

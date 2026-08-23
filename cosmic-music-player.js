@@ -319,7 +319,7 @@ class CosmicMusicPlayer {
 
         console.log('🎵 Injecting player HTML into body...');
         const playerHTML = `
-            <div id="cosmic-music-player" style="position: fixed; bottom: 20px; left: 20px; z-index: 9999; background: linear-gradient(135deg, rgba(0, 0, 0, 0.95), rgba(20, 20, 30, 0.98)); border: 2px solid rgba(186, 148, 79, 0.5); border-radius: 15px; padding: 1rem; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(186, 148, 79, 0.2); backdrop-filter: blur(10px); width: 320px; transition: all 0.3s ease;">
+            <div id="cosmic-music-player" style="position: fixed; bottom: 20px; right: 20px; left: auto; z-index: 9999; background: linear-gradient(135deg, rgba(0, 0, 0, 0.95), rgba(20, 20, 30, 0.98)); border: 2px solid rgba(186, 148, 79, 0.5); border-radius: 15px; padding: 1rem; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(186, 148, 79, 0.2); backdrop-filter: blur(10px); width: ${this.isMinimized ? '180px' : '320px'}; transition: box-shadow 0.3s ease, border-color 0.3s ease;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
                         <span style="font-size: 1.5rem; animation: pulse-glow 2s infinite;">🎵</span>
@@ -328,7 +328,7 @@ class CosmicMusicPlayer {
                     <button id="minimize-player" style="background: none; border: none; color: #ba944f; cursor: pointer; font-size: 1.2rem; padding: 0.25rem; transition: transform 0.2s;">−</button>
                 </div>
 
-                <div id="player-content">
+                <div id="player-content" style="display: ${this.isMinimized ? 'none' : 'block'};">
                     <div id="current-track" style="color: rgba(255, 255, 255, 0.9); font-size: 0.85rem; margin-bottom: 0.5rem; font-weight: 500; text-align: center;">Track 1: Cosmic Journey</div>
                     <div id="track-info" style="color: rgba(255, 255, 255, 0.5); font-size: 0.7rem; margin-bottom: 0.75rem; text-align: center;">Track 1 of 19</div>
 
@@ -1571,14 +1571,8 @@ class CosmicMusicPlayer {
         // Keep the homepage player expanded as a showcase, but use a compact mission-audio dock on subpages.
         const currentRoute = window.location.pathname.replace(/\/+$/, '').toLowerCase();
         const isHomepage = currentRoute === '' || currentRoute === '/' || currentRoute.endsWith('/index.html');
-        this.isMinimized = false;
-        localStorage.setItem('cosmicPlayerMinimized', isHomepage ? 'false' : 'true');
-        if (!isHomepage) {
-            setTimeout(() => {
-                const playerContent = document.getElementById('player-content');
-                if (playerContent && !this.isMinimized) this.toggleMinimize();
-            }, 180);
-        }
+        this.isMinimized = !isHomepage;
+        localStorage.setItem('cosmicPlayerMinimized', this.isMinimized ? 'true' : 'false');
 
         // Load playback state from sessionStorage (persists across page navigation)
         const savedState = sessionStorage.getItem('cosmicPlayerState');

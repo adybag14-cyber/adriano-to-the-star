@@ -1,13 +1,13 @@
 {
   "schema": 1,
   "source": "gitlab.com/adybag14-group/starisdons",
-  "sourceRef": "ae64deb2dc77925f9636958eebd328b348e994e6",
-  "sourceSha": "ae64deb2dc77925f9636958eebd328b348e994e6",
+  "sourceRef": "HEAD",
+  "sourceSha": "c7229b9ab4f99204ad2dcd7dd2600f1662e11d91",
   "maxBlobBytes": 5242880,
-  "includedFiles": 8342,
-  "includedBytes": 233233285,
-  "excludedFiles": 50149,
-  "excludedBytes": 5988834780,
+  "includedFiles": 4995,
+  "includedBytes": 310410927,
+  "excludedFiles": 36,
+  "excludedBytes": 304852608,
   "excludedPrefixes": [
     "public/",
     "node_modules/",
@@ -48,179 +48,14 @@
   ],
   "largestExcluded": [
     {
-      "path": "total-war-2/Medieval II - Total War/packs/data_0.pack",
-      "size": 1013426292,
-      "reason": "excluded-prefix"
-    },
-    {
-      "path": "total-war-2/Medieval II - Total War/packs/data_1.pack",
-      "size": 726802234,
-      "reason": "excluded-prefix"
-    },
-    {
-      "path": "experimental/sentient-browser/models/t5_gemma2-q4f16_1/params_shard_1.bin",
-      "size": 83886080,
-      "reason": "excluded-prefix"
-    },
-    {
-      "path": "experimental/sentient-browser/models/t5_gemma2-q4f16_1/params_shard_2.bin",
-      "size": 83886080,
-      "reason": "excluded-prefix"
-    },
-    {
-      "path": "experimental/sentient-browser/models/t5_gemma2-q4f16_1/params_shard_3.bin",
-      "size": 83886080,
-      "reason": "excluded-prefix"
-    },
-    {
-      "path": "experimental/sentient-browser/models/t5_gemma2-q4f16_1/resolve/main/params_shard_1.bin",
-      "size": 83886080,
-      "reason": "excluded-prefix"
-    },
-    {
-      "path": "experimental/sentient-browser/models/t5_gemma2-q4f16_1/resolve/main/params_shard_2.bin",
-      "size": 83886080,
-      "reason": "excluded-prefix"
-    },
-    {
-      "path": "experimental/sentient-browser/models/t5_gemma2-q4f16_1/resolve/main/params_shard_3.bin",
-      "size": 83886080,
-      "reason": "excluded-prefix"
-    },
-    {
-      "path": "overrides.jar",
-      "size": 76957697,
-      "reason": "explicit-runtime-or-diagnostic"
-    },
-    {
-      "path": "graphics.zip",
-      "size": 73945428,
-      "reason": "explicit-runtime-or-diagnostic"
-    },
-    {
-      "path": "jre8u271-linux-x64.tar.gz",
-      "size": 59819900,
-      "reason": "explicit-runtime-or-diagnostic"
-    },
-    {
-      "path": "assets/models/ships/viper.glb",
-      "size": 57474288,
-      "reason": "blob-over-5242880"
-    },
-    {
-      "path": "assets/models_backup/ships/viper.glb",
-      "size": 57474288,
-      "reason": "excluded-prefix"
-    },
-    {
-      "path": "files/sounds/music/music.bin",
-      "size": 53996039,
-      "reason": "excluded-prefix"
-    },
-    {
       "path": "assets/models/props/bridge_table.glb",
       "size": 42977928,
       "reason": "blob-over-5242880"
     },
     {
-      "path": "localhost3.har",
-      "size": 42770582,
-      "reason": "explicit-runtime-or-diagnostic"
-    },
-    {
-      "path": "localhost4.har",
-      "size": 40427132,
-      "reason": "explicit-runtime-or-diagnostic"
-    },
-    {
-      "path": "lint_errors.json",
-      "size": 38084847,
-      "reason": "explicit-runtime-or-diagnostic"
-    },
-    {
-      "path": "cheerpj_dist/4.2/17/lib/modules",
-      "size": 38077827,
-      "reason": "excluded-prefix"
-    },
-    {
-      "path": "cheerpj_dist/4.2/modules",
-      "size": 38077827,
-      "reason": "excluded-prefix"
-    },
-    {
-      "path": "experimental/sentient-browser/models/t5_gemma2-q4f16_1/params_shard_5.bin",
-      "size": 33367040,
-      "reason": "excluded-prefix"
-    },
-    {
-      "path": "experimental/sentient-browser/models/t5_gemma2-q4f16_1/resolve/main/params_shard_5.bin",
-      "size": 33367040,
-      "reason": "excluded-prefix"
-    },
-    {
-      "path": "experimental/sentient-browser/models/t5_gemma2-q4f16_1/params_shard_0.bin",
-      "size": 33216000,
-      "reason": "excluded-prefix"
-    },
-    {
-      "path": "experimental/sentient-browser/models/t5_gemma2-q4f16_1/resolve/main/params_shard_0.bin",
-      "size": 33216000,
-      "reason": "excluded-prefix"
-    },
-    {
-      "path": "tmp_shard.bin",
-      "size": 33216000,
-      "reason": "explicit-runtime-or-diagnostic"
-    },
-    {
-      "path": "merged_game.jar",
-      "size": 29838995,
-      "reason": "explicit-runtime-or-diagnostic"
-    },
-    {
-      "path": "files/starsector.log",
-      "size": 28037750,
-      "reason": "excluded-prefix"
-    },
-    {
-      "path": "experimental/sentient-browser/models/t5_gemma2-q4f16_1/params_shard_4.bin",
-      "size": 27616000,
-      "reason": "excluded-prefix"
-    },
-    {
-      "path": "experimental/sentient-browser/models/t5_gemma2-q4f16_1/resolve/main/params_shard_4.bin",
-      "size": 27616000,
-      "reason": "excluded-prefix"
-    },
-    {
-      "path": "cheerpj-3.0/8/jre/lib/rt.jar",
-      "size": 26793950,
-      "reason": "excluded-prefix"
-    },
-    {
       "path": "assets/models/ruins/relic.glb",
       "size": 24229904,
       "reason": "blob-over-5242880"
-    },
-    {
-      "path": "assets/models_backup/ruins/relic.glb",
-      "size": 24229904,
-      "reason": "excluded-prefix"
-    },
-    {
-      "path": "total-war-2/Medieval II - Total War/medieval2.exe",
-      "size": 19673088,
-      "reason": "excluded-prefix"
-    },
-    {
-      "path": "audio/track-6.mp3",
-      "size": 19111725,
-      "reason": "blob-over-5242880"
-    },
-    {
-      "path": "public/audio/track-6.mp3",
-      "size": 19111725,
-      "reason": "excluded-prefix"
     },
     {
       "path": "assets/models/habitats/outpost_tower.glb",
@@ -233,49 +68,9 @@
       "reason": "blob-over-5242880"
     },
     {
-      "path": "assets/models_backup/habitats/outpost_tower.glb",
-      "size": 17540348,
-      "reason": "excluded-prefix"
-    },
-    {
-      "path": "assets/models_backup/science/telescope.glb",
-      "size": 17540348,
-      "reason": "excluded-prefix"
-    },
-    {
-      "path": "experimental/sentient-browser/models/t5_gemma2-q4f16_1/params_shard_6.bin",
-      "size": 16979200,
-      "reason": "excluded-prefix"
-    },
-    {
-      "path": "experimental/sentient-browser/models/t5_gemma2-q4f16_1/resolve/main/params_shard_6.bin",
-      "size": 16979200,
-      "reason": "excluded-prefix"
-    },
-    {
-      "path": "audio/track-8.mp3",
-      "size": 16511085,
-      "reason": "blob-over-5242880"
-    },
-    {
-      "path": "public/audio/track-8.mp3",
-      "size": 16511085,
-      "reason": "excluded-prefix"
-    },
-    {
       "path": "assets/models/characters/pioneer_suit.glb",
       "size": 13491364,
       "reason": "blob-over-5242880"
-    },
-    {
-      "path": "assets/models_backup/characters/pioneer_suit.glb",
-      "size": 13491364,
-      "reason": "excluded-prefix"
-    },
-    {
-      "path": "total-war-2/_Redist/dxnt.cab",
-      "size": 13265040,
-      "reason": "excluded-prefix"
     },
     {
       "path": "assets/models/fauna/sky_whale.glb",
@@ -283,19 +78,154 @@
       "reason": "blob-over-5242880"
     },
     {
-      "path": "assets/models_backup/fauna/sky_whale.glb",
-      "size": 12488144,
-      "reason": "excluded-prefix"
+      "path": "assets/models/vehicles/lunar_rover.glb",
+      "size": 11778688,
+      "reason": "blob-over-5242880"
     },
     {
-      "path": "total-war-2/Medieval II - Total War/data/world/maps/battle/norman_prologue/battle_of_hastings/map.wfc",
-      "size": 12458148,
-      "reason": "excluded-prefix"
+      "path": "assets/models/resources/ice_core.glb",
+      "size": 11221356,
+      "reason": "blob-over-5242880"
     },
     {
-      "path": "swf/f93116386publicfileschaos-faction-2-REMOTE.SWF",
-      "size": 12337577,
-      "reason": "excluded-prefix"
+      "path": "assets/models/resources/rare_earth.glb",
+      "size": 11221356,
+      "reason": "blob-over-5242880"
+    },
+    {
+      "path": "assets/models/props/holo_console.glb",
+      "size": 10614184,
+      "reason": "blob-over-5242880"
+    },
+    {
+      "path": "assets/models/science/radar_array.glb",
+      "size": 10614184,
+      "reason": "blob-over-5242880"
+    },
+    {
+      "path": "assets/models/habitats/airlock.glb",
+      "size": 9564264,
+      "reason": "blob-over-5242880"
+    },
+    {
+      "path": "assets/models/props/emergency_beacon.glb",
+      "size": 9564264,
+      "reason": "blob-over-5242880"
+    },
+    {
+      "path": "assets/models/flora/crystalline_fern.glb",
+      "size": 9300744,
+      "reason": "blob-over-5242880"
+    },
+    {
+      "path": "assets/models/industrial/chemical_vat.glb",
+      "size": 8966700,
+      "reason": "blob-over-5242880"
+    },
+    {
+      "path": "assets/models/props/datapad.glb",
+      "size": 8966700,
+      "reason": "blob-over-5242880"
+    },
+    {
+      "path": "assets/models/props/life_support_tank.glb",
+      "size": 8966700,
+      "reason": "blob-over-5242880"
+    },
+    {
+      "path": "assets/models/flora/glow_cap.glb",
+      "size": 8110040,
+      "reason": "blob-over-5242880"
+    },
+    {
+      "path": "assets/models/comms/dish_large.glb",
+      "size": 7833440,
+      "reason": "blob-over-5242880"
+    },
+    {
+      "path": "starfarer.api.jar",
+      "size": 7182557,
+      "reason": "blob-over-5242880"
+    },
+    {
+      "path": "starfarer.api_v2.jar",
+      "size": 7182557,
+      "reason": "blob-over-5242880"
+    },
+    {
+      "path": "assets/models/fauna/hex_stalker.glb",
+      "size": 6401616,
+      "reason": "blob-over-5242880"
+    },
+    {
+      "path": "starfarer_obf.jar",
+      "size": 6029184,
+      "reason": "blob-over-5242880"
+    },
+    {
+      "path": "starfarer_obf_v2.jar",
+      "size": 6029184,
+      "reason": "blob-over-5242880"
+    },
+    {
+      "path": "starfarer_obf_unsigned.jar",
+      "size": 5840895,
+      "reason": "blob-over-5242880"
+    },
+    {
+      "path": "assets/models/mega/dyson_ring_segment.glb",
+      "size": 5742828,
+      "reason": "blob-over-5242880"
+    },
+    {
+      "path": "assets/models/industrial/repair_drone.glb",
+      "size": 5422412,
+      "reason": "blob-over-5242880"
+    },
+    {
+      "path": "GITLAB-API-KEYS-SETUP.md",
+      "size": 10941,
+      "reason": "explicit-runtime-or-diagnostic"
+    },
+    {
+      "path": "REQUIRED-API-KEYS-GITLAB.md",
+      "size": 4775,
+      "reason": "explicit-runtime-or-diagnostic"
+    },
+    {
+      "path": "SETUP-API-KEYS.md",
+      "size": 4152,
+      "reason": "explicit-runtime-or-diagnostic"
+    },
+    {
+      "path": "GEMINI-API-KEY-SETUP.md",
+      "size": 3066,
+      "reason": "explicit-runtime-or-diagnostic"
+    },
+    {
+      "path": "inject-api-keys.ps1",
+      "size": 2778,
+      "reason": "explicit-runtime-or-diagnostic"
+    },
+    {
+      "path": "backend/LIVE-API-WITH-API-KEY-SUPPORT.md",
+      "size": 2163,
+      "reason": "explicit-runtime-or-diagnostic"
+    },
+    {
+      "path": "GET-SUPABASE-CREDENTIALS.md",
+      "size": 1872,
+      "reason": "explicit-runtime-or-diagnostic"
+    },
+    {
+      "path": "UPDATE-GEMINI-API-KEY.md",
+      "size": 940,
+      "reason": "explicit-runtime-or-diagnostic"
+    },
+    {
+      "path": ".env",
+      "size": 32,
+      "reason": "credential-material"
     }
   ]
 }

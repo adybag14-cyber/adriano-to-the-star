@@ -10,7 +10,7 @@ class MarketplacePaymentIntegration {
         this.paymentMethods = ['stripe', 'paypal'];
         this.currentPaymentMethod = null;
         this.isInitialized = false;
-        
+
         this.init();
     }
 
@@ -18,16 +18,11 @@ class MarketplacePaymentIntegration {
      * Initialize payment integration
      */
     async init() {
-        // Initialize Stripe (if key available)
-        if (window.STRIPE_PUBLIC_KEY) {
-            await this.initStripe();
-        }
-
-        // Initialize PayPal (if client ID available)
-        if (window.PAYPAL_CLIENT_ID) {
-            await this.initPayPal();
-        }
-
+        // Payment SDKs are intentionally lazy-loaded on the first payment action.
+        // Loading third-party SDKs during page startup makes the entire Marketplace
+        // look broken when a CDN is blocked or temporarily unavailable.
+        this.stripeConfigured = Boolean(window.STRIPE_PUBLIC_KEY);
+        this.paypalConfigured = Boolean(window.PAYPAL_CLIENT_ID);
         this.isInitialized = true;
         console.log('💳 Marketplace Payment Integration initialized');
     }
@@ -49,10 +44,16 @@ class MarketplacePaymentIntegration {
                 });
             }
 
+            if (typeof window.Stripe !== 'function') {
+                throw new Error('Stripe.js loaded without exposing the Stripe constructor');
+            }
             this.stripe = window.Stripe(window.STRIPE_PUBLIC_KEY);
             console.log('✅ Stripe initialized');
+            return true;
         } catch (error) {
-            console.error('Failed to initialize Stripe:', error);
+            console.warn('Stripe is temporarily unavailable; card payments remain disabled:', error);
+            this.stripe = null;
+            return false;
         }
     }
 
@@ -75,8 +76,11 @@ class MarketplacePaymentIntegration {
 
             this.paypal = window.paypal;
             console.log('✅ PayPal initialized');
+            return true;
         } catch (error) {
-            console.error('Failed to initialize PayPal:', error);
+            console.warn('PayPal is temporarily unavailable; PayPal payments remain disabled:', error);
+            this.paypal = null;
+            return false;
         }
     }
 
@@ -200,9 +204,12 @@ class MarketplacePaymentIntegration {
      */
     async getBuyerName() {
         // Get from user profile or form
-        if (window.supabase && window.supabase.auth && typeof window.supabase.auth.getUser === 'function') {
+        const supabaseClient = window.supabaseClient?.auth?.getUser
+            ? window.supabaseClient
+            : (window.supabase?.auth?.getUser ? window.supabase : null);
+        if (supabaseClient) {
             try {
-                const { data: { user } } = await window.supabase.auth.getUser();
+                const { data: { user } } = await supabaseClient.auth.getUser();
                 return user?.user_metadata?.name || 'Buyer';
             } catch (error) {
                 console.warn('⚠️ Could not get user for buyer name:', error);
@@ -215,7 +222,14 @@ class MarketplacePaymentIntegration {
     /**
      * Show payment modal
      */
-    showPaymentModal(listing, amount, currency = 'USD') {
+    async showPaymentModal(listing, amount, currency = 'USD') {
+        if (this.stripeConfigured && !this.stripe) {
+            await this.initStripe();
+        }
+        if (this.paypalConfigured && !this.paypal) {
+            await this.initPayPal();
+        }
+
         const modal = document.createElement('div');
         modal.className = 'payment-modal';
         modal.style.cssText = `
@@ -240,9 +254,10 @@ class MarketplacePaymentIntegration {
                 </div>
                 <div style="margin-bottom: 1.5rem;">
                     <label style="display: block; margin-bottom: 0.5rem;">Payment Method:</label>
-                    <select id="payment-method-select" style="width: 100%; padding: 0.75rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(186,148,79,0.5); border-radius: 8px; color: #fff;">
+                    <select id="payment-method-select" style="width: 100%; padding: 0.75rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(186,148,79,0.5); border-radius: 8px; color: #fff;" ${(!this.stripe && !this.paypal) ? 'disabled' : ''}>
                         ${this.stripe ? '<option value="stripe">Stripe (Card)</option>' : ''}
                         ${this.paypal ? '<option value="paypal">PayPal</option>' : ''}
+                        ${(!this.stripe && !this.paypal) ? '<option value="">Payment providers unavailable</option>' : ''}
                     </select>
                 </div>
                 <div id="payment-container"></div>
@@ -261,8 +276,8 @@ class MarketplacePaymentIntegration {
 
         // Setup payment method change
         const methodSelect = modal.querySelector('#payment-method-select');
-        methodSelect.addEventListener('change', () => {
-            this.updatePaymentContainer(modal.querySelector('#payment-container'), methodSelect.value, amount, currency, listing.id);
+        methodSelect?.addEventListener('change', () => {
+            this.updatePaymentContainer(modal.querySelector('#payment-container'), methodSelect?.value || '', amount, currency, listing.id);
         });
 
         // Setup cancel
@@ -271,7 +286,14 @@ class MarketplacePaymentIntegration {
         });
 
         // Setup confirm payment
-        modal.querySelector('#confirm-payment').addEventListener('click', async () => {
+        const confirmButton = modal.querySelector('#confirm-payment');
+        if (!this.stripe && !this.paypal) {
+            confirmButton.disabled = true;
+            confirmButton.textContent = 'Payment provider unavailable';
+            confirmButton.style.opacity = '0.6';
+            confirmButton.style.cursor = 'not-allowed';
+        }
+        confirmButton.addEventListener('click', async () => {
             try {
                 const result = await this.processPayment(amount, currency, listing.id, methodSelect.value);
                 this.showPaymentSuccess(result);
@@ -282,7 +304,7 @@ class MarketplacePaymentIntegration {
         });
 
         // Initialize payment container
-        this.updatePaymentContainer(modal.querySelector('#payment-container'), methodSelect.value, amount, currency, listing.id);
+        this.updatePaymentContainer(modal.querySelector('#payment-container'), methodSelect?.value || '', amount, currency, listing.id);
     }
 
     /**
@@ -379,7 +401,7 @@ class MarketplacePaymentIntegration {
 // Initialize globally
 if (typeof window !== 'undefined') {
     window.marketplacePaymentIntegration = new MarketplacePaymentIntegration();
-    
+
     // Make available globally
     window.getMarketplacePaymentIntegration = () => window.marketplacePaymentIntegration;
 }

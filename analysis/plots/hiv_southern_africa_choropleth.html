@@ -1,18 +1,18 @@
 <html>
 <head><meta charset="utf-8" />    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
-    <script src="universal-simulation-hub.js"></script>
-    <script src="void-warfare-engine.js"></script>
-    <script src="planetary-environment-engine.js"></script>
-    <script src="galactic-governance-engine.js"></script>
-    <script src="mining-resource-engine.js"></script>
-    <script src="xeno-intelligence-engine.js"></script>
-    <script src="quantum-propulsion-engine.js"></script>
-    <script src="intelligence-shadow-engine.js"></script>
-    <script src="fleet-command-mega-engine.js"></script>
-    <script src="deep-space-industry-engine.js"></script>
-    <script src="procedural-content-engine.js"></script>
-    <script src="galactic-commerce-engine.js"></script>
-    <script src="metaphysics-apotheosis-engine.js"></script>
+    <script src="/universal-simulation-hub.js"></script>
+    <script src="/void-warfare-engine.js"></script>
+    <script src="/planetary-environment-engine.js"></script>
+    <script src="/galactic-governance-engine.js"></script>
+    <script src="/mining-resource-engine.js"></script>
+    <script src="/xeno-intelligence-engine.js"></script>
+    <script src="/quantum-propulsion-engine.js"></script>
+    <script src="/intelligence-shadow-engine.js"></script>
+    <script src="/fleet-command-mega-engine.js"></script>
+    <script src="/deep-space-industry-engine.js"></script>
+    <script src="/procedural-content-engine.js"></script>
+    <script src="/galactic-commerce-engine.js"></script>
+    <script src="/metaphysics-apotheosis-engine.js"></script>
 </head>
 <body>
     <div>                        <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
@@ -265,7 +265,7 @@ float cookTorranceSpecular(
   float G1 = (2.0 * NdotH * VdotN) / VdotH;
   float G2 = (2.0 * NdotH * LdotN) / LdotH;
   float G = min(1.0, min(G1, G2));
-  
+
   //Distribution term
   float D = beckmannDistribution(NdotH, roughness);
 
@@ -277,7 +277,7 @@ float cookTorranceSpecular(
 }
 
 bool outOfRange(float a, float b, float p) {
-  return ((p > max(a, b)) || 
+  return ((p > max(a, b)) ||
           (p < min(a, b)));
 }
 
@@ -425,7 +425,7 @@ void main() {
 #define GLSLIFY 1
 
 bool outOfRange(float a, float b, float p) {
-  return ((p > max(a, b)) || 
+  return ((p > max(a, b)) ||
           (p < min(a, b)));
 }
 
@@ -543,7 +543,7 @@ float cookTorranceSpecular(
   float G1 = (2.0 * NdotH * VdotN) / VdotH;
   float G2 = (2.0 * NdotH * LdotN) / LdotH;
   float G = min(1.0, min(G1, G2));
-  
+
   //Distribution term
   float D = beckmannDistribution(NdotH, roughness);
 
@@ -557,7 +557,7 @@ float cookTorranceSpecular(
 //#pragma glslify: beckmann = require(glsl-specular-beckmann) // used in gl-surface3d
 
 bool outOfRange(float a, float b, float p) {
-  return ((p > max(a, b)) || 
+  return ((p > max(a, b)) ||
           (p < min(a, b)));
 }
 
@@ -636,7 +636,7 @@ void main() {
 #define GLSLIFY 1
 
 bool outOfRange(float a, float b, float p) {
-  return ((p > max(a, b)) || 
+  return ((p > max(a, b)) ||
           (p < min(a, b)));
 }
 
@@ -671,7 +671,7 @@ void main() {
 #define GLSLIFY 1
 
 bool outOfRange(float a, float b, float p) {
-  return ((p > max(a, b)) || 
+  return ((p > max(a, b)) ||
           (p < min(a, b)));
 }
 
@@ -745,7 +745,7 @@ void main() {
 #define GLSLIFY 1
 
 bool outOfRange(float a, float b, float p) {
-  return ((p > max(a, b)) || 
+  return ((p > max(a, b)) ||
           (p < min(a, b)));
 }
 
@@ -778,7 +778,7 @@ void main() {
 #define GLSLIFY 1
 
 bool outOfRange(float a, float b, float p) {
-  return ((p > max(a, b)) || 
+  return ((p > max(a, b)) ||
           (p < min(a, b)));
 }
 
@@ -893,7 +893,7 @@ float beckmannSpecular(
 }
 
 bool outOfRange(float a, float b, float p) {
-  return ((p > max(a, b)) || 
+  return ((p > max(a, b)) ||
           (p < min(a, b)));
 }
 
@@ -995,7 +995,7 @@ void main() {
 #define GLSLIFY 1
 
 bool outOfRange(float a, float b, float p) {
-  return ((p > max(a, b)) || 
+  return ((p > max(a, b)) ||
           (p < min(a, b)));
 }
 
@@ -1043,7 +1043,7 @@ void main() {
 #define GLSLIFY 1
 
 bool outOfRange(float a, float b, float p) {
-  return ((p > max(a, b)) || 
+  return ((p > max(a, b)) ||
           (p < min(a, b)));
 }
 
@@ -1100,7 +1100,7 @@ void main() {
 #define GLSLIFY 1
 
 bool outOfRange(float a, float b, float p) {
-  return ((p > max(a, b)) || 
+  return ((p > max(a, b)) ||
           (p < min(a, b)));
 }
 
@@ -1158,7 +1158,7 @@ void main() {
 #define GLSLIFY 1
 
 bool outOfRange(float a, float b, float p) {
-  return ((p > max(a, b)) || 
+  return ((p > max(a, b)) ||
           (p < min(a, b)));
 }
 
@@ -1218,7 +1218,7 @@ void main() {
 #define GLSLIFY 1
 
 bool outOfRange(float a, float b, float p) {
-  return ((p > max(a, b)) || 
+  return ((p > max(a, b)) ||
           (p < min(a, b)));
 }
 
@@ -1254,7 +1254,7 @@ void main() {
 #define GLSLIFY 1
 
 bool outOfRange(float a, float b, float p) {
-  return ((p > max(a, b)) || 
+  return ((p > max(a, b)) ||
           (p < min(a, b)));
 }
 
@@ -1558,7 +1558,7 @@ void main() {
 #define GLSLIFY 1
 
 bool outOfRange(float a, float b, float p) {
-  return ((p > max(a, b)) || 
+  return ((p > max(a, b)) ||
           (p < min(a, b)));
 }
 
@@ -1705,7 +1705,7 @@ float cookTorranceSpecular(
   float G1 = (2.0 * NdotH * VdotN) / VdotH;
   float G2 = (2.0 * NdotH * LdotN) / LdotH;
   float G = min(1.0, min(G1, G2));
-  
+
   //Distribution term
   float D = beckmannDistribution(NdotH, roughness);
 
@@ -1717,7 +1717,7 @@ float cookTorranceSpecular(
 }
 
 bool outOfRange(float a, float b, float p) {
-  return ((p > max(a, b)) || 
+  return ((p > max(a, b)) ||
           (p < min(a, b)));
 }
 
@@ -1828,7 +1828,7 @@ void main() {
 #define GLSLIFY 1
 
 bool outOfRange(float a, float b, float p) {
-  return ((p > max(a, b)) || 
+  return ((p > max(a, b)) ||
           (p < min(a, b)));
 }
 
@@ -1903,7 +1903,7 @@ void main() {
 #define GLSLIFY 1
 
 bool outOfRange(float a, float b, float p) {
-  return ((p > max(a, b)) || 
+  return ((p > max(a, b)) ||
           (p < min(a, b)));
 }
 
@@ -1989,7 +1989,7 @@ vec4 packFloat(float v) {
 }
 
 bool outOfRange(float a, float b, float p) {
-  return ((p > max(a, b)) || 
+  return ((p > max(a, b)) ||
           (p < min(a, b)));
 }
 

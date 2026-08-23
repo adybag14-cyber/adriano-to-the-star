@@ -35,12 +35,50 @@ function Copy-DirectorySafely {
     }
 }
 
-# Root pages and presentation assets.
-Get-ChildItem -Path . -File -Filter "*.html" | Copy-Item -Destination "public\" -Force
+# Root pages and presentation assets. Keep developer-only test/debug harnesses in the
+# repository when they are still useful to CI, but never publish them to GitLab Pages.
+function Test-IsNonProductionRootWebFile {
+    param([Parameter(Mandatory = $true)][System.IO.FileInfo]$File)
+
+    $Name = $File.Name
+    if ($Name -in @(
+        "index_scraped.html",
+        "index-corrected.html",
+        "index-simple.html",
+        "index-ultra-simple.html",
+        "index-working.html",
+        "index_new.html",
+        "game.html",
+        "play.html",
+        "starsector_4.2_final.html",
+        "cj3_debug.js",
+        "temp-music-player-backup.js"
+    )) { return $true }
+    if ($Name -match '(?i)^test(?:[-_].*|\.html$)') { return $true }
+    if ($Name -match '(?i)(?:^|[-_])(?:test|debug)(?:[-_].*)?\.html$') { return $true }
+    if ($Name -match '(?i)(?:benchmark|fuzz).*\.html$') { return $true }
+    if ($Name -match '(?i)^test[-_].*\.js$') { return $true }
+    if ($Name -match '(?i)(?:^|[-_])test\.js$') { return $true }
+    if ($Name -match '(?i)\.(?:test|spec)\.js$') { return $true }
+    return $false
+}
+
+$RootHtmlFiles = Get-ChildItem -Path . -File -Filter "*.html" |
+    Where-Object { -not (Test-IsNonProductionRootWebFile $_) }
+$RootHtmlFiles | Copy-Item -Destination "public\" -Force
 Get-ChildItem -Path . -File -Filter "*.css" | Copy-Item -Destination "public\" -Force
 
-# Root JavaScript is retained because many legacy pages load scripts directly by filename.
-Get-ChildItem -Path . -File -Filter "*.js" | Copy-Item -Destination "public\" -Force
+# Root JavaScript is retained because many legacy pages load scripts directly by filename,
+# except test/spec harnesses that are not part of the production site.
+$RootJavaScriptFiles = Get-ChildItem -Path . -File -Filter "*.js" |
+    Where-Object { -not (Test-IsNonProductionRootWebFile $_) }
+$RootJavaScriptFiles | Copy-Item -Destination "public\" -Force
+
+$ExcludedRootWebFiles = Get-ChildItem -Path . -File |
+    Where-Object { ($_.Extension -in '.html', '.js') -and (Test-IsNonProductionRootWebFile $_) }
+if ($ExcludedRootWebFiles) {
+    Write-Host "Excluded $($ExcludedRootWebFiles.Count) developer-only root web files from Pages."
+}
 
 $CoreAssets = @(
     "manifest.json",
@@ -50,13 +88,27 @@ $CoreAssets = @(
     "sitemap.xml",
     "sitemap_index.xml",
     "robots.txt",
-    "sw.js"
+    "70cf5dbdf5fa4e0f9e4f847c624468fe.txt",
+    "sw.js",
+    "games-manifest.json",
+    "stellar-ai-cli.zip"
 )
 foreach ($file in $CoreAssets) {
     if (Test-Path $file) {
         Copy-Item $file -Destination "public\" -Force
     }
 }
+
+$IndexNowVerificationFile = "70cf5dbdf5fa4e0f9e4f847c624468fe.txt"
+$IndexNowKey = (Get-Content -LiteralPath $IndexNowVerificationFile -Raw).Trim()
+if ($IndexNowKey -ne [System.IO.Path]::GetFileNameWithoutExtension($IndexNowVerificationFile)) {
+    throw "IndexNow verification filename and value do not match."
+}
+[System.IO.File]::WriteAllText(
+    (Join-Path "public" $IndexNowVerificationFile),
+    $IndexNowKey,
+    [System.Text.UTF8Encoding]::new($false)
+)
 
 $Directories = @(
     "images",
@@ -74,6 +126,26 @@ foreach ($directory in $Directories) {
     Copy-DirectorySafely $directory "public\$directory"
 }
 
+# Never publish nested developer fixtures from otherwise production-facing directories.
+if (Test-Path -LiteralPath "public\forms\test") {
+    Remove-Item -LiteralPath "public\forms\test" -Recurse -Force
+}
+
+# Publish only the model assets that live production code references directly.
+# The rest of assets/models stays out of Pages and can remain source/R2 material.
+$ProductionModelAssets = @(
+    "assets\models\ships\viper.glb",
+    "assets\models\defense\missile_battery.glb"
+)
+foreach ($asset in $ProductionModelAssets) {
+    if (-not (Test-Path -LiteralPath $asset)) {
+        throw "Required production model is missing: $asset"
+    }
+    $destination = Join-Path "public" $asset
+    $destinationDirectory = Split-Path -Parent $destination
+    New-Item -ItemType Directory -Path $destinationDirectory -Force | Out-Null
+    Copy-Item -LiteralPath $asset -Destination $destination -Force
+}
 # Refresh Pioneer science feeds at build time. Browsers only read the resulting
 # same-origin snapshot, so upstream CORS/rate-limit failures never leak into gameplay.
 $SpaceFeedUpdater = "scripts\update-space-feeds.ps1"
@@ -125,6 +197,18 @@ if (Test-Path "experimental") {
         Remove-Item -Force
 }
 
+# Apply the static production experience before asset versioning. This produces
+# crawler-readable metadata and visible breadcrumbs for the exact public-page
+# inventory while leaving experimental application internals untouched.
+$ProductionPagePreparer = "scripts\prepare-production-pages.mjs"
+if (-not (Test-Path -LiteralPath $ProductionPagePreparer)) {
+    throw "Production page preparer is missing: $ProductionPagePreparer"
+}
+& node $ProductionPagePreparer "public"
+if ($LASTEXITCODE -ne 0) {
+    throw "Production page preparation failed with exit code $LASTEXITCODE"
+}
+
 # Version local CSS and JavaScript references in generated output. Cloudflare can cache
 # negative responses, so a commit-specific query prevents a stale 404 from surviving
 # after the asset has been restored by a later deployment. Local script tags also opt
@@ -174,9 +258,11 @@ foreach ($HtmlFile in Get-ChildItem "public" -Recurse -File -Filter "*.html") {
     }
 }
 
-# Runtime loaders, workers, and dynamic imports may contain local asset paths inside
-# JavaScript strings rather than HTML attributes. Version those generated references too.
-$LocalAssetStringPattern = '(?i)(?<quote>["''])(?<path>(?!https?:|//|data:|#|mailto:)[^"''?#\r\n]+?\.(?:css|js))(?<query>\?[^"'']*)?\k<quote>'
+# Runtime loaders, workers, dynamic imports, and data feeds may contain local asset
+# paths inside JavaScript strings rather than HTML attributes. Version those generated
+# references too. JSON is included so returning visitors cannot receive a stale feed
+# from an intermediary/browser cache after the JavaScript itself has been upgraded.
+$LocalAssetStringPattern = '(?i)(?<quote>["''])(?<path>(?!https?:|//|data:|#|mailto:)[^"''?#\r\n]+?\.(?:css|js|json))(?<query>\?[^"'']*)?\k<quote>'
 $VersionedJavaScriptReferenceCount = 0
 foreach ($JavaScriptFile in Get-ChildItem "public" -Recurse -File -Filter "*.js") {
     $JavaScriptContent = [System.IO.File]::ReadAllText($JavaScriptFile.FullName)
@@ -201,6 +287,27 @@ foreach ($JavaScriptFile in Get-ChildItem "public" -Recurse -File -Filter "*.js"
 Write-Host "Versioned $VersionedHtmlReferenceCount HTML references and $VersionedJavaScriptReferenceCount JavaScript runtime references with asset version $AssetVersion."
 Write-Host "Excluded $RocketLoaderExclusionCount local script tags from Cloudflare Rocket Loader."
 
+# Reject structurally corrupted HTML before deployment. A past bulk SEO edit duplicated
+# complete bodies and even placed <main>/<footer> inside <head>; browsers recover
+# unpredictably and execute scripts twice, so fail the build instead of publishing it.
+$StructuralHtmlErrors = @()
+foreach ($HtmlFile in Get-ChildItem "public" -Recurse -File -Filter "*.html") {
+    $Markup = [System.IO.File]::ReadAllText($HtmlFile.FullName)
+    $BodyCount = ([regex]::Matches($Markup, '(?i)<body\b')).Count
+    $MainCount = ([regex]::Matches($Markup, '(?i)<main\b')).Count
+    $FooterCount = ([regex]::Matches($Markup, '(?i)<footer\b')).Count
+    $HeadMatch = [regex]::Match($Markup, '(?is)<head\b[^>]*>(.*?)</head>')
+    $ContentInsideHead = $HeadMatch.Success -and [regex]::IsMatch($HeadMatch.Groups[1].Value, '(?i)<(?:main|footer)\b')
+
+    if ($BodyCount -gt 1 -or $MainCount -gt 1 -or $FooterCount -gt 1 -or $ContentInsideHead) {
+        $RelativeHtmlPath = [System.IO.Path]::GetRelativePath((Resolve-Path "public"), $HtmlFile.FullName)
+        $StructuralHtmlErrors += "$RelativeHtmlPath (body=$BodyCount main=$MainCount footer=$FooterCount content-in-head=$ContentInsideHead)"
+    }
+}
+if ($StructuralHtmlErrors.Count -gt 0) {
+    throw "Structurally invalid production HTML: $($StructuralHtmlErrors -join '; ')"
+}
+
 # Minify only the generated Pioneer startup scripts after all runtime asset URLs have been
 # rewritten. Source files remain untouched, and Terser keeps top-level/global names intact.
 $PioneerMinifier = "scripts\minify-pioneer-pages.mjs"
@@ -217,6 +324,8 @@ $RequiredFiles = @(
     "index.html",
     "landing.css",
     "landing-experience.js",
+    "site-experience.css",
+    "experimental-lab.css",
     "ita-music-player.css",
     "i18n.js",
     "i18n-styles.css",
@@ -230,13 +339,60 @@ $RequiredFiles = @(
     "database.html",
     "database-ita-shell.css",
     "database-experience.js",
+    "education.html",
+    "education-viewer.js",
+    "images\earth_texture_map.png",
+    "images\textures\mercury.jpg",
+    "images\textures\venus.jpg",
+    "images\textures\mars.jpg",
+    "images\textures\jupiter.jpg",
+    "images\textures\saturn.jpg",
+    "images\textures\uranus.jpg",
+    "images\textures\neptune.jpg",
     "data\space-feeds.json",
+    "games-manifest.json",
+    "stellar-ai-cli.zip",
+    "assets\models\ships\viper.glb",
+    "assets\models\defense\missile_battery.glb",
     "CNAME"
 )
 
 $MissingFiles = $RequiredFiles | Where-Object { -not (Test-Path (Join-Path "public" $_)) }
 if ($MissingFiles) {
     throw "Build is missing required production files: $($MissingFiles -join ', ')"
+}
+
+# Education planet surfaces must be real image payloads, not tiny CDN/LFS/error text.
+$EducationTextureAssets = @(
+    "images\earth_texture_map.png",
+    "images\textures\mercury.jpg",
+    "images\textures\venus.jpg",
+    "images\textures\mars.jpg",
+    "images\textures\jupiter.jpg",
+    "images\textures\saturn.jpg",
+    "images\textures\uranus.jpg",
+    "images\textures\neptune.jpg"
+)
+foreach ($TextureAsset in $EducationTextureAssets) {
+    $TexturePath = Join-Path "public" $TextureAsset
+    $TextureBytes = [System.IO.File]::ReadAllBytes($TexturePath)
+    if ($TextureBytes.Length -lt 1024) {
+        throw "Education texture is suspiciously small/corrupt: $TextureAsset ($($TextureBytes.Length) bytes)"
+    }
+    $IsJpeg = $TextureBytes.Length -ge 2 -and $TextureBytes[0] -eq 0xFF -and $TextureBytes[1] -eq 0xD8
+    $IsPng = $TextureBytes.Length -ge 8 -and $TextureBytes[0] -eq 0x89 -and $TextureBytes[1] -eq 0x50 -and $TextureBytes[2] -eq 0x4E -and $TextureBytes[3] -eq 0x47
+    if (-not ($IsJpeg -or $IsPng)) {
+        throw "Education texture is not a valid JPEG/PNG payload: $TextureAsset"
+    }
+}
+
+$StarsectorRedirectPage = Get-Content "public\starsector.html" -Raw
+$StarsectorRedirectTarget = "https://adybag14-cyber.github.io/starsectorquick/launch.html?autostart=1"
+if (-not $StarsectorRedirectPage.Contains($StarsectorRedirectTarget)) {
+    throw "Starsector page does not redirect to the production StarsectorQuick launcher."
+}
+if ($StarsectorRedirectPage -match "(?i)cheerpj|starfarer_obf|lwjgl") {
+    throw "Starsector redirect page unexpectedly contains the retired in-site Java launcher."
 }
 
 $HomePage = Get-Content "public\index.html" -Raw
@@ -276,6 +432,15 @@ foreach ($ForbiddenText in $ForbiddenContent) {
     if ($HomePage.Contains($ForbiddenText)) {
         throw "Stale or unsafe homepage content remains in the Pages artifact: $ForbiddenText"
     }
+}
+
+$ProductionPageAuditor = "scripts\audit-production-pages.mjs"
+if (-not (Test-Path -LiteralPath $ProductionPageAuditor)) {
+    throw "Production page auditor is missing: $ProductionPageAuditor"
+}
+& node $ProductionPageAuditor "public"
+if ($LASTEXITCODE -ne 0) {
+    throw "Production page audit failed with exit code $LASTEXITCODE"
 }
 
 Set-Content -Path "public\test_file.txt" -Value "GitLab Pages artifact verified during build."

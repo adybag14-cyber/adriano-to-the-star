@@ -121,10 +121,21 @@ class SpaceAPIDashboard {
         if (content) content.style.display = 'none';
         if (error) error.style.display = 'none';
         
+        let hasCachedPreview = false;
         try {
             if (forceRefresh) {
                 // Clear cache to force refresh
                 this.api.cache.clear();
+            } else if (typeof this.api.getBuildCachedUpdates === 'function') {
+                const cached = await this.api.getBuildCachedUpdates();
+                if (cached.exoplanets.length || cached.launches.length || cached.news.length) {
+                    hasCachedPreview = true;
+                    if (loading) loading.style.display = 'none';
+                    if (content) {
+                        content.style.display = 'block';
+                        this.renderAllData(cached);
+                    }
+                }
             }
             
             const data = await this.api.getAllUpdates();
@@ -135,6 +146,10 @@ class SpaceAPIDashboard {
                 this.renderAllData(data);
             }
         } catch (err) {
+            if (hasCachedPreview) {
+                console.info('Live space data is unavailable; keeping the build-cached snapshot.', err?.message || err);
+                return;
+            }
             console.error('Error loading space data:', err);
             if (loading) loading.style.display = 'none';
             if (error) error.style.display = 'block';
@@ -272,16 +287,20 @@ class SpaceAPIDashboard {
             return '<p class="no-data">No exoplanet data available</p>';
         }
         
-        return exoplanets.map(planet => `
+        return exoplanets.map(planet => {
+            const distance = Number(planet.distance);
+            const distanceLabel = Number.isFinite(distance) ? `${distance.toFixed(2)} ly` : '';
+            return `
             <div class="exoplanet-item">
                 <div class="planet-name">${planet.name || 'Unknown'}</div>
                 <div class="planet-details">
                     ${planet.discoveryYear ? `<span>Discovered: ${planet.discoveryYear}</span>` : ''}
-                    ${planet.distance ? `<span>Distance: ${planet.distance.toFixed(2)} ly</span>` : ''}
+                    ${distanceLabel ? `<span>Distance: ${distanceLabel}</span>` : ''}
                     ${planet.method ? `<span>Method: ${planet.method}</span>` : ''}
                 </div>
             </div>
-        `).join('');
+        `;
+        }).join('');
     }
     
     /**
@@ -599,4 +618,3 @@ class SpaceAPIDashboard {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = SpaceAPIDashboard;
 }
-

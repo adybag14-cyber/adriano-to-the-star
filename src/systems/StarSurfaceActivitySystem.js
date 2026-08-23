@@ -1,7 +1,7 @@
 /**
  * ☀️ STAR SURFACE ACTIVITY SYSTEM
  * Era II: The Living Cosmos - Advanced Planetary Engines
- * 
+ *
  * Procedural star surface activity including flares, sunspots, coronal mass ejections,
  * and solar wind. Affects local solar weather and planetary environments.
  */
@@ -12,17 +12,17 @@ class StarSurfaceActivitySystem {
     constructor(game) {
         this.game = game;
         this.stars = [];
-        
+
         // Activity parameters
         this.activityLevel = 0.5; // 0-1, affects frequency of events
         this.maxFlares = 10;
         this.maxSunspots = 20;
         this.maxCMEs = 5;
-        
+
         // Solar wind parameters
         this.solarWindSpeed = 400; // km/s
         this.solarWindDensity = 5; // particles/cm³
-        
+
         console.log('☀️ Star Surface Activity System: Initialized');
     }
 
@@ -89,6 +89,7 @@ class StarSurfaceActivitySystem {
     createStarVisualization(star) {
         const group = new THREE.Group();
         group.position.copy(star.position);
+        const starColor = this.getSpectralColor(star.spectralType);
 
         // Star sphere with shader for surface effects
         const geometry = new THREE.SphereGeometry(
@@ -102,13 +103,13 @@ class StarSurfaceActivitySystem {
                 time: { value: 0 },
                 temperature: { value: star.temperature },
                 activityLevel: { value: this.activityLevel },
-                starColor: { value: this.getSpectralColor(star.spectralType) }
+                starColor: { value: starColor }
             },
             vertexShader: `
                 varying vec2 vUv;
                 varying vec3 vPosition;
                 varying vec3 vNormal;
-                
+
                 void main() {
                     vUv = uv;
                     vPosition = position;
@@ -121,16 +122,16 @@ class StarSurfaceActivitySystem {
                 uniform float temperature;
                 uniform float activityLevel;
                 uniform vec3 starColor;
-                
+
                 varying vec2 vUv;
                 varying vec3 vPosition;
                 varying vec3 vNormal;
-                
+
                 // Simplex noise function
                 vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
                 vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
                 vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); }
-                
+
                 float snoise(vec2 v) {
                     const vec4 C = vec4(0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439);
                     vec2 i  = floor(v + dot(v, C.yy) );
@@ -154,34 +155,34 @@ class StarSurfaceActivitySystem {
                     g.yz = a0.yz * x12.xz + h.yz * x12.yw;
                     return 130.0 * dot(m, g);
                 }
-                
+
                 void main() {
                     // Base color from temperature
                     float tempNorm = (temperature - 3000.0) / 27000.0;
                     vec3 hotColor = vec3(1.0, 1.0, 0.8);
                     vec3 coolColor = vec3(1.0, 0.3, 0.0);
                     vec3 baseColor = mix(coolColor, hotColor, tempNorm);
-                    
+
                     // Surface turbulence
                     float turbulence = snoise(vUv * 10.0 + time * 0.5) * 0.5 + 0.5;
                     turbulence += snoise(vUv * 20.0 - time * 0.3) * 0.25;
-                    
+
                     // Granulation pattern
                     float granulation = snoise(vUv * 50.0) * 0.1;
-                    
+
                     // Limb darkening
                     float cosTheta = dot(vNormal, vec3(0.0, 0.0, 1.0));
                     float limbDarkening = 1.0 - 0.6 * (1.0 - cosTheta);
-                    
+
                     // Activity effects (brighter areas for flares)
                     float activity = snoise(vUv * 5.0 + time * 0.2) * activityLevel;
                     vec3 activityColor = vec3(1.0, 0.9, 0.7) * activity;
-                    
+
                     // Combine all effects
                     vec3 color = baseColor * (0.8 + turbulence * 0.2 + granulation);
                     color += activityColor;
                     color *= limbDarkening;
-                    
+
                     gl_FragColor = vec4(color, 1.0);
                 }
             `
@@ -201,11 +202,11 @@ class StarSurfaceActivitySystem {
         const coronaMaterial = new THREE.ShaderMaterial({
             uniforms: {
                 time: { value: 0 },
-                starColor: { value: this.getSpectralColor(star.spectralType) }
+                starColor: { value: starColor }
             },
             vertexShader: `
                 varying vec3 vNormal;
-                
+
                 void main() {
                     vNormal = normal;
                     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
@@ -214,18 +215,18 @@ class StarSurfaceActivitySystem {
             fragmentShader: `
                 uniform float time;
                 uniform vec3 starColor;
-                
+
                 varying vec3 vNormal;
-                
+
                 void main() {
                     // Fresnel effect for corona glow
                     float fresnel = pow(1.0 - abs(dot(vNormal, vec3(0.0, 0.0, 1.0))), 3.0);
-                    
+
                     // Pulsing effect
                     float pulse = sin(time * 2.0) * 0.1 + 0.9;
-                    
+
                     vec3 color = starColor * fresnel * pulse;
-                    
+
                     gl_FragColor = vec4(color, fresnel * 0.5);
                 }
             `,
@@ -550,7 +551,7 @@ class StarSurfaceActivitySystem {
         for (const star of this.stars) {
             if (star.group) {
                 this.game.scene.remove(star.group);
-                
+
                 // Dispose all meshes
                 star.group.traverse(obj => {
                     if (obj.geometry) obj.geometry.dispose();
