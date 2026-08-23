@@ -805,7 +805,7 @@ class StellarAI {
     initLiveKitVoice() {
         // Check if LiveKitVoiceIntegration is available
         if (typeof LiveKitVoiceIntegration === 'undefined') {
-            console.warn('LiveKit Voice Integration not loaded');
+            console.info('Optional LiveKit voice integration is unavailable; text chat remains active.');
             const btn = document.getElementById('livekit-voice-btn');
             if (btn) {
                 btn.style.display = 'none';
@@ -3368,5 +3368,4 @@ initStellarAI();
 
 // Start initialization
 initStellarAI();
-
 

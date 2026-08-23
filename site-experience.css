@@ -1,0 +1,207 @@
+/* Shared 2026 production experience layer. Page-specific applications remain in control
+   of their canvases; this layer aligns navigation, content surfaces and accessibility. */
+:root {
+  --ita-night: #050814;
+  --ita-night-2: #0a1024;
+  --ita-surface: rgba(13, 21, 43, 0.82);
+  --ita-surface-strong: rgba(16, 27, 54, 0.96);
+  --ita-line: rgba(148, 163, 184, 0.22);
+  --ita-cyan: #67e8f9;
+  --ita-violet: #a78bfa;
+  --ita-lime: #bef264;
+  --ita-text: #f8fafc;
+  --ita-muted: #b8c2d8;
+  --ita-shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+}
+
+body.ita-site-refresh {
+  color-scheme: dark;
+  accent-color: var(--ita-cyan);
+}
+
+body.ita-site-standard {
+  margin: 0;
+  color: var(--ita-text);
+  font-family: Manrope, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(103, 232, 249, 0.13), transparent 34rem),
+    radial-gradient(circle at 92% 14%, rgba(167, 139, 250, 0.14), transparent 38rem),
+    linear-gradient(180deg, var(--ita-night), var(--ita-night-2) 55%, #050713);
+  min-height: 100vh;
+}
+
+body.ita-site-standard::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.22;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.7) 0 0.7px, transparent 0.9px);
+  background-size: 34px 34px;
+  mask-image: linear-gradient(to bottom, black, transparent 70%);
+}
+
+body.ita-site-refresh a { color: var(--ita-cyan); }
+body.ita-site-refresh a:hover { color: #d5faff; }
+
+body.ita-site-refresh .site-header,
+body.ita-site-refresh > header:not(.page-header) {
+  border-bottom: 1px solid var(--ita-line);
+  background: rgba(5, 8, 20, 0.82);
+  backdrop-filter: blur(18px);
+}
+
+body.ita-site-standard .site-header {
+  position: sticky;
+  top: 0;
+  z-index: 9000;
+}
+
+body.ita-site-refresh .main-nav a,
+body.ita-site-refresh .nav-links a,
+body.ita-site-refresh .nav-menu a {
+  border-radius: 999px;
+  color: var(--ita-muted);
+  font-family: "DM Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.82rem;
+  letter-spacing: 0.035em;
+}
+
+body.ita-site-refresh .main-nav a:hover,
+body.ita-site-refresh .nav-links a:hover,
+body.ita-site-refresh .nav-menu a:hover,
+body.ita-site-refresh .main-nav a.active,
+body.ita-site-refresh .nav-links a.active {
+  color: var(--ita-text);
+  background: rgba(103, 232, 249, 0.11);
+}
+
+.ita-breadcrumb {
+  position: relative;
+  z-index: 8500;
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 16px 0 10px;
+  color: var(--ita-muted);
+  font: 600 0.78rem/1.5 "DM Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
+  letter-spacing: 0.045em;
+}
+
+.ita-breadcrumb ol {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ita-breadcrumb li { display: inline-flex; align-items: center; gap: 8px; }
+.ita-breadcrumb a { color: var(--ita-cyan) !important; text-decoration: none; }
+.ita-breadcrumb a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.ita-breadcrumb [aria-current="page"] { color: var(--ita-text); }
+
+.ita-breadcrumb--floating {
+  position: fixed;
+  top: 14px;
+  left: 96px;
+  z-index: 9500;
+  width: auto;
+  max-width: min(720px, calc(100vw - 206px));
+  margin: 0;
+  padding: 8px 12px;
+  border: 1px solid var(--ita-line);
+  border-radius: 999px;
+  background: rgba(5, 8, 20, 0.86);
+  backdrop-filter: blur(14px);
+  pointer-events: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ita-breadcrumb--floating a { pointer-events: auto; }
+
+body.ita-site-standard main {
+  position: relative;
+  z-index: 1;
+  width: min(1180px, calc(100% - 32px));
+  margin-inline: auto;
+}
+
+body.ita-site-standard .page-hero,
+body.ita-site-standard .hero-section,
+body.ita-site-standard main > section:first-child {
+  overflow: hidden;
+  border: 1px solid var(--ita-line);
+  border-radius: 28px;
+  background:
+    linear-gradient(135deg, rgba(103, 232, 249, 0.12), transparent 42%),
+    linear-gradient(315deg, rgba(167, 139, 250, 0.13), transparent 46%),
+    var(--ita-surface);
+  box-shadow: var(--ita-shadow);
+}
+
+body.ita-site-standard h1,
+body.ita-site-standard .page-title {
+  color: var(--ita-text);
+  font-family: Manrope, Inter, ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(2.35rem, 6vw, 5.25rem);
+  font-weight: 750;
+  letter-spacing: -0.055em;
+  line-height: 0.98;
+  text-wrap: balance;
+}
+
+body.ita-site-standard h2,
+body.ita-site-standard h3 { color: var(--ita-text); font-family: Manrope, Inter, ui-sans-serif, system-ui, sans-serif; }
+body.ita-site-standard p,
+body.ita-site-standard li { color: var(--ita-muted); }
+
+body.ita-site-standard :is(.content-section, .dashboard-card, .feature-card, .info-card, .stat-card, .event-card, .member-card, .group-card, .product-card, .blog-card, .newsletter-card, .glass-card) {
+  border: 1px solid var(--ita-line);
+  border-radius: 20px;
+  background: var(--ita-surface);
+  box-shadow: 0 14px 42px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(14px);
+}
+
+body.ita-site-refresh :is(button, .btn, .cta-button, .primary-button, input[type="submit"]) {
+  border-radius: 999px;
+  border: 1px solid rgba(103, 232, 249, 0.38);
+  font-family: "DM Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-weight: 700;
+}
+
+body.ita-site-refresh :is(button, .btn, .cta-button, .primary-button, a):focus-visible {
+  outline: 3px solid var(--ita-lime);
+  outline-offset: 3px;
+}
+
+body.ita-site-standard .site-footer,
+body.ita-site-standard > footer {
+  position: relative;
+  z-index: 1;
+  margin-top: 72px;
+  border-top: 1px solid var(--ita-line);
+  background: rgba(5, 8, 20, 0.78);
+  color: var(--ita-muted);
+}
+
+@media (max-width: 720px) {
+  .ita-breadcrumb { width: min(100% - 24px, 1180px); padding-top: 12px; font-size: 0.72rem; }
+  body.ita-site-standard main { width: min(100% - 24px, 1180px); }
+  body.ita-site-standard .page-hero,
+  body.ita-site-standard .hero-section,
+  body.ita-site-standard main > section:first-child { border-radius: 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.ita-site-refresh *, body.ita-site-refresh *::before, body.ita-site-refresh *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

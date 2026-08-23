@@ -125,7 +125,7 @@ try {
     $launchData = Invoke-JsonFeed -Url "https://ll.thespacedevs.com/2.2.0/launch/upcoming/?limit=2&mode=detailed"
     foreach ($launch in @($launchData.results | Select-Object -First 2)) {
         $window = if ($launch.window_start) {
-            ([DateTimeOffset]::Parse([string]$launch.window_start)).UtcDateTime.ToString("yyyy-MM-dd HH:mm 'UTC'")
+            ([DateTimeOffset]$launch.window_start).UtcDateTime.ToString("yyyy-MM-dd HH:mm 'UTC'")
         }
         else { "TBD" }
         $pad = if ($launch.pad -and $launch.pad.name) { [string]$launch.pad.name } else { "TBD" }

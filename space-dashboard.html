@@ -117,7 +117,7 @@
             const init = () => {
                 const container = document.getElementById('space-api-dashboard-container');
                 if (container && typeof SpaceAPIDashboard !== 'undefined') {
-                    const spaceAPI = new SpaceAPIIntegrations({ nasaApiKey: window.NASA_API_KEY || 'SLlv60158lAX77nc2wy64WkI8S4mqG1lQvbw3g2Y' });
+                    const spaceAPI = new SpaceAPIIntegrations({ nasaApiKey: window.NASA_API_KEY || null });
                     const dashboard = new SpaceAPIDashboard(spaceAPI);
                     dashboard.init(container);
                     dashboard.show();

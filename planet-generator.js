@@ -391,7 +391,7 @@ class PlanetGenerator {
                 vec4 norm1 = taylorInvSqrt(vec4(dot(g001, g001), dot(g011, g011), dot(g101, g101), dot(g111, g111)));
                 g001 *= norm1.x; g011 *= norm1.y; g101 *= norm1.z; g111 *= norm1.w;
                 vec3 fade_xyz = fade(Pf0);
-                
+
                 float n000 = dot(g000, Pf0);
                 float n100 = dot(g100, vec3(Pf1.x, Pf0.yz));
                 float n010 = dot(g010, vec3(Pf0.x, Pf1.y, Pf0.z));
@@ -402,7 +402,7 @@ class PlanetGenerator {
                 float n111 = dot(g111, Pf1);
                 vec4 n_z = mix(vec4(n000, n100, n010, n110), vec4(n001, n101, n011, n111), fade_xyz.z);
                 vec2 n_yz = mix(n_z.xy, n_z.zw, fade_xyz.y);
-                float n_xyz = mix(n_yz.x, n_yz.y, fade_xyz.x); 
+                float n_xyz = mix(n_yz.x, n_yz.y, fade_xyz.x);
                 return 2.2 * n_xyz;
             }
         `;
@@ -439,12 +439,12 @@ class PlanetGenerator {
                 uniform float tidallyLocked;
                 uniform float climateContrast;
                 uniform float terrainDetail;
-                
+
                 varying vec3 vWorldNormal;
                 varying vec3 vLocalNormal;
                 varying vec3 vPosition;
                 varying vec3 vWorldPosition;
-                
+
                 ${noiseCommon}
 
                 // Roadmap Item 1: Global Illumination Approximation
@@ -768,22 +768,23 @@ class PlanetGenerator {
         const isRockySurface = !['gas', 'giant'].includes(String(type || '').toLowerCase());
         if (isRockySurface) {
             const posAttr = geometry.attributes.position;
-            const count = posAttr.count;
-            for (let i = 0; i < count; i++) {
-                const x = posAttr.getX(i);
-                const y = posAttr.getY(i);
-                const z = posAttr.getZ(i);
+            // BufferGeometry positions are tightly packed xyz triples. Mutating the backing
+            // Float32Array directly avoids six accessor calls per vertex while preserving the
+            // exact terrain function and mesh resolution. This is a startup-only hot path.
+            const positions = posAttr.array;
+            for (let i = 0; i < positions.length; i += 3) {
+                const x = positions[i];
+                const y = positions[i + 1];
+                const z = positions[i + 2];
 
-                // Normalized Coords
                 const nx = x / 50; const ny = y / 50; const nz = z / 50;
-
                 const disp = this.calculateHeight(nx, ny, nz, seed, resolvedProfile, type);
 
-                // Displace
-                posAttr.setX(i, x + nx * disp);
-                posAttr.setY(i, y + ny * disp);
-                posAttr.setZ(i, z + nz * disp);
+                positions[i] = x + nx * disp;
+                positions[i + 1] = y + ny * disp;
+                positions[i + 2] = z + nz * disp;
             }
+            posAttr.needsUpdate = true;
             geometry.computeVertexNormals();
         }
 

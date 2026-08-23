@@ -9,15 +9,20 @@ class SpaceMissionCrowdfunding {
         this.contributions = [];
         this.currentUser = null;
         this.isInitialized = false;
-        
+
         this.init();
     }
 
     async init() {
-        if (window.supabase) {
-            const { data: { user } } = await window.supabase.auth.getUser();
-            if (user) {
-                this.currentUser = user;
+        const supabaseClient = window.supabaseClient?.auth?.getUser
+            ? window.supabaseClient
+            : (window.supabase?.auth?.getUser ? window.supabase : null);
+        if (supabaseClient) {
+            try {
+                const { data } = await supabaseClient.auth.getUser();
+                this.currentUser = data?.user || null;
+            } catch (error) {
+                console.warn('Optional Supabase session unavailable for crowdfunding:', error);
             }
         }
 
@@ -215,7 +220,7 @@ class SpaceMissionCrowdfunding {
         container.innerHTML = `
             <div class="crowdfunding-container" style="background: rgba(0, 0, 0, 0.6); border: 2px solid rgba(186, 148, 79, 0.3); border-radius: 15px; padding: 2rem; margin: 1rem 0;">
                 <h3 style="color: #ba944f; margin: 0 0 1.5rem 0;">🚀 Space Mission Crowdfunding</h3>
-                
+
                 ${this.currentUser ? `
                     <button id="create-campaign-btn" class="btn-primary" style="padding: 0.75rem 1.5rem; background: rgba(186, 148, 79, 0.2); border: 2px solid rgba(186, 148, 79, 0.5); border-radius: 10px; color: white; cursor: pointer; font-weight: 600; margin-bottom: 2rem;">
                         ➕ Create Campaign
@@ -252,7 +257,7 @@ class SpaceMissionCrowdfunding {
                 <div class="campaign-item" style="padding: 1.5rem; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(186, 148, 79, 0.3); border-radius: 10px; margin-bottom: 1rem;">
                     <h5 style="color: #ba944f; margin: 0 0 0.5rem 0;">${campaign.title}</h5>
                     <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem; margin: 0.5rem 0;">${campaign.description}</p>
-                    
+
                     <div style="margin: 1rem 0;">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
                             <span style="color: rgba(255, 255, 255, 0.8);">Progress</span>

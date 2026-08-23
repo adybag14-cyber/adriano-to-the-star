@@ -23,6 +23,11 @@ class PlanetStatisticsDashboard {
      * Load statistics from database
      */
     async loadStatistics() {
+        if (!this.supabase?.from) {
+            this.stats = this.getDefaultStats();
+            return;
+        }
+
         try {
             // Get all claims
             const { data: claims, error: claimsError } = await this.supabase
@@ -154,7 +159,7 @@ class PlanetStatisticsDashboard {
         container.innerHTML = `
             <div class="statistics-dashboard">
                 <h2>📊 Planet Claim Statistics</h2>
-                
+
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-value">${this.stats.total_claims.toLocaleString()}</div>

@@ -49,13 +49,14 @@ class UserHistory {
         widget.style.cssText = `
             position: fixed;
             top: 100px;
-            right: -250px; /* Hidden initially */
-            width: 250px;
+            right: 0;
+            width: min(250px, calc(100vw - 80px));
+            box-sizing: border-box;
+            display: none; /* Hidden initially without widening the page */
             background: rgba(0, 0, 0, 0.9);
             border-left: 1px solid #ba944f;
             color: #fff;
             padding: 1rem;
-            transition: right 0.3s ease;
             z-index: 1000;
             max-height: 80vh;
             overflow-y: auto;
@@ -63,17 +64,20 @@ class UserHistory {
         `;
 
         // Toggle tab
-        const toggle = document.createElement('div');
+        const toggle = document.createElement('button');
+        toggle.type = 'button';
         toggle.innerHTML = '🕒 Recents';
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-controls', 'history-list');
         toggle.style.cssText = `
-            position: absolute;
-            left: -80px;
-            top: 20px;
+            position: fixed;
+            right: 0;
+            top: 120px;
+            z-index: 1001;
             width: 80px;
             height: 30px;
             background: rgba(0, 0, 0, 0.9);
             border: 1px solid #ba944f;
-            border-right: none;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -85,11 +89,10 @@ class UserHistory {
         `;
 
         toggle.onclick = () => {
-            const currentRight = parseInt(widget.style.right || '-250');
-            widget.style.right = currentRight === 0 ? '-250px' : '0';
+            const isOpen = widget.style.display !== 'none';
+            widget.style.display = isOpen ? 'none' : 'block';
+            toggle.setAttribute('aria-expanded', String(!isOpen));
         };
-
-        widget.appendChild(toggle);
 
         // Content container
         const content = document.createElement('div');
@@ -97,6 +100,7 @@ class UserHistory {
         widget.appendChild(content);
 
         document.body.appendChild(widget);
+        document.body.appendChild(toggle);
         this.updateUI();
     }
 

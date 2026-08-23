@@ -8,6 +8,7 @@ class SpaceAPIIntegrations {
         this.cache = new Map();
         this.cacheExpiry = 5 * 60 * 1000; // 5 minutes
         this.updateInterval = null;
+        this.staticFeedPromise = null;
         
         // NASA API Key (optional - can be set via constructor or environment)
         // Get your free API key from: https://api.nasa.gov/
@@ -60,6 +61,76 @@ class SpaceAPIIntegrations {
         this.setupAutoUpdate();
     }
 
+    parsecsToLightYears(value) {
+        const parsecs = Number(value);
+        return Number.isFinite(parsecs) ? parsecs * 3.26156 : null;
+    }
+
+    async fetchWithTimeout(url, options = {}, timeoutMs = 4500) {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), timeoutMs);
+        try {
+            return await fetch(url, { ...options, signal: controller.signal });
+        } finally {
+            clearTimeout(timeout);
+        }
+    }
+
+    async getBuildCachedFeed(type) {
+        if (!this.staticFeedPromise) {
+            this.staticFeedPromise = this.fetchWithTimeout('data/space-feeds.json', { cache: 'no-cache' }, 2500)
+                .then(response => {
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    return response.json();
+                })
+                .then(snapshot => Array.isArray(snapshot.feeds) ? snapshot.feeds : [])
+                .catch(error => {
+                    console.info('Build-cached space feed is unavailable.', error?.message || error);
+                    return [];
+                });
+        }
+        const feeds = await this.staticFeedPromise;
+        return feeds.filter(item => item.type === type);
+    }
+
+    async getBuildCachedUpdates() {
+        const [exoplanets, launches, news] = await Promise.all([
+            this.getBuildCachedFeed('exoplanet'),
+            this.getBuildCachedFeed('launch'),
+            this.getBuildCachedFeed('news')
+        ]);
+
+        return {
+            exoplanets: exoplanets.map(item => ({
+                name: item.title,
+                discoveryYear: item.meta?.discoveryYear || null,
+                distance: this.parsecsToLightYears(item.meta?.distancePc),
+                status: 'confirmed',
+                source: item.source || 'NASA Exoplanet Archive'
+            })),
+            launches: launches.map(item => ({
+                id: item.link,
+                name: item.title.replace(/^Launch:\s*/i, ''),
+                date: item.desc.match(/Window:\s*([^|]+)/i)?.[1]?.trim() || null,
+                details: item.desc,
+                upcoming: true,
+                source: item.source
+            })),
+            news: news.map(item => ({
+                title: item.title,
+                link: item.link,
+                description: item.desc,
+                pubDate: item.meta?.publishedAt || null,
+                source: item.source || 'Build-cached feed'
+            })),
+            apod: null,
+            neo: null,
+            telescopes: {},
+            timestamp: new Date().toISOString(),
+            cached: true
+        };
+    }
+
     trackEvent(eventName, data = {}) {
         try {
             if (typeof window !== 'undefined' && window.performanceMonitoring) {
@@ -95,8 +166,8 @@ class SpaceAPIIntegrations {
                 return;
             }
 
-            if (typeof console !== 'undefined' && typeof console.error === 'function') {
-                console.error(...args);
+            if (typeof console !== 'undefined' && typeof console.info === 'function') {
+                console.info(...args);
             }
         } catch {
         }
@@ -164,13 +235,26 @@ class SpaceAPIIntegrations {
             // NASA Exoplanet Archive API - Get confirmed planets
             const url = `${this.apis.nasa.exoplanetArchive}?table=exoplanets&format=json&where=pl_confirmed=1&order=pl_disc+desc&limit=${limit}`;
             
-            const data = await this.fetchJSON(url);
+            let data;
+            try {
+                data = await this.fetchJSON(url);
+            } catch (error) {
+                const fallback = await this.getBuildCachedFeed('exoplanet');
+                if (!fallback.length) throw error;
+                return fallback.slice(0, limit).map(item => ({
+                    name: item.title,
+                    discoveryYear: item.meta?.discoveryYear || null,
+                    distance: this.parsecsToLightYears(item.meta?.distancePc),
+                    status: 'confirmed',
+                    source: item.source || 'NASA Exoplanet Archive'
+                }));
+            }
             return data.map(planet => ({
                 name: planet.pl_name || planet.pl_hostname,
                 discoveryYear: planet.pl_disc || null,
                 mass: planet.pl_bmassj || null,
                 radius: planet.pl_radj || null,
-                distance: planet.st_dist || null,
+                distance: this.parsecsToLightYears(planet.st_dist),
                 temperature: planet.pl_eqt || null,
                 method: planet.pl_discmethod || null,
                 status: 'confirmed',
@@ -227,7 +311,21 @@ class SpaceAPIIntegrations {
             // Using REST API v4 - get more to filter out past launches
             const url = `${this.apis.spacex.rest}/launches/upcoming?limit=${limit * 3}`;
             
-            const launches = await this.fetchJSON(url);
+            let launches;
+            try {
+                launches = await this.fetchJSON(url);
+            } catch (error) {
+                const fallback = await this.getBuildCachedFeed('launch');
+                if (!fallback.length) throw error;
+                return fallback.slice(0, limit).map(item => ({
+                    id: item.link,
+                    name: item.title.replace(/^Launch:\s*/i, ''),
+                    date: item.desc.match(/Window:\s*([^|]+)/i)?.[1]?.trim() || null,
+                    details: item.desc,
+                    upcoming: true,
+                    source: item.source
+                }));
+            }
             const now = new Date();
             
             // Filter to only future launches (after current date/time)
@@ -268,8 +366,11 @@ class SpaceAPIIntegrations {
     async getSpaceXLatestLaunches(limit = 5) {
         return this.getCachedOrFetch('spacex_latest', async () => {
             const url = `${this.apis.spacex.rest}/launches/past?limit=${limit}&order=desc`;
-            
-            return await this.fetchJSON(url);
+            try {
+                return await this.fetchJSON(url);
+            } catch {
+                return [];
+            }
         });
     }
     
@@ -291,60 +392,21 @@ class SpaceAPIIntegrations {
     // ============================================================================
     
     async fetchJSON(url) {
-        try {
-            const res = await fetch(url);
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            return await res.json();
-        } catch (e) {
-            console.warn(`[space-api-integrations] Direct fetch failed for ${url}, attempting proxy...`, e.message);
-            
-            // Try AllOrigins first
-            try {
-                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
-                const proxyRes = await fetch(proxyUrl);
-                if (!proxyRes.ok) throw new Error(`Proxy HTTP ${proxyRes.status}`);
-                const data = await proxyRes.json();
-                if (data && data.contents) {
-                    return JSON.parse(data.contents);
-                }
-            } catch (proxyError) {
-                console.warn('[space-api-integrations] AllOrigins proxy failed, trying corsproxy.io...', proxyError.message);
-            }
-
-            // Fallback to corsproxy.io
-            try {
-                const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
-                const proxyRes = await fetch(proxyUrl);
-                if (!proxyRes.ok) throw new Error(`Proxy HTTP ${proxyRes.status}`);
-                return await proxyRes.json();
-            } catch (proxyError) {
-                console.error('[space-api-integrations] All proxies failed:', proxyError.message);
-                throw e; // Re-throw original error
-            }
-        }
+        const response = await this.fetchWithTimeout(url, { headers: { Accept: 'application/json' } });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const contentType = response.headers.get('content-type') || '';
+        if (!contentType.toLowerCase().includes('json')) throw new Error('Upstream returned a non-JSON response');
+        return response.json();
     }
 
     async parseRSSFeed(feedUrl) {
         try {
-            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(feedUrl)}`;
-            const response = await fetch(proxyUrl);
-            if (!response.ok) throw new Error(`RSS proxy error: ${response.status}`);
-            
-            const data = await response.json();
-            if (data && data.contents) {
-                return this.parseRSSXML(data.contents);
-            }
-            throw new Error('Proxy returned empty content');
+            const response = await this.fetchWithTimeout(feedUrl, { headers: { Accept: 'application/rss+xml, application/xml, text/xml' } });
+            if (!response.ok) throw new Error(`RSS feed error: ${response.status}`);
+            return this.parseRSSXML(await response.text());
         } catch (error) {
-            this.logError(`Error parsing RSS feed ${feedUrl} via proxy:`, error);
-            try {
-                const response = await fetch(feedUrl);
-                const text = await response.text();
-                return this.parseRSSXML(text);
-            } catch (e) {
-                this.logError('RSS parsing failed completely:', e);
-                return [];
-            }
+            this.logError(`RSS feed unavailable for ${feedUrl}:`, error);
+            return [];
         }
     }
     
@@ -558,15 +620,7 @@ class SpaceAPIIntegrations {
      */
     async getAllUpdates() {
         if (this.isAutomation()) {
-            return {
-                exoplanets: [],
-                apod: null,
-                neo: null,
-                launches: [],
-                news: [],
-                telescopes: {},
-                timestamp: new Date().toISOString()
-            };
+            return this.getBuildCachedUpdates();
         }
 
         try {
@@ -619,4 +673,3 @@ class SpaceAPIIntegrations {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = SpaceAPIIntegrations;
 }
-

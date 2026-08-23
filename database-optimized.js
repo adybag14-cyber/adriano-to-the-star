@@ -478,10 +478,11 @@ class OptimizedDatabase {
         ];
 
         // Initialize loader if available
-        if (typeof LargeExoplanetLoader !== 'undefined') {
-            this.largeDatasetLoader = new LargeExoplanetLoader();
+        const Loader = window.LargeExoplanetLoader;
+        if (typeof Loader === 'function') {
+            this.largeDatasetLoader = new Loader();
         } else {
-            console.warn('⚠️ LargeExoplanetLoader not available');
+            console.info('Large optional dataset loader is unavailable; the bundled Kepler catalog remains active.');
             return;
         }
 

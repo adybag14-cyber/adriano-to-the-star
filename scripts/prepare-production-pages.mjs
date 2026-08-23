@@ -1,0 +1,177 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { execFileSync } from 'node:child_process';
+import { SITE_ORIGIN, SITE_PAGES, canonicalUrl } from './site-pages.mjs';
+
+const publicRoot = path.resolve(process.argv[2] || 'public');
+const escapeHtml = value => String(value).replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+const escapeJsonForHtml = value => JSON.stringify(value, null, 2).replaceAll('<', '\\u003c');
+
+function releaseDate() {
+  const candidates = [process.env.SITE_RELEASE_DATE, process.env.CI_COMMIT_TIMESTAMP];
+  try {
+    candidates.push(execFileSync('git', ['show', '-s', '--format=%cI', 'HEAD'], { encoding: 'utf8' }).trim());
+  } catch {}
+  for (const candidate of candidates) {
+    if (!candidate) continue;
+    const parsed = new Date(candidate);
+    if (!Number.isNaN(parsed.valueOf())) return parsed.toISOString().slice(0, 10);
+  }
+  throw new Error('Unable to determine an accurate release date for the sitemap.');
+}
+
+function removeBreadcrumbData(value) {
+  if (Array.isArray(value)) return value.map(removeBreadcrumbData).filter(item => item !== null);
+  if (!value || typeof value !== 'object') return value;
+  if (value['@type'] === 'BreadcrumbList' || (Array.isArray(value['@type']) && value['@type'].includes('BreadcrumbList'))) return null;
+  const result = {};
+  for (const [key, child] of Object.entries(value)) {
+    const cleaned = removeBreadcrumbData(child);
+    if (cleaned !== null && (!Array.isArray(cleaned) || cleaned.length)) result[key] = cleaned;
+  }
+  return result;
+}
+
+function normalizeStructuredData(html) {
+  return html.replace(/<script\b([^>]*type=["']application\/ld\+json["'][^>]*)>([\s\S]*?)<\/script>/gi, (full, attributes, source) => {
+    try {
+      const cleaned = removeBreadcrumbData(JSON.parse(source));
+      if (cleaned === null || (Array.isArray(cleaned) && !cleaned.length)) return '';
+      return `<script${attributes}>\n${escapeJsonForHtml(cleaned)}\n</script>`;
+    } catch {
+      return full;
+    }
+  });
+}
+
+function replaceTitle(html, title) {
+  const tag = `<title>${escapeHtml(title)}</title>`;
+  return /<title>[\s\S]*?<\/title>/i.test(html) ? html.replace(/<title>[\s\S]*?<\/title>/i, tag) : html.replace(/<head\b[^>]*>/i, match => `${match}\n${tag}`);
+}
+
+function removeHeadTag(html, pattern) {
+  return html.replace(pattern, '');
+}
+
+function headMetadata(page) {
+  const url = canonicalUrl(page);
+  const prefix = page.path.includes('/') ? '../' : '';
+  const robots = page.indexable ? 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1' : 'noindex,follow';
+  return [
+    '<meta name="ita-production-metadata" content="2026-08">',
+    `<meta name="description" content="${escapeHtml(page.description)}">`,
+    `<meta name="robots" content="${robots}">`,
+    '<meta name="googlebot" content="max-image-preview:large,max-snippet:-1,max-video-preview:-1">',
+    `<link rel="canonical" href="${url}">`,
+    `<meta property="og:title" content="${escapeHtml(page.title)}">`,
+    `<meta property="og:description" content="${escapeHtml(page.description)}">`,
+    `<meta property="og:url" content="${url}">`,
+    '<meta property="og:type" content="website">',
+    '<meta property="og:site_name" content="Adriano To The Star">',
+    '<meta name="twitter:card" content="summary_large_image">',
+    `<meta name="twitter:title" content="${escapeHtml(page.title)}">`,
+    `<meta name="twitter:description" content="${escapeHtml(page.description)}">`,
+    `<link rel="stylesheet" href="${prefix}site-experience.css">`,
+    `<link rel="stylesheet" href="${prefix}i18n-styles.css">`
+  ].join('\n    ');
+}
+
+function breadcrumbFor(page, floating = false) {
+  const depth = page.path.split('/').length - 1;
+  const homeHref = depth ? '../index.html' : 'index.html';
+  const crumbs = [{ name: 'Home', href: homeHref, url: `${SITE_ORIGIN}/` }];
+  if (page.parent) crumbs.push({ name: page.parent[0], href: depth ? `../${page.parent[1]}` : page.parent[1], url: `${SITE_ORIGIN}/${page.parent[1]}` });
+  crumbs.push({ name: page.title.split('|')[0].trim(), href: null, url: canonicalUrl(page) });
+  const visible = crumbs.map((crumb, index) => {
+    const content = crumb.href ? `<a href="${crumb.href}">${escapeHtml(crumb.name)}</a>` : `<span aria-current="page">${escapeHtml(crumb.name)}</span>`;
+    return `<li>${content}${index < crumbs.length - 1 ? '<span aria-hidden="true">/</span>' : ''}</li>`;
+  }).join('');
+  const structured = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    '@id': `${canonicalUrl(page)}#breadcrumb`,
+    itemListElement: crumbs.map((crumb, index) => ({ '@type': 'ListItem', position: index + 1, name: crumb.name, item: crumb.url }))
+  };
+  return {
+    visible: `<nav class="ita-breadcrumb${floating ? ' ita-breadcrumb--floating' : ''}" aria-label="Breadcrumb"><ol>${visible}</ol></nav>`,
+    structured: `<script id="ita-breadcrumb-structured-data" type="application/ld+json">\n${escapeJsonForHtml(structured)}\n</script>`
+  };
+}
+
+function refreshBodyClass(html, page) {
+  const immersive = new Set(['index.html', 'database.html', 'education.html', 'exoplanet-pioneer.html', 'mechgen.html', 'projects.html', 'star-maps.html']);
+  return html.replace(/<body\b([^>]*)>/i, (full, attributes) => {
+    const classMatch = attributes.match(/\bclass\s*=\s*(["'])(.*?)\1/i);
+    const additions = ['ita-site-refresh', immersive.has(page.path) ? 'ita-site-immersive' : 'ita-site-standard'];
+    if (classMatch) {
+      const classes = new Set(`${classMatch[2]} ${additions.join(' ')}`.trim().split(/\s+/));
+      return `<body${attributes.replace(classMatch[0], `class="${[...classes].join(' ')}"`)}>`;
+    }
+    return `<body${attributes} class="${additions.join(' ')}">`;
+  });
+}
+
+async function transformPage(page) {
+  const file = path.join(publicRoot, ...page.path.split('/'));
+  let html = await fs.readFile(file, 'utf8');
+  html = normalizeStructuredData(html);
+  html = replaceTitle(html, page.title);
+  html = removeHeadTag(html, /\s*<meta\b[^>]*name=["']keywords["'][^>]*>/gi);
+  html = removeHeadTag(html, /\s*<meta\b[^>]*name=["'](?:description|robots|googlebot)["'][^>]*>/gi);
+  html = removeHeadTag(html, /\s*<meta\b[^>]*property=["']og:(?:title|description|url|type|site_name)["'][^>]*>/gi);
+  html = removeHeadTag(html, /\s*<meta\b[^>]*name=["']twitter:(?:card|title|description)["'][^>]*>/gi);
+  html = removeHeadTag(html, /\s*<link\b[^>]*rel=["']canonical["'][^>]*>/gi);
+  html = removeHeadTag(html, /\s*<link\b[^>]*href=["'](?:\.\.\/)?(?:site-experience|i18n-styles)\.css(?:\?[^"']*)?["'][^>]*>/gi);
+  html = removeHeadTag(html, /\s*<meta\b[^>]*name=["']ita-production-metadata["'][^>]*>/gi);
+  html = html.replace(/<\/head>/i, `    ${headMetadata(page)}\n</head>`);
+  html = refreshBodyClass(html, page);
+  html = html.replace(/\s*<nav\b[^>]*class=["'][^"']*\bita-breadcrumb\b[^"']*["'][^>]*>[\s\S]*?<\/nav>/gi, '');
+  html = html.replace(/\s*<script\b[^>]*id=["']ita-breadcrumb-structured-data["'][^>]*>[\s\S]*?<\/script>/gi, '');
+  const breadcrumb = breadcrumbFor(page, !/<main\b/i.test(html));
+  html = html.replace(/<head\b[^>]*>[\s\S]*?<\/head>/i, head => {
+    if (/<script\b/i.test(head)) return head.replace(/<script\b/i, `${breadcrumb.structured}\n<script`);
+    return head.replace(/<\/head>/i, `${breadcrumb.structured}\n</head>`);
+  });
+  html = html.replace(/<body\b[^>]*>/i, match => `${match}\n${breadcrumb.visible}`);
+  const selfContainedRuntime = new Set(['exoplanet-pioneer.html', 'starsector.html']);
+  if (!selfContainedRuntime.has(page.path) && !/(?:src=["'](?:\.\.\/)?i18n\.js(?:\?|["']))/i.test(html)) {
+    const prefix = page.path.includes('/') ? '../' : '';
+    html = html.replace(/<\/body>/i, `  <script src="${prefix}i18n.js" defer></script>\n</body>`);
+  }
+  await fs.writeFile(file, html, 'utf8');
+}
+
+await Promise.all(SITE_PAGES.map(transformPage));
+
+const experimentalPages = [
+  ['experimental/webgpu-galaxy/galaxy-sim.html', 'Browser-local WebGPU compute; no application backend.'],
+  ['experimental/procedural-planets/index.html', 'Browser-local WebGL scene with versioned external Three.js modules.'],
+  ['experimental/fluid-nebula/index.html', 'Browser-local Canvas 2D particle simulation; no application backend.'],
+  ['experimental/sentient-browser/hal-interface.html', 'WebGPU or network-assisted AI experiment; remote inference is operated separately from this website release.'],
+  ['experimental/holographic-xr/surface-explorer.html', 'Device-specific WebXR experiment with external Three.js modules.'],
+  ['experimental/holographic-xr/ar-star-chart.html', 'Device-specific immersive-AR experiment with external Three.js modules.'],
+  ['experimental/connected-cosmos/cosmic-radio.html', 'Same-origin tab communication simulation; no public radio backend.'],
+  ['experimental/connected-cosmos/p2p-network.html', 'Same-origin tab data-mesh simulation; no internet-wide peer backend.'],
+  ['experimental/native-integration/captains-log.html', 'Permission-based local File System Access experiment.'],
+  ['experimental/native-integration/telemetry.html', 'Permission-based WebSerial experiment with a browser-only simulation fallback.']
+];
+const unrelatedEnginePattern = /\s*(?:<!--\s*MASTER MEGA-ENGINE ARCHITECTURE\s*-->)?\s*<script\b[^>]*src=["']\/(?:universal-simulation-hub|void-warfare-engine|planetary-environment-engine|galactic-governance-engine|mining-resource-engine|xeno-intelligence-engine|quantum-propulsion-engine|intelligence-shadow-engine|fleet-command-mega-engine|deep-space-industry-engine|procedural-content-engine|galactic-commerce-engine|metaphysics-apotheosis-engine)\.js(?:\?[^"']*)?["'][^>]*><\/script>/gi;
+await Promise.all(experimentalPages.map(async ([relativePath, disclosure]) => {
+  const file = path.join(publicRoot, ...relativePath.split('/'));
+  let html = await fs.readFile(file, 'utf8');
+  html = html.replace(unrelatedEnginePattern, '');
+  if (!html.includes('experimental-lab.css')) html = html.replace(/<\/head>/i, '  <link rel="stylesheet" href="../../experimental-lab.css">\n</head>');
+  html = html.replace(/\s*<details\b[^>]*class=["'][^"']*\bita-lab-disclosure\b[^"']*["'][^>]*>[\s\S]*?<\/details>/gi, '');
+  const notice = `<details class="ita-lab-disclosure"><summary>Lab status</summary><div><strong>Experimental browser system</strong><p>${escapeHtml(disclosure)}</p><a href="../../projects.html">Return to the project catalog</a></div></details>`;
+  html = html.replace(/<body\b[^>]*>/i, match => `${match}\n${notice}`);
+  await fs.writeFile(file, html, 'utf8');
+}));
+
+const lastmod = releaseDate();
+const sitemapPages = SITE_PAGES.filter(page => page.indexable);
+const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemapPages.map(page => `  <url>\n    <loc>${canonicalUrl(page)}</loc>\n    <lastmod>${lastmod}</lastmod>\n  </url>`).join('\n')}\n</urlset>\n`;
+const sitemapIndex = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <sitemap>\n    <loc>${SITE_ORIGIN}/sitemap.xml</loc>\n    <lastmod>${lastmod}</lastmod>\n  </sitemap>\n</sitemapindex>\n`;
+await fs.writeFile(path.join(publicRoot, 'sitemap.xml'), sitemap, 'utf8');
+await fs.writeFile(path.join(publicRoot, 'sitemap_index.xml'), sitemapIndex, 'utf8');
+
+console.log(`Prepared ${SITE_PAGES.length} public pages, ${experimentalPages.length} bounded project labs, and ${sitemapPages.length} indexable sitemap URLs for ${lastmod}.`);

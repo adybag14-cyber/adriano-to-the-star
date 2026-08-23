@@ -6,7 +6,7 @@ export default defineConfig({
   retries: 0,
   reporter: 'list',
   use: {
-    baseURL: 'https://adrianotothestar.com',
+    baseURL: process.env.BASE_URL || 'https://adrianotothestar.com',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
   },

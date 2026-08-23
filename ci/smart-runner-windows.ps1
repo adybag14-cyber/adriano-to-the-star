@@ -29,7 +29,6 @@ function Invoke-CheckedCommand {
 function Invoke-ProductionHealthCheck {
     Write-Host "Running production content and asset checks..."
     $BaseUrl = "https://adrianotothestar.com"
-    $ApiHealthUrl = "https://api.adrianotothestar.com/api/health"
     $CacheKey = if ($env:CI_PIPELINE_ID) {
         $env:CI_PIPELINE_ID
     }
@@ -43,12 +42,18 @@ function Invoke-ProductionHealthCheck {
         @{ Path = "/landing-experience.js?deploy=$CacheKey"; Contains = "StellarField" },
         @{ Path = "/ita-music-player.css?deploy=$CacheKey"; Contains = "MISSION AUDIO" },
         @{ Path = "/i18n.js?deploy=$CacheKey"; Contains = "ita-language-switcher" },
+        @{ Path = "/i18n.js?deploy=$CacheKey"; Contains = "assetVersion" },
+        @{ Path = "/site-experience.css?deploy=$CacheKey"; Contains = "ita-site-refresh" },
         @{ Path = "/auth-supabase.js?deploy=$CacheKey"; Contains = "cloudflare-d1" },
         @{ Path = "/theme-styles.css?deploy=$CacheKey"; Contains = ".theme-toggle-btn" },
         @{ Path = "/code-splitting.js?deploy=$CacheKey"; Contains = "cosmic-music-player.js?v=" },
         @{ Path = "/database.html?deploy=$CacheKey"; Contains = "theme-styles.css?v=" },
         @{ Path = "/database.html?deploy=$CacheKey"; Contains = 'data-cfasync="false"' },
-        @{ Path = "/database.html?deploy=$CacheKey"; Contains = "large-exoplanet-loader.js?v=" }
+        @{ Path = "/database.html?deploy=$CacheKey"; Contains = "large-exoplanet-loader.js?v=" },
+        @{ Path = "/projects.html?deploy=$CacheKey"; Contains = "2026 FLIGHT LAB" },
+        @{ Path = "/projects.js?deploy=$CacheKey"; Contains = "checkCapabilities" },
+        @{ Path = "/education.html?deploy=$CacheKey"; Contains = "ita-breadcrumb" },
+        @{ Path = "/sitemap.xml?deploy=$CacheKey"; Contains = "galaxy-object-trading.html" }
     )
 
     $MaximumAttempts = 12
@@ -70,14 +75,6 @@ function Invoke-ProductionHealthCheck {
                 }
             }
 
-            $ApiResponse = Invoke-WebRequest -Uri "${ApiHealthUrl}?deploy=$CacheKey" -UseBasicParsing -TimeoutSec 30 -Headers @{
-                "Cache-Control" = "no-cache"
-                "Pragma" = "no-cache"
-            }
-            if ($ApiResponse.StatusCode -ne 200 -or -not $ApiResponse.Content.Contains('"version":"2.1.0-d1"') -or -not $ApiResponse.Content.Contains('"database":"ok"') -or -not $ApiResponse.Content.Contains('"storage":"d1"')) {
-                throw "Production D1 API health check did not report version 2.1.0-d1 with database and D1 storage ok."
-            }
-
             $HomeResponse = Invoke-WebRequest -Uri "$BaseUrl/?deploy=$CacheKey" -UseBasicParsing -TimeoutSec 30 -Headers @{
                 "Cache-Control" = "no-cache"
                 "Pragma" = "no-cache"
@@ -93,7 +90,7 @@ function Invoke-ProductionHealthCheck {
                 }
             }
 
-            Write-Host "Production checks passed: homepage, D1 API, versioned assets, database experience, Rocket Loader exclusions, and stale-content gate verified."
+            Write-Host "Production website checks passed: homepage, versioned assets, database, projects, breadcrumbs, sitemap, Rocket Loader exclusions, and stale-content gate verified."
             return
         }
         catch {
@@ -183,19 +180,6 @@ try {
                 Invoke-CheckedCommand npm audit --audit-level=moderate
             }
         }
-        "deploy-mechgen" {
-            if (-not (Test-Path "mechgen_web\deploy.ps1")) {
-                throw "mechgen_web\deploy.ps1 was not found."
-            }
-            Invoke-CheckedCommand powershell -ExecutionPolicy Bypass -File mechgen_web\deploy.ps1
-        }
-        "deploy-api-worker" {
-            if (-not (Test-Path "wrangler-api.toml")) {
-                throw "wrangler-api.toml was not found."
-            }
-            Invoke-CheckedCommand npx wrangler d1 migrations apply exoplanet-pioneer-db --remote --config wrangler-api.toml
-            Invoke-CheckedCommand npx wrangler deploy --config wrangler-api.toml
-        }
         default {
             throw "Unknown runner stage: $Stage"
         }
@@ -217,10 +201,6 @@ try {
         Write-Host "Coverage artifact copied back to CI_PROJECT_DIR."
     }
 
-    if ($Stage -eq "deploy-mechgen" -and (Test-Path "mechgen_backend_url.txt")) {
-        Copy-Item "mechgen_backend_url.txt" -Destination "$env:CI_PROJECT_DIR" -Force
-        Write-Host "MechGen deployment URL copied back to CI_PROJECT_DIR."
-    }
 }
 catch {
     Write-Error "Runner stage '$Stage' failed: $_"

@@ -47,10 +47,11 @@ class HALComputer {
 
         this.cerebrasApiKey = (typeof window !== 'undefined' && window.CEREBRAS_API_KEY)
             ? window.CEREBRAS_API_KEY
-            : 'csk-yknmfcp4y46r9m36k6r4xm3y92x8pxx33cvrc5cmwvtpjfv6';
+            : storedCerebrasKey;
         this.cerebrasModel = 'qwen-3-235b-a22b-instruct-2507';
         this.cerebrasEndpoint = 'https://api.cerebras.ai/v1/chat/completions';
         this.useCerebras = false;
+        this.useWebLLM = false;
         this.isLoadingEngine = false;
         this.initProgressCallback = null;
         this.inputListenerAttached = false;
@@ -120,6 +121,37 @@ class HALComputer {
             this.useCerebras = false;
         }
 
+        try {
+            this.useWebLLM = localStorage.getItem('hal_use_webllm') === 'true';
+        } catch (_e) {
+            this.useWebLLM = false;
+        }
+
+        const webllmToggle = document.getElementById('webllm-toggle');
+        if (webllmToggle) {
+            webllmToggle.checked = this.useWebLLM;
+            webllmToggle.addEventListener('change', async () => {
+                this.useWebLLM = !!webllmToggle.checked;
+                try { localStorage.setItem('hal_use_webllm', this.useWebLLM ? 'true' : 'false'); } catch (_e) {}
+                if (this.useWebLLM) {
+                    this.useCerebras = false;
+                    const cerebrasToggle = document.getElementById('cerebras-toggle');
+                    if (cerebrasToggle) cerebrasToggle.checked = false;
+                    try { localStorage.setItem('hal_use_cerebras', 'false'); } catch (_e) {}
+                    this.initialized = false;
+                    await this.initWebLLMEngine();
+                } else {
+                    this.initialized = 'mock';
+                    if (this.ui?.status) {
+                        this.ui.status.textContent = 'ONLINE // LOCAL FALLBACK';
+                        this.ui.status.style.color = '#44ff44';
+                    }
+                    if (this.ui?.modelStatus) this.ui.modelStatus.style.display = 'none';
+                }
+                this.updateProviderUI();
+            });
+        }
+
         const toggle = document.getElementById('cerebras-toggle');
         if (toggle) {
             toggle.checked = this.useCerebras;
@@ -134,6 +166,10 @@ class HALComputer {
                 this.updateProviderUI();
 
                 if (this.useCerebras) {
+                    this.useWebLLM = false;
+                    const webllmToggle = document.getElementById('webllm-toggle');
+                    if (webllmToggle) webllmToggle.checked = false;
+                    try { localStorage.setItem('hal_use_webllm', 'false'); } catch (_e) {}
                     this.initialized = 'cerebras';
                     if (this.ui && this.ui.status) {
                         this.ui.status.textContent = 'ONLINE // CEREBRAS LINK READY';
@@ -146,12 +182,22 @@ class HALComputer {
                     return;
                 }
 
-                if (!this.engine && !this.isLoadingEngine && this.initialized !== 'mock') {
+                if (this.useWebLLM && !this.engine && !this.isLoadingEngine) {
                     if (this.ui && this.ui.status) {
                         this.ui.status.textContent = 'INITIALIZING NEURAL NET...';
                         this.ui.status.style.color = '#ff3333';
                     }
                     await this.initWebLLMEngine();
+                    return;
+                }
+
+                if (!this.useWebLLM) {
+                    this.initialized = 'mock';
+                    if (this.ui?.status) {
+                        this.ui.status.textContent = 'ONLINE // LOCAL FALLBACK';
+                        this.ui.status.style.color = '#44ff44';
+                    }
+                    this.updateProviderUI();
                     return;
                 }
 
@@ -174,7 +220,7 @@ class HALComputer {
         if (titleEl) {
             titleEl.textContent = this.useCerebras
                 ? 'H.A.L. 9000 // CEREBRAS INTEGRATED'
-                : 'H.A.L. 9000 // WEB-LLM INTEGRATED';
+                : (this.useWebLLM ? 'H.A.L. 9000 // WEB-LLM INTEGRATED' : 'H.A.L. 9000 // LOCAL FALLBACK');
         }
     }
 
@@ -203,9 +249,7 @@ class HALComputer {
 
         if (this.useCerebras) {
             this.initialized = 'cerebras';
-            if (this.ui && this.ui.modelStatus) {
-                this.ui.modelStatus.style.display = 'none';
-            }
+            if (this.ui && this.ui.modelStatus) this.ui.modelStatus.style.display = 'none';
             if (this.ui && this.ui.status) {
                 this.ui.status.textContent = 'ONLINE // CEREBRAS LINK READY';
                 this.ui.status.style.color = '#44ff44';
@@ -215,7 +259,20 @@ class HALComputer {
             return;
         }
 
-        await this.initWebLLMEngine();
+        if (this.useWebLLM) {
+            await this.initWebLLMEngine();
+            return;
+        }
+
+        this.initialized = 'mock';
+        if (this.ui?.modelStatus) this.ui.modelStatus.style.display = 'none';
+        if (this.ui?.status) {
+            this.ui.status.textContent = 'ONLINE // LOCAL FALLBACK';
+            this.ui.status.style.color = '#44ff44';
+        }
+        this.log('Local fallback mode ready. Enable Local WebLLM to load the browser model.');
+        this.setupInput();
+        this.updateProviderUI();
     }
 
     async initWebLLMEngine() {
@@ -264,7 +321,7 @@ class HALComputer {
                 this.updateStatus("ONLINE", true);
 
             } catch (primaryError) {
-                console.error("PRIMARY LOAD ERROR:", primaryError);
+                console.warn("Primary WebLLM model unavailable:", primaryError);
                 if (this.fallbackModelId && this.fallbackModelId !== this.modelId) {
                     this.log(`Primary model failed to load (${this.modelId}). Trying fallback model (${this.fallbackModelId})...`);
                     this.modelId = this.fallbackModelId;
@@ -288,8 +345,8 @@ class HALComputer {
             this.log("Model Loaded Successfully.");
 
         } catch (e) {
-            console.error(e);
-            this.ui.status.textContent = "ERROR // STORAGE FAILURE";
+            console.warn('WebLLM unavailable; entering local HAL fallback mode:', e);
+            this.ui.status.textContent = "ONLINE // LOCAL FALLBACK";
 
             let errorMsg = e.message;
             if (e.message.includes('Cache') || e.name === 'QuotaExceededError') {
@@ -317,8 +374,8 @@ class HALComputer {
                 }
             }
 
-            this.log("CRITICAL ERROR: " + errorMsg);
-            this.appendMessage("system", `Critical Error: ${errorMsg} Switching to fallback logic circuits (Mock Mode).`);
+            this.log("WebLLM unavailable: " + errorMsg);
+            this.appendMessage("system", `Remote model unavailable: ${errorMsg}. Local logic circuits are active.`);
 
             // Allow mock mode
 

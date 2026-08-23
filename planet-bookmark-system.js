@@ -12,16 +12,19 @@ class PlanetBookmarkSystem {
     }
 
     async init() {
-        if (!window.supabase || !window.supabase.auth) {
-            console.warn("Bookmark: Supabase not ready. Retrying in 1s...");
-            setTimeout(() => this.init(), 1000);
-            return;
-        }
-        const { data: { user } } = await window.supabase.auth.getUser();
         this.loadBookmarks();
+        const auth = window.supabase?.auth;
+        if (auth?.getUser) {
+            try {
+                const { data: { user } } = await auth.getUser();
+                if (user) this.currentUser = user;
+            } catch (error) {
+                console.info('Bookmark account sync is unavailable; local storage remains active.', error?.message || error);
+            }
+        }
         this.setupDelegatedEvents();
         this.isInitialized = true;
-        console.log('🔖 Planet Bookmark System initialized');
+        console.log(`🔖 Planet Bookmark System initialized (${this.currentUser ? 'account' : 'local'} storage)`);
     }
 
     setupDelegatedEvents() {
@@ -143,4 +146,3 @@ if (typeof window !== 'undefined') {
     window.PlanetBookmarkSystem = PlanetBookmarkSystem;
     window.planetBookmarkSystem = new PlanetBookmarkSystem();
 }
-

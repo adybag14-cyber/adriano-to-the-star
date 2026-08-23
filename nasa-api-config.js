@@ -7,14 +7,14 @@
 
 // Set NASA API key globally for use across the application
 if (typeof window !== 'undefined') {
-    window.NASA_API_KEY = 'SLlv60158lAX77nc2wy64WkI8S4mqG1lQvbw3g2Y';
+    window.NASA_API_KEY = window.NASA_API_KEY || 'DEMO_KEY';
     console.log('✅ NASA API key configured');
 }
 
 // Export for Node.js environments
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
-        NASA_API_KEY: 'SLlv60158lAX77nc2wy64WkI8S4mqG1lQvbw3g2Y'
+        NASA_API_KEY: (typeof process !== 'undefined' && process.env && process.env.NASA_API_KEY) ? process.env.NASA_API_KEY : 'DEMO_KEY'
     };
 }
 

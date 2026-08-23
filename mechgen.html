@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MechGen - AI-Powered Mech Design Studio | Adriano To The Star</title>
-    
+
     <meta name="description" content="Synthesize and visualize complex organic reaction mechanisms with MechGen. AI-powered chemical analysis and RDKit molecular rendering.">
     <meta name="keywords" content="MechGen, Organic Chemistry, RDKit, AI Synthesis, Adriano To The Star">
     <link rel="canonical" href="https://adrianotothestar.com/mechgen.html">
@@ -14,7 +14,7 @@
     <meta property="og:url" content="https://adrianotothestar.com/mechgen.html">
     <meta property="og:image" content="https://adrianotothestar.com/images/bg-large.jpg">
     <meta property="og:type" content="website">
-    
+
     <script type="application/ld+json">
     [
       {
@@ -43,7 +43,6 @@
     <link rel="icon" type="image/x-icon" href="images/ita_logo.png">
     <link rel="manifest" href="manifest.json">
 
-    <script src="loader.js"></script>
     <script src="navigation.js" defer></script>
     <script src="cosmic-music-player.js" defer></script>
     <script src="theme-toggle.js" defer></script>
@@ -59,20 +58,6 @@
         .btn { padding: 12px 20px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(255, 255, 255, 0.05); color: #fff; cursor: pointer; font-weight: 600; text-decoration: none; }
         .btn-primary { border-color: rgba(186, 148, 79, 0.5); background: rgba(186, 148, 79, 0.15); color: #ba944f; }
     </style>
-    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
-    <script src="universal-simulation-hub.js"></script>
-    <script src="void-warfare-engine.js"></script>
-    <script src="planetary-environment-engine.js"></script>
-    <script src="galactic-governance-engine.js"></script>
-    <script src="mining-resource-engine.js"></script>
-    <script src="xeno-intelligence-engine.js"></script>
-    <script src="quantum-propulsion-engine.js"></script>
-    <script src="intelligence-shadow-engine.js"></script>
-    <script src="fleet-command-mega-engine.js"></script>
-    <script src="deep-space-industry-engine.js"></script>
-    <script src="procedural-content-engine.js"></script>
-    <script src="galactic-commerce-engine.js"></script>
-    <script src="metaphysics-apotheosis-engine.js"></script>
 </head>
 <body>
     <div class="mechgen-container">
@@ -88,7 +73,7 @@
         </div>
 
         <div class="mechgen-frame-container">
-            <iframe id="mechgen-frame" class="mechgen-frame" title="MechGen UI"></iframe>
+            <iframe id="mechgen-frame" class="mechgen-frame" title="MechGen UI" sandbox="allow-forms allow-modals allow-popups allow-scripts allow-same-origin"></iframe>
         </div>
     </div>
 
@@ -104,20 +89,50 @@
             var connectBtn = document.getElementById('mechgen-connect');
             var resetBtn = document.getElementById('mechgen-reset');
 
-            function applyUrl(url) {
-                if (!url) return;
-                frame.src = url;
-                if (input) input.value = url;
-                localStorage.setItem('MECHGEN_WEB_URL', url);
+            const emptyState = `<style>html{height:100%;background:#080a10;color:#d8dce6;font:16px/1.6 system-ui,sans-serif}section{min-height:100vh;display:grid;place-items:center;text-align:center}div{max-width:38rem;padding:2rem}h2{color:#ba944f;letter-spacing:.08em}</style><section><div><h2>MechGen backend not connected</h2><p>Enter the URL of a running MechGen web service above and choose <strong>Connect</strong>. The public site does not assume a localhost service is available.</p></div></section>`;
+
+            function showEmptyState() {
+                frame.removeAttribute('src');
+                frame.srcdoc = emptyState;
             }
 
-            connectBtn?.addEventListener('click', () => applyUrl(input.value));
+            function applyUrl(rawUrl) {
+                const value = String(rawUrl || '').trim();
+                if (!value) {
+                    showEmptyState();
+                    return;
+                }
+                let parsed;
+                try {
+                    parsed = new URL(value);
+                } catch {
+                    input?.setCustomValidity('Enter a valid http:// or https:// URL.');
+                    input?.reportValidity();
+                    return;
+                }
+                if (!['http:', 'https:'].includes(parsed.protocol)) {
+                    input?.setCustomValidity('Only http:// and https:// URLs are supported.');
+                    input?.reportValidity();
+                    return;
+                }
+                input?.setCustomValidity('');
+                frame.removeAttribute('srcdoc');
+                frame.src = parsed.href;
+                if (input) input.value = parsed.href;
+                localStorage.setItem('MECHGEN_WEB_URL', parsed.href);
+            }
+
+            connectBtn?.addEventListener('click', () => applyUrl(input?.value));
+            input?.addEventListener('input', () => input.setCustomValidity(''));
             resetBtn?.addEventListener('click', () => {
-                const def = 'http://localhost:8001/';
-                applyUrl(def);
+                localStorage.removeItem('MECHGEN_WEB_URL');
+                if (input) input.value = '';
+                showEmptyState();
             });
 
-            applyUrl(localStorage.getItem('MECHGEN_WEB_URL') || 'http://localhost:8001/');
+            const savedUrl = localStorage.getItem('MECHGEN_WEB_URL');
+            if (savedUrl) applyUrl(savedUrl);
+            else showEmptyState();
         })();
     </script>
 </body>

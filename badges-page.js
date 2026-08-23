@@ -32,6 +32,11 @@ class BadgesPage {
      * Load all available badges
      */
     async loadAllBadges() {
+        if (!this.supabase?.from) {
+            this.allBadges = this.getFallbackBadges();
+            return;
+        }
+
         try {
             const { data, error } = await this.supabase
                 .from('badges_catalog')
@@ -42,7 +47,8 @@ class BadgesPage {
             if (error) throw error;
             this.allBadges = data || [];
         } catch (error) {
-            console.error('Error loading badges:', error);
+            console.warn('Badge catalog backend unavailable; using built-in catalog.', error);
+            this.allBadges = this.getFallbackBadges();
         }
     }
 
@@ -50,7 +56,7 @@ class BadgesPage {
      * Load user's earned badges
      */
     async loadUserBadges() {
-        if (!this.reputationSystem.currentUser) return;
+        if (!this.reputationSystem.currentUser || !this.supabase?.from) return;
 
         try {
             const { data, error } = await this.supabase
@@ -63,6 +69,28 @@ class BadgesPage {
         } catch (error) {
             console.error('Error loading user badges:', error);
         }
+    }
+
+    getFallbackBadges() {
+        return [
+            ['first_claim','First Claim','Claimed your first exoplanet','🪐','claim',50,'common'],
+            ['five_claims','Planet Collector','Claimed 5 exoplanets','🌍','claim',100,'uncommon'],
+            ['ten_claims','Star System Owner','Claimed 10 exoplanets','⭐','claim',200,'rare'],
+            ['fifty_claims','Galactic Landlord','Claimed 50 exoplanets','🌌','claim',500,'epic'],
+            ['hundred_claims','Cosmic Emperor','Claimed 100 exoplanets','👑','claim',1000,'legendary'],
+            ['first_sale','First Sale','Sold your first planet','💰','marketplace',75,'common'],
+            ['five_sales','Merchant','Completed 5 sales','💼','marketplace',150,'uncommon'],
+            ['ten_sales','Trader','Completed 10 sales','🤝','marketplace',300,'rare'],
+            ['first_message','Communicator','Sent your first message','💬','social',25,'common'],
+            ['hundred_messages','Social Butterfly','Sent 100 messages','🦋','social',200,'rare'],
+            ['points_100','Getting Started','Earned 100 points','🌟','milestone',0,'common'],
+            ['points_500','Rising Star','Earned 500 points','⭐','milestone',0,'uncommon'],
+            ['points_1000','Stellar','Earned 1,000 points','✨','milestone',0,'rare'],
+            ['points_5000','Cosmic','Earned 5,000 points','🌠','milestone',0,'epic'],
+            ['early_adopter','Early Adopter','Joined during early access','🚀','special',500,'rare'],
+            ['beta_tester','Beta Tester','Helped test the platform','🧪','special',300,'uncommon'],
+            ['founder','Founder','One of the first 100 users','💎','special',1000,'legendary']
+        ].map(([badge_id,name,description,icon,category,points_reward,rarity]) => ({ badge_id,name,description,icon,category,points_reward,rarity }));
     }
 
     /**

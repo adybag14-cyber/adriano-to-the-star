@@ -12,19 +12,19 @@ class PlanetWishlistSystem {
     }
 
     async init() {
-        if (!window.supabase || !window.supabase.auth) {
-            console.warn("Wishlist: Supabase not ready. Retrying in 1s...");
-            setTimeout(() => this.init(), 1000);
-            return;
-        }
-        if (window.supabase) {
-            const { data: { user } } = await window.supabase.auth.getUser();
-            if (user) this.currentUser = user;
-        }
         this.loadWishlist();
+        const auth = window.supabase?.auth;
+        if (auth?.getUser) {
+            try {
+                const { data: { user } } = await auth.getUser();
+                if (user) this.currentUser = user;
+            } catch (error) {
+                console.info('Wishlist account sync is unavailable; local storage remains active.', error?.message || error);
+            }
+        }
         this.setupDelegatedEvents();
         this.isInitialized = true;
-        console.log('⭐ Planet Wishlist System initialized');
+        console.log(`⭐ Planet Wishlist System initialized (${this.currentUser ? 'account' : 'local'} storage)`);
     }
 
     setupDelegatedEvents() {
@@ -145,4 +145,3 @@ if (typeof window !== 'undefined') {
     window.PlanetWishlistSystem = PlanetWishlistSystem;
     window.planetWishlistSystem = new PlanetWishlistSystem();
 }
-

@@ -32,9 +32,17 @@ class ReputationSystem {
             this.supabase = window.supabaseClient;
         }
 
+        if (!this.supabase?.auth) {
+            this.currentUser = null;
+            this.reputation = null;
+            this.badges = [];
+            this.initialized = true;
+            return false;
+        }
+
         const { data: { user } } = await this.supabase.auth.getUser();
         this.currentUser = user;
-        
+
         if (this.currentUser) {
             await this.loadReputation();
             await this.loadBadges();

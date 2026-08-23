@@ -1,0 +1,9 @@
+{
+    "id": "DummyMod",
+    "name": "Dummy Mod",
+    "version": "1.0.0",
+    "description": "A dummy mod to satisfy mod manager.",
+    "gameVersion": "0.98a-RC1",
+    "jars": [],
+    "modPlugin": ""
+}

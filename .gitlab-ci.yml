@@ -11,8 +11,14 @@ variables:
   GIT_CONFIG_PARAMETERS: "'core.longpaths=true'"
 
 workflow:
+  auto_cancel:
+    on_new_commit: interruptible
   rules:
-    - when: always
+    # This local Windows runner is reserved for production website releases.
+    # Branch and merge-request validation belongs to the GitHub mirror workflow.
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $DEPLOY_PRODUCTION == "true"'
+    - when: never
 
 default:
   interruptible: true
@@ -51,7 +57,6 @@ lint:windows:
     - !reference [.setup_logic, node_windows]
   script:
     - powershell -ExecutionPolicy Bypass -File ci/smart-runner-windows.ps1 validate-lint
-  allow_failure: true
   timeout: 5m
 
 test:windows:
@@ -106,36 +111,11 @@ pages:
   environment:
     name: production
     url: https://adrianotothestar.com
+    deployment_tier: production
+  resource_group: production-website
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
   timeout: 30m
-
-deploy_mechgen_web:windows:
-  stage: deploy
-  tags: [windows]
-  variables:
-    PROJECT_ID: "adriano-broadband"
-    REGION: "europe-west2"
-    SERVICE_NAME: "mechgen-web"
-  script:
-    - powershell -ExecutionPolicy Bypass -File ci/smart-runner-windows.ps1 deploy-mechgen
-  allow_failure: true
-  artifacts:
-    paths:
-      - mechgen_backend_url.txt
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main" && $GCP_SA_KEY_B64 && $GEMINI_API_KEY'
-  timeout: 15m
-
-deploy_api_worker:windows:
-  stage: deploy
-  tags: [windows]
-  script:
-    - powershell -ExecutionPolicy Bypass -File ci/smart-runner-windows.ps1 deploy-api-worker
-  allow_failure: true
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main" && $CLOUDFLARE_API_TOKEN'
-  timeout: 10m
 
 health_check:windows:
   stage: monitor
@@ -144,6 +124,17 @@ health_check:windows:
     - pages
   script:
     - powershell -ExecutionPolicy Bypass -File ci/smart-runner-windows.ps1 monitor-health
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  timeout: 5m
+
+notify_indexnow:windows:
+  stage: monitor
+  tags: [windows]
+  needs:
+    - health_check:windows
+  script:
+    - python submit_indexnow.py --submit
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
   timeout: 5m

@@ -52,6 +52,7 @@
             backdrop-filter: blur(20px);
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
             text-align: center;
+            box-sizing: border-box;
         }
 
         .logo-section h1 { font-size: 2.5rem; color: #ba944f; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 8px; }
@@ -59,7 +60,7 @@
 
         .input-group { margin: 25px 0; text-align: left; }
         .input-group label { display: block; color: #90a4ae; font-size: 0.85rem; margin-bottom: 10px; text-transform: uppercase; }
-        .input-group input { width: 100%; padding: 16px; background: rgba(20, 30, 50, 0.8); border: 1px solid rgba(186, 148, 79, 0.2); border-radius: 12px; color: #fff; outline: none; }
+        .input-group input { width: 100%; padding: 16px; box-sizing: border-box; background: rgba(20, 30, 50, 0.8); border: 1px solid rgba(186, 148, 79, 0.2); border-radius: 12px; color: #fff; outline: none; }
         .input-group input:focus { border-color: #ba944f; box-shadow: 0 0 20px rgba(186, 148, 79, 0.2); }
 
         .login-btn { width: 100%; padding: 16px; background: #ba944f; border: none; border-radius: 12px; color: black; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: all 0.3s; }
@@ -68,20 +69,6 @@
         .error-msg { background: rgba(244, 67, 54, 0.15); border: 1px solid rgba(244, 67, 54, 0.3); color: #ef5350; padding: 12px; border-radius: 10px; margin-bottom: 20px; display: none; }
         .error-msg.visible { display: block; }
     </style>
-    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
-    <script src="universal-simulation-hub.js"></script>
-    <script src="void-warfare-engine.js"></script>
-    <script src="planetary-environment-engine.js"></script>
-    <script src="galactic-governance-engine.js"></script>
-    <script src="mining-resource-engine.js"></script>
-    <script src="xeno-intelligence-engine.js"></script>
-    <script src="quantum-propulsion-engine.js"></script>
-    <script src="intelligence-shadow-engine.js"></script>
-    <script src="fleet-command-mega-engine.js"></script>
-    <script src="deep-space-industry-engine.js"></script>
-    <script src="procedural-content-engine.js"></script>
-    <script src="galactic-commerce-engine.js"></script>
-    <script src="metaphysics-apotheosis-engine.js"></script>
 </head>
 <body>
     <div class="starfield"></div>
