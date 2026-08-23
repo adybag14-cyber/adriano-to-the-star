@@ -64,6 +64,15 @@ if (!i18n.includes("sourceUrl?.searchParams.get('v')")) fail('i18n.js: translati
 const english = JSON.parse(await fs.readFile(path.join(publicRoot, 'translations', 'en.json'), 'utf8'));
 if (!english.hero?.line1 || !english.hero?.line2 || !english.nav?.projects) fail('translations/en.json: current landing translation keys are missing');
 
+const spaceFeedsText = await fs.readFile(path.join(publicRoot, 'data', 'space-feeds.json'), 'utf8');
+try {
+  const spaceFeeds = JSON.parse(spaceFeedsText);
+  if (!Array.isArray(spaceFeeds.feeds) || !spaceFeeds.feeds.length) fail('data/space-feeds.json: build-cached feed is empty');
+  if (/[\u0080-\u009f\ufffd]/u.test(spaceFeedsText)) fail('data/space-feeds.json: contains replacement/control characters associated with mojibake');
+} catch (error) {
+  fail(`data/space-feeds.json: invalid JSON (${error.message})`);
+}
+
 if (failures.length) {
   console.error(`Production page audit failed with ${failures.length} issue(s):`);
   failures.forEach(message => console.error(` - ${message}`));
