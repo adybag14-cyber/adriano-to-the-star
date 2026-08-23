@@ -133,6 +133,8 @@ test.describe('production site overhaul', () => {
     await page.goto('/stellar-ai.html', { waitUntil: 'domcontentloaded' });
     await expect(page.locator('#stellar-chat-shell')).toBeVisible();
     await expect(page.locator('#bonsai-local-panel')).toBeVisible();
+    await expect(page.locator('#cosmic-music-player')).toBeVisible();
+    await expect(page.locator('#theme-toggle-btn')).toBeVisible();
     expect(modelRequests).toEqual([]);
     const boxes = await page.evaluate(() => {
       const ids = ['model-selector', 'metrics-btn', 'clear-chat-btn', 'export-chat-btn', 'message-input', 'send-btn'];
@@ -146,8 +148,29 @@ test.describe('production site overhaul', () => {
     expect(overlaps(boxes['metrics-btn'], boxes['clear-chat-btn'])).toBe(false);
     expect(overlaps(boxes['clear-chat-btn'], boxes['export-chat-btn'])).toBe(false);
     expect(overlaps(boxes['message-input'], boxes['send-btn'])).toBe(false);
+
+    const floatingControlsOverlap = () => page.evaluate(() => {
+      const player = document.getElementById('cosmic-music-player').getBoundingClientRect();
+      const theme = document.getElementById('theme-toggle-btn').getBoundingClientRect();
+      return player.left < theme.right && player.right > theme.left && player.top < theme.bottom && player.bottom > theme.top;
+    });
+    expect(await floatingControlsOverlap()).toBe(false);
+
+    await page.locator('#minimize-player').click();
+    await expect(page.locator('#player-content')).toBeVisible();
+    expect(await floatingControlsOverlap()).toBe(false);
+
+    await page.locator('#minimize-player').click();
+    await expect(page.locator('#player-content')).toBeHidden();
+    expect(await floatingControlsOverlap()).toBe(false);
+
     await page.setViewportSize({ width: 390, height: 844 });
     expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(2);
+    expect(await floatingControlsOverlap()).toBe(false);
+
+    await page.locator('#minimize-player').click();
+    await expect(page.locator('#player-content')).toBeVisible();
+    expect(await floatingControlsOverlap()).toBe(false);
     expect(modelRequests).toEqual([]);
   });
 

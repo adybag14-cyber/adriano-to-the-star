@@ -200,6 +200,11 @@ body.ita-site-refresh :is(.theme-toggle-btn, .theme-option, .action-btn, .contro
   box-shadow: none !important;
 }
 
+body.ita-site-refresh .theme-toggle-btn {
+  /* Do not animate fixed-position lane changes through the audio player. */
+  transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease !important;
+}
+
 body.ita-site-refresh :is(.theme-toggle-btn, .theme-option, .action-btn, .control-btn, .filter-btn, .new-chat-btn):hover,
 body.ita-site-refresh .theme-option.active {
   color: var(--ita-text) !important;
@@ -244,6 +249,42 @@ body.ita-site-refresh [style*="border-left"][style*="#BA944F"] {
 body.ita-site-refresh #cosmic-music-player :is(button, #minimize-player, #prev-track, #play-pause, #next-track, #download-track) {
   color: var(--ita-cyan) !important;
   border-color: rgba(103, 232, 249, 0.48) !important;
+}
+
+/*
+ * Keep the two independently injected floating controls in separate lanes.
+ * The audio player writes its compact/expanded width inline, which gives CSS a
+ * reliable state signal without coupling either component's JavaScript.
+ */
+@media (min-width: 769px) {
+  body.ita-site-refresh:has(#cosmic-music-player[style*="width: 180px"]) :is(.theme-toggle-container, .theme-toggle-btn) {
+    right: 230px !important;
+    bottom: 24px !important;
+  }
+
+  body.ita-site-refresh:has(#cosmic-music-player:not([style*="width: 180px"])) :is(.theme-toggle-container, .theme-toggle-btn) {
+    right: 380px !important;
+    bottom: 24px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  body.ita-site-refresh:has(#cosmic-music-player[style*="width: 180px"]) :is(.theme-toggle-container, .theme-toggle-btn) {
+    right: 15px !important;
+    bottom: 120px !important;
+  }
+
+  body.ita-site-refresh:has(#cosmic-music-player:not([style*="width: 180px"])) :is(.theme-toggle-container, .theme-toggle-btn) {
+    top: 88px !important;
+    right: 15px !important;
+    bottom: auto !important;
+  }
+
+  body.ita-site-refresh:has(#cosmic-music-player:not([style*="width: 180px"])) .theme-selector-menu {
+    top: 58px;
+    right: 0;
+    bottom: auto;
+  }
 }
 
 body.ita-site-refresh #progress-fill {
