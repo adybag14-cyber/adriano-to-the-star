@@ -47,10 +47,10 @@ if (new Set(sitemapUrls).size !== sitemapUrls.length) fail('sitemap.xml: duplica
 
 const robots = await fs.readFile(path.join(publicRoot, 'robots.txt'), 'utf8');
 if (!/^Sitemap: https:\/\/adrianotothestar\.com\/sitemap\.xml\s*$/mi.test(robots)) fail('robots.txt: canonical Sitemap directive is missing');
-const indexNowVerificationName = '79aa2fca849a4efe98a254a197fb1533';
+const indexNowVerificationName = '70cf5dbdf5fa4e0f9e4f847c624468fe';
 try {
   const indexNowVerification = await fs.readFile(path.join(publicRoot, `${indexNowVerificationName}.txt`), 'utf8');
-  if (indexNowVerification.trim() !== indexNowVerificationName) fail('IndexNow verification: public filename and value do not match');
+  if (indexNowVerification !== indexNowVerificationName) fail('IndexNow verification: public filename and value do not match exactly');
 } catch {
   fail('IndexNow verification: public root verification file is missing');
 }

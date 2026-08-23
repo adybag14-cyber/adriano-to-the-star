@@ -8,9 +8,11 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
-import urllib.error
-import urllib.request
+import shutil
+import subprocess
+import time
 import xml.etree.ElementTree as ET
 from pathlib import Path
 from urllib.parse import urlparse
@@ -18,7 +20,8 @@ from urllib.parse import urlparse
 HOST = "adrianotothestar.com"
 ENDPOINT = "https://api.indexnow.org/indexnow"
 KEY_PATTERN = re.compile(r"^[A-Za-z0-9-]{8,128}$")
-VERIFICATION_FILE = "79aa2fca849a4efe98a254a197fb1533.txt"
+VERIFICATION_FILE = "70cf5dbdf5fa4e0f9e4f847c624468fe.txt"
+TRANSIENT_CURL_EXIT_CODES = {5, 6, 7, 18, 28, 35, 52, 55, 56}
 
 
 def sitemap_urls(path: Path) -> list[str]:
@@ -47,6 +50,45 @@ def verification_key(root: Path) -> tuple[str, Path]:
     return stem, candidate
 
 
+def submit_payload(payload: bytes) -> int:
+    curl = shutil.which("curl.exe") or shutil.which("curl")
+    if not curl:
+        raise RuntimeError("Native curl is required for the IndexNow TLS transport.")
+    command = [
+        curl,
+        "--silent",
+        "--show-error",
+        "--ipv4",
+        "--http1.1",
+        "--connect-timeout", "10",
+        "--max-time", "30",
+        "--output", os.devnull,
+        "--write-out", "%{http_code}",
+        "--request", "POST",
+        "--header", "Content-Type: application/json; charset=utf-8",
+        "--header", "Accept: application/json",
+        "--header", "User-Agent: AdrianoToTheStar-IndexNow/1.0",
+        "--data-binary", "@-",
+        ENDPOINT,
+    ]
+    for attempt in range(1, 4):
+        result = subprocess.run(command, input=payload, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
+        if result.returncode == 0:
+            try:
+                status = int(result.stdout.decode("ascii").strip())
+            except ValueError as error:
+                raise RuntimeError("IndexNow transport returned an unreadable HTTP status.") from error
+            if status in (200, 202):
+                return status
+            if status != 429 and status < 500:
+                raise RuntimeError(f"IndexNow rejected the production URL batch with HTTP {status}.")
+        elif result.returncode not in TRANSIENT_CURL_EXIT_CODES:
+            raise RuntimeError(f"IndexNow curl transport failed with exit code {result.returncode}.")
+        if attempt < 3:
+            time.sleep(2 ** attempt)
+    raise RuntimeError("IndexNow transport did not succeed after 3 bounded attempts.")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--submit", action="store_true", help="Perform the external IndexNow notification.")
@@ -58,7 +100,7 @@ def main() -> int:
     urls = sitemap_urls(sitemap)
     key, _ = verification_key(root)
     public_key_file = sitemap.parent / VERIFICATION_FILE
-    if not public_key_file.is_file() or public_key_file.read_text(encoding="utf-8").strip() != key:
+    if not public_key_file.is_file() or public_key_file.read_text(encoding="utf-8") != key:
         raise RuntimeError("The production artifact is missing the matching public IndexNow verification file.")
     print(f"Validated {len(urls)} canonical HTTPS URLs and matching source/public verification files.")
     if not args.submit:
@@ -71,14 +113,7 @@ def main() -> int:
         "keyLocation": f"https://{HOST}/{public_key_file.name}",
         "urlList": urls,
     }).encode("utf-8")
-    request = urllib.request.Request(ENDPOINT, data=payload, headers={"Content-Type": "application/json; charset=utf-8"}, method="POST")
-    try:
-        with urllib.request.urlopen(request, timeout=30) as response:
-            status = response.status
-    except urllib.error.HTTPError as error:
-        raise RuntimeError(f"IndexNow rejected the production URL batch with HTTP {error.code}.") from error
-    if status not in (200, 202):
-        raise RuntimeError(f"IndexNow returned unexpected HTTP {status}.")
+    status = submit_payload(payload)
     print(f"IndexNow accepted the production URL batch (HTTP {status}).")
     return 0
 

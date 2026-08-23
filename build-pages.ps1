@@ -88,7 +88,7 @@ $CoreAssets = @(
     "sitemap.xml",
     "sitemap_index.xml",
     "robots.txt",
-    "79aa2fca849a4efe98a254a197fb1533.txt",
+    "70cf5dbdf5fa4e0f9e4f847c624468fe.txt",
     "sw.js",
     "games-manifest.json",
     "stellar-ai-cli.zip"
@@ -98,6 +98,17 @@ foreach ($file in $CoreAssets) {
         Copy-Item $file -Destination "public\" -Force
     }
 }
+
+$IndexNowVerificationFile = "70cf5dbdf5fa4e0f9e4f847c624468fe.txt"
+$IndexNowKey = (Get-Content -LiteralPath $IndexNowVerificationFile -Raw).Trim()
+if ($IndexNowKey -ne [System.IO.Path]::GetFileNameWithoutExtension($IndexNowVerificationFile)) {
+    throw "IndexNow verification filename and value do not match."
+}
+[System.IO.File]::WriteAllText(
+    (Join-Path "public" $IndexNowVerificationFile),
+    $IndexNowKey,
+    [System.Text.UTF8Encoding]::new($false)
+)
 
 $Directories = @(
     "images",
