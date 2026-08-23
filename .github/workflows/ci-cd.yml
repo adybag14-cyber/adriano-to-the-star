@@ -216,7 +216,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: pioneer-heavy-validation-${{ github.run_id }}
-          path: .devbox/logs/github-actions-pioneer
+          path: .devbox/logs/pioneer-github-actions-pioneer
           if-no-files-found: warn
           retention-days: 14
 
