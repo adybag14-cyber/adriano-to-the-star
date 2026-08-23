@@ -9,8 +9,8 @@
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: linear-gradient(135deg, rgba(186, 148, 79, 0.9), rgba(186, 148, 79, 0.7));
-    border: 2px solid rgba(186, 148, 79, 0.5);
+    background: linear-gradient(135deg, rgba(103, 232, 249, 0.9), rgba(103, 232, 249, 0.7));
+    border: 2px solid rgba(103, 232, 249, 0.5);
     color: #ffffff;
     font-size: 1.5rem;
     cursor: pointer;
@@ -24,7 +24,7 @@
 
 .page-history-btn:hover {
     transform: scale(1.1);
-    box-shadow: 0 6px 20px rgba(186, 148, 79, 0.5);
+    box-shadow: 0 6px 20px rgba(103, 232, 249, 0.5);
 }
 
 .page-history-panel {
@@ -34,7 +34,7 @@
     width: 500px;
     height: 100vh;
     background: rgba(0, 0, 0, 0.95);
-    border-left: 2px solid rgba(186, 148, 79, 0.4);
+    border-left: 2px solid rgba(103, 232, 249, 0.4);
     z-index: 10003;
     transition: right 0.3s ease;
     overflow-y: auto;
@@ -49,15 +49,15 @@
 
 .page-history-header {
     padding: 1.5rem;
-    border-bottom: 2px solid rgba(186, 148, 79, 0.4);
+    border-bottom: 2px solid rgba(103, 232, 249, 0.4);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(186, 148, 79, 0.1);
+    background: rgba(103, 232, 249, 0.1);
 }
 
 .page-history-header h3 {
-    color: #ba944f;
+    color: #67e8f9;
     font-family: 'Raleway', sans-serif;
     font-size: 1.5rem;
     font-weight: 600;
@@ -67,7 +67,7 @@
 .page-history-close {
     background: transparent;
     border: none;
-    color: #ba944f;
+    color: #67e8f9;
     font-size: 1.5rem;
     cursor: pointer;
     padding: 0.5rem;
@@ -82,7 +82,7 @@
 
 .page-history-close:hover {
     transform: rotate(90deg);
-    background: rgba(186, 148, 79, 0.2);
+    background: rgba(103, 232, 249, 0.2);
 }
 
 .page-history-content {
@@ -94,14 +94,14 @@
 
 .page-history-search {
     padding: 1.5rem;
-    border-bottom: 2px solid rgba(186, 148, 79, 0.4);
+    border-bottom: 2px solid rgba(103, 232, 249, 0.4);
 }
 
 .history-search-input {
     width: 100%;
     padding: 0.75rem;
     background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(186, 148, 79, 0.3);
+    border: 1px solid rgba(103, 232, 249, 0.3);
     border-radius: 8px;
     color: #ffffff;
     font-family: 'Raleway', sans-serif;
@@ -117,8 +117,8 @@
 .history-item {
     padding: 1rem;
     margin-bottom: 0.5rem;
-    background: rgba(186, 148, 79, 0.1);
-    border: 1px solid rgba(186, 148, 79, 0.2);
+    background: rgba(103, 232, 249, 0.1);
+    border: 1px solid rgba(103, 232, 249, 0.2);
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -127,14 +127,14 @@
 }
 
 .history-item:hover {
-    background: rgba(186, 148, 79, 0.2);
-    border-color: rgba(186, 148, 79, 0.4);
+    background: rgba(103, 232, 249, 0.2);
+    border-color: rgba(103, 232, 249, 0.4);
     transform: translateX(4px);
 }
 
 .history-item.current {
-    border-left: 4px solid #ba944f;
-    background: rgba(186, 148, 79, 0.15);
+    border-left: 4px solid #67e8f9;
+    background: rgba(103, 232, 249, 0.15);
 }
 
 .history-item-icon {
@@ -195,8 +195,8 @@
 }
 
 .theme-light .history-item {
-    background: rgba(186, 148, 79, 0.05);
-    border-color: rgba(186, 148, 79, 0.2);
+    background: rgba(103, 232, 249, 0.05);
+    border-color: rgba(103, 232, 249, 0.2);
 }
 
 .theme-light .history-item-title {

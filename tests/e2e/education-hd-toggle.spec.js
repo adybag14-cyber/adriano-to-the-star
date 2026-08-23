@@ -12,8 +12,7 @@ async function waitForTexture(page, predicate, timeoutMs = 60000) {
                 url: image?.src || null,
                 width: image?.width || 0,
                 height: image?.height || 0,
-                bakedWidth: image?.bakedWidth || 0,
-                bakedHeight: image?.bakedHeight || 0,
+                nativeTexture: image?.nativeTexture === true,
                 hdTexturesEnabled: window.viewer?.hdTexturesEnabled
             };
         });
@@ -32,8 +31,7 @@ async function waitForTexture(page, predicate, timeoutMs = 60000) {
             url: image?.src || null,
             width: image?.width || 0,
             height: image?.height || 0,
-            bakedWidth: image?.bakedWidth || 0,
-            bakedHeight: image?.bakedHeight || 0,
+            nativeTexture: image?.nativeTexture === true,
             hdTexturesEnabled: window.viewer?.hdTexturesEnabled
         };
     });
@@ -57,7 +55,7 @@ async function setHdToggle(page, enabled) {
     }
 }
 
-test('Education: enhanced detail toggle increases the local Mercury texture bake', async ({ page }) => {
+test('Education: enhanced detail toggle switches Earth between native 2K and 5.4K textures', async ({ page }) => {
     test.setTimeout(3 * 60 * 1000);
 
     await page.goto(`${BASE_URL}/education.html?cb=playwright-hd-toggle`, { waitUntil: 'domcontentloaded' });
@@ -67,12 +65,12 @@ test('Education: enhanced detail toggle increases the local Mercury texture bake
     await setHdToggle(page, false);
 
     await page.evaluate(() => {
-        window.viewer.loadPlanet('Mercury');
+        window.viewer.loadPlanet('Earth');
     });
 
     const base = await waitForTexture(
         page,
-        (info) => info.width > 1000 && info.bakedWidth <= 512 && String(info.url || '').includes('images/textures/mercury.jpg') && info.hdTexturesEnabled === false,
+        (info) => info.width === 2048 && info.nativeTexture && String(info.url || '').includes('images/textures/earth-blue-marble-2048.jpg') && info.hdTexturesEnabled === false,
         90000
     );
 
@@ -80,7 +78,7 @@ test('Education: enhanced detail toggle increases the local Mercury texture bake
 
     const hd = await waitForTexture(
         page,
-        (info) => info.width > 1000 && info.bakedWidth > base.bakedWidth && String(info.url || '').includes('images/textures/mercury.jpg') && info.hdTexturesEnabled === true,
+        (info) => info.width >= 5000 && info.nativeTexture && info.width > base.width && String(info.url || '').includes('images/textures/earth-blue-marble-5400.jpg') && info.hdTexturesEnabled === true,
         150000
     );
 
@@ -88,12 +86,12 @@ test('Education: enhanced detail toggle increases the local Mercury texture bake
 
     const back = await waitForTexture(
         page,
-        (info) => info.width > 1000 && info.bakedWidth === base.bakedWidth && String(info.url || '').includes('images/textures/mercury.jpg') && info.hdTexturesEnabled === false,
+        (info) => info.width === base.width && info.nativeTexture && String(info.url || '').includes('images/textures/earth-blue-marble-2048.jpg') && info.hdTexturesEnabled === false,
         90000
     );
 
-    expect(base.bakedWidth).toBeLessThan(hd.bakedWidth);
-    expect(back.bakedWidth).toBe(base.bakedWidth);
+    expect(base.width).toBeLessThan(hd.width);
+    expect(back.width).toBe(base.width);
 });
 
 test('Education: all main buttons work without console errors', async ({ page }) => {

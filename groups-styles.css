@@ -14,7 +14,7 @@
 }
 
 .user-display {
-    color: var(--gold-accent, #ba944f);
+    color: var(--gold-accent, #67e8f9);
     font-weight: 600;
 }
 
@@ -28,7 +28,7 @@
 
 .group-card {
     background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(20, 20, 30, 0.8));
-    border: 2px solid rgba(186, 148, 79, 0.3);
+    border: 2px solid rgba(103, 232, 249, 0.3);
     border-radius: 15px;
     padding: 2rem;
     transition: all 0.4s ease;
@@ -46,7 +46,7 @@
     background: linear-gradient(
         45deg,
         transparent 30%,
-        rgba(186, 148, 79, 0.1) 50%,
+        rgba(103, 232, 249, 0.1) 50%,
         transparent 70%
     );
     animation: shimmer 3s linear infinite;
@@ -54,12 +54,12 @@
 
 .group-card:hover {
     transform: translateY(-5px);
-    border-color: #ba944f;
-    box-shadow: 0 10px 30px rgba(186, 148, 79, 0.3);
+    border-color: #67e8f9;
+    box-shadow: 0 10px 30px rgba(103, 232, 249, 0.3);
 }
 
 .group-card h3 {
-    color: #ba944f;
+    color: #67e8f9;
     margin-bottom: 1rem;
 }
 
@@ -74,7 +74,7 @@
 .join-group-btn {
     width: 100%;
     padding: 0.75rem;
-    background: linear-gradient(135deg, #ba944f, #ffd700);
+    background: linear-gradient(135deg, #67e8f9, #a78bfa);
     border: none;
     border-radius: 8px;
     color: #000;
@@ -85,7 +85,7 @@
 
 .join-group-btn:hover {
     transform: scale(1.05);
-    box-shadow: 0 5px 15px rgba(186, 148, 79, 0.5);
+    box-shadow: 0 5px 15px rgba(103, 232, 249, 0.5);
 }
 
 .member-badge {
@@ -110,7 +110,7 @@
 .filter-group-btn {
     padding: 0.75rem 1.5rem;
     background: rgba(0, 0, 0, 0.5);
-    border: 2px solid rgba(186, 148, 79, 0.3);
+    border: 2px solid rgba(103, 232, 249, 0.3);
     border-radius: 25px;
     color: #fff;
     cursor: pointer;
@@ -118,14 +118,14 @@
 }
 
 .filter-group-btn:hover {
-    border-color: #ba944f;
-    background: rgba(186, 148, 79, 0.1);
+    border-color: #67e8f9;
+    background: rgba(103, 232, 249, 0.1);
 }
 
 .filter-group-btn.active {
-    background: linear-gradient(135deg, #ba944f, #ffd700);
+    background: linear-gradient(135deg, #67e8f9, #a78bfa);
     color: #000;
-    border-color: #ffd700;
+    border-color: #a78bfa;
 }
 
 /* Posts */
@@ -135,7 +135,7 @@
 
 .post-card {
     background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(20, 20, 30, 0.8));
-    border: 2px solid rgba(186, 148, 79, 0.3);
+    border: 2px solid rgba(103, 232, 249, 0.3);
     border-radius: 15px;
     padding: 2rem;
     margin-bottom: 2rem;
@@ -143,7 +143,7 @@
 }
 
 .post-card:hover {
-    border-color: rgba(186, 148, 79, 0.6);
+    border-color: rgba(103, 232, 249, 0.6);
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
 }
 
@@ -154,7 +154,7 @@
 }
 
 .post-group-tag a {
-    color: #ba944f;
+    color: #67e8f9;
     text-decoration: none;
 }
 
@@ -195,7 +195,7 @@
     display: flex;
     gap: 2rem;
     padding-top: 1.5rem;
-    border-top: 1px solid rgba(186, 148, 79, 0.2);
+    border-top: 1px solid rgba(103, 232, 249, 0.2);
 }
 
 .like-btn {
@@ -207,7 +207,7 @@
 }
 
 .like-btn:hover {
-    color: #ba944f;
+    color: #67e8f9;
     transform: scale(1.1);
 }
 
@@ -219,11 +219,11 @@
 .comments-section {
     margin-top: 2rem;
     padding-top: 1.5rem;
-    border-top: 1px solid rgba(186, 148, 79, 0.2);
+    border-top: 1px solid rgba(103, 232, 249, 0.2);
 }
 
 .comments-section h4 {
-    color: #ba944f;
+    color: #67e8f9;
     margin-bottom: 1rem;
 }
 
@@ -235,7 +235,7 @@
 }
 
 .comment strong {
-    color: #ba944f;
+    color: #67e8f9;
 }
 
 .comment-date {
@@ -255,14 +255,14 @@
     flex: 1;
     padding: 0.75rem;
     background: rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(186, 148, 79, 0.3);
+    border: 1px solid rgba(103, 232, 249, 0.3);
     border-radius: 8px;
     color: #fff;
 }
 
 .add-comment button {
     padding: 0.75rem 1.5rem;
-    background: linear-gradient(135deg, #ba944f, #ffd700);
+    background: linear-gradient(135deg, #67e8f9, #a78bfa);
     border: none;
     border-radius: 8px;
     color: #000;
@@ -292,7 +292,7 @@
 
 .modal-content {
     background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(20, 20, 30, 0.95));
-    border: 2px solid rgba(186, 148, 79, 0.5);
+    border: 2px solid rgba(103, 232, 249, 0.5);
     border-radius: 20px;
     padding: 2rem;
     max-width: 500px;
@@ -321,7 +321,7 @@
 }
 
 .modal-header h2 {
-    color: #ba944f;
+    color: #67e8f9;
     margin: 0;
 }
 
@@ -335,7 +335,7 @@
 }
 
 .close-modal:hover {
-    color: #ba944f;
+    color: #67e8f9;
     transform: rotate(90deg);
 }
 
@@ -346,7 +346,7 @@
 .form-group label {
     display: block;
     margin-bottom: 0.5rem;
-    color: #ba944f;
+    color: #67e8f9;
     font-weight: 600;
 }
 
@@ -356,7 +356,7 @@
     width: 100%;
     padding: 0.75rem;
     background: rgba(0, 0, 0, 0.5);
-    border: 2px solid rgba(186, 148, 79, 0.3);
+    border: 2px solid rgba(103, 232, 249, 0.3);
     border-radius: 8px;
     color: #fff;
     font-size: 1rem;
@@ -366,8 +366,8 @@
 .form-group textarea:focus,
 .form-group select:focus {
     outline: none;
-    border-color: #ba944f;
-    box-shadow: 0 0 10px rgba(186, 148, 79, 0.3);
+    border-color: #67e8f9;
+    box-shadow: 0 0 10px rgba(103, 232, 249, 0.3);
 }
 
 .form-group textarea {
@@ -378,7 +378,7 @@
 .submit-btn {
     width: 100%;
     padding: 1rem;
-    background: linear-gradient(135deg, #ba944f, #ffd700);
+    background: linear-gradient(135deg, #67e8f9, #a78bfa);
     border: none;
     border-radius: 8px;
     color: #000;
@@ -390,7 +390,7 @@
 
 .submit-btn:hover {
     transform: scale(1.02);
-    box-shadow: 0 5px 20px rgba(186, 148, 79, 0.5);
+    box-shadow: 0 5px 20px rgba(103, 232, 249, 0.5);
 }
 
 .form-footer {
@@ -400,7 +400,7 @@
 }
 
 .form-footer a {
-    color: #ba944f;
+    color: #67e8f9;
     text-decoration: none;
     font-weight: 600;
 }
@@ -412,7 +412,7 @@
 /* Buttons */
 .create-post-btn {
     padding: 0.75rem 1.5rem;
-    background: linear-gradient(135deg, #ba944f, #ffd700);
+    background: linear-gradient(135deg, #67e8f9, #a78bfa);
     border: none;
     border-radius: 8px;
     color: #000;
@@ -423,22 +423,22 @@
 
 .create-post-btn:hover {
     transform: scale(1.05);
-    box-shadow: 0 5px 15px rgba(186, 148, 79, 0.5);
+    box-shadow: 0 5px 15px rgba(103, 232, 249, 0.5);
 }
 
 .login-button, .logout-button {
     padding: 0.5rem 1.5rem;
-    background: rgba(186, 148, 79, 0.2);
-    border: 2px solid #ba944f;
+    background: rgba(103, 232, 249, 0.2);
+    border: 2px solid #67e8f9;
     border-radius: 8px;
-    color: #ba944f;
+    color: #67e8f9;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
 .login-button:hover, .logout-button:hover {
-    background: #ba944f;
+    background: #67e8f9;
     color: #000;
 }
 
@@ -453,7 +453,7 @@
     text-align: center;
     padding: 3rem;
     opacity: 0.7;
-    border: 2px dashed rgba(186, 148, 79, 0.3);
+    border: 2px dashed rgba(103, 232, 249, 0.3);
     border-radius: 15px;
 }
 

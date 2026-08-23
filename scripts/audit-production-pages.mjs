@@ -24,6 +24,9 @@ for (const page of SITE_PAGES) {
     [count(html, /<meta\b[^>]*name="keywords"/gi) === 0, 'obsolete meta keywords remain'],
     [count(html, /<nav\b[^>]*class="[^"]*\bita-breadcrumb\b[^"]*"/gi) === 1, 'must have one visible breadcrumb'],
     [count(html, /id="ita-breadcrumb-structured-data"/gi) === 1, 'must have one generated BreadcrumbList'],
+    [!html.includes('"SearchAction"'), 'retired sitelinks SearchAction structured data remains'],
+    [!html.includes('"SpeakableSpecification"'), 'unsupported speakable structured data remains'],
+    [!html.includes('/html/head/title'), 'malformed speakable XPath remains crawlable'],
     [html.includes(`href="${prefix}site-experience.css?`), 'shared experience stylesheet is missing or unversioned'],
     [html.includes(`href="${prefix}i18n-styles.css?`), 'i18n stylesheet is missing or unversioned'],
     [['exoplanet-pioneer.html', 'starsector.html'].includes(page.path) || /src="(?:\.\.\/)?i18n\.js\?v=/.test(html), 'i18n runtime is missing or unversioned'],
@@ -56,7 +59,7 @@ try {
 }
 
 const projects = await fs.readFile(path.join(publicRoot, 'projects.html'), 'utf8');
-if (count(projects, /<article\b[^>]*class="project-card/g) !== 10) fail('projects.html: expected 10 published project cards');
+if (count(projects, /<article\b[^>]*class="project-card/g) !== 11) fail('projects.html: expected 11 published project cards');
 for (const match of projects.matchAll(/href="(experimental\/[^"]+\.html)"/g)) {
   try {
     const target = await fs.readFile(path.join(publicRoot, ...match[1].split('/')), 'utf8');
@@ -64,6 +67,22 @@ for (const match of projects.matchAll(/href="(experimental\/[^"]+\.html)"/g)) {
     if (!target.includes('experimental-lab.css?v=')) fail(`projects.html: ${match[1]} lacks versioned lab UI`);
     if (/src=["']\/(?:universal-simulation-hub|void-warfare-engine|planetary-environment-engine|galactic-governance-engine|mining-resource-engine|xeno-intelligence-engine|quantum-propulsion-engine|intelligence-shadow-engine|fleet-command-mega-engine|deep-space-industry-engine|procedural-content-engine|galactic-commerce-engine|metaphysics-apotheosis-engine)\.js/i.test(target)) fail(`projects.html: ${match[1]} still loads unrelated mega-engine code`);
   } catch { fail(`projects.html: missing launch target ${match[1]}`); }
+}
+
+for (const [legacy, target] of [
+  ['offline.html', '../offline.html'],
+  ['gta-6-videos.html', '../gta-6-videos.html'],
+  ['events.html', '../events.html'],
+  ['projects.html', '../projects.html'],
+  ['database.html', '../database.html']
+]) {
+  try {
+    const redirect = await fs.readFile(path.join(publicRoot, 'service-page', legacy), 'utf8');
+    if (!redirect.includes(`content="0;url=${target}"`)) fail(`service-page/${legacy}: legacy redirect is missing or targets the wrong page`);
+    if (!/<meta name="robots" content="noindex,follow">/i.test(redirect)) fail(`service-page/${legacy}: legacy redirect must be noindex,follow`);
+  } catch {
+    fail(`service-page/${legacy}: Search Console legacy redirect is missing`);
+  }
 }
 
 const i18n = await fs.readFile(path.join(publicRoot, 'i18n.js'), 'utf8');

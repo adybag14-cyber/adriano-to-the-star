@@ -1,0 +1,224 @@
+/* 2026 observatory interface layer for the public analytics page. */
+.analytics-page {
+    --analytics-cyan: #67e8f9;
+    --analytics-blue: #38bdf8;
+    --analytics-violet: #8b5cf6;
+    --analytics-green: #86efac;
+    --analytics-panel: rgba(3, 7, 18, 0.9);
+    --analytics-panel-soft: rgba(8, 15, 34, 0.76);
+    --analytics-line: rgba(103, 232, 249, 0.18);
+    --analytics-muted: #94a3b8;
+    padding-bottom: 8rem;
+}
+
+.analytics-page .page-hero {
+    border: 1px solid rgba(103, 232, 249, 0.16);
+    background: radial-gradient(circle at 30% 0%, rgba(34, 211, 238, 0.16), transparent 42%),
+        radial-gradient(circle at 80% 100%, rgba(139, 92, 246, 0.14), transparent 45%),
+        rgba(2, 6, 23, 0.76);
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.34);
+}
+
+.analytics-page .page-title {
+    color: #f8fafc !important;
+    text-shadow: 0 0 28px rgba(56, 189, 248, 0.3) !important;
+}
+
+.analytics-page .content-container {
+    width: min(1200px, calc(100% - 2rem));
+}
+
+.analytics-overview,
+.analytics-page :is(.analytics-dashboard, .popular-planet-trends, .claim-statistics-dashboard, .discovery-statistics-widget, .performance-dashboard) {
+    border: 1px solid var(--analytics-line) !important;
+    border-radius: 22px !important;
+    background: linear-gradient(145deg, rgba(3, 7, 18, 0.94), rgba(8, 15, 34, 0.88)) !important;
+    box-shadow: 0 25px 72px rgba(0, 0, 0, 0.38), 0 0 0 1px rgba(139, 92, 246, 0.06) inset !important;
+}
+
+.analytics-overview {
+    padding: clamp(1.25rem, 3vw, 2.25rem);
+}
+
+.analytics-overview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1.25rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--analytics-line);
+}
+
+.analytics-eyebrow {
+    margin: 0 0 0.4rem;
+    color: var(--analytics-cyan);
+    font: 800 0.72rem/1.2 "Fira Code", monospace;
+    letter-spacing: 0.16em;
+}
+
+.analytics-overview h2,
+.analytics-section-title {
+    margin: 0;
+    color: #f8fafc !important;
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    letter-spacing: -0.025em;
+}
+
+.analytics-overview-header p:not(.analytics-eyebrow) {
+    max-width: 66ch;
+    margin: 0.55rem 0 0;
+    color: #cbd5e1;
+    line-height: 1.65;
+}
+
+.analytics-source-badge {
+    flex: 0 0 auto;
+    padding: 0.5rem 0.7rem;
+    border: 1px solid rgba(134, 239, 172, 0.26);
+    border-radius: 999px;
+    background: rgba(20, 83, 45, 0.18);
+    color: #bbf7d0;
+    font: 700 0.68rem/1.2 "Fira Code", monospace;
+}
+
+.analytics-metric-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.85rem;
+    margin-top: 1.25rem;
+}
+
+.analytics-metric-card {
+    display: grid;
+    gap: 0.45rem;
+    min-width: 0;
+    padding: 1rem;
+    border: 1px solid var(--analytics-line);
+    border-radius: 15px;
+    background: linear-gradient(155deg, rgba(15, 23, 42, 0.86), rgba(8, 47, 73, 0.22));
+}
+
+.analytics-metric-card strong {
+    overflow-wrap: anywhere;
+    color: #f8fafc;
+    font: 750 clamp(1.65rem, 3vw, 2.5rem)/1.05 "Orbitron", sans-serif;
+}
+
+.analytics-metric-label {
+    color: var(--analytics-cyan);
+    font-size: 0.73rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.analytics-metric-card small,
+.analytics-data-note {
+    color: var(--analytics-muted);
+    font-size: 0.78rem;
+    line-height: 1.45;
+}
+
+.analytics-data-note {
+    display: flex;
+    gap: 0.7rem;
+    align-items: flex-start;
+    margin-top: 1rem;
+    padding: 0.8rem 0.9rem;
+    border: 1px dashed rgba(139, 92, 246, 0.3);
+    border-radius: 12px;
+    background: rgba(76, 29, 149, 0.1);
+}
+
+.analytics-data-note span {
+    color: #c4b5fd;
+    font-size: 1.1rem;
+}
+
+.analytics-data-note p {
+    margin: 0;
+}
+
+.analytics-section-title {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.analytics-page :is(.analytics-card, .stat-card, .widget-card, .trend-card) {
+    border-color: var(--analytics-line) !important;
+    background: rgba(15, 23, 42, 0.7) !important;
+    box-shadow: none !important;
+}
+
+.analytics-page :is(.analytics-card, .stat-card, .widget-card, .trend-card):hover {
+    border-color: rgba(103, 232, 249, 0.42) !important;
+}
+
+.analytics-page :is(.analytics-card h3, .stat-value, .current-level, .dashboard-header h2, .popular-planet-trends h2, .claim-statistics-dashboard h2, .claim-statistics-dashboard h3) {
+    color: #e0f2fe !important;
+    text-shadow: none !important;
+}
+
+.analytics-page :is(.refresh-btn, .time-range-select, .edit-mode-btn, .add-widget-btn, button) {
+    border-color: rgba(103, 232, 249, 0.26) !important;
+}
+
+.analytics-page :is(.refresh-btn, .edit-mode-btn, .add-widget-btn) {
+    background: rgba(8, 47, 73, 0.54) !important;
+    color: #cffafe !important;
+}
+
+.analytics-page .progress-fill {
+    background: linear-gradient(90deg, var(--analytics-blue), var(--analytics-violet)) !important;
+}
+
+.analytics-page [style*="color: #67e8f9"],
+.analytics-page [style*="color:#67e8f9"] {
+    color: var(--analytics-cyan) !important;
+}
+
+.analytics-page [style*="background: rgba(103, 232, 249"],
+.analytics-page [style*="background:rgba(103,232,249"] {
+    background: rgba(8, 47, 73, 0.38) !important;
+}
+
+.analytics-page [style*="border: 1px solid rgba(103, 232, 249"],
+.analytics-page [style*="border:1px solid rgba(103,232,249"] {
+    border-color: rgba(103, 232, 249, 0.24) !important;
+}
+
+.analytics-page #cosmic-music-player {
+    border-color: rgba(103, 232, 249, 0.42) !important;
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.62), 0 0 26px rgba(56, 189, 248, 0.14) !important;
+}
+
+.analytics-page #cosmic-music-player :is(button, #minimize-player, #prev-track, #play-pause, #next-track, #download-track) {
+    border-color: rgba(103, 232, 249, 0.5) !important;
+    color: var(--analytics-cyan) !important;
+}
+
+.analytics-page #progress-fill {
+    background: linear-gradient(90deg, var(--analytics-blue), var(--analytics-violet)) !important;
+}
+
+@media (max-width: 820px) {
+    .analytics-overview-header {
+        flex-direction: column;
+    }
+
+    .analytics-metric-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .analytics-metric-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .analytics-page #cosmic-music-player {
+        right: 0.75rem !important;
+        bottom: 0.75rem !important;
+        max-width: calc(100vw - 1.5rem) !important;
+    }
+}

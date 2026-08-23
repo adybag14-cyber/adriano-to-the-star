@@ -16,7 +16,7 @@
 
 .event-dialog {
     background: rgba(20, 20, 30, 0.95);
-    border: 2px solid rgba(186, 148, 79, 0.5);
+    border: 2px solid rgba(103, 232, 249, 0.5);
     border-radius: 12px;
     padding: 2rem;
     max-width: 500px;
@@ -28,7 +28,7 @@
 }
 
 .event-dialog h3 {
-    color: #ba944f;
+    color: #67e8f9;
     font-family: 'Cormorant Garamond', serif;
     margin-bottom: 1.5rem;
     font-size: 1.5rem;
@@ -52,7 +52,7 @@
     width: 100%;
     padding: 0.75rem;
     background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(186, 148, 79, 0.3);
+    border: 1px solid rgba(103, 232, 249, 0.3);
     border-radius: 6px;
     color: #ffffff;
     font-family: 'Raleway', sans-serif;
@@ -63,13 +63,13 @@
 .form-group input[type="datetime-local"]:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #ba944f;
-    box-shadow: 0 0 10px rgba(186, 148, 79, 0.3);
+    border-color: #67e8f9;
+    box-shadow: 0 0 10px rgba(103, 232, 249, 0.3);
 }
 
 .form-group input[type="checkbox"] {
     margin-right: 0.5rem;
-    accent-color: #ba944f;
+    accent-color: #67e8f9;
 }
 
 .form-actions {
@@ -79,8 +79,8 @@
 }
 
 .user-event {
-    border-left: 4px solid var(--event-color, #ba944f);
-    background: rgba(186, 148, 79, 0.05);
+    border-left: 4px solid var(--event-color, #67e8f9);
+    background: rgba(103, 232, 249, 0.05);
 }
 
 .user-event .event-actions {

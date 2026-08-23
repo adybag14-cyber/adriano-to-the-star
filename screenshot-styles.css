@@ -9,8 +9,8 @@
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: linear-gradient(135deg, rgba(186, 148, 79, 0.9), rgba(186, 148, 79, 0.7));
-    border: 2px solid rgba(186, 148, 79, 0.5);
+    background: linear-gradient(135deg, rgba(103, 232, 249, 0.9), rgba(103, 232, 249, 0.7));
+    border: 2px solid rgba(103, 232, 249, 0.5);
     color: #ffffff;
     font-size: 1.5rem;
     cursor: pointer;
@@ -24,13 +24,13 @@
 
 .screenshot-btn:hover {
     transform: scale(1.1);
-    box-shadow: 0 6px 20px rgba(186, 148, 79, 0.5);
+    box-shadow: 0 6px 20px rgba(103, 232, 249, 0.5);
 }
 
 .screenshot-menu {
     position: fixed;
     background: rgba(0, 0, 0, 0.95);
-    border: 2px solid rgba(186, 148, 79, 0.4);
+    border: 2px solid rgba(103, 232, 249, 0.4);
     border-radius: 12px;
     padding: 0.5rem;
     z-index: 10001;
@@ -70,8 +70,8 @@
 }
 
 .screenshot-option:hover {
-    background: rgba(186, 148, 79, 0.2);
-    color: #ba944f;
+    background: rgba(103, 232, 249, 0.2);
+    color: #67e8f9;
     transform: translateX(4px);
 }
 

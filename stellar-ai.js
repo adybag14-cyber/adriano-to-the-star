@@ -1222,6 +1222,18 @@ class StellarAI {
                     // Re-throw to show error message, don't fall back to generic fallback
                     throw liveError;
                 }
+            } else if (this.selectedModel === 'bonsai-local') {
+                if (!window.stellarBonsai) {
+                    throw new Error('The browser-local Bonsai controls have not finished initializing. Please try again.');
+                }
+                if (!window.stellarBonsai.isReady()) {
+                    throw new Error('Choose a Bonsai model in the local AI panel and press Load model before sending a local prompt.');
+                }
+                const messages = chat.messages.slice(-10).map(message => ({
+                    role: message.role,
+                    content: message.content
+                }));
+                responseText = await window.stellarBonsai.generate(messages);
             } else if (this.selectedModel === 'qwen-3-235b-a22b-instruct-2507') {
                 responseText = await this.getCerebrasResponse(chat);
             } else if (this.selectedModel === 'fallback') {
@@ -3368,4 +3380,3 @@ initStellarAI();
 
 // Start initialization
 initStellarAI();
-

@@ -2,7 +2,7 @@
 
 .space-api-dashboard {
     background: linear-gradient(135deg, rgba(8, 10, 25, 0.85), rgba(18, 22, 40, 0.95));
-    border: 2px solid rgba(186, 148, 79, 0.3);
+    border: 2px solid rgba(103, 232, 249, 0.3);
     border-radius: 18px;
     padding: 2rem;
     margin: 2rem 0;
@@ -15,7 +15,7 @@
     align-items: center;
     margin-bottom: 2rem;
     padding-bottom: 1rem;
-    border-bottom: 2px solid rgba(186, 148, 79, 0.2);
+    border-bottom: 2px solid rgba(103, 232, 249, 0.2);
 }
 
 .dashboard-header h2 {
@@ -29,10 +29,10 @@
 
 .refresh-btn {
     padding: 0.75rem 1.5rem;
-    background: rgba(186, 148, 79, 0.2);
-    border: 2px solid rgba(186, 148, 79, 0.4);
+    background: rgba(103, 232, 249, 0.2);
+    border: 2px solid rgba(103, 232, 249, 0.4);
     border-radius: 8px;
-    color: #ba944f;
+    color: #67e8f9;
     font-size: 1rem;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -42,10 +42,10 @@
 }
 
 .refresh-btn:hover {
-    background: rgba(186, 148, 79, 0.3);
-    border-color: rgba(186, 148, 79, 0.6);
+    background: rgba(103, 232, 249, 0.3);
+    border-color: rgba(103, 232, 249, 0.6);
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(186, 148, 79, 0.3);
+    box-shadow: 0 5px 15px rgba(103, 232, 249, 0.3);
 }
 
 .dashboard-tabs {
@@ -58,7 +58,7 @@
 .tab-btn {
     padding: 0.75rem 1.5rem;
     background: rgba(0, 0, 0, 0.3);
-    border: 2px solid rgba(186, 148, 79, 0.2);
+    border: 2px solid rgba(103, 232, 249, 0.2);
     border-radius: 8px;
     color: rgba(255, 255, 255, 0.7);
     font-size: 1rem;
@@ -70,14 +70,14 @@
 }
 
 .tab-btn:hover {
-    border-color: rgba(186, 148, 79, 0.4);
+    border-color: rgba(103, 232, 249, 0.4);
     color: rgba(255, 255, 255, 0.9);
 }
 
 .tab-btn.active {
-    background: rgba(186, 148, 79, 0.2);
-    border-color: rgba(186, 148, 79, 0.6);
-    color: #ba944f;
+    background: rgba(103, 232, 249, 0.2);
+    border-color: rgba(103, 232, 249, 0.6);
+    color: #67e8f9;
 }
 
 .dashboard-content {
@@ -92,8 +92,8 @@
 }
 
 .loading-state .spinner {
-    border: 4px solid rgba(186, 148, 79, 0.2);
-    border-top: 4px solid #ba944f;
+    border: 4px solid rgba(103, 232, 249, 0.2);
+    border-top: 4px solid #67e8f9;
     border-radius: 50%;
     width: 60px;
     height: 60px;
@@ -128,7 +128,7 @@
 
 .data-section {
     background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(186, 148, 79, 0.2);
+    border: 1px solid rgba(103, 232, 249, 0.2);
     border-radius: 12px;
     padding: 1.5rem;
 }
@@ -137,7 +137,7 @@
     font-family: 'Raleway', sans-serif;
     font-size: 1.5rem;
     font-weight: 400;
-    color: #ba944f;
+    color: #67e8f9;
     margin-bottom: 1rem;
     text-transform: uppercase;
     letter-spacing: 2px;
@@ -156,7 +156,7 @@
 .launch-item,
 .news-item {
     background: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(186, 148, 79, 0.1);
+    border: 1px solid rgba(103, 232, 249, 0.1);
     border-radius: 8px;
     padding: 1rem;
     transition: all 0.3s ease;
@@ -165,7 +165,7 @@
 .exoplanet-item:hover,
 .launch-item:hover,
 .news-item:hover {
-    border-color: rgba(186, 148, 79, 0.4);
+    border-color: rgba(103, 232, 249, 0.4);
     transform: translateX(5px);
 }
 
@@ -180,7 +180,7 @@
 }
 
 .planet-name {
-    color: #ba944f;
+    color: #67e8f9;
 }
 
 .planet-details,
@@ -196,9 +196,9 @@
 
 .planet-details span {
     padding: 0.25rem 0.75rem;
-    background: rgba(186, 148, 79, 0.1);
+    background: rgba(103, 232, 249, 0.1);
     border-radius: 4px;
-    border: 1px solid rgba(186, 148, 79, 0.2);
+    border: 1px solid rgba(103, 232, 249, 0.2);
 }
 
 .launch-item.upcoming {
@@ -213,7 +213,7 @@
 
 .news-source {
     font-size: 0.8rem;
-    color: rgba(186, 148, 79, 0.8);
+    color: rgba(103, 232, 249, 0.8);
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-bottom: 0.5rem;
@@ -226,7 +226,7 @@
 }
 
 .news-title a:hover {
-    color: #ba944f;
+    color: #67e8f9;
 }
 
 /* Full View Styles */
@@ -253,10 +253,10 @@
 .view-more-btn {
     margin-top: 1rem;
     padding: 0.5rem 1rem;
-    background: rgba(186, 148, 79, 0.1);
-    border: 1px solid rgba(186, 148, 79, 0.3);
+    background: rgba(103, 232, 249, 0.1);
+    border: 1px solid rgba(103, 232, 249, 0.3);
     border-radius: 6px;
-    color: #ba944f;
+    color: #67e8f9;
     font-size: 0.9rem;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -264,8 +264,8 @@
 }
 
 .view-more-btn:hover {
-    background: rgba(186, 148, 79, 0.2);
-    border-color: rgba(186, 148, 79, 0.5);
+    background: rgba(103, 232, 249, 0.2);
+    border-color: rgba(103, 232, 249, 0.5);
 }
 
 .no-data {
@@ -281,7 +281,7 @@
     font-size: 0.9rem;
     margin-top: 2rem;
     padding-top: 1rem;
-    border-top: 1px solid rgba(186, 148, 79, 0.2);
+    border-top: 1px solid rgba(103, 232, 249, 0.2);
 }
 
 /* APOD Styles */
@@ -291,13 +291,13 @@
 
 .apod-card {
     background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(186, 148, 79, 0.2);
+    border: 1px solid rgba(103, 232, 249, 0.2);
     border-radius: 12px;
     padding: 2rem;
 }
 
 .apod-date {
-    color: rgba(186, 148, 79, 0.8);
+    color: rgba(103, 232, 249, 0.8);
     font-size: 0.9rem;
     margin-bottom: 0.5rem;
     text-transform: uppercase;
@@ -307,7 +307,7 @@
 .apod-title {
     font-family: 'Cormorant Garamond', serif;
     font-size: 2rem;
-    color: #ba944f;
+    color: #67e8f9;
     margin-bottom: 1.5rem;
 }
 
@@ -347,17 +347,17 @@
     display: inline-block;
     margin-top: 1rem;
     padding: 0.75rem 1.5rem;
-    background: rgba(186, 148, 79, 0.2);
-    border: 1px solid rgba(186, 148, 79, 0.4);
+    background: rgba(103, 232, 249, 0.2);
+    border: 1px solid rgba(103, 232, 249, 0.4);
     border-radius: 6px;
-    color: #ba944f;
+    color: #67e8f9;
     text-decoration: none;
     transition: all 0.3s ease;
 }
 
 .apod-hd-link:hover {
-    background: rgba(186, 148, 79, 0.3);
-    border-color: rgba(186, 148, 79, 0.6);
+    background: rgba(103, 232, 249, 0.3);
+    border-color: rgba(103, 232, 249, 0.6);
 }
 
 /* NEO Styles */
@@ -367,7 +367,7 @@
 
 .neo-stats {
     background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(186, 148, 79, 0.2);
+    border: 1px solid rgba(103, 232, 249, 0.2);
     border-radius: 8px;
     padding: 1rem;
     margin-bottom: 1.5rem;
@@ -379,7 +379,7 @@
 }
 
 .stat-item strong {
-    color: #ba944f;
+    color: #67e8f9;
 }
 
 .neo-list {
@@ -390,7 +390,7 @@
 
 .neo-item {
     background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(186, 148, 79, 0.2);
+    border: 1px solid rgba(103, 232, 249, 0.2);
     border-radius: 8px;
     padding: 1.5rem;
     transition: all 0.3s ease;
@@ -402,7 +402,7 @@
 }
 
 .neo-item:hover {
-    border-color: rgba(186, 148, 79, 0.4);
+    border-color: rgba(103, 232, 249, 0.4);
     transform: translateX(5px);
 }
 
@@ -410,7 +410,7 @@
     font-family: 'Raleway', sans-serif;
     font-size: 1.2rem;
     font-weight: 600;
-    color: #ba944f;
+    color: #67e8f9;
     margin-bottom: 1rem;
 }
 
@@ -424,9 +424,9 @@
 
 .neo-details span {
     padding: 0.25rem 0.75rem;
-    background: rgba(186, 148, 79, 0.1);
+    background: rgba(103, 232, 249, 0.1);
     border-radius: 4px;
-    border: 1px solid rgba(186, 148, 79, 0.2);
+    border: 1px solid rgba(103, 232, 249, 0.2);
 }
 
 .hazard-badge {
@@ -449,7 +449,7 @@
     font-family: 'Raleway', sans-serif;
     font-size: 1.8rem;
     font-weight: 400;
-    color: #ba944f;
+    color: #67e8f9;
     margin-bottom: 1.5rem;
     text-transform: uppercase;
     letter-spacing: 2px;
@@ -463,14 +463,14 @@
 
 .telescope-item {
     background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(186, 148, 79, 0.2);
+    border: 1px solid rgba(103, 232, 249, 0.2);
     border-radius: 12px;
     padding: 1.5rem;
     transition: all 0.3s ease;
 }
 
 .telescope-item:hover {
-    border-color: rgba(186, 148, 79, 0.4);
+    border-color: rgba(103, 232, 249, 0.4);
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
@@ -505,13 +505,13 @@
 .telescope-link {
     display: inline-block;
     margin-top: 1rem;
-    color: #ba944f;
+    color: #67e8f9;
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 .telescope-link:hover {
-    color: #d4b86a;
+    color: #a78bfa;
 }
 
 .telescope-date {
@@ -545,7 +545,7 @@
     font-family: 'Raleway', sans-serif;
     font-size: 1.8rem;
     font-weight: 400;
-    color: #ba944f;
+    color: #67e8f9;
     margin-bottom: 1.5rem;
     text-transform: uppercase;
     letter-spacing: 2px;

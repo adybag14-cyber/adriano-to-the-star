@@ -83,6 +83,82 @@ test.describe('production site overhaul', () => {
     }
   });
 
+  test('Earth uses native NASA surface detail with independent clouds and atmosphere', async ({ page }) => {
+    await page.goto('/education.html', { waitUntil: 'domcontentloaded' });
+    await page.waitForFunction(() => window.viewer?.currentPlanet === 'Earth' && Boolean(window.viewer?.planetMesh?.userData?.surfaceImage));
+    const state = await page.evaluate(() => ({
+      surface: window.viewer.planetMesh.userData.surfaceImage,
+      map: Boolean(window.viewer.planetMesh.material.map),
+      vertexColours: Boolean(window.viewer.planetMesh.geometry.attributes.color),
+      clouds: Boolean(window.viewer.cloudMesh?.material?.map),
+      atmosphere: Boolean(window.viewer.atmosphereMesh?.material?.isShaderMaterial),
+      toneMapping: window.viewer.renderer.toneMapping,
+      triangles: window.viewer.renderer.info.render.triangles
+    }));
+    expect(state.surface.src).toContain('images/textures/earth-blue-marble-2048.jpg');
+    expect(state.surface.width).toBe(2048);
+    expect(state.surface.height).toBe(1024);
+    expect(state.surface.nativeTexture).toBe(true);
+    expect(state.map).toBe(true);
+    expect(state.vertexColours).toBe(false);
+    expect(state.clouds).toBe(true);
+    expect(state.atmosphere).toBe(true);
+    expect(state.triangles).toBeGreaterThan(20_000);
+  });
+
+  test('Star Maps supports search, selection, routes, zoom, and keyboard navigation', async ({ page }) => {
+    await page.goto('/star-maps.html', { waitUntil: 'domcontentloaded' });
+    await expect(page.locator('#star-map-container')).toHaveAttribute('data-star-map-ready', 'true');
+    await expect(page.locator('#star-map')).toBeVisible();
+    await page.locator('#stellar-map-search').fill('TRAPPIST-1');
+    await expect(page.locator('#stellar-map-name')).toHaveText('TRAPPIST-1');
+    await expect(page.locator('#star-map-container')).toHaveAttribute('data-star-map-selected', 'trappist-1');
+    await expect(page.locator('#stellar-map-education')).toHaveAttribute('href', /education\.html\?target=TRAPPIST-1/i);
+    const before = await page.locator('#stellar-map-coordinates').textContent();
+    await page.locator('#stellar-map-zoom-in').click();
+    await expect(page.locator('#stellar-map-coordinates')).not.toHaveText(before || '');
+    await page.locator('#stellar-map-routes').click();
+    await expect(page.locator('#stellar-map-routes')).toHaveAttribute('aria-pressed', 'false');
+    await page.locator('#star-map').focus();
+    await page.keyboard.press('r');
+    await expect(page.locator('#stellar-map-coordinates')).toContainText('100%');
+  });
+
+  test('Stellar AI keeps controls separated and never downloads Bonsai before consent', async ({ page }) => {
+    const modelRequests = [];
+    page.on('request', request => {
+      if (/esm\.sh\/bitgpu|huggingface\.co\/(?:prism-ml|onnx-community)|cdn\.jsdelivr\.net\/gh\/stfurkan\/bitgpu/i.test(request.url())) modelRequests.push(request.url());
+    });
+    await page.setViewportSize({ width: 1440, height: 1000 });
+    await page.goto('/stellar-ai.html', { waitUntil: 'domcontentloaded' });
+    await expect(page.locator('#stellar-chat-shell')).toBeVisible();
+    await expect(page.locator('#bonsai-local-panel')).toBeVisible();
+    expect(modelRequests).toEqual([]);
+    const boxes = await page.evaluate(() => {
+      const ids = ['model-selector', 'metrics-btn', 'clear-chat-btn', 'export-chat-btn', 'message-input', 'send-btn'];
+      return Object.fromEntries(ids.map(id => {
+        const rect = document.getElementById(id).getBoundingClientRect();
+        return [id, { left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom }];
+      }));
+    });
+    const overlaps = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+    expect(overlaps(boxes['model-selector'], boxes['metrics-btn'])).toBe(false);
+    expect(overlaps(boxes['metrics-btn'], boxes['clear-chat-btn'])).toBe(false);
+    expect(overlaps(boxes['clear-chat-btn'], boxes['export-chat-btn'])).toBe(false);
+    expect(overlaps(boxes['message-input'], boxes['send-btn'])).toBe(false);
+    await page.setViewportSize({ width: 390, height: 844 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(2);
+    expect(modelRequests).toEqual([]);
+  });
+
+  test('Analytics renders a labelled browser-local snapshot without waiting for account data', async ({ page }) => {
+    await page.goto('/analytics-dashboard.html', { waitUntil: 'domcontentloaded' });
+    await expect(page.locator('.analytics-overview')).toBeVisible({ timeout: 2_000 });
+    await expect(page.locator('#analytics-account-status')).toContainText(/local browser data only/i);
+    await expect(page.locator('.analytics-metric-card')).toHaveCount(4);
+    await expect(page.locator('.analytics-data-note')).toContainText(/no sample numbers/i);
+  });
+
   test('Space Dashboard renders the build-cached snapshot while live feeds are unavailable', async ({ page }) => {
     const feedRequests = [];
     page.on('request', request => {
@@ -106,7 +182,7 @@ test.describe('production site overhaul', () => {
     const externalPosts = [];
     page.on('request', request => { if (request.method() !== 'GET' && !request.url().startsWith('http://127.0.0.1')) externalPosts.push(request.url()); });
     await page.goto('/projects.html', { waitUntil: 'domcontentloaded' });
-    await expect(page.locator('.project-card')).toHaveCount(10);
+    await expect(page.locator('.project-card')).toHaveCount(11);
     await expect(page.locator('#readiness-summary')).toContainText('/ 5 available');
     await page.locator('[data-filter="immersive"]').click();
     await expect(page.locator('.project-card:visible')).toHaveCount(2);

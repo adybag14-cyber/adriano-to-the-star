@@ -8,7 +8,7 @@ A normal full-history push mirror is intentionally not used: the canonical Git r
 
 ## Snapshot policy
 
-`scripts/create-github-ci-snapshot.py` materializes files directly from a committed Git ref, never from the working tree. This prevents unrelated local edits from entering the mirror. It excludes generated/vendor/backup runtime trees, credential/bootstrap material (including `.env*`), and files larger than 5 MiB unless the policy is deliberately changed. The snapshot records the canonical source commit in both `.gitlab-source-sha` and `.github-ci-snapshot.json`.
+`scripts/create-github-ci-snapshot.py` materializes files directly from the committed, checked-out `HEAD`, never from working-tree file contents. This prevents unrelated local edits from entering the mirror. It excludes every path covered by the committed `.gitignore` policy, generated/vendor/backup runtime trees, credential/bootstrap material (including `.env*`), and files larger than 5 MiB unless the policy is deliberately changed. The snapshot records the canonical source commit in both `.gitlab-source-sha` and `.github-ci-snapshot.json`.
 
 The size cap has a narrow production-input exception for the complete `audio/` tree and the two model files explicitly published by `build-pages.ps1`. Required Pages inputs are checked fail-closed while unrelated large models and packaged runtimes remain excluded.
 

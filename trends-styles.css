@@ -3,7 +3,7 @@
 .popular-trends-dashboard,
 .claim-statistics-dashboard {
     background: linear-gradient(135deg, rgba(8, 10, 25, 0.85), rgba(18, 22, 40, 0.95));
-    border: 2px solid rgba(186, 148, 79, 0.3);
+    border: 2px solid rgba(103, 232, 249, 0.3);
     border-radius: 18px;
     padding: 2rem;
     margin: 2rem 0;
@@ -17,7 +17,7 @@
     align-items: center;
     margin-bottom: 2rem;
     padding-bottom: 1rem;
-    border-bottom: 2px solid rgba(186, 148, 79, 0.2);
+    border-bottom: 2px solid rgba(103, 232, 249, 0.2);
     flex-wrap: wrap;
     gap: 1rem;
 }
@@ -27,17 +27,17 @@
     font-family: 'Cormorant Garamond', serif;
     font-size: 2rem;
     font-weight: 300;
-    color: #ba944f;
+    color: #67e8f9;
     margin: 0;
 }
 
 .refresh-trends-btn,
 .timeframe-select {
     padding: 0.5rem 1rem;
-    background: rgba(186, 148, 79, 0.2);
-    border: 1px solid rgba(186, 148, 79, 0.3);
+    background: rgba(103, 232, 249, 0.2);
+    border: 1px solid rgba(103, 232, 249, 0.3);
     border-radius: 6px;
-    color: #ba944f;
+    color: #67e8f9;
     font-family: 'Raleway', sans-serif;
     font-weight: 600;
     cursor: pointer;
@@ -45,15 +45,15 @@
 }
 
 .refresh-trends-btn:hover {
-    background: rgba(186, 148, 79, 0.3);
-    border-color: rgba(186, 148, 79, 0.5);
+    background: rgba(103, 232, 249, 0.3);
+    border-color: rgba(103, 232, 249, 0.5);
 }
 
 .trends-tabs {
     display: flex;
     gap: 0.5rem;
     margin-bottom: 2rem;
-    border-bottom: 2px solid rgba(186, 148, 79, 0.2);
+    border-bottom: 2px solid rgba(103, 232, 249, 0.2);
 }
 
 .tab-btn {
@@ -76,8 +76,8 @@
 }
 
 .tab-btn.active {
-    color: #ba944f;
-    border-bottom-color: #ba944f;
+    color: #67e8f9;
+    border-bottom-color: #67e8f9;
 }
 
 .tab-content {
@@ -100,13 +100,13 @@
     gap: 1.5rem;
     padding: 1.5rem;
     background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(186, 148, 79, 0.2);
+    border: 1px solid rgba(103, 232, 249, 0.2);
     border-radius: 12px;
     transition: all 0.3s ease;
 }
 
 .trend-item:hover {
-    border-color: rgba(186, 148, 79, 0.4);
+    border-color: rgba(103, 232, 249, 0.4);
     transform: translateX(5px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
@@ -115,7 +115,7 @@
     font-family: 'Cormorant Garamond', serif;
     font-size: 2rem;
     font-weight: 600;
-    color: #ba944f;
+    color: #67e8f9;
     min-width: 60px;
     text-align: center;
 }
@@ -153,10 +153,10 @@
 
 .view-planet-btn {
     padding: 0.75rem 1.5rem;
-    background: rgba(186, 148, 79, 0.2);
-    border: 2px solid rgba(186, 148, 79, 0.4);
+    background: rgba(103, 232, 249, 0.2);
+    border: 2px solid rgba(103, 232, 249, 0.4);
     border-radius: 8px;
-    color: #ba944f;
+    color: #67e8f9;
     font-family: 'Raleway', sans-serif;
     font-weight: 600;
     cursor: pointer;
@@ -167,8 +167,8 @@
 }
 
 .view-planet-btn:hover {
-    background: rgba(186, 148, 79, 0.3);
-    border-color: rgba(186, 148, 79, 0.6);
+    background: rgba(103, 232, 249, 0.3);
+    border-color: rgba(103, 232, 249, 0.6);
     transform: translateY(-2px);
 }
 
@@ -189,7 +189,7 @@
 
 .stat-card {
     background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(186, 148, 79, 0.2);
+    border: 1px solid rgba(103, 232, 249, 0.2);
     border-radius: 12px;
     padding: 1.5rem;
     text-align: center;
@@ -199,7 +199,7 @@
     font-family: 'Cormorant Garamond', serif;
     font-size: 3rem;
     font-weight: 600;
-    color: #ba944f;
+    color: #67e8f9;
     margin-bottom: 0.5rem;
 }
 
@@ -228,7 +228,7 @@
 
 .chart-card {
     background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(186, 148, 79, 0.2);
+    border: 1px solid rgba(103, 232, 249, 0.2);
     border-radius: 12px;
     padding: 1.5rem;
 }
@@ -236,7 +236,7 @@
 .chart-card h4 {
     font-family: 'Raleway', sans-serif;
     font-size: 1.3rem;
-    color: #ba944f;
+    color: #67e8f9;
     margin: 0 0 1rem 0;
 }
 
@@ -262,7 +262,7 @@
 
 .bar {
     width: 100%;
-    background: linear-gradient(180deg, #ba944f, #d4b86a);
+    background: linear-gradient(180deg, #67e8f9, #a78bfa);
     border-radius: 4px 4px 0 0;
     min-height: 10px;
     transition: all 0.3s ease;
@@ -280,7 +280,7 @@
 
 .bar-value {
     font-size: 0.85rem;
-    color: #ba944f;
+    color: #67e8f9;
     font-weight: 600;
 }
 
@@ -313,7 +313,7 @@
 
 .type-fill {
     height: 100%;
-    background: linear-gradient(90deg, #ba944f, #d4b86a);
+    background: linear-gradient(90deg, #67e8f9, #a78bfa);
     border-radius: 10px;
     transition: width 0.3s ease;
 }
@@ -328,7 +328,7 @@
 
 .most-claimed-section {
     background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(186, 148, 79, 0.2);
+    border: 1px solid rgba(103, 232, 249, 0.2);
     border-radius: 12px;
     padding: 1.5rem;
 }
@@ -336,7 +336,7 @@
 .most-claimed-section h4 {
     font-family: 'Raleway', sans-serif;
     font-size: 1.3rem;
-    color: #ba944f;
+    color: #67e8f9;
     margin: 0 0 1rem 0;
 }
 
@@ -363,7 +363,7 @@
 
 .claim-count {
     font-family: 'Raleway', sans-serif;
-    color: #ba944f;
+    color: #67e8f9;
     font-size: 0.9rem;
 }
 

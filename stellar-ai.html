@@ -59,6 +59,7 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="pages-styles.css">
     <link rel="stylesheet" href="stellar-ai-styles.css">
+    <link rel="stylesheet" href="stellar-ai-v2.css">
     <link rel="stylesheet" href="theme-styles.css">
     <link rel="stylesheet" href="accessibility-styles.css">
     <link rel="stylesheet" href="i18n-styles.css">
@@ -86,7 +87,7 @@
     <script src="galactic-commerce-engine.js"></script>
     <script src="metaphysics-apotheosis-engine.js"></script>
 </head>
-<body>
+<body class="stellar-ai-page">
     <section class="page-hero" data-entrance="fadeIn">
         <h1 class="page-title" data-scroll-animate>🤖 STELLAR AI</h1>
         <p class="page-subtitle">Your Intelligent Cosmic Companion</p>
@@ -95,7 +96,7 @@
         </p>
     </section>
 
-    <div class="chat-container">
+    <div class="chat-container" id="stellar-chat-shell">
         <!-- Sidebar -->
         <div class="chat-sidebar">
             <div class="sidebar-header">
@@ -144,6 +145,7 @@
                             <option value="gemini-pro">Gemini Pro</option>
                             <option value="llama-3.1">Llama 3.1</option>
                             <option value="qwen-3-235b-a22b-instruct-2507">Cerebras Qwen3 235B (Preview)</option>
+                            <option value="bonsai-local">Bonsai Local · WebGPU · Private</option>
                             <option value="fallback">Fallback (Demo)</option>
                         </select>
                     </div>
@@ -154,6 +156,40 @@
                     </div>
                 </div>
             </div>
+
+            <section class="bonsai-local-panel" id="bonsai-local-panel" aria-labelledby="bonsai-local-title">
+                <div class="bonsai-local-copy">
+                    <p class="bonsai-eyebrow">BROWSER-LOCAL AI</p>
+                    <h2 id="bonsai-local-title">Run Bonsai privately with WebGPU</h2>
+                    <p>Model weights download only after you press <strong>Load model</strong>. Prompts and replies stay in this browser; no inference service receives them.</p>
+                </div>
+                <div class="bonsai-local-controls">
+                    <label for="bonsai-model">Local model</label>
+                    <select id="bonsai-model">
+                        <option value="bonsai-1.7b-gguf">Bonsai 1.7B · about 240 MB · recommended</option>
+                        <option value="bonsai-4b-gguf">Bonsai 4B · about 570 MB</option>
+                        <option value="bonsai-8b-gguf">Bonsai 8B · about 1.2 GB</option>
+                        <option value="bonsai-27b-gguf">Bonsai 27B · about 3.8 GB · 16 GB+ recommended</option>
+                    </select>
+                    <div class="bonsai-button-row">
+                        <button type="button" id="bonsai-load" class="bonsai-primary">Load model</button>
+                        <button type="button" id="bonsai-cancel" class="bonsai-secondary" disabled>Cancel</button>
+                        <button type="button" id="bonsai-remove" class="bonsai-secondary" hidden>Remove downloads</button>
+                    </div>
+                </div>
+                <div class="bonsai-local-status" role="status" aria-live="polite">
+                    <div class="bonsai-status-row">
+                        <span id="bonsai-status">WebGPU check pending. No model has been downloaded.</span>
+                        <span id="bonsai-storage"></span>
+                    </div>
+                    <progress id="bonsai-progress" value="0" max="1" hidden></progress>
+                </div>
+                <details class="bonsai-local-details">
+                    <summary>Compatibility, storage, and source</summary>
+                    <p>Requires a WebGPU-capable browser and GPU. The 27B option is the requested approximately 4 GB experiment and needs substantially more working memory than its download size. Models are cached locally and can be removed here.</p>
+                    <p>Powered by the MIT-licensed <a href="https://github.com/stfurkan/bitgpu" target="_blank" rel="noopener noreferrer">BitGPU Bonsai experiment</a>, pinned to version 0.19.1.</p>
+                </details>
+            </section>
 
             <div class="messages-container" id="messages-container">
                 <div class="welcome-message">
@@ -210,7 +246,7 @@
     <!-- LiveKit Integration Section -->
     <section class="content-section" data-entrance="slideUp" id="livekit-integration-section">
         <div class="content-container">
-            <h2 class="section-title" style="text-align: center; color: #ba944f;">🎙️ LiveKit Integration</h2>
+            <h2 class="section-title" style="text-align: center;">🎙️ LiveKit Integration</h2>
             <div class="chat-container" id="livekit-chat-container">
                 <div class="chat-header">
                     <div class="chat-title">🎙️ LiveKit Voice Agent</div>
@@ -232,6 +268,7 @@
 
     <script src="ai-model-performance-metrics.js" defer></script>
     <script src="gemini-config.js" defer></script>
+    <script src="stellar-ai-bonsai.js" defer></script>
     <script src="stellar-ai.js" defer></script>
     <script src="livekit-chat.js?v=1.0.2" defer></script>
     <script src="pwa-loader.js" defer></script>

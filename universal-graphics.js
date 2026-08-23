@@ -344,7 +344,7 @@ class UniversalGraphics {
                 width: 0;
                 height: 0;
                 border-radius: 50%;
-                background: rgba(186, 148, 79, 0.2);
+                background: rgba(103, 232, 249, 0.14);
                 transform: translate(-50%, -50%);
                 transition: width 0.6s ease, height 0.6s ease;
                 pointer-events: none;
@@ -366,12 +366,12 @@ class UniversalGraphics {
             }
 
             ::-webkit-scrollbar-thumb {
-                background: linear-gradient(180deg, #ba944f, #ffd700);
+                background: linear-gradient(180deg, #22d3ee, #8b5cf6);
                 border-radius: 6px;
             }
 
             ::-webkit-scrollbar-thumb:hover {
-                background: linear-gradient(180deg, #ffd700, #ba944f);
+                background: linear-gradient(180deg, #67e8f9, #a78bfa);
             }
         `;
         document.head.appendChild(style);

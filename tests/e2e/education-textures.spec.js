@@ -5,7 +5,7 @@ const BASE_URL = process.env.BASE_URL || 'http://localhost:8080';
 const PLANETS = [
     ['Mercury', 'images/textures/mercury.jpg'],
     ['Venus', 'images/textures/venus.jpg'],
-    ['Earth', 'images/earth_texture_map.png'],
+    ['Earth', 'images/textures/earth-blue-marble-2048.jpg'],
     ['Mars', 'images/textures/mars.jpg'],
     ['Jupiter', 'images/textures/jupiter.jpg'],
     ['Saturn', 'images/textures/saturn.jpg'],
@@ -61,20 +61,17 @@ test.describe('Education planet surface regression', () => {
                 const viewer = window.viewer;
                 const mesh = viewer.planetMesh;
                 const meta = mesh.userData.surfaceImage;
-                const colors = mesh.geometry.attributes.color.array;
-                let min = Infinity;
-                let max = -Infinity;
-                for (const value of colors) {
-                    min = Math.min(min, value);
-                    max = Math.max(max, value);
-                }
                 return {
                     active: viewer.active,
                     contextLost: viewer.renderer.getContext().isContextLost(),
                     source: meta?.src || '',
                     sourceWidth: meta?.width || 0,
                     sourceHeight: meta?.height || 0,
-                    colorRange: Number.isFinite(max - min) ? max - min : 0,
+                    nativeTexture: meta?.nativeTexture === true,
+                    hasTextureMap: Boolean(mesh.material.map),
+                    anisotropy: meta?.anisotropy || 0,
+                    hasAtmosphere: viewer.currentPlanet !== 'Earth' || Boolean(viewer.atmosphereMesh),
+                    hasClouds: viewer.currentPlanet !== 'Earth' || Boolean(viewer.cloudMesh),
                     drawCalls: viewer.renderer.info.render.calls,
                     triangles: viewer.renderer.info.render.triangles
                 };
@@ -85,7 +82,11 @@ test.describe('Education planet surface regression', () => {
             expect(state.source).toContain(expectedSource);
             expect(state.sourceWidth).toBeGreaterThan(64);
             expect(state.sourceHeight).toBeGreaterThan(64);
-            expect(state.colorRange).toBeGreaterThan(0.03);
+            expect(state.nativeTexture).toBe(true);
+            expect(state.hasTextureMap).toBe(true);
+            expect(state.anisotropy).toBeGreaterThan(0);
+            expect(state.hasAtmosphere).toBe(true);
+            expect(state.hasClouds).toBe(true);
             expect(state.drawCalls).toBeGreaterThan(0);
             expect(state.triangles).toBeGreaterThan(10_000);
         }

@@ -80,6 +80,31 @@ def run_git(repo: Path, *args: str, text: bool = False) -> subprocess.CompletedP
     )
 
 
+def git_ignored_paths(repo: Path, entries: list[dict]) -> set[str]:
+    """Return tracked paths excluded by the checked-out ref's ignore policy."""
+    payload = b"\0".join(
+        entry["path"].encode("utf-8", errors="surrogateescape") for entry in entries
+    ) + b"\0"
+    result = subprocess.run(
+        ["git", "check-ignore", "--no-index", "-z", "--stdin"],
+        cwd=repo,
+        input=payload,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    if result.returncode not in (0, 1):
+        raise RuntimeError(
+            "git check-ignore failed: "
+            + result.stderr.decode("utf-8", errors="replace").strip()
+        )
+    return {
+        item.decode("utf-8", errors="surrogateescape")
+        for item in result.stdout.split(b"\0")
+        if item
+    }
+
+
 def parse_tree(repo: Path, ref: str) -> list[dict]:
     raw = run_git(repo, "ls-tree", "-rlz", ref).stdout
     entries: list[dict] = []
@@ -163,16 +188,33 @@ def main() -> int:
     output = Path(args.output).resolve()
     max_blob_bytes = max(1, int(args.max_blob_mib * 1024 * 1024))
     source_sha = run_git(repo, "rev-parse", args.ref, text=True).stdout.strip()
+    checked_out_sha = run_git(repo, "rev-parse", "HEAD", text=True).stdout.strip()
+
+    if source_sha != checked_out_sha:
+        raise SystemExit(
+            "Snapshot ref must match the checked-out HEAD so the committed .gitignore "
+            "policy can be applied deterministically."
+        )
+    ignore_diff = subprocess.run(
+        ["git", "diff", "--quiet", "HEAD", "--", ".gitignore"],
+        cwd=repo,
+        check=False,
+    )
+    if ignore_diff.returncode != 0:
+        raise SystemExit("Refusing to snapshot with uncommitted .gitignore changes.")
 
     if output.exists() and not args.keep_output:
         shutil.rmtree(output)
     output.mkdir(parents=True, exist_ok=True)
 
     entries = parse_tree(repo, args.ref)
+    ignored_paths = git_ignored_paths(repo, entries)
     included: list[dict] = []
     excluded: list[dict] = []
     for entry in entries:
         reason = exclusion_reason(entry, max_blob_bytes)
+        if reason is None and entry["path"] in ignored_paths:
+            reason = "gitignore-policy"
         if reason:
             excluded.append({"path": entry["path"], "size": entry["size"], "reason": reason})
         else:

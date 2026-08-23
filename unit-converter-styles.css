@@ -9,8 +9,8 @@
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: linear-gradient(135deg, rgba(186, 148, 79, 0.9), rgba(186, 148, 79, 0.7));
-    border: 2px solid rgba(186, 148, 79, 0.5);
+    background: linear-gradient(135deg, rgba(103, 232, 249, 0.9), rgba(103, 232, 249, 0.7));
+    border: 2px solid rgba(103, 232, 249, 0.5);
     color: #ffffff;
     font-size: 1.5rem;
     cursor: pointer;
@@ -24,7 +24,7 @@
 
 .unit-converter-btn:hover {
     transform: scale(1.1);
-    box-shadow: 0 6px 20px rgba(186, 148, 79, 0.5);
+    box-shadow: 0 6px 20px rgba(103, 232, 249, 0.5);
 }
 
 .unit-converter-modal {
@@ -51,7 +51,7 @@
 
 .unit-converter-content {
     background: rgba(0, 0, 0, 0.95);
-    border: 2px solid rgba(186, 148, 79, 0.4);
+    border: 2px solid rgba(103, 232, 249, 0.4);
     border-radius: 16px;
     width: 90%;
     max-width: 500px;
@@ -66,15 +66,15 @@
 
 .unit-converter-header {
     padding: 1.5rem;
-    border-bottom: 2px solid rgba(186, 148, 79, 0.4);
+    border-bottom: 2px solid rgba(103, 232, 249, 0.4);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(186, 148, 79, 0.1);
+    background: rgba(103, 232, 249, 0.1);
 }
 
 .unit-converter-header h3 {
-    color: #ba944f;
+    color: #67e8f9;
     font-family: 'Raleway', sans-serif;
     font-size: 1.5rem;
     font-weight: 600;
@@ -84,7 +84,7 @@
 .unit-converter-close {
     background: transparent;
     border: none;
-    color: #ba944f;
+    color: #67e8f9;
     font-size: 1.5rem;
     cursor: pointer;
     padding: 0.5rem;
@@ -99,7 +99,7 @@
 
 .unit-converter-close:hover {
     transform: rotate(90deg);
-    background: rgba(186, 148, 79, 0.2);
+    background: rgba(103, 232, 249, 0.2);
 }
 
 .unit-converter-body {
@@ -121,8 +121,8 @@
 .converter-select {
     width: 100%;
     padding: 0.75rem;
-    background: rgba(186, 148, 79, 0.1);
-    border: 2px solid rgba(186, 148, 79, 0.3);
+    background: rgba(103, 232, 249, 0.1);
+    border: 2px solid rgba(103, 232, 249, 0.3);
     border-radius: 8px;
     color: #ffffff;
     font-family: 'Raleway', sans-serif;
@@ -132,7 +132,7 @@
 
 .converter-select:focus {
     outline: none;
-    border-color: #ba944f;
+    border-color: #67e8f9;
 }
 
 .converter-inputs {
@@ -151,8 +151,8 @@
 
 .converter-input {
     padding: 1rem;
-    background: rgba(186, 148, 79, 0.1);
-    border: 2px solid rgba(186, 148, 79, 0.3);
+    background: rgba(103, 232, 249, 0.1);
+    border: 2px solid rgba(103, 232, 249, 0.3);
     border-radius: 8px;
     color: #ffffff;
     font-family: 'Raleway', sans-serif;
@@ -162,17 +162,17 @@
 
 .converter-input:focus {
     outline: none;
-    border-color: #ba944f;
+    border-color: #67e8f9;
 }
 
 .converter-input[readonly] {
-    background: rgba(186, 148, 79, 0.05);
+    background: rgba(103, 232, 249, 0.05);
     cursor: default;
 }
 
 .converter-arrow {
     font-size: 2rem;
-    color: #ba944f;
+    color: #67e8f9;
     margin-top: 1.5rem;
 }
 
@@ -185,10 +185,10 @@
 .converter-copy-btn {
     flex: 1;
     padding: 0.75rem;
-    background: rgba(186, 148, 79, 0.2);
-    border: 2px solid rgba(186, 148, 79, 0.4);
+    background: rgba(103, 232, 249, 0.2);
+    border: 2px solid rgba(103, 232, 249, 0.4);
     border-radius: 8px;
-    color: #ba944f;
+    color: #67e8f9;
     font-family: 'Raleway', sans-serif;
     font-size: 1rem;
     font-weight: 600;
@@ -198,7 +198,7 @@
 
 .converter-swap-btn:hover,
 .converter-copy-btn:hover {
-    background: rgba(186, 148, 79, 0.3);
+    background: rgba(103, 232, 249, 0.3);
     transform: translateY(-2px);
 }
 

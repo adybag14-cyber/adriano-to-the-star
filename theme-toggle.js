@@ -16,31 +16,19 @@
 
 class ThemeToggle {
     constructor() {
-        this.currentTheme = 'dark'; // Default to dark
+        this.currentTheme = 'cosmic'; // Production defaults to the deep-space identity.
         this.themes = {
-            dark: {
-                name: 'Dark',
-                icon: '🌙',
-                class: 'theme-dark',
-                description: 'Classic dark theme with gold accents'
-            },
-            light: {
-                name: 'Light',
-                icon: '☀️',
-                class: 'theme-light',
-                description: 'Bright light theme for daytime viewing'
-            },
             cosmic: {
                 name: 'Cosmic',
                 icon: '✨',
                 class: 'theme-cosmic',
-                description: 'Deep space theme with purple and blue'
+                description: 'Deep space theme with cyan, blue, and violet'
             },
-            solar: {
-                name: 'Solar',
-                icon: '☀️',
-                class: 'theme-solar',
-                description: 'Warm orange and yellow theme'
+            dark: {
+                name: 'Deep contrast',
+                icon: '🌙',
+                class: 'theme-dark',
+                description: 'Higher-contrast version of the deep-space theme'
             }
         };
 
@@ -66,16 +54,7 @@ class ThemeToggle {
      */
     loadTheme() {
         const saved = localStorage.getItem('theme-preference');
-        if (saved && this.themes[saved]) {
-            this.currentTheme = saved;
-        } else {
-            // Check system preference
-            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-                this.currentTheme = 'light';
-            } else {
-                this.currentTheme = 'dark';
-            }
-        }
+        this.currentTheme = saved && this.themes[saved] ? saved : 'cosmic';
     }
 
     /**
@@ -112,7 +91,7 @@ class ThemeToggle {
      * Toggle between dark and light themes (quick toggle)
      */
     toggle() {
-        const newTheme = this.currentTheme === 'dark' ? 'light' : 'dark';
+        const newTheme = this.currentTheme === 'cosmic' ? 'dark' : 'cosmic';
         this.applyTheme(newTheme);
         this.updateToggleButton();
         this.updateThemeSelector();
@@ -281,7 +260,7 @@ class ThemeToggle {
         const btn = button || document.getElementById('theme-toggle-btn');
         if (!btn) return;
 
-        const nextTheme = this.currentTheme === 'dark' ? 'light' : 'dark';
+        const nextTheme = this.currentTheme === 'cosmic' ? 'dark' : 'cosmic';
         const theme = this.themes[this.currentTheme];
         const nextThemeInfo = this.themes[nextTheme];
 
@@ -294,27 +273,9 @@ class ThemeToggle {
      * Watch for system theme changes
      */
     watchSystemTheme() {
-        if (!window.matchMedia) return;
-
-        const mediaQuery = window.matchMedia('(prefers-color-scheme: light)');
-
-        // Only auto-switch if user hasn't set a preference
-        const hasUserPreference = localStorage.getItem('theme-preference');
-
-        const handleChange = (e) => {
-            if (!hasUserPreference) {
-                this.applyTheme(e.matches ? 'light' : 'dark');
-                this.updateToggleButton();
-            }
-        };
-
-        // Modern browsers
-        if (mediaQuery.addEventListener) {
-            mediaQuery.addEventListener('change', handleChange);
-        } else {
-            // Fallback for older browsers
-            mediaQuery.addListener(handleChange);
-        }
+        // Keep the site's deep-space identity independent of operating-system
+        // light/dark changes. Visitors can choose the higher-contrast deep
+        // variant from the selector.
     }
 
     /**
@@ -362,4 +323,3 @@ window.ThemeToggle = ThemeToggle;
 window.themeToggle = () => themeToggleInstance;
 
 })();
-

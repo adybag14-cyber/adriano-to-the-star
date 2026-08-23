@@ -9,8 +9,8 @@
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: linear-gradient(135deg, rgba(186, 148, 79, 0.9), rgba(186, 148, 79, 0.7));
-    border: 2px solid rgba(186, 148, 79, 0.5);
+    background: linear-gradient(135deg, rgba(103, 232, 249, 0.9), rgba(103, 232, 249, 0.7));
+    border: 2px solid rgba(103, 232, 249, 0.5);
     color: #ffffff;
     font-size: 1.5rem;
     cursor: pointer;
@@ -24,7 +24,7 @@
 
 .timer-stopwatch-btn:hover {
     transform: scale(1.1);
-    box-shadow: 0 6px 20px rgba(186, 148, 79, 0.5);
+    box-shadow: 0 6px 20px rgba(103, 232, 249, 0.5);
 }
 
 .timer-stopwatch-modal {
@@ -51,7 +51,7 @@
 
 .timer-stopwatch-content {
     background: rgba(0, 0, 0, 0.95);
-    border: 2px solid rgba(186, 148, 79, 0.4);
+    border: 2px solid rgba(103, 232, 249, 0.4);
     border-radius: 16px;
     width: 90%;
     max-width: 500px;
@@ -68,15 +68,15 @@
 
 .timer-stopwatch-header {
     padding: 1.5rem;
-    border-bottom: 2px solid rgba(186, 148, 79, 0.4);
+    border-bottom: 2px solid rgba(103, 232, 249, 0.4);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(186, 148, 79, 0.1);
+    background: rgba(103, 232, 249, 0.1);
 }
 
 .timer-stopwatch-header h3 {
-    color: #ba944f;
+    color: #67e8f9;
     font-family: 'Raleway', sans-serif;
     font-size: 1.5rem;
     font-weight: 600;
@@ -86,7 +86,7 @@
 .timer-stopwatch-close {
     background: transparent;
     border: none;
-    color: #ba944f;
+    color: #67e8f9;
     font-size: 1.5rem;
     cursor: pointer;
     padding: 0.5rem;
@@ -101,7 +101,7 @@
 
 .timer-stopwatch-close:hover {
     transform: rotate(90deg);
-    background: rgba(186, 148, 79, 0.2);
+    background: rgba(103, 232, 249, 0.2);
 }
 
 .timer-stopwatch-body {
@@ -112,7 +112,7 @@
     display: flex;
     gap: 0.5rem;
     margin-bottom: 1.5rem;
-    border-bottom: 2px solid rgba(186, 148, 79, 0.2);
+    border-bottom: 2px solid rgba(103, 232, 249, 0.2);
 }
 
 .timer-tab {
@@ -130,8 +130,8 @@
 }
 
 .timer-tab.active {
-    color: #ba944f;
-    border-bottom-color: #ba944f;
+    color: #67e8f9;
+    border-bottom-color: #67e8f9;
 }
 
 .timer-tab:hover {
@@ -152,7 +152,7 @@
     font-family: 'Courier New', monospace;
     font-size: 3rem;
     font-weight: 600;
-    color: #ba944f;
+    color: #67e8f9;
     margin: 2rem 0;
     letter-spacing: 4px;
 }
@@ -168,8 +168,8 @@
 .timer-inputs input {
     width: 80px;
     padding: 1rem;
-    background: rgba(186, 148, 79, 0.1);
-    border: 2px solid rgba(186, 148, 79, 0.3);
+    background: rgba(103, 232, 249, 0.1);
+    border: 2px solid rgba(103, 232, 249, 0.3);
     border-radius: 8px;
     color: #ffffff;
     font-family: 'Courier New', monospace;
@@ -180,11 +180,11 @@
 
 .timer-inputs input:focus {
     outline: none;
-    border-color: #ba944f;
+    border-color: #67e8f9;
 }
 
 .timer-inputs span {
-    color: #ba944f;
+    color: #67e8f9;
     font-size: 1.5rem;
     font-weight: 600;
 }
@@ -199,10 +199,10 @@
 .timer-btn {
     flex: 1;
     padding: 0.75rem;
-    background: rgba(186, 148, 79, 0.2);
-    border: 2px solid rgba(186, 148, 79, 0.4);
+    background: rgba(103, 232, 249, 0.2);
+    border: 2px solid rgba(103, 232, 249, 0.4);
     border-radius: 8px;
-    color: #ba944f;
+    color: #67e8f9;
     font-family: 'Raleway', sans-serif;
     font-size: 1rem;
     font-weight: 600;
@@ -211,7 +211,7 @@
 }
 
 .timer-btn:hover {
-    background: rgba(186, 148, 79, 0.3);
+    background: rgba(103, 232, 249, 0.3);
     transform: translateY(-2px);
 }
 
@@ -240,7 +240,7 @@
     font-weight: 600;
     margin-bottom: 0.5rem;
     padding-bottom: 0.5rem;
-    border-bottom: 1px solid rgba(186, 148, 79, 0.2);
+    border-bottom: 1px solid rgba(103, 232, 249, 0.2);
 }
 
 .lap-item {
@@ -250,7 +250,7 @@
     color: rgba(255, 255, 255, 0.9);
     font-family: 'Courier New', monospace;
     font-size: 0.9rem;
-    border-bottom: 1px solid rgba(186, 148, 79, 0.1);
+    border-bottom: 1px solid rgba(103, 232, 249, 0.1);
 }
 
 .lap-item:last-child {

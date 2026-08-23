@@ -4,12 +4,12 @@
 
 .search-autocomplete {
     background: rgba(0, 0, 0, 0.95);
-    border: 2px solid rgba(186, 148, 79, 0.4);
+    border: 2px solid rgba(103, 232, 249, 0.4);
     border-radius: 8px;
     padding: 0.5rem;
     max-height: 300px;
     overflow-y: auto;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(186, 148, 79, 0.2);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(103, 232, 249, 0.2);
     backdrop-filter: blur(20px);
     z-index: 10000;
 }
@@ -28,8 +28,8 @@
 }
 
 .autocomplete-item:hover {
-    background: rgba(186, 148, 79, 0.2);
-    color: #ba944f;
+    background: rgba(103, 232, 249, 0.2);
+    color: #67e8f9;
     transform: translateX(4px);
 }
 
@@ -53,18 +53,18 @@
 }
 
 .search-autocomplete::-webkit-scrollbar-thumb {
-    background: rgba(186, 148, 79, 0.5);
+    background: rgba(103, 232, 249, 0.5);
     border-radius: 4px;
 }
 
 .search-autocomplete::-webkit-scrollbar-thumb:hover {
-    background: rgba(186, 148, 79, 0.7);
+    background: rgba(103, 232, 249, 0.7);
 }
 
 /* Light theme support */
 .theme-light .search-autocomplete {
     background: rgba(255, 255, 255, 0.95);
-    border-color: rgba(186, 148, 79, 0.3);
+    border-color: rgba(103, 232, 249, 0.3);
 }
 
 .theme-light .autocomplete-item {
@@ -72,8 +72,8 @@
 }
 
 .theme-light .autocomplete-item:hover {
-    background: rgba(186, 148, 79, 0.1);
-    color: #ba944f;
+    background: rgba(103, 232, 249, 0.1);
+    color: #67e8f9;
 }
 
 /* Mobile responsive */

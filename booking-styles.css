@@ -20,7 +20,7 @@
 .event-card {
     position: relative;
     background: linear-gradient(135deg, rgba(10, 10, 20, 0.9), rgba(30, 20, 40, 0.8));
-    border: 2px solid rgba(186, 148, 79, 0.3);
+    border: 2px solid rgba(103, 232, 249, 0.3);
     border-radius: 20px;
     padding: 0;
     overflow: hidden;
@@ -35,7 +35,7 @@
     left: -2px;
     right: -2px;
     bottom: -2px;
-    background: linear-gradient(45deg, #ba944f, #ffd700, #ba944f, #ffd700);
+    background: linear-gradient(45deg, #67e8f9, #a78bfa, #67e8f9, #a78bfa);
     background-size: 400% 400%;
     border-radius: 20px;
     z-index: -1;
@@ -64,8 +64,8 @@
     transform: translateY(-15px) scale(1.03);
     box-shadow:
         0 30px 80px rgba(0, 0, 0, 0.8),
-        0 0 60px rgba(186, 148, 79, 0.5),
-        inset 0 0 50px rgba(186, 148, 79, 0.1);
+        0 0 60px rgba(103, 232, 249, 0.5),
+        inset 0 0 50px rgba(103, 232, 249, 0.1);
 }
 
 /* Event Image */
@@ -102,7 +102,7 @@
     position: absolute;
     top: 20px;
     right: 20px;
-    background: linear-gradient(135deg, #ba944f, #ffd700);
+    background: linear-gradient(135deg, #67e8f9, #a78bfa);
     color: #000;
     padding: 8px 20px;
     border-radius: 25px;
@@ -110,7 +110,7 @@
     font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 1px;
-    box-shadow: 0 5px 20px rgba(186, 148, 79, 0.5);
+    box-shadow: 0 5px 20px rgba(103, 232, 249, 0.5);
     animation: badgePulse 2s ease-in-out infinite;
 }
 
@@ -131,7 +131,7 @@
 }
 
 .event-badge.vip {
-    background: linear-gradient(135deg, #ffd700, #ff8c00);
+    background: linear-gradient(135deg, #a78bfa, #a78bfa);
 }
 
 /* Event Content */
@@ -140,11 +140,11 @@
 }
 
 .event-title {
-    color: #ba944f;
+    color: #67e8f9;
     font-size: 1.8rem;
     font-weight: 700;
     margin-bottom: 1rem;
-    text-shadow: 0 0 20px rgba(186, 148, 79, 0.6);
+    text-shadow: 0 0 20px rgba(103, 232, 249, 0.6);
 }
 
 .event-date {
@@ -181,21 +181,21 @@
 .event-stat {
     text-align: center;
     padding: 1rem;
-    background: rgba(186, 148, 79, 0.1);
-    border: 1px solid rgba(186, 148, 79, 0.3);
+    background: rgba(103, 232, 249, 0.1);
+    border: 1px solid rgba(103, 232, 249, 0.3);
     border-radius: 12px;
     transition: all 0.3s ease;
 }
 
 .event-stat:hover {
-    background: rgba(186, 148, 79, 0.2);
+    background: rgba(103, 232, 249, 0.2);
     transform: scale(1.05);
 }
 
 .event-stat-value {
     font-size: 1.8rem;
     font-weight: 800;
-    color: #ba944f;
+    color: #67e8f9;
     display: block;
 }
 
@@ -210,7 +210,7 @@
 .book-button {
     width: 100%;
     padding: 16px 32px;
-    background: linear-gradient(135deg, #ba944f, #ffd700);
+    background: linear-gradient(135deg, #67e8f9, #a78bfa);
     border: none;
     border-radius: 30px;
     color: #000;
@@ -245,7 +245,7 @@
 .book-button:hover {
     transform: translateY(-3px);
     box-shadow:
-        0 15px 40px rgba(186, 148, 79, 0.6),
+        0 15px 40px rgba(103, 232, 249, 0.6),
         0 0 40px rgba(255, 215, 0, 0.5);
 }
 
@@ -261,7 +261,7 @@
 /* Countdown Timer */
 .event-countdown {
     background: rgba(0, 0, 0, 0.5);
-    border: 2px solid rgba(186, 148, 79, 0.3);
+    border: 2px solid rgba(103, 232, 249, 0.3);
     border-radius: 15px;
     padding: 1.5rem;
     margin: 1.5rem 0;
@@ -269,7 +269,7 @@
 }
 
 .countdown-title {
-    color: #ba944f;
+    color: #67e8f9;
     font-size: 1rem;
     margin-bottom: 1rem;
     text-transform: uppercase;
@@ -289,8 +289,8 @@
 .countdown-value {
     font-size: 2.5rem;
     font-weight: 800;
-    color: #ba944f;
-    text-shadow: 0 0 20px rgba(186, 148, 79, 0.8);
+    color: #67e8f9;
+    text-shadow: 0 0 20px rgba(103, 232, 249, 0.8);
     display: block;
     line-height: 1;
 }
@@ -313,7 +313,7 @@
     height: 100%;
     background: repeating-linear-gradient(0deg,
             transparent 0px,
-            rgba(186, 148, 79, 0.03) 1px,
+            rgba(103, 232, 249, 0.03) 1px,
             transparent 2px,
             transparent 4px);
     pointer-events: none;
@@ -362,7 +362,7 @@
 
 .booking-modal-content {
     background: linear-gradient(135deg, rgba(10, 10, 20, 0.95), rgba(30, 20, 40, 0.95));
-    border: 2px solid rgba(186, 148, 79, 0.5);
+    border: 2px solid rgba(103, 232, 249, 0.5);
     border-radius: 20px;
     padding: 3rem;
     max-width: 600px;
@@ -392,15 +392,15 @@
 }
 
 .modal-title {
-    color: #ba944f;
+    color: #67e8f9;
     font-size: 2rem;
     margin: 0;
 }
 
 .modal-close {
     background: none;
-    border: 2px solid #ba944f;
-    color: #ba944f;
+    border: 2px solid #67e8f9;
+    color: #67e8f9;
     padding: 8px 20px;
     border-radius: 8px;
     cursor: pointer;
@@ -409,7 +409,7 @@
 }
 
 .modal-close:hover {
-    background: #ba944f;
+    background: #67e8f9;
     color: #000;
 }
 
@@ -426,7 +426,7 @@
 }
 
 .form-label {
-    color: #ba944f;
+    color: #67e8f9;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -436,7 +436,7 @@
 .form-input {
     padding: 12px 20px;
     background: rgba(0, 0, 0, 0.5);
-    border: 2px solid rgba(186, 148, 79, 0.3);
+    border: 2px solid rgba(103, 232, 249, 0.3);
     border-radius: 10px;
     color: #fff;
     font-size: 1rem;
@@ -445,13 +445,13 @@
 
 .form-input:focus {
     outline: none;
-    border-color: #ba944f;
-    box-shadow: 0 0 20px rgba(186, 148, 79, 0.4);
+    border-color: #67e8f9;
+    box-shadow: 0 0 20px rgba(103, 232, 249, 0.4);
 }
 
 .submit-button {
     padding: 16px 32px;
-    background: linear-gradient(135deg, #ba944f, #ffd700);
+    background: linear-gradient(135deg, #67e8f9, #a78bfa);
     border: none;
     border-radius: 30px;
     color: #000;
@@ -466,7 +466,7 @@
 
 .submit-button:hover {
     transform: translateY(-3px);
-    box-shadow: 0 15px 40px rgba(186, 148, 79, 0.6);
+    box-shadow: 0 15px 40px rgba(103, 232, 249, 0.6);
 }
 
 /* Responsive */

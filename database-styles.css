@@ -61,12 +61,12 @@
     margin: 3rem 0;
     padding: 2rem;
     background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(186, 148, 79, 0.3);
+    border: 1px solid rgba(103, 232, 249, 0.3);
     border-radius: 12px;
 }
 
 #google-drive-container h3 {
-    color: var(--gold-accent, #ba944f);
+    color: var(--gold-accent, #67e8f9);
     margin-bottom: 1.5rem;
 }
 
@@ -77,8 +77,8 @@
 }
 
 .spinner {
-    border: 4px solid rgba(186, 148, 79, 0.2);
-    border-top: 4px solid #ba944f;
+    border: 4px solid rgba(103, 232, 249, 0.2);
+    border-top: 4px solid #67e8f9;
     border-radius: 50%;
     width: 60px;
     height: 60px;
@@ -210,7 +210,7 @@ body.database-page #custom-dashboard-toolbar {
     min-width: 250px;
     padding: 12px 20px;
     background: rgba(0, 0, 0, 0.5);
-    border: 2px solid rgba(186, 148, 79, 0.3);
+    border: 2px solid rgba(103, 232, 249, 0.3);
     border-radius: 25px;
     color: #fff;
     font-size: 1rem;
@@ -219,8 +219,8 @@ body.database-page #custom-dashboard-toolbar {
 
 .search-input:focus {
     outline: none;
-    border-color: #ba944f;
-    box-shadow: 0 0 20px rgba(186, 148, 79, 0.4);
+    border-color: #67e8f9;
+    box-shadow: 0 0 20px rgba(103, 232, 249, 0.4);
 }
 
 .search-input::placeholder {
@@ -230,7 +230,7 @@ body.database-page #custom-dashboard-toolbar {
 .sort-select {
     padding: 12px 20px;
     background: rgba(0, 0, 0, 0.5);
-    border: 2px solid rgba(186, 148, 79, 0.3);
+    border: 2px solid rgba(103, 232, 249, 0.3);
     border-radius: 25px;
     color: #fff;
     font-size: 1rem;
@@ -240,19 +240,19 @@ body.database-page #custom-dashboard-toolbar {
 
 .sort-select:focus {
     outline: none;
-    border-color: #ba944f;
+    border-color: #67e8f9;
 }
 
 .data-count {
     padding: 12px 24px;
-    background: rgba(186, 148, 79, 0.1);
-    border: 1px solid rgba(186, 148, 79, 0.3);
+    background: rgba(103, 232, 249, 0.1);
+    border: 1px solid rgba(103, 232, 249, 0.3);
     border-radius: 25px;
     font-weight: 600;
 }
 
 .data-count #result-count {
-    color: #ba944f;
+    color: #67e8f9;
     font-size: 1.2rem;
 }
 
@@ -306,7 +306,7 @@ body.database-page #custom-dashboard-toolbar {
 .planet-card[data-hover]:hover {
     transform: translateY(-4px);
     box-shadow: 0 22px 50px rgba(0, 0, 0, 0.95);
-    border-color: rgba(186, 148, 79, 0.85) !important;
+    border-color: rgba(103, 232, 249, 0.85) !important;
     outline: none;
     filter: none;
 }
@@ -340,11 +340,11 @@ body.database-page #custom-dashboard-toolbar {
 }
 
 .planet-name {
-    color: #ba944f;
+    color: #67e8f9;
     font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 1.5rem;
-    text-shadow: 0 0 10px rgba(186, 148, 79, 0.5);
+    text-shadow: 0 0 10px rgba(103, 232, 249, 0.5);
 }
 
 .planet-details {
@@ -362,14 +362,14 @@ body.database-page #custom-dashboard-toolbar {
 }
 
 .planet-details strong {
-    color: #ba944f;
+    color: #67e8f9;
 }
 
 /* Claim Button */
 .claim-button {
     width: 100%;
     padding: 12px 24px;
-    background: linear-gradient(135deg, #ba944f, #ffd700);
+    background: linear-gradient(135deg, #67e8f9, #a78bfa);
     border: none;
     border-radius: 25px;
     color: #000;
@@ -385,7 +385,7 @@ body.database-page #custom-dashboard-toolbar {
 .claim-button:hover {
     transform: scale(1.05);
     box-shadow:
-        0 10px 30px rgba(186, 148, 79, 0.6),
+        0 10px 30px rgba(103, 232, 249, 0.6),
         0 0 20px rgba(255, 215, 0, 0.4);
 }
 
@@ -403,7 +403,7 @@ body.database-page #custom-dashboard-toolbar {
 
 .stat-card {
     background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(20, 20, 30, 0.8));
-    border: 2px solid rgba(186, 148, 79, 0.3);
+    border: 2px solid rgba(103, 232, 249, 0.3);
     border-radius: 15px;
     padding: 2rem;
     text-align: center;
@@ -412,16 +412,16 @@ body.database-page #custom-dashboard-toolbar {
 
 .stat-card:hover {
     transform: translateY(-5px);
-    border-color: #ba944f;
-    box-shadow: 0 10px 30px rgba(186, 148, 79, 0.3);
+    border-color: #67e8f9;
+    box-shadow: 0 10px 30px rgba(103, 232, 249, 0.3);
 }
 
 .stat-number {
     font-size: 3rem;
     font-weight: 800;
-    color: #ba944f;
+    color: #67e8f9;
     margin-bottom: 0.5rem;
-    text-shadow: 0 0 20px rgba(186, 148, 79, 0.6);
+    text-shadow: 0 0 20px rgba(103, 232, 249, 0.6);
 }
 
 .stat-label {
@@ -434,7 +434,7 @@ body.database-page #custom-dashboard-toolbar {
 /* Advanced Filters */
 #advanced-filters {
     background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(186, 148, 79, 0.3);
+    border: 1px solid rgba(103, 232, 249, 0.3);
     border-radius: 12px;
     padding: 2rem;
     margin: 2rem 0;
@@ -449,7 +449,7 @@ body.database-page #custom-dashboard-toolbar {
 }
 
 .filter-group h4 {
-    color: #ba944f;
+    color: #67e8f9;
     margin-bottom: 1rem;
     font-size: 1.2rem;
 }
@@ -463,7 +463,7 @@ body.database-page #custom-dashboard-toolbar {
 }
 
 .filter-group label:hover {
-    color: #ba944f;
+    color: #67e8f9;
 }
 
 .filter-group input[type="checkbox"] {
@@ -477,7 +477,7 @@ body.database-page #custom-dashboard-toolbar {
 }
 
 #distance-value {
-    color: #ba944f;
+    color: #67e8f9;
     font-weight: 700;
     font-size: 1.2rem;
 }
@@ -571,7 +571,7 @@ body.database-page #custom-dashboard-toolbar {
 .favorite-btn:hover,
 .compare-btn:hover,
 .share-btn:hover {
-    background: rgba(186, 148, 79, 0.3) !important;
+    background: rgba(103, 232, 249, 0.3) !important;
     transform: scale(1.1);
     transition: all 0.2s ease;
 }
@@ -582,7 +582,7 @@ body.database-page #custom-dashboard-toolbar {
 
 #comparison-modal th {
     font-weight: 600;
-    color: #ba944f;
+    color: #67e8f9;
 }
 
 #comparison-modal td {
@@ -614,7 +614,7 @@ body.database-page #custom-dashboard-toolbar {
 }
 
 .timeline-item:hover {
-    background: rgba(186, 148, 79, 0.1) !important;
+    background: rgba(103, 232, 249, 0.1) !important;
     transform: translateX(5px);
 }
 

@@ -2,7 +2,7 @@
 
 .broadband-search-section {
     background: rgba(0, 0, 0, 0.3);
-    border: 2px solid rgba(186, 148, 79, 0.3);
+    border: 2px solid rgba(103, 232, 249, 0.3);
     border-radius: 15px;
     padding: 2rem;
     margin-bottom: 2rem;
@@ -18,7 +18,7 @@
     flex: 1;
     padding: 1rem 1.5rem;
     background: rgba(0, 0, 0, 0.5);
-    border: 2px solid rgba(186, 148, 79, 0.3);
+    border: 2px solid rgba(103, 232, 249, 0.3);
     border-radius: 10px;
     color: #ffffff;
     font-family: 'Raleway', sans-serif;
@@ -28,8 +28,8 @@
 }
 
 .search-input:focus {
-    border-color: rgba(186, 148, 79, 0.6);
-    box-shadow: 0 0 20px rgba(186, 148, 79, 0.2);
+    border-color: rgba(103, 232, 249, 0.6);
+    box-shadow: 0 0 20px rgba(103, 232, 249, 0.2);
 }
 
 .search-input::placeholder {
@@ -41,10 +41,10 @@
 .clear-button,
 .refresh-all-button {
     padding: 1rem 2rem;
-    background: rgba(186, 148, 79, 0.2);
-    border: 2px solid rgba(186, 148, 79, 0.5);
+    background: rgba(103, 232, 249, 0.2);
+    border: 2px solid rgba(103, 232, 249, 0.5);
     border-radius: 10px;
-    color: #ba944f;
+    color: #67e8f9;
     font-family: 'Raleway', sans-serif;
     font-size: 1rem;
     font-weight: 500;
@@ -58,10 +58,10 @@
 .check-button:hover,
 .clear-button:hover,
 .refresh-all-button:hover:not(:disabled) {
-    background: rgba(186, 148, 79, 0.3);
-    border-color: rgba(186, 148, 79, 0.7);
+    background: rgba(103, 232, 249, 0.3);
+    border-color: rgba(103, 232, 249, 0.7);
     transform: translateY(-2px);
-    box-shadow: 0 5px 20px rgba(186, 148, 79, 0.3);
+    box-shadow: 0 5px 20px rgba(103, 232, 249, 0.3);
 }
 
 .refresh-all-button {
@@ -133,7 +133,7 @@
     right: 2rem;
     padding: 1rem 2rem;
     background: rgba(0, 0, 0, 0.9);
-    border: 2px solid rgba(186, 148, 79, 0.5);
+    border: 2px solid rgba(103, 232, 249, 0.5);
     border-radius: 10px;
     color: #ffffff;
     font-family: 'Raleway', sans-serif;
@@ -197,7 +197,7 @@
 .filter-select {
     padding: 0.75rem 1rem;
     background: rgba(0, 0, 0, 0.5);
-    border: 2px solid rgba(186, 148, 79, 0.3);
+    border: 2px solid rgba(103, 232, 249, 0.3);
     border-radius: 8px;
     color: #ffffff;
     font-family: 'Raleway', sans-serif;
@@ -208,7 +208,7 @@
 }
 
 .filter-select:hover {
-    border-color: rgba(186, 148, 79, 0.5);
+    border-color: rgba(103, 232, 249, 0.5);
 }
 
 .filter-select option {
@@ -225,7 +225,7 @@
 
 .stat-card {
     background: rgba(0, 0, 0, 0.3);
-    border: 2px solid rgba(186, 148, 79, 0.3);
+    border: 2px solid rgba(103, 232, 249, 0.3);
     border-radius: 15px;
     padding: 2rem;
     text-align: center;
@@ -233,16 +233,16 @@
 }
 
 .stat-card:hover {
-    border-color: rgba(186, 148, 79, 0.6);
+    border-color: rgba(103, 232, 249, 0.6);
     transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(186, 148, 79, 0.2);
+    box-shadow: 0 10px 30px rgba(103, 232, 249, 0.2);
 }
 
 .stat-number {
     font-family: 'Cormorant Garamond', serif;
     font-size: 3rem;
     font-weight: 600;
-    color: #ba944f;
+    color: #67e8f9;
     margin-bottom: 0.5rem;
 }
 
@@ -263,7 +263,7 @@
 
 .provider-card {
     background: rgba(0, 0, 0, 0.3);
-    border: 2px solid rgba(186, 148, 79, 0.3);
+    border: 2px solid rgba(103, 232, 249, 0.3);
     border-radius: 15px;
     padding: 1.5rem;
     transition: all 0.3s ease;
@@ -272,9 +272,9 @@
 }
 
 .provider-card:hover {
-    border-color: rgba(186, 148, 79, 0.6);
+    border-color: rgba(103, 232, 249, 0.6);
     transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(186, 148, 79, 0.2);
+    box-shadow: 0 10px 30px rgba(103, 232, 249, 0.2);
 }
 
 .provider-header {
@@ -290,7 +290,7 @@
     font-family: 'Cormorant Garamond', serif;
     font-size: 1.5rem;
     font-weight: 600;
-    color: #ba944f;
+    color: #67e8f9;
     flex: 1;
     min-width: 0;
 }
@@ -326,12 +326,12 @@
 .provider-type {
     display: inline-block;
     padding: 0.25rem 0.75rem;
-    background: rgba(186, 148, 79, 0.2);
-    border: 1px solid rgba(186, 148, 79, 0.3);
+    background: rgba(103, 232, 249, 0.2);
+    border: 1px solid rgba(103, 232, 249, 0.3);
     border-radius: 5px;
     font-family: 'Raleway', sans-serif;
     font-size: 0.75rem;
-    color: #ba944f;
+    color: #67e8f9;
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-bottom: 1rem;
@@ -369,7 +369,7 @@
     font-family: 'Raleway', sans-serif;
     font-size: 1.1rem;
     font-weight: 600;
-    color: #ba944f;
+    color: #67e8f9;
     margin-bottom: 0.25rem;
 }
 
@@ -474,10 +474,10 @@
 .provider-link {
     display: inline-block;
     padding: 0.75rem 1.5rem;
-    background: rgba(186, 148, 79, 0.2);
-    border: 2px solid rgba(186, 148, 79, 0.5);
+    background: rgba(103, 232, 249, 0.2);
+    border: 2px solid rgba(103, 232, 249, 0.5);
     border-radius: 8px;
-    color: #ba944f;
+    color: #67e8f9;
     text-decoration: none;
     font-family: 'Raleway', sans-serif;
     font-size: 0.9rem;
@@ -490,18 +490,18 @@
 }
 
 .provider-view-btn {
-    background: rgba(186, 148, 79, 0.3);
+    background: rgba(103, 232, 249, 0.3);
 }
 
 .provider-external-btn {
-    background: rgba(186, 148, 79, 0.2);
+    background: rgba(103, 232, 249, 0.2);
 }
 
 .provider-link:hover {
-    background: rgba(186, 148, 79, 0.4);
-    border-color: rgba(186, 148, 79, 0.7);
+    background: rgba(103, 232, 249, 0.4);
+    border-color: rgba(103, 232, 249, 0.7);
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(186, 148, 79, 0.3);
+    box-shadow: 0 5px 15px rgba(103, 232, 249, 0.3);
 }
 
 /* Provider Viewer Modal */
@@ -534,7 +534,7 @@
     max-height: 90vh;
     margin: 2.5% auto;
     background: rgba(0, 0, 0, 0.95);
-    border: 2px solid rgba(186, 148, 79, 0.5);
+    border: 2px solid rgba(103, 232, 249, 0.5);
     border-radius: 15px;
     display: flex;
     flex-direction: column;
@@ -547,7 +547,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 1.5rem 2rem;
-    border-bottom: 2px solid rgba(186, 148, 79, 0.3);
+    border-bottom: 2px solid rgba(103, 232, 249, 0.3);
     background: rgba(0, 0, 0, 0.5);
     border-radius: 15px 15px 0 0;
 }
@@ -556,7 +556,7 @@
     font-family: 'Cormorant Garamond', serif;
     font-size: 1.5rem;
     font-weight: 600;
-    color: #ba944f;
+    color: #67e8f9;
     margin: 0;
 }
 
@@ -567,10 +567,10 @@
 
 .viewer-btn {
     padding: 0.5rem 1rem;
-    background: rgba(186, 148, 79, 0.2);
-    border: 2px solid rgba(186, 148, 79, 0.5);
+    background: rgba(103, 232, 249, 0.2);
+    border: 2px solid rgba(103, 232, 249, 0.5);
     border-radius: 8px;
-    color: #ba944f;
+    color: #67e8f9;
     font-size: 1.2rem;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -578,8 +578,8 @@
 }
 
 .viewer-btn:hover {
-    background: rgba(186, 148, 79, 0.4);
-    border-color: rgba(186, 148, 79, 0.7);
+    background: rgba(103, 232, 249, 0.4);
+    border-color: rgba(103, 232, 249, 0.7);
     transform: scale(1.1);
 }
 
@@ -678,8 +678,8 @@
 }
 
 .spinner {
-    border: 3px solid rgba(186, 148, 79, 0.3);
-    border-top: 3px solid #ba944f;
+    border: 3px solid rgba(103, 232, 249, 0.3);
+    border-top: 3px solid #67e8f9;
     border-radius: 50%;
     width: 50px;
     height: 50px;
@@ -707,7 +707,7 @@
 
 .postcode-checker {
     background: rgba(0, 0, 0, 0.3);
-    border: 2px solid rgba(186, 148, 79, 0.3);
+    border: 2px solid rgba(103, 232, 249, 0.3);
     border-radius: 15px;
     padding: 2rem;
     margin-top: 2rem;
@@ -723,7 +723,7 @@
     flex: 1;
     padding: 1rem 1.5rem;
     background: rgba(0, 0, 0, 0.5);
-    border: 2px solid rgba(186, 148, 79, 0.3);
+    border: 2px solid rgba(103, 232, 249, 0.3);
     border-radius: 10px;
     color: #ffffff;
     font-family: 'Raleway', sans-serif;
@@ -734,8 +734,8 @@
 }
 
 .postcode-input:focus {
-    border-color: rgba(186, 148, 79, 0.6);
-    box-shadow: 0 0 20px rgba(186, 148, 79, 0.2);
+    border-color: rgba(103, 232, 249, 0.6);
+    box-shadow: 0 0 20px rgba(103, 232, 249, 0.2);
 }
 
 .postcode-results {
@@ -873,8 +873,8 @@
 }
 
 .spinner {
-    border: 3px solid rgba(186, 148, 79, 0.3);
-    border-top: 3px solid #ba944f;
+    border: 3px solid rgba(103, 232, 249, 0.3);
+    border-top: 3px solid #67e8f9;
     border-radius: 50%;
     width: 50px;
     height: 50px;
@@ -902,7 +902,7 @@
 
 .postcode-checker {
     background: rgba(0, 0, 0, 0.3);
-    border: 2px solid rgba(186, 148, 79, 0.3);
+    border: 2px solid rgba(103, 232, 249, 0.3);
     border-radius: 15px;
     padding: 2rem;
     margin-top: 2rem;
@@ -918,7 +918,7 @@
     flex: 1;
     padding: 1rem 1.5rem;
     background: rgba(0, 0, 0, 0.5);
-    border: 2px solid rgba(186, 148, 79, 0.3);
+    border: 2px solid rgba(103, 232, 249, 0.3);
     border-radius: 10px;
     color: #ffffff;
     font-family: 'Raleway', sans-serif;
@@ -929,8 +929,8 @@
 }
 
 .postcode-input:focus {
-    border-color: rgba(186, 148, 79, 0.6);
-    box-shadow: 0 0 20px rgba(186, 148, 79, 0.2);
+    border-color: rgba(103, 232, 249, 0.6);
+    box-shadow: 0 0 20px rgba(103, 232, 249, 0.2);
 }
 
 .postcode-results {
@@ -1140,8 +1140,8 @@
 
 .show-all-deals-btn {
     background: transparent;
-    border: 1px solid rgba(186, 148, 79, 0.5);
-    color: #ba944f;
+    border: 1px solid rgba(103, 232, 249, 0.5);
+    color: #67e8f9;
     padding: 0.5rem 1rem;
     border-radius: 5px;
     cursor: pointer;
@@ -1151,15 +1151,15 @@
 }
 
 .show-all-deals-btn:hover {
-    background: rgba(186, 148, 79, 0.2);
-    border-color: #ba944f;
+    background: rgba(103, 232, 249, 0.2);
+    border-color: #67e8f9;
 }
 
 /* Check price button */
 .check-price-btn {
-    background: rgba(186, 148, 79, 0.2);
-    border: 1px solid rgba(186, 148, 79, 0.5);
-    color: #ba944f;
+    background: rgba(103, 232, 249, 0.2);
+    border: 1px solid rgba(103, 232, 249, 0.5);
+    color: #67e8f9;
     padding: 0.5rem 1rem;
     border-radius: 5px;
     cursor: pointer;
@@ -1171,8 +1171,8 @@
 }
 
 .check-price-btn:hover:not(:disabled) {
-    background: rgba(186, 148, 79, 0.3);
-    border-color: #ba944f;
+    background: rgba(103, 232, 249, 0.3);
+    border-color: #67e8f9;
 }
 
 .check-price-btn:disabled {
@@ -1208,7 +1208,7 @@
 }
 
 .deal-item:hover {
-    border-color: rgba(186, 148, 79, 0.6) !important;
+    border-color: rgba(103, 232, 249, 0.6) !important;
     transform: translateX(5px);
 }
 
@@ -1217,9 +1217,9 @@
 .section-title {
     font-family: 'Cormorant Garamond', serif;
     font-size: 2rem;
-    color: #ba944f;
+    color: #67e8f9;
     margin-bottom: 1.5rem;
-    border-bottom: 1px solid rgba(186, 148, 79, 0.3);
+    border-bottom: 1px solid rgba(103, 232, 249, 0.3);
     padding-bottom: 0.5rem;
 }
 
@@ -1239,12 +1239,12 @@
 
 .provider-bookmark-btn:hover {
     transform: scale(1.2);
-    color: rgba(186, 148, 79, 0.6);
+    color: rgba(103, 232, 249, 0.6);
 }
 
 .provider-bookmark-btn.active {
-    color: #ba944f;
-    text-shadow: 0 0 10px rgba(186, 148, 79, 0.5);
+    color: #67e8f9;
+    text-shadow: 0 0 10px rgba(103, 232, 249, 0.5);
 }
 
 /* Compare Checkbox */
@@ -1259,7 +1259,7 @@
     appearance: none;
     width: 20px;
     height: 20px;
-    border: 2px solid rgba(186, 148, 79, 0.5);
+    border: 2px solid rgba(103, 232, 249, 0.5);
     border-radius: 4px;
     background: rgba(0, 0, 0, 0.3);
     cursor: pointer;
@@ -1268,8 +1268,8 @@
 }
 
 .compare-checkbox:checked {
-    background: #ba944f;
-    border-color: #ba944f;
+    background: #67e8f9;
+    border-color: #67e8f9;
 }
 
 .compare-checkbox:checked::after {
@@ -1297,7 +1297,7 @@
     left: 0;
     width: 100%;
     background: rgba(0, 0, 0, 0.9);
-    border-top: 2px solid #ba944f;
+    border-top: 2px solid #67e8f9;
     padding: 1rem;
     z-index: 9000;
     transition: bottom 0.3s ease;
@@ -1319,7 +1319,7 @@
 .comparison-count {
     font-family: 'Cormorant Garamond', serif;
     font-size: 1.5rem;
-    color: #ba944f;
+    color: #67e8f9;
 }
 
 .comparison-actions {
@@ -1339,7 +1339,7 @@
 }
 
 .compare-btn.primary {
-    background: #ba944f;
+    background: #67e8f9;
     color: #000;
     border: none;
 }
@@ -1371,7 +1371,7 @@
 
 .comparison-column {
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(186, 148, 79, 0.3);
+    border: 1px solid rgba(103, 232, 249, 0.3);
     border-radius: 10px;
     padding: 1.5rem;
     min-width: 250px;

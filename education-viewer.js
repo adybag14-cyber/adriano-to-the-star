@@ -57,8 +57,9 @@ class PlanetViewer {
                 }
             },
             'Earth': {
-                texture: 'images/earth_texture_map.png',
-                textureHd: 'images/earth_texture_map.png',
+                texture: 'images/textures/earth-blue-marble-2048.jpg',
+                textureHd: 'images/textures/earth-blue-marble-5400.jpg',
+                clouds: 'images/textures/earth-clouds-2048.jpg',
                 color: 0x3b82f6,
                 size: 1,
                 speed: 0.001,
@@ -67,7 +68,7 @@ class PlanetViewer {
                     diameter: '12,742 km',
                     distance: '1 AU',
                     surface: '71% Water',
-                    desc: 'The third planet from the Sun. High-resolution surface imagery is served locally for reliable detail.'
+                    desc: 'The third planet from the Sun, rendered with NASA Blue Marble surface data, an independent cloud layer, atmospheric scattering, and directional sunlight.'
                 }
             },
             'Mars': {
@@ -267,7 +268,10 @@ class PlanetViewer {
             if (this.animationFrameId === null) this.animate();
         });
         this.renderer.setSize(window.innerWidth, window.innerHeight);
-        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+        this.renderer.outputEncoding = THREE.sRGBEncoding;
+        this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        this.renderer.toneMappingExposure = 0.92;
         this.container.appendChild(this.renderer.domElement);
 
         // Controls
@@ -278,18 +282,18 @@ class PlanetViewer {
         this.controls.maxDistance = 20;
 
         // Lighting
-        this.ambientLight = new THREE.AmbientLight(0xffffff, 0.35); // Soft white light
+        this.ambientLight = new THREE.AmbientLight(0x9bb8d8, 0.22);
         this.scene.add(this.ambientLight);
 
-        this.hemiLight = new THREE.HemisphereLight(0xffffff, 0x080820, 0.18);
+        this.hemiLight = new THREE.HemisphereLight(0x9fdcff, 0x02030a, 0.15);
         this.scene.add(this.hemiLight);
 
-        this.sunLight = new THREE.DirectionalLight(0xffffff, 0.8);
-        this.sunLight.position.copy(this.camera.position);
+        this.sunLight = new THREE.DirectionalLight(0xfff4df, 1.12);
+        this.sunLight.position.set(-3.6, 2.25, 4.8);
         this.scene.add(this.sunLight);
 
-        this.fillLight = new THREE.DirectionalLight(0xffffff, 0.15);
-        this.fillLight.position.copy(this.camera.position).add(new THREE.Vector3(-2, 2, -2));
+        this.fillLight = new THREE.DirectionalLight(0x5d7cff, 0.05);
+        this.fillLight.position.set(4, -2, -3);
         this.scene.add(this.fillLight);
 
         // Stars Background
@@ -345,25 +349,22 @@ class PlanetViewer {
         clearTimeout(this.textureLoadTimer);
         this.textureLoadTimer = null;
 
-        // One persistent sphere/material is reused for the full Education session. Current
-        // Chromium can lose the legacy Three r128 context when many materials/programs are
-        // destroyed and recreated in quick succession. Updating one colour buffer is cheaper,
-        // deterministic, and preserves the same orbit/rotation interaction.
-        if (!this.planetMesh || !this.planetMesh.userData.educationVertexSurface) {
+        // Reuse one high-density sphere for the session. Texture maps stay in texture space;
+        // baking them into vertex colours (the previous implementation) reduced a 5,400 px
+        // source to a 96x96 sampling grid and was the direct cause of the blurred Earth.
+        if (!this.planetMesh || !this.planetMesh.userData.educationTextureSurface) {
             if (this.planetMesh) {
                 this.scene.remove(this.planetMesh);
                 this.planetMesh.geometry?.dispose?.();
                 this.planetMesh.material?.dispose?.();
             }
-            const geometry = new THREE.SphereGeometry(1, 96, 96);
-            geometry.setAttribute('color', new THREE.BufferAttribute(new Float32Array(geometry.attributes.position.count * 3), 3));
-            const material = new THREE.MeshBasicMaterial({ color: 0xffffff, vertexColors: true });
+            const geometry = new THREE.SphereGeometry(1, 160, 112);
+            const material = new THREE.MeshPhongMaterial({ color: 0xffffff, shininess: 9 });
             this.planetMesh = new THREE.Mesh(geometry, material);
-            this.planetMesh.userData.educationVertexSurface = true;
+            this.planetMesh.userData.educationTextureSurface = true;
             this.scene.add(this.planetMesh);
         }
 
-        // Legacy cloud/atmosphere meshes are not used by the reliable local-image path.
         for (const key of ['cloudMesh', 'atmosphereMesh']) {
             const mesh = this[key];
             if (!mesh) continue;
@@ -376,88 +377,68 @@ class PlanetViewer {
 
         const mesh = this.planetMesh;
         mesh.name = `EducationPlanet:${resolvedName}`;
+        mesh.rotation.set(0.05, resolvedName === 'Earth' ? -0.72 : 0, resolvedName === 'Earth' ? -0.18 : 0);
         mesh.userData.surfaceImage = null;
-        const geometry = mesh.geometry;
-        const positions = geometry.attributes.position;
-        const normals = geometry.attributes.normal;
-        const uv = geometry.attributes.uv;
-        const colorAttribute = geometry.attributes.color;
-        const colors = colorAttribute.array;
-        const light = new THREE.Vector3(0.42, 0.32, 0.84).normalize();
-        const normal = new THREE.Vector3();
-        const fallbackColor = new THREE.Color(config.color || 0x888888);
+        mesh.material.map?.dispose?.();
+        mesh.material.bumpMap?.dispose?.();
+        mesh.material.dispose?.();
+        mesh.material = new THREE.MeshPhongMaterial({
+            color: config.color || 0x888888,
+            shininess: resolvedName === 'Earth' ? 1 : 7,
+            specular: resolvedName === 'Earth' ? 0x080b10 : 0x151924
+        });
 
-        const applyFallbackColours = () => {
-            for (let i = 0; i < positions.count; i++) {
-                normal.fromBufferAttribute(normals, i).normalize();
-                const shade = 0.42 + 0.58 * Math.max(0, normal.dot(light));
-                colors[i * 3] = fallbackColor.r * shade;
-                colors[i * 3 + 1] = fallbackColor.g * shade;
-                colors[i * 3 + 2] = fallbackColor.b * shade;
-            }
-            colorAttribute.needsUpdate = true;
-        };
-        applyFallbackColours();
+        if (resolvedName === 'Earth') this.createAtmosphere(mesh.geometry);
 
         if (!config.texture) return;
 
-        const bakeImage = (image, sourceUrl) => {
+        const configureTexture = (texture) => {
+            texture.encoding = THREE.sRGBEncoding;
+            texture.anisotropy = Math.min(16, this.renderer.capabilities.getMaxAnisotropy());
+            texture.minFilter = THREE.LinearMipmapLinearFilter;
+            texture.magFilter = THREE.LinearFilter;
+            texture.generateMipmaps = true;
+            texture.needsUpdate = true;
+            return texture;
+        };
+
+        const applySurface = (texture, sourceUrl) => {
             if (generation !== this.loadGeneration || this.currentPlanet !== resolvedName || this.planetMesh !== mesh) return;
-            const sourceWidth = image.naturalWidth || image.width || 0;
-            const sourceHeight = image.naturalHeight || image.height || 0;
-            if (sourceWidth < 2 || sourceHeight < 2) {
-                console.info(`Texture unavailable for ${resolvedName}; keeping deterministic fallback surface.`);
-                return;
+            configureTexture(texture);
+            mesh.material.map?.dispose?.();
+            mesh.material.map = texture;
+            mesh.material.color.setHex(0xffffff);
+            if (resolvedName === 'Earth') {
+                mesh.material.bumpMap = texture;
+                mesh.material.bumpScale = 0.002;
             }
-            // Enhanced mode bakes more of the checked-in source image into the
-            // surface without introducing a fragile remote 8K dependency.
-            const maxDimension = this.hdTexturesEnabled ? 1024 : 512;
-            const scale = Math.min(1, maxDimension / Math.max(sourceWidth, sourceHeight));
-            const width = Math.max(2, Math.round(sourceWidth * scale));
-            const height = Math.max(2, Math.round(sourceHeight * scale));
-            const canvas = document.createElement('canvas');
-            canvas.width = width;
-            canvas.height = height;
-            const context = canvas.getContext('2d', { willReadFrequently: true });
-            if (!context) return;
-            context.drawImage(image, 0, 0, width, height);
-            const pixels = context.getImageData(0, 0, width, height).data;
-            for (let i = 0; i < positions.count; i++) {
-                const u = Math.min(1, Math.max(0, uv.getX(i)));
-                const v = Math.min(1, Math.max(0, uv.getY(i)));
-                const x = Math.min(width - 1, Math.max(0, Math.round(u * (width - 1))));
-                const y = Math.min(height - 1, Math.max(0, Math.round((1 - v) * (height - 1))));
-                const offset = (y * width + x) * 4;
-                normal.fromBufferAttribute(normals, i).normalize();
-                const shade = 0.42 + 0.58 * Math.max(0, normal.dot(light));
-                colors[i * 3] = (pixels[offset] / 255) * shade;
-                colors[i * 3 + 1] = (pixels[offset + 1] / 255) * shade;
-                colors[i * 3 + 2] = (pixels[offset + 2] / 255) * shade;
-            }
-            colorAttribute.needsUpdate = true;
+            mesh.material.needsUpdate = true;
+            const image = texture.image || {};
             mesh.userData.surfaceImage = {
                 src: sourceUrl,
-                width: sourceWidth,
-                height: sourceHeight,
-                bakedWidth: width,
-                bakedHeight: height
+                width: image.naturalWidth || image.width || 0,
+                height: image.naturalHeight || image.height || 0,
+                anisotropy: texture.anisotropy,
+                nativeTexture: true
             };
+
+            if (resolvedName === 'Earth' && config.clouds) this.loadCloudLayer(config.clouds, generation, mesh.geometry);
         };
 
         const standardUrl = config.texture;
         const preferredUrl = this.hdTexturesEnabled && config.textureHd ? config.textureHd : standardUrl;
         this.textureLoadTimer = setTimeout(() => {
             if (generation !== this.loadGeneration || this.currentPlanet !== resolvedName || this.planetMesh !== mesh) return;
-            const loader = new THREE.ImageLoader();
+            const loader = new THREE.TextureLoader();
             const loadStandard = () => loader.load(
                 standardUrl,
-                (image) => bakeImage(image, standardUrl),
+                (texture) => applySurface(texture, standardUrl),
                 undefined,
                 () => console.info(`Texture unavailable for ${resolvedName}; keeping deterministic fallback surface.`)
             );
             loader.load(
                 preferredUrl,
-                (image) => bakeImage(image, preferredUrl),
+                (texture) => applySurface(texture, preferredUrl),
                 undefined,
                 () => {
                     if (generation !== this.loadGeneration || this.currentPlanet !== resolvedName || this.planetMesh !== mesh) return;
@@ -466,6 +447,62 @@ class PlanetViewer {
                 }
             );
         }, 80);
+    }
+
+    createAtmosphere(geometry) {
+        const material = new THREE.ShaderMaterial({
+            vertexShader: `
+                varying vec3 vNormal;
+                varying vec3 vViewDirection;
+                void main() {
+                    vec4 viewPosition = modelViewMatrix * vec4(position, 1.0);
+                    vNormal = normalize(normalMatrix * normal);
+                    vViewDirection = normalize(-viewPosition.xyz);
+                    gl_Position = projectionMatrix * viewPosition;
+                }
+            `,
+            fragmentShader: `
+                varying vec3 vNormal;
+                varying vec3 vViewDirection;
+                void main() {
+                    float rim = pow(1.0 - max(dot(vNormal, vViewDirection), 0.0), 2.35);
+                    gl_FragColor = vec4(0.16, 0.48, 0.92, rim * 0.26);
+                }
+            `,
+            side: THREE.BackSide,
+            blending: THREE.AdditiveBlending,
+            transparent: true,
+            depthWrite: false
+        });
+        this.atmosphereMesh = new THREE.Mesh(geometry.clone(), material);
+        this.atmosphereMesh.name = 'EducationEarth:Atmosphere';
+        this.atmosphereMesh.scale.setScalar(1.018);
+        this.scene.add(this.atmosphereMesh);
+    }
+
+    loadCloudLayer(url, generation, sourceGeometry) {
+        new THREE.TextureLoader().load(url, (texture) => {
+            if (generation !== this.loadGeneration || this.currentPlanet !== 'Earth') {
+                texture.dispose();
+                return;
+            }
+            texture.encoding = THREE.sRGBEncoding;
+            texture.anisotropy = Math.min(16, this.renderer.capabilities.getMaxAnisotropy());
+            const material = new THREE.MeshPhongMaterial({
+                map: texture,
+                color: 0xdff6ff,
+                transparent: true,
+                opacity: 0.52,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false,
+                shininess: 3
+            });
+            this.cloudMesh = new THREE.Mesh(sourceGeometry.clone(), material);
+            this.cloudMesh.name = 'EducationEarth:Clouds';
+            this.cloudMesh.scale.setScalar(1.012);
+            this.cloudMesh.rotation.copy(this.planetMesh.rotation);
+            this.scene.add(this.cloudMesh);
+        }, undefined, () => console.info('Cloud texture unavailable; Earth surface and atmosphere remain active.'));
     }
 
     setHdTextures(enabled) {
@@ -512,14 +549,6 @@ class PlanetViewer {
 
             if (this.stars) {
                 this.stars.rotation.y -= 0.0001;
-            }
-
-            if (this.sunLight && this.camera) {
-                this.sunLight.position.copy(this.camera.position);
-            }
-
-            if (this.fillLight && this.camera) {
-                this.fillLight.position.copy(this.camera.position).add(new THREE.Vector3(-2, 2, -2));
             }
 
             if (this.controls) this.controls.update();

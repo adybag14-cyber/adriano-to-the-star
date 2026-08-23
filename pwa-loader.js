@@ -82,14 +82,14 @@ function showInstallButton() {
         right: 20px;
         z-index: 9999;
         padding: 12px 24px;
-        background: linear-gradient(135deg, #ba944f, #8a6e3a);
+        background: linear-gradient(135deg, #0891b2, #7c3aed);
         color: white;
-        border: none;
+        border: 1px solid rgba(103, 232, 249, 0.42);
         border-radius: 50px;
         font-family: 'Raleway', sans-serif;
         font-weight: 600;
         cursor: pointer;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        box-shadow: 0 12px 30px rgba(0,0,0,0.42), 0 0 22px rgba(56,189,248,0.14);
         transition: transform 0.3s ease, opacity 0.3s ease;
         opacity: 0;
         transform: translateY(20px);

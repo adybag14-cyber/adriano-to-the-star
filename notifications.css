@@ -13,8 +13,8 @@
 
 .notification-toast {
     background: rgba(10, 10, 15, 0.95);
-    border: 1px solid rgba(186, 148, 79, 0.3);
-    border-left: 4px solid #ba944f;
+    border: 1px solid rgba(103, 232, 249, 0.3);
+    border-left: 4px solid #67e8f9;
     padding: 1rem 1.5rem;
     border-radius: 8px;
     color: #fff;
@@ -59,7 +59,7 @@
 .notification-title {
     font-weight: 700;
     margin-bottom: 0.25rem;
-    color: #ba944f;
+    color: #67e8f9;
     font-family: 'Cormorant Garamond', serif;
     font-size: 1.1rem;
 }

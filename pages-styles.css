@@ -158,7 +158,7 @@
 
 .cosmic-player-card {
     background: linear-gradient(135deg, rgba(8, 10, 25, 0.85), rgba(18, 22, 40, 0.95));
-    border: 1px solid rgba(186, 148, 79, 0.35);
+    border: 1px solid rgba(103, 232, 249, 0.35);
     border-radius: 18px;
     padding: clamp(1.5rem, 4vw, 3rem);
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
@@ -171,7 +171,7 @@
     text-transform: uppercase;
     letter-spacing: 4px;
     font-size: 0.9rem;
-    color: rgba(186, 148, 79, 0.85);
+    color: rgba(103, 232, 249, 0.85);
     margin-bottom: 0.5rem;
 }
 

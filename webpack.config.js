@@ -8,9 +8,14 @@
  * @author Adriano To The Star
  */
 
-const path = require('path');
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import TerserPlugin from 'terser-webpack-plugin';
 
-module.exports = {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default {
     mode: 'production',
     entry: {
         main: './stellar-ai.js',
@@ -42,7 +47,7 @@ module.exports = {
         minimize: true,
         minimizer: [
             '...',
-            new (require('terser-webpack-plugin'))({
+            new TerserPlugin({
                 terserOptions: {
                     compress: {
                         drop_console: true,
@@ -71,4 +76,3 @@ module.exports = {
         extensions: ['.js', '.json']
     }
 };
-

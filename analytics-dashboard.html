@@ -65,6 +65,7 @@
     <link rel="stylesheet" href="keyboard-shortcuts-styles.css">
     <link rel="stylesheet" href="dashboard-widgets-styles.css">
     <link rel="stylesheet" href="trends-styles.css">
+    <link rel="stylesheet" href="analytics-v2.css">
     <link rel="stylesheet" href="i18n-styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -95,7 +96,7 @@
     <script src="galactic-commerce-engine.js"></script>
     <script src="metaphysics-apotheosis-engine.js"></script>
 </head>
-<body>
+<body class="analytics-page">
     <main>
         <section class="page-hero" data-entrance="fadeIn">
             <h1 class="page-title" data-scroll-animate>ANALYTICS DASHBOARD</h1>
@@ -113,7 +114,7 @@
 
         <section class="content-section" data-entrance="slideUp">
             <div class="content-container">
-                <h2 style="text-align: center; margin-bottom: 2rem; color: #ba944f;">📊 Planet Discovery Statistics</h2>
+                <h2 class="analytics-section-title">Planet discovery statistics</h2>
                 <div id="discovery-statistics-container"></div>
             </div>
         </section>
@@ -130,7 +131,7 @@
         <p><a href="index.html">Back to Home</a> · <a href="ai-fairness.html">AI &amp; Fairness</a></p>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3"></script>
     <script src="supabase-config.js"></script>
     <script src="auth-supabase.js" defer></script>
     <script src="reputation-system.js" defer></script>

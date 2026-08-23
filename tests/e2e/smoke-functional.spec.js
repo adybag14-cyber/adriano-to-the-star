@@ -83,10 +83,12 @@ async function safeClick(page, selector) {
 }
 
 async function verifyLanguageSwitch(page, kind) {
-    await page.waitForSelector('#lang-toggle-btn', { timeout: 30000 });
+    const toggleSelector = '#lang-toggle-btn, .ita-language-toggle';
+    const codeSelector = '.lang-code, .ita-language-code';
+    await page.waitForSelector(toggleSelector, { timeout: 30000 });
 
     const before = await page
-        .locator('.lang-code')
+        .locator(codeSelector)
         .first()
         .textContent()
         .then((value) => (value ? value.trim().toLowerCase() : null))
@@ -126,12 +128,12 @@ async function verifyLanguageSwitch(page, kind) {
                   .catch(() => null)
             : null;
 
-    await safeClick(page, '#lang-toggle-btn');
-    await safeClick(page, `.lang-option[data-lang="${targetLang}"]`);
+    await safeClick(page, toggleSelector);
+    await safeClick(page, `.lang-option[data-lang="${targetLang}"], .ita-language-option[data-lang="${targetLang}"]`);
 
     await page.waitForFunction(
         (expected) => {
-            const el = document.querySelector('.lang-code');
+            const el = document.querySelector('.lang-code, .ita-language-code');
             return el && String(el.textContent || '').trim().toUpperCase() === expected;
         },
         targetLabel,

@@ -58,6 +58,7 @@
 
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="pages-styles.css">
+    <link rel="stylesheet" href="star-maps.css">
     <link rel="stylesheet" href="theme-styles.css">
     <link rel="stylesheet" href="accessibility-styles.css">
     <link rel="stylesheet" href="i18n-styles.css">
@@ -89,16 +90,18 @@
     <script src="galactic-commerce-engine.js"></script>
     <script src="metaphysics-apotheosis-engine.js"></script>
 </head>
-<body>
+<body class="star-maps-page">
     <main>
         <section class="page-hero" data-entrance="fadeIn">
-            <h1 class="page-title">🌟 Interactive Star Maps</h1>
-            <p class="page-subtitle">Explore the cosmos with an interactive star map</p>
+            <h1 class="page-title">Interactive Star Maps</h1>
+            <p class="page-subtitle">Pan, zoom, search, select and route through nearby stars and landmark exoplanet systems</p>
         </section>
 
         <section class="content-section" data-entrance="slideUp">
             <div class="content-container">
-                <div id="star-map-container" class="star-map-container" style="min-height: 600px; background: rgba(0, 0, 0, 0.4); border-radius: 15px; border: 1px solid rgba(186, 148, 79, 0.2);"></div>
+                <div id="star-map-container" class="star-map-container">
+                    <p class="stellar-map-noscript">The interactive catalogue is loading. It includes nearby stars, Kepler targets, exoplanet hosts, keyboard navigation, search, pan and zoom.</p>
+                </div>
             </div>
         </section>
     </main>

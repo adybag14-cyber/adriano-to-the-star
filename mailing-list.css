@@ -36,7 +36,7 @@
 .mailing-modal-content {
     position: relative;
     background: linear-gradient(135deg, rgba(10, 10, 20, 0.95), rgba(20, 20, 40, 0.95));
-    border: 2px solid rgba(186, 148, 79, 0.4);
+    border: 2px solid rgba(103, 232, 249, 0.4);
     border-radius: 20px;
     padding: 3rem;
     max-width: 500px;
@@ -44,7 +44,7 @@
     max-height: 90vh;
     overflow-y: auto;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8),
-        0 0 40px rgba(186, 148, 79, 0.2);
+        0 0 40px rgba(103, 232, 249, 0.2);
     animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -64,9 +64,9 @@
     position: absolute;
     top: 1rem;
     right: 1rem;
-    background: rgba(186, 148, 79, 0.2);
-    border: 2px solid rgba(186, 148, 79, 0.4);
-    color: #ba944f;
+    background: rgba(103, 232, 249, 0.2);
+    border: 2px solid rgba(103, 232, 249, 0.4);
+    color: #67e8f9;
     font-size: 2rem;
     width: 40px;
     height: 40px;
@@ -81,9 +81,9 @@
 }
 
 .mailing-modal-close:hover {
-    background: rgba(186, 148, 79, 0.3);
+    background: rgba(103, 232, 249, 0.3);
     transform: rotate(90deg);
-    box-shadow: 0 0 20px rgba(186, 148, 79, 0.5);
+    box-shadow: 0 0 20px rgba(103, 232, 249, 0.5);
 }
 
 .mailing-modal-header {
@@ -92,7 +92,7 @@
 }
 
 .mailing-modal-header h2 {
-    color: #ba944f;
+    color: #67e8f9;
     font-size: 2rem;
     margin-bottom: 0.5rem;
     font-weight: 700;
@@ -126,7 +126,7 @@
 .form-group input[type="email"] {
     padding: 0.875rem 1.25rem;
     background: rgba(0, 0, 0, 0.3);
-    border: 2px solid rgba(186, 148, 79, 0.3);
+    border: 2px solid rgba(103, 232, 249, 0.3);
     border-radius: 12px;
     color: white;
     font-size: 1rem;
@@ -137,9 +137,9 @@
 .form-group input[type="text"]:focus,
 .form-group input[type="email"]:focus {
     outline: none;
-    border-color: #ba944f;
+    border-color: #67e8f9;
     background: rgba(0, 0, 0, 0.5);
-    box-shadow: 0 0 20px rgba(186, 148, 79, 0.3);
+    box-shadow: 0 0 20px rgba(103, 232, 249, 0.3);
 }
 
 .form-group input::placeholder {
@@ -161,19 +161,19 @@
 }
 
 .checkbox-group label:hover {
-    background: rgba(186, 148, 79, 0.1);
+    background: rgba(103, 232, 249, 0.1);
 }
 
 .checkbox-group input[type="checkbox"] {
     width: 20px;
     height: 20px;
     cursor: pointer;
-    accent-color: #ba944f;
+    accent-color: #67e8f9;
 }
 
 .mailing-submit-btn {
     padding: 1rem 2rem;
-    background: linear-gradient(135deg, #ba944f, #967338);
+    background: linear-gradient(135deg, #67e8f9, #967338);
     color: white;
     border: none;
     border-radius: 12px;
@@ -181,13 +181,13 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(186, 148, 79, 0.4);
+    box-shadow: 0 4px 15px rgba(103, 232, 249, 0.4);
     margin-top: 0.5rem;
 }
 
 .mailing-submit-btn:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 6px 25px rgba(186, 148, 79, 0.6);
+    box-shadow: 0 6px 25px rgba(103, 232, 249, 0.6);
 }
 
 .mailing-submit-btn:active:not(:disabled) {
@@ -207,7 +207,7 @@
 }
 
 .mailing-privacy a {
-    color: #ba944f;
+    color: #67e8f9;
     text-decoration: none;
     transition: opacity 0.2s ease;
 }
@@ -243,7 +243,7 @@
 }
 
 .mailing-success h3 {
-    color: #ba944f;
+    color: #67e8f9;
     font-size: 1.8rem;
     margin-bottom: 1rem;
 }
@@ -257,9 +257,9 @@
 
 .success-btn {
     padding: 0.875rem 2rem;
-    background: rgba(186, 148, 79, 0.2);
-    border: 2px solid #ba944f;
-    color: #ba944f;
+    background: rgba(103, 232, 249, 0.2);
+    border: 2px solid #67e8f9;
+    color: #67e8f9;
     border-radius: 12px;
     font-size: 1rem;
     font-weight: 600;
@@ -268,7 +268,7 @@
 }
 
 .success-btn:hover {
-    background: rgba(186, 148, 79, 0.3);
+    background: rgba(103, 232, 249, 0.3);
     transform: scale(1.05);
 }
 
@@ -303,10 +303,10 @@
 }
 
 .mailing-modal-content::-webkit-scrollbar-thumb {
-    background: rgba(186, 148, 79, 0.4);
+    background: rgba(103, 232, 249, 0.4);
     border-radius: 10px;
 }
 
 .mailing-modal-content::-webkit-scrollbar-thumb:hover {
-    background: rgba(186, 148, 79, 0.6);
+    background: rgba(103, 232, 249, 0.6);
 }

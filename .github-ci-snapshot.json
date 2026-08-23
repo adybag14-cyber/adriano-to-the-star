@@ -1,13 +1,13 @@
 {
   "schema": 1,
   "source": "gitlab.com/adybag14-group/starisdons",
-  "sourceRef": "HEAD",
-  "sourceSha": "c7229b9ab4f99204ad2dcd7dd2600f1662e11d91",
+  "sourceRef": "09e43a16d60fd19dd6151a85411e5752bc150b12",
+  "sourceSha": "09e43a16d60fd19dd6151a85411e5752bc150b12",
   "maxBlobBytes": 5242880,
-  "includedFiles": 4995,
-  "includedBytes": 310410927,
-  "excludedFiles": 36,
-  "excludedBytes": 304852608,
+  "includedFiles": 3897,
+  "includedBytes": 296835725,
+  "excludedFiles": 1146,
+  "excludedBytes": 321221314,
   "excludedPrefixes": [
     "public/",
     "node_modules/",
@@ -183,49 +183,119 @@
       "reason": "blob-over-5242880"
     },
     {
-      "path": "GITLAB-API-KEYS-SETUP.md",
-      "size": 10941,
-      "reason": "explicit-runtime-or-diagnostic"
+      "path": "resources.jar",
+      "size": 2906150,
+      "reason": "gitignore-policy"
     },
     {
-      "path": "REQUIRED-API-KEYS-GITLAB.md",
-      "size": 4775,
-      "reason": "explicit-runtime-or-diagnostic"
+      "path": "webp-imageio-0.1.6.jar",
+      "size": 1098331,
+      "reason": "gitignore-policy"
     },
     {
-      "path": "SETUP-API-KEYS.md",
-      "size": 4152,
-      "reason": "explicit-runtime-or-diagnostic"
+      "path": "cheerpj-natives/lwjgl-fixed.jar",
+      "size": 1062228,
+      "reason": "gitignore-policy"
     },
     {
-      "path": "GEMINI-API-KEY-SETUP.md",
-      "size": 3066,
-      "reason": "explicit-runtime-or-diagnostic"
+      "path": "cheerpj-natives/lwjgl-patched.jar",
+      "size": 1056824,
+      "reason": "gitignore-policy"
     },
     {
-      "path": "inject-api-keys.ps1",
-      "size": 2778,
-      "reason": "explicit-runtime-or-diagnostic"
+      "path": "lwjgl.jar",
+      "size": 1053471,
+      "reason": "gitignore-policy"
     },
     {
-      "path": "backend/LIVE-API-WITH-API-KEY-SUPPORT.md",
-      "size": 2163,
-      "reason": "explicit-runtime-or-diagnostic"
+      "path": "lwjgl_renamed.jar",
+      "size": 1053471,
+      "reason": "gitignore-policy"
     },
     {
-      "path": "GET-SUPABASE-CREDENTIALS.md",
-      "size": 1872,
-      "reason": "explicit-runtime-or-diagnostic"
+      "path": "lwjgl_v2.jar",
+      "size": 1053471,
+      "reason": "gitignore-policy"
     },
     {
-      "path": "UPDATE-GEMINI-API-KEY.md",
-      "size": 940,
-      "reason": "explicit-runtime-or-diagnostic"
+      "path": "janino.jar",
+      "size": 613299,
+      "reason": "gitignore-policy"
     },
     {
-      "path": ".env",
-      "size": 32,
-      "reason": "credential-material"
+      "path": "xstream-1.4.10.jar",
+      "size": 589803,
+      "reason": "gitignore-policy"
+    },
+    {
+      "path": "log4j-1.2.9.jar",
+      "size": 352291,
+      "reason": "gitignore-policy"
+    },
+    {
+      "path": "fs.common_obf.jar",
+      "size": 309218,
+      "reason": "gitignore-policy"
+    },
+    {
+      "path": "jaxb-api-2.4.0-b180830.0359-sources.jar",
+      "size": 270926,
+      "reason": "gitignore-policy"
+    },
+    {
+      "path": "jinput.jar",
+      "size": 214859,
+      "reason": "gitignore-policy"
+    },
+    {
+      "path": "tracker-api/node_modules/mime-db/db.json",
+      "size": 185882,
+      "reason": "gitignore-policy"
+    },
+    {
+      "path": "lwjgl_util.jar",
+      "size": 173911,
+      "reason": "gitignore-policy"
+    },
+    {
+      "path": "jaxb-api-2.4.0-b180830.0359.jar",
+      "size": 128032,
+      "reason": "gitignore-policy"
+    },
+    {
+      "path": "tracker-api/node_modules/express/History.md",
+      "size": 115153,
+      "reason": "gitignore-policy"
+    },
+    {
+      "path": "mechgen_error_v3.png",
+      "size": 114349,
+      "reason": "gitignore-policy"
+    },
+    {
+      "path": "stubs/org/lwjgl/opengl/GL11.class",
+      "size": 89927,
+      "reason": "gitignore-policy"
+    },
+    {
+      "path": "tracker-api/node_modules/nodemon/bin/windows-kill.exe",
+      "size": 80384,
+      "reason": "gitignore-policy"
+    },
+    {
+      "path": "txw2-3.0.2.jar",
+      "size": 72003,
+      "reason": "gitignore-policy"
+    },
+    {
+      "path": "jorbis-0.0.15.jar",
+      "size": 58917,
+      "reason": "gitignore-policy"
+    },
+    {
+      "path": "cheerpj-natives/natives_clean/lwjgl.js",
+      "size": 57763,
+      "reason": "gitignore-policy"
     }
   ]
 }

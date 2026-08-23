@@ -75,8 +75,13 @@ class AnalyticsDashboard {
             return;
         }
 
-        // Wait for Supabase to be ready (with timeout)
-        await this.waitForSupabase();
+        // Public analytics must never block on an optional account service.
+        // Render a truthful browser-local snapshot first, then enrich it for a
+        // signed-in visitor when Supabase is available.
+        this.renderPublicOverview();
+        this.trackEvent('analytics_dashboard_public_initialized');
+        const supabaseReady = await this.waitForSupabase(1500);
+        if (!supabaseReady) return;
 
         // Initialize Supabase client if not already initialized
         if (!this.supabase) {
@@ -96,27 +101,22 @@ class AnalyticsDashboard {
                         }
                     } catch (error) {
                         console.error('Error creating Supabase client:', error);
-                        container.innerHTML = '<div class="error-message">Failed to initialize Supabase client. Please check your configuration.</div>';
                         return;
                     }
                 } else {
-                    container.innerHTML = '<div class="error-message">Supabase not configured. Please configure Supabase in supabase-config.js</div>';
                     return;
                 }
             } else {
-                container.innerHTML = '<div class="error-message">Supabase client not available. Please ensure Supabase scripts are loaded.</div>';
                 return;
             }
         }
 
         // Final check authentication - ensure it's a valid client
         if (!this.supabase) {
-            container.innerHTML = '<div class="error-message">Supabase client not initialized.</div>';
             return;
         }
         
         if (!this.supabase.auth) {
-            container.innerHTML = '<div class="error-message">Supabase authentication not available. Please ensure Supabase is properly configured.</div>';
             return;
         }
 
@@ -160,7 +160,8 @@ class AnalyticsDashboard {
         }
 
         if (!this.currentUser) {
-            container.innerHTML = '<div class="login-prompt">Please <a href="login.html">login</a> to view analytics</div>';
+            const accountStatus = document.getElementById('analytics-account-status');
+            if (accountStatus) accountStatus.textContent = 'Guest session · local browser data only';
             return;
         }
 
@@ -173,6 +174,71 @@ class AnalyticsDashboard {
         this.render();
         await this.loadAnalytics();
         this.trackEvent('analytics_dashboard_initialized');
+    }
+
+    /**
+     * Render an immediate, honest public snapshot from this browser only.
+     * No synthetic platform totals and no optional backend are required.
+     */
+    renderPublicOverview() {
+        const container = document.getElementById('analytics-container');
+        if (!container) return;
+
+        const readArray = key => {
+            try {
+                const value = JSON.parse(localStorage.getItem(key) || '[]');
+                return Array.isArray(value) ? value : [];
+            } catch {
+                return [];
+            }
+        };
+        const claims = readArray('planet-claims');
+        const interactions = readArray('planet-trends');
+        const activeClaims = claims.filter(claim => claim && claim.status === 'active').length;
+        let savedItems = 0;
+        try {
+            savedItems = readArray('favorites').length + readArray('saved-planets').length;
+        } catch { /* Local storage can be disabled. */ }
+        const language = (document.documentElement.lang || 'en').toUpperCase();
+        const webGpu = Boolean(navigator.gpu);
+
+        container.innerHTML = `
+            <section class="analytics-overview" aria-labelledby="analytics-overview-title">
+                <div class="analytics-overview-header">
+                    <div>
+                        <p class="analytics-eyebrow">OBSERVATORY TELEMETRY</p>
+                        <h2 id="analytics-overview-title">Your browser snapshot</h2>
+                        <p>These values come from this browser only. They are not presented as site-wide or live production totals.</p>
+                    </div>
+                    <span class="analytics-source-badge" id="analytics-account-status">Guest session · local browser data only</span>
+                </div>
+                <div class="analytics-metric-grid">
+                    <article class="analytics-metric-card">
+                        <span class="analytics-metric-label">Saved items</span>
+                        <strong>${savedItems}</strong>
+                        <small>Local favourites and saved planets</small>
+                    </article>
+                    <article class="analytics-metric-card">
+                        <span class="analytics-metric-label">Planet claims</span>
+                        <strong>${claims.length}</strong>
+                        <small>${activeClaims} active in this browser</small>
+                    </article>
+                    <article class="analytics-metric-card">
+                        <span class="analytics-metric-label">Planet interactions</span>
+                        <strong>${interactions.length}</strong>
+                        <small>Locally recorded views and actions</small>
+                    </article>
+                    <article class="analytics-metric-card">
+                        <span class="analytics-metric-label">Runtime</span>
+                        <strong>${webGpu ? 'WebGPU' : 'WebGL'}</strong>
+                        <small>${webGpu ? 'Local AI compatible' : 'Standard graphics path'} · ${language}</small>
+                    </article>
+                </div>
+                <div class="analytics-data-note">
+                    <span aria-hidden="true">◎</span>
+                    <p>Account analytics appear here only after a valid signed-in session is detected. Empty activity stays explicitly empty—no sample numbers are substituted.</p>
+                </div>
+            </section>`;
     }
 
     /**
@@ -992,4 +1058,3 @@ class AnalyticsDashboard {
         initDashboardOnce();
     }
 })();
-

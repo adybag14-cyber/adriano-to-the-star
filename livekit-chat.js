@@ -624,7 +624,20 @@ function initLiveKitChat() {
                     if (nowReady) {
                         tryInit();
                     } else {
-                        console.error('❌ Timeout waiting for LiveKit SDK in tryInit');
+                        console.info('LiveKit voice SDK is not configured; text chat and browser-local Bonsai remain available.');
+                        const connectButton = document.getElementById('livekit-connect-btn');
+                        if (connectButton) {
+                            connectButton.disabled = true;
+                            connectButton.textContent = 'Voice service unavailable';
+                            connectButton.title = 'The optional LiveKit voice service is not configured for this deployment.';
+                        }
+                        const messages = document.getElementById('livekit-messages-container');
+                        if (messages && !messages.textContent.trim()) {
+                            const notice = document.createElement('p');
+                            notice.className = 'livekit-availability-note';
+                            notice.textContent = 'Voice chat is not configured for this deployment. Text chat and browser-local Bonsai are still available above.';
+                            messages.appendChild(notice);
+                        }
                     }
                 }
             }, 200);
@@ -647,4 +660,3 @@ if (document.readyState === 'loading') {
     // DOM already loaded, initialize after a short delay
     setTimeout(initLiveKitChat, 200);
 }
-

@@ -20,13 +20,14 @@ function releaseDate() {
   throw new Error('Unable to determine an accurate release date for the sitemap.');
 }
 
-function removeBreadcrumbData(value) {
-  if (Array.isArray(value)) return value.map(removeBreadcrumbData).filter(item => item !== null);
+function removeUnsupportedStructuredData(value) {
+  if (Array.isArray(value)) return value.map(removeUnsupportedStructuredData).filter(item => item !== null);
   if (!value || typeof value !== 'object') return value;
-  if (value['@type'] === 'BreadcrumbList' || (Array.isArray(value['@type']) && value['@type'].includes('BreadcrumbList'))) return null;
+  const types = Array.isArray(value['@type']) ? value['@type'] : [value['@type']];
+  if (types.includes('BreadcrumbList') || types.includes('SearchAction') || types.includes('SpeakableSpecification')) return null;
   const result = {};
   for (const [key, child] of Object.entries(value)) {
-    const cleaned = removeBreadcrumbData(child);
+    const cleaned = removeUnsupportedStructuredData(child);
     if (cleaned !== null && (!Array.isArray(cleaned) || cleaned.length)) result[key] = cleaned;
   }
   return result;
@@ -35,7 +36,7 @@ function removeBreadcrumbData(value) {
 function normalizeStructuredData(html) {
   return html.replace(/<script\b([^>]*type=["']application\/ld\+json["'][^>]*)>([\s\S]*?)<\/script>/gi, (full, attributes, source) => {
     try {
-      const cleaned = removeBreadcrumbData(JSON.parse(source));
+      const cleaned = removeUnsupportedStructuredData(JSON.parse(source));
       if (cleaned === null || (Array.isArray(cleaned) && !cleaned.length)) return '';
       return `<script${attributes}>\n${escapeJsonForHtml(cleaned)}\n</script>`;
     } catch {
@@ -169,8 +170,19 @@ await Promise.all(experimentalPages.map(async ([relativePath, disclosure]) => {
 
 const lastmod = releaseDate();
 const sitemapPages = SITE_PAGES.filter(page => page.indexable);
-const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemapPages.map(page => `  <url>\n    <loc>${canonicalUrl(page)}</loc>\n    <lastmod>${lastmod}</lastmod>\n  </url>`).join('\n')}\n</urlset>\n`;
-const sitemapIndex = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <sitemap>\n    <loc>${SITE_ORIGIN}/sitemap.xml</loc>\n    <lastmod>${lastmod}</lastmod>\n  </sitemap>\n</sitemapindex>\n`;
+function gitLastModified(page) {
+  const candidates = [page.path, 'scripts/site-pages.mjs', 'scripts/prepare-production-pages.mjs'];
+  try {
+    const commitDate = execFileSync('git', ['log', '-1', '--format=%cI', '--', ...candidates], { encoding: 'utf8' }).trim();
+    if (commitDate) return new Date(commitDate).toISOString().slice(0, 10);
+  } catch {}
+  return lastmod;
+}
+
+const sitemapEntries = sitemapPages.map(page => ({ page, lastmod: gitLastModified(page) }));
+const sitemapLastmod = sitemapEntries.map(entry => entry.lastmod).sort().at(-1) || lastmod;
+const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemapEntries.map(({ page, lastmod: pageLastmod }) => `  <url>\n    <loc>${canonicalUrl(page)}</loc>\n    <lastmod>${pageLastmod}</lastmod>\n  </url>`).join('\n')}\n</urlset>\n`;
+const sitemapIndex = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <sitemap>\n    <loc>${SITE_ORIGIN}/sitemap.xml</loc>\n    <lastmod>${sitemapLastmod}</lastmod>\n  </sitemap>\n</sitemapindex>\n`;
 await fs.writeFile(path.join(publicRoot, 'sitemap.xml'), sitemap, 'utf8');
 await fs.writeFile(path.join(publicRoot, 'sitemap_index.xml'), sitemapIndex, 'utf8');
 

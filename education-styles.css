@@ -2,7 +2,7 @@
 
 .education-dashboard {
     background: linear-gradient(135deg, rgba(8, 10, 25, 0.85), rgba(18, 22, 40, 0.95));
-    border: 2px solid rgba(186, 148, 79, 0.3);
+    border: 2px solid rgba(103, 232, 249, 0.3);
     border-radius: 18px;
     padding: 2rem;
     margin: 2rem 0;
@@ -13,7 +13,7 @@
     text-align: center;
     margin-bottom: 3rem;
     padding-bottom: 2rem;
-    border-bottom: 2px solid rgba(186, 148, 79, 0.2);
+    border-bottom: 2px solid rgba(103, 232, 249, 0.2);
 }
 
 .education-header h2 {
@@ -38,7 +38,7 @@
 
 .course-card {
     background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(186, 148, 79, 0.2);
+    border: 1px solid rgba(103, 232, 249, 0.2);
     border-radius: 12px;
     padding: 2rem;
     transition: all 0.3s ease;
@@ -48,7 +48,7 @@
 }
 
 .course-card:hover {
-    border-color: rgba(186, 148, 79, 0.4);
+    border-color: rgba(103, 232, 249, 0.4);
     transform: translateY(-5px);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
@@ -64,7 +64,7 @@
     font-family: 'Raleway', sans-serif;
     font-size: 1.5rem;
     font-weight: 600;
-    color: #ba944f;
+    color: #67e8f9;
     margin: 0;
     flex: 1;
 }
@@ -123,7 +123,7 @@
 
 .course-progress .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #ba944f, #d4b86a);
+    background: linear-gradient(90deg, #67e8f9, #a78bfa);
     border-radius: 3px;
     transition: width 0.3s ease;
 }
@@ -136,10 +136,10 @@
 .start-course-btn {
     margin-top: auto;
     padding: 0.75rem 1.5rem;
-    background: rgba(186, 148, 79, 0.2);
-    border: 2px solid rgba(186, 148, 79, 0.4);
+    background: rgba(103, 232, 249, 0.2);
+    border: 2px solid rgba(103, 232, 249, 0.4);
     border-radius: 8px;
-    color: #ba944f;
+    color: #67e8f9;
     font-size: 1rem;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -150,15 +150,15 @@
 }
 
 .start-course-btn:hover {
-    background: rgba(186, 148, 79, 0.3);
-    border-color: rgba(186, 148, 79, 0.6);
+    background: rgba(103, 232, 249, 0.3);
+    border-color: rgba(103, 232, 249, 0.6);
     transform: translateY(-2px);
 }
 
 /* Course Viewer */
 .course-viewer {
     background: linear-gradient(135deg, rgba(8, 10, 25, 0.85), rgba(18, 22, 40, 0.95));
-    border: 2px solid rgba(186, 148, 79, 0.3);
+    border: 2px solid rgba(103, 232, 249, 0.3);
     border-radius: 18px;
     padding: 2rem;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
@@ -167,15 +167,15 @@
 .course-nav {
     margin-bottom: 2rem;
     padding-bottom: 1.5rem;
-    border-bottom: 2px solid rgba(186, 148, 79, 0.2);
+    border-bottom: 2px solid rgba(103, 232, 249, 0.2);
 }
 
 .back-btn {
     padding: 0.5rem 1rem;
     background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(186, 148, 79, 0.3);
+    border: 1px solid rgba(103, 232, 249, 0.3);
     border-radius: 6px;
-    color: #ba944f;
+    color: #67e8f9;
     cursor: pointer;
     font-family: 'Raleway', sans-serif;
     margin-bottom: 1rem;
@@ -183,8 +183,8 @@
 }
 
 .back-btn:hover {
-    border-color: rgba(186, 148, 79, 0.6);
-    background: rgba(186, 148, 79, 0.1);
+    border-color: rgba(103, 232, 249, 0.6);
+    background: rgba(103, 232, 249, 0.1);
 }
 
 .course-title {
@@ -200,7 +200,7 @@
     font-family: 'Cormorant Garamond', serif;
     font-size: 2rem;
     font-weight: 300;
-    color: #ba944f;
+    color: #67e8f9;
     margin: 0;
 }
 
@@ -225,7 +225,7 @@
 .lesson-content h3 {
     font-family: 'Cormorant Garamond', serif;
     font-size: 2rem;
-    color: #ba944f;
+    color: #67e8f9;
     margin-bottom: 1.5rem;
 }
 
@@ -237,7 +237,7 @@
 }
 
 .lesson-body h4 {
-    color: #ba944f;
+    color: #67e8f9;
     margin-top: 1.5rem;
     margin-bottom: 1rem;
 }
@@ -253,13 +253,13 @@
 }
 
 .lesson-body a {
-    color: #ba944f;
+    color: #67e8f9;
     text-decoration: underline;
 }
 
 .lesson-quiz {
     background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(186, 148, 79, 0.2);
+    border: 1px solid rgba(103, 232, 249, 0.2);
     border-radius: 12px;
     padding: 2rem;
     margin: 2rem 0;
@@ -268,7 +268,7 @@
 .lesson-quiz h4 {
     font-family: 'Raleway', sans-serif;
     font-size: 1.5rem;
-    color: #ba944f;
+    color: #67e8f9;
     margin-bottom: 1rem;
 }
 
@@ -288,7 +288,7 @@
 .quiz-option {
     padding: 1rem 1.5rem;
     background: rgba(0, 0, 0, 0.2);
-    border: 2px solid rgba(186, 148, 79, 0.3);
+    border: 2px solid rgba(103, 232, 249, 0.3);
     border-radius: 8px;
     color: rgba(255, 255, 255, 0.9);
     font-size: 1rem;
@@ -299,8 +299,8 @@
 }
 
 .quiz-option:hover:not(:disabled) {
-    border-color: rgba(186, 148, 79, 0.6);
-    background: rgba(186, 148, 79, 0.1);
+    border-color: rgba(103, 232, 249, 0.6);
+    background: rgba(103, 232, 249, 0.1);
     transform: translateX(5px);
 }
 
@@ -340,15 +340,15 @@
     justify-content: space-between;
     margin-top: 3rem;
     padding-top: 2rem;
-    border-top: 2px solid rgba(186, 148, 79, 0.2);
+    border-top: 2px solid rgba(103, 232, 249, 0.2);
 }
 
 .nav-btn {
     padding: 0.75rem 2rem;
-    background: rgba(186, 148, 79, 0.2);
-    border: 2px solid rgba(186, 148, 79, 0.4);
+    background: rgba(103, 232, 249, 0.2);
+    border: 2px solid rgba(103, 232, 249, 0.4);
     border-radius: 8px;
-    color: #ba944f;
+    color: #67e8f9;
     font-size: 1rem;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -359,8 +359,8 @@
 }
 
 .nav-btn:hover {
-    background: rgba(186, 148, 79, 0.3);
-    border-color: rgba(186, 148, 79, 0.6);
+    background: rgba(103, 232, 249, 0.3);
+    border-color: rgba(103, 232, 249, 0.6);
     transform: translateY(-2px);
 }
 

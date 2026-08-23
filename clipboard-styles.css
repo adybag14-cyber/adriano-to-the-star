@@ -6,10 +6,10 @@
     position: absolute;
     top: 0.5rem;
     right: 0.5rem;
-    background: rgba(186, 148, 79, 0.2);
-    border: 1px solid rgba(186, 148, 79, 0.4);
+    background: rgba(103, 232, 249, 0.2);
+    border: 1px solid rgba(103, 232, 249, 0.4);
     border-radius: 6px;
-    color: #ba944f;
+    color: #67e8f9;
     cursor: pointer;
     font-size: 1rem;
     padding: 0.5rem;
@@ -24,7 +24,7 @@ pre:hover .copy-code-btn,
 }
 
 .copy-code-btn:hover {
-    background: rgba(186, 148, 79, 0.3);
+    background: rgba(103, 232, 249, 0.3);
     transform: scale(1.1);
 }
 
@@ -34,17 +34,17 @@ pre:hover .copy-code-btn,
 }
 
 [data-copy]:hover {
-    color: #ba944f;
+    color: #67e8f9;
     text-decoration: underline;
 }
 
 /* Light theme support */
 .theme-light .copy-code-btn {
-    background: rgba(186, 148, 79, 0.1);
-    border-color: rgba(186, 148, 79, 0.3);
+    background: rgba(103, 232, 249, 0.1);
+    border-color: rgba(103, 232, 249, 0.3);
 }
 
 .theme-light .copy-code-btn:hover {
-    background: rgba(186, 148, 79, 0.2);
+    background: rgba(103, 232, 249, 0.2);
 }
 
