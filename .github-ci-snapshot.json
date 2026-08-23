@@ -1,13 +1,13 @@
 {
   "schema": 1,
   "source": "gitlab.com/adybag14-group/starisdons",
-  "sourceRef": "47408086fde30f15de87b09a02a57e67c53fca04",
-  "sourceSha": "47408086fde30f15de87b09a02a57e67c53fca04",
+  "sourceRef": "5adb273f76f72e61f7c405d92216c9fe85ceadc4",
+  "sourceSha": "5adb273f76f72e61f7c405d92216c9fe85ceadc4",
   "maxBlobBytes": 5242880,
-  "includedFiles": 4982,
-  "includedBytes": 146235140,
-  "excludedFiles": 48,
-  "excludedBytes": 469023176,
+  "includedFiles": 4994,
+  "includedBytes": 310406478,
+  "excludedFiles": 36,
+  "excludedBytes": 304852608,
   "excludedPrefixes": [
     "public/",
     "node_modules/",
@@ -48,11 +48,6 @@
   ],
   "largestExcluded": [
     {
-      "path": "assets/models/ships/viper.glb",
-      "size": 57474288,
-      "reason": "blob-over-5242880"
-    },
-    {
       "path": "assets/models/props/bridge_table.glb",
       "size": 42977928,
       "reason": "blob-over-5242880"
@@ -63,11 +58,6 @@
       "reason": "blob-over-5242880"
     },
     {
-      "path": "audio/track-6.mp3",
-      "size": 19111725,
-      "reason": "blob-over-5242880"
-    },
-    {
       "path": "assets/models/habitats/outpost_tower.glb",
       "size": 17540348,
       "reason": "blob-over-5242880"
@@ -75,11 +65,6 @@
     {
       "path": "assets/models/science/telescope.glb",
       "size": 17540348,
-      "reason": "blob-over-5242880"
-    },
-    {
-      "path": "audio/track-8.mp3",
-      "size": 16511085,
       "reason": "blob-over-5242880"
     },
     {
@@ -108,11 +93,6 @@
       "reason": "blob-over-5242880"
     },
     {
-      "path": "audio/track-9.mp3",
-      "size": 10654125,
-      "reason": "blob-over-5242880"
-    },
-    {
       "path": "assets/models/props/holo_console.glb",
       "size": 10614184,
       "reason": "blob-over-5242880"
@@ -120,11 +100,6 @@
     {
       "path": "assets/models/science/radar_array.glb",
       "size": 10614184,
-      "reason": "blob-over-5242880"
-    },
-    {
-      "path": "audio/track-11.mp3",
-      "size": 9812205,
       "reason": "blob-over-5242880"
     },
     {
@@ -143,11 +118,6 @@
       "reason": "blob-over-5242880"
     },
     {
-      "path": "audio/track-12.mp3",
-      "size": 9179565,
-      "reason": "blob-over-5242880"
-    },
-    {
       "path": "assets/models/industrial/chemical_vat.glb",
       "size": 8966700,
       "reason": "blob-over-5242880"
@@ -160,11 +130,6 @@
     {
       "path": "assets/models/props/life_support_tank.glb",
       "size": 8966700,
-      "reason": "blob-over-5242880"
-    },
-    {
-      "path": "audio/track-13.mp3",
-      "size": 8949165,
       "reason": "blob-over-5242880"
     },
     {
@@ -185,26 +150,6 @@
     {
       "path": "starfarer.api_v2.jar",
       "size": 7182557,
-      "reason": "blob-over-5242880"
-    },
-    {
-      "path": "audio/cosmic-journey.mp3",
-      "size": 6982893,
-      "reason": "blob-over-5242880"
-    },
-    {
-      "path": "audio/track-16.mp3",
-      "size": 6728685,
-      "reason": "blob-over-5242880"
-    },
-    {
-      "path": "audio/track-17.mp3",
-      "size": 6644205,
-      "reason": "blob-over-5242880"
-    },
-    {
-      "path": "audio/track-14.mp3",
-      "size": 6539565,
       "reason": "blob-over-5242880"
     },
     {
@@ -230,11 +175,6 @@
     {
       "path": "assets/models/mega/dyson_ring_segment.glb",
       "size": 5742828,
-      "reason": "blob-over-5242880"
-    },
-    {
-      "path": "audio/stellar-voyage.mp3",
-      "size": 5583062,
       "reason": "blob-over-5242880"
     },
     {
