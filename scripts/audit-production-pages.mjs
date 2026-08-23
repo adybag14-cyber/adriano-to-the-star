@@ -47,6 +47,13 @@ if (new Set(sitemapUrls).size !== sitemapUrls.length) fail('sitemap.xml: duplica
 
 const robots = await fs.readFile(path.join(publicRoot, 'robots.txt'), 'utf8');
 if (!/^Sitemap: https:\/\/adrianotothestar\.com\/sitemap\.xml\s*$/mi.test(robots)) fail('robots.txt: canonical Sitemap directive is missing');
+const indexNowVerificationName = '79aa2fca849a4efe98a254a197fb1533';
+try {
+  const indexNowVerification = await fs.readFile(path.join(publicRoot, `${indexNowVerificationName}.txt`), 'utf8');
+  if (indexNowVerification.trim() !== indexNowVerificationName) fail('IndexNow verification: public filename and value do not match');
+} catch {
+  fail('IndexNow verification: public root verification file is missing');
+}
 
 const projects = await fs.readFile(path.join(publicRoot, 'projects.html'), 'utf8');
 if (count(projects, /<article\b[^>]*class="project-card/g) !== 10) fail('projects.html: expected 10 published project cards');

@@ -56,8 +56,11 @@ def main() -> int:
     root = Path(__file__).resolve().parent
     sitemap = (root / args.sitemap).resolve()
     urls = sitemap_urls(sitemap)
-    key, key_file = verification_key(root)
-    print(f"Validated {len(urls)} canonical HTTPS URLs and an existing root verification file.")
+    key, _ = verification_key(root)
+    public_key_file = sitemap.parent / VERIFICATION_FILE
+    if not public_key_file.is_file() or public_key_file.read_text(encoding="utf-8").strip() != key:
+        raise RuntimeError("The production artifact is missing the matching public IndexNow verification file.")
+    print(f"Validated {len(urls)} canonical HTTPS URLs and matching source/public verification files.")
     if not args.submit:
         print("Dry run only. Pass --submit after the production health gate to notify IndexNow.")
         return 0
@@ -65,7 +68,7 @@ def main() -> int:
     payload = json.dumps({
         "host": HOST,
         "key": key,
-        "keyLocation": f"https://{HOST}/{key_file.name}",
+        "keyLocation": f"https://{HOST}/{public_key_file.name}",
         "urlList": urls,
     }).encode("utf-8")
     request = urllib.request.Request(ENDPOINT, data=payload, headers={"Content-Type": "application/json; charset=utf-8"}, method="POST")

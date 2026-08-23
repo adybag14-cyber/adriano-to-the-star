@@ -88,6 +88,7 @@ $CoreAssets = @(
     "sitemap.xml",
     "sitemap_index.xml",
     "robots.txt",
+    "79aa2fca849a4efe98a254a197fb1533.txt",
     "sw.js",
     "games-manifest.json",
     "stellar-ai-cli.zip"
