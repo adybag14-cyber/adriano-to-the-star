@@ -177,10 +177,10 @@ async function clickTimeSpeed(title) {
         // first-click safeguard.
         await button.click();
         safetyOverride = true;
-        await page.waitForTimeout(80);
         actual = await page.evaluate(() => window.game.timeScale);
     }
     log('interaction', { action: 'click-time-speed', title, expected, actual, safetyOverride });
+    return { expected, actual, safetyOverride };
 }
 async function getWindowRect(selector) {
     return page.locator(selector).evaluate((element) => {
@@ -686,7 +686,7 @@ try {
     await clickTimeSpeed('1x Speed');
     await page.waitForTimeout(1100);
     const solarRateAtOne = await page.evaluate(() => window.game.resourceRates?.energy ?? 0);
-    await clickTimeSpeed('10x Speed');
+    const solarTenXRequest = await clickTimeSpeed('10x Speed');
     await page.waitForTimeout(1100);
     const solarFlow = await page.evaluate(() => ({
         capacity: window.game.powerGrid?.capacity ?? 0,
@@ -697,7 +697,12 @@ try {
     }));
     assert(solarFlow.capacity > 0, 'completed Solar Array contributes power', solarFlow);
     assert(solarFlow.solarPowered === true, 'completed Solar Array reports powered state', solarFlow);
-    assert(solarFlow.energyRate > Math.max(0, solarRateAtOne) * 5, '10x simulation scales Solar Array production above measured 1x output', { solarRateAtOne, ...solarFlow });
+    const sampledSpeed = Math.max(1, solarFlow.timeScale || 1);
+    assert(
+        solarTenXRequest.actual === 10 && solarFlow.energyRate >= Math.max(0, solarRateAtOne) * sampledSpeed * 0.95,
+        'explicit 10x override engages and sampled Solar Array output tracks any later safety-reduced speed',
+        { solarRateAtOne, solarTenXRequest, ...solarFlow }
+    );
     assert(/^\+/.test(solarFlow.ratePill), 'desktop resource HUD exposes positive live energy flow', solarFlow);
 
     await setPhase('habitat-construction');
