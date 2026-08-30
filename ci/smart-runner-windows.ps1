@@ -62,17 +62,17 @@ function Invoke-ProductionHealthCheck {
         @{ Path = "/privacy.html?deploy=$CacheKey"; Contains = "Privacy" },
         @{ Path = "/tracker.html?deploy=$CacheKey"; Contains = "vendor/tracker/react-18.3.1.production.min.js?v=" },
         @{ Path = "/about.html?deploy=$CacheKey"; Contains = "ABOUT THE PROJECT"; Excludes = @("ABOUT ME", "My Story", "Britain.", "MI6", "Metropolitan Police") },
-        # Immutable URLs are first checked through an attempt-specific probe.
-        # Only after the probe sees the new origin marker are the canonical
-        # commit-stamped URLs requested, preventing a stale origin response from
-        # being cached under a fresh immutable URL during Pages propagation.
+        # Versioned asset contents are checked only through attempt-specific
+        # probes. The release HTML and manifest prove the canonical immutable
+        # URL strings. Requesting those bare URLs from CI during propagation can
+        # route to a different stale edge and poison the fresh cache key.
         @{ Path = "/book-online.html?deploy=$CacheKey"; Contains = "book-online.css?v=$ReleaseMarker" },
-        @{ Path = "/book-online.css?v=$ReleaseMarker"; Contains = ".mission-plan-form"; Immutable = $true },
+        @{ Path = "/book-online.css?v=$ReleaseMarker"; Contains = ".mission-plan-form" },
         @{ Path = "/star-maps.html?deploy=$CacheKey"; Contains = "interactive-star-maps.js?v=$ReleaseMarker" },
-        @{ Path = "/interactive-star-maps.js?v=$ReleaseMarker"; Contains = "updateCanvasAccessibilityLabel"; Immutable = $true },
-        @{ Path = "/manifest.json?v=$ReleaseMarker"; Contains = "icon-192x192.png?v=$ReleaseMarker"; Immutable = $true },
-        @{ Path = "/images/icon-192x192.png?v=$ReleaseMarker"; Contains = $null; Immutable = $true },
-        @{ Path = "/images/icon-512x512.png?v=$ReleaseMarker"; Contains = $null; Immutable = $true },
+        @{ Path = "/interactive-star-maps.js?v=$ReleaseMarker"; Contains = "updateCanvasAccessibilityLabel" },
+        @{ Path = "/manifest.json?v=$ReleaseMarker"; Contains = "icon-192x192.png?v=$ReleaseMarker" },
+        @{ Path = "/images/icon-192x192.png?v=$ReleaseMarker"; Contains = $null },
+        @{ Path = "/images/icon-512x512.png?v=$ReleaseMarker"; Contains = $null },
         @{ Path = "/sitemap.xml?deploy=$CacheKey"; Contains = "galaxy-object-trading.html" }
     )
 
@@ -125,21 +125,7 @@ function Invoke-ProductionHealthCheck {
                 }
             }
 
-            foreach ($Check in @($Checks | Where-Object { $_.Immutable })) {
-                $Url = "$BaseUrl$($Check.Path)"
-                $Response = Invoke-WebRequest -Uri $Url -UseBasicParsing -TimeoutSec 30 -Headers @{
-                    "Cache-Control" = "no-cache"
-                    "Pragma" = "no-cache"
-                }
-                if ($Response.StatusCode -ne 200) {
-                    throw "$Url returned HTTP $($Response.StatusCode)"
-                }
-                if ($Check.Contains -and -not $Response.Content.Contains($Check.Contains)) {
-                    throw "$Url did not contain the expected immutable production marker."
-                }
-            }
-
-            Write-Host "Production website checks passed: homepage, privacy-safe About page, exact commit-stamped assets, PWA manifest, database, projects, breadcrumbs, sitemap, Rocket Loader exclusions, and stale-content gate verified."
+            Write-Host "Production website checks passed: homepage, privacy-safe About page, commit-stamped asset probes, PWA manifest, database, projects, breadcrumbs, sitemap, Rocket Loader exclusions, and stale-content gate verified."
             return
         }
         catch {
