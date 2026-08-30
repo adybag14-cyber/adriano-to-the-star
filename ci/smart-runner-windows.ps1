@@ -35,6 +35,12 @@ function Invoke-ProductionHealthCheck {
     else {
         [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
     }
+    $ReleaseMarker = if ($env:CI_COMMIT_SHORT_SHA) {
+        $env:CI_COMMIT_SHORT_SHA
+    }
+    else {
+        $CacheKey
+    }
 
     $Checks = @(
         @{ Path = "/?deploy=$CacheKey"; Contains = 'data-release="2026-07-ita-experience"' },
@@ -55,6 +61,14 @@ function Invoke-ProductionHealthCheck {
         @{ Path = "/education.html?deploy=$CacheKey"; Contains = "ita-breadcrumb" },
         @{ Path = "/privacy.html?deploy=$CacheKey"; Contains = "Privacy" },
         @{ Path = "/tracker.html?deploy=$CacheKey"; Contains = "vendor/tracker/react-18.3.1.production.min.js?v=" },
+        # Exercise the exact immutable URLs emitted into the release. A random
+        # deployment query can succeed while a previously cached 404 remains
+        # attached to the real commit-stamped asset URL.
+        @{ Path = "/book-online.html?deploy=$CacheKey"; Contains = "book-online.css?v=$ReleaseMarker" },
+        @{ Path = "/book-online.css?v=$ReleaseMarker"; Contains = ".mission-plan-form" },
+        @{ Path = "/star-maps.html?deploy=$CacheKey"; Contains = "interactive-star-maps.js?v=$ReleaseMarker" },
+        @{ Path = "/interactive-star-maps.js?v=$ReleaseMarker"; Contains = "updateCanvasAccessibilityLabel" },
+        @{ Path = "/manifest.json?v=$ReleaseMarker"; Contains = '"icons"' },
         @{ Path = "/sitemap.xml?deploy=$CacheKey"; Contains = "galaxy-object-trading.html" }
     )
 
@@ -92,7 +106,7 @@ function Invoke-ProductionHealthCheck {
                 }
             }
 
-            Write-Host "Production website checks passed: homepage, versioned assets, database, projects, breadcrumbs, sitemap, Rocket Loader exclusions, and stale-content gate verified."
+            Write-Host "Production website checks passed: homepage, exact commit-stamped assets, PWA manifest, database, projects, breadcrumbs, sitemap, Rocket Loader exclusions, and stale-content gate verified."
             return
         }
         catch {
