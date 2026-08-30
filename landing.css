@@ -14,3 +14,8 @@
 /* Keep flight telemetry legible over every phase of the animated hero image. */
 .telemetry{background:rgba(5,7,13,.94)}
 .telemetry small{color:#c5c8d8}
+.stage-caption{color:#c5c8d8}
+.planet:after{content:none}
+.planet-texture,.planet-glow{position:absolute;inset:0;border-radius:inherit}
+.planet-texture{background:url("images/bg-large.jpg") center/cover no-repeat;filter:saturate(.72) contrast(1.1) brightness(.72);transform:scale(1.28)}
+.planet-glow{background:radial-gradient(circle at 68% 35%,transparent 0 14%,rgba(10,10,19,.24) 43%,#03040a 84%)}

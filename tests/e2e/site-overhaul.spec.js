@@ -81,9 +81,11 @@ test.describe('production site overhaul', () => {
   test('landing telemetry stays legible and decorative hero art stays out of the accessibility tree', async ({ page }) => {
     await page.goto('/index.html', { waitUntil: 'domcontentloaded' });
     await expect(page.locator('.planet-system')).toHaveAttribute('aria-hidden', 'true');
-    await expect(page.locator('.planet img')).toHaveAttribute('alt', '');
+    await expect(page.locator('.planet img')).toHaveCount(0);
+    await expect(page.locator('.planet-texture')).toHaveCSS('background-image', /bg-large\.jpg/);
     await expect(page.locator('.telemetry small').first()).toHaveCSS('color', 'rgb(197, 200, 216)');
     await expect(page.locator('.telemetry').first()).toHaveCSS('background-color', 'rgba(5, 7, 13, 0.94)');
+    await expect(page.locator('.stage-caption span').last()).toHaveCSS('color', 'rgb(197, 200, 216)');
   });
 
   test('landing theme menu supports keyboard-ready selection and persistence', async ({ page }) => {
