@@ -16,6 +16,21 @@ const PROJECT_TARGETS = [
 const BASE_ORIGIN = new URL(process.env.BASE_URL || 'https://adrianotothestar.com').origin;
 
 test.describe('production site overhaul', () => {
+  test('about page stays concise and publishes no personal biography or plan', async ({ page }) => {
+    const response = await page.goto('/about.html', { waitUntil: 'domcontentloaded' });
+    expect(response?.status()).toBe(200);
+    await expect(page.getByRole('heading', { level: 1, name: 'ABOUT THE PROJECT' })).toBeVisible();
+    const mainText = await page.locator('main').innerText();
+    const wordCount = mainText.trim().split(/\s+/).filter(Boolean).length;
+    expect(wordCount).toBeLessThanOrEqual(70);
+    expect(mainText).not.toMatch(/About Me|My Story|Britain|Oxford|Cambridge|Biomedical|Chemistry|Metropolitan|MI[456]|police|secret service|criminal record|founder|roadmap|long-term vision|programme of study|prime minister/i);
+    const markup = await page.locator('html').innerHTML();
+    expect(markup).not.toMatch(/contact@|twitter\.com|facebook\.com|universal-simulation-hub|void-warfare-engine|metaphysics-apotheosis/i);
+    await expect(page.getByRole('link', { name: 'Explore the database' })).toHaveAttribute('href', 'database.html');
+    await expect(page.getByRole('link', { name: 'Open the stellar tracker' })).toHaveAttribute('href', 'tracker.html');
+    await expect(page.getByRole('link', { name: 'Read the privacy notice' })).toHaveAttribute('href', 'privacy.html');
+  });
+
   test('all 46 public pages load, expose metadata and breadcrumbs, and scroll without layout overflow', async ({ page }) => {
     test.setTimeout(10 * 60 * 1000);
     for (const entry of SITE_PAGES) {

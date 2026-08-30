@@ -2,7 +2,7 @@ export const SITE_ORIGIN = 'https://adrianotothestar.com';
 
 export const SITE_PAGES = [
   ['index.html', 'Interstellar Travel Agency | Explore Worlds Beyond Earth', 'Explore exoplanets, future routes, interactive star maps, space technology, and research from the Adriano To The Star interstellar travel concept.'],
-  ['about.html', 'About Adriano To The Star', 'Meet Adriano and learn how the Adriano To The Star research platform combines exoplanet science, interactive technology, and a long-term vision for space exploration.'],
+  ['about.html', 'About the Project | Adriano To The Star', 'A short introduction to the Adriano To The Star space education and browser-experiment project.'],
   ['ai-fairness.html', 'AI Fairness for Space Research | Adriano To The Star', 'Review practical fairness principles, bias checks, and responsible-AI safeguards for models used across the Adriano To The Star research platform.'],
   ['ai-metrics-dashboard.html', 'AI Model Performance Metrics | Adriano To The Star', 'Explore model quality, latency, reliability, and evaluation metrics for artificial-intelligence experiments on Adriano To The Star.'],
   ['ai-predictions.html', 'AI Predictions for Exoplanet Research | Adriano To The Star', 'Explore clearly labeled AI-assisted forecasts for exoplanet discovery, habitability research, and future space missions.'],
