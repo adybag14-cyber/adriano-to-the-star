@@ -229,8 +229,16 @@ const finalRefs = collectScriptReferences(rewrittenHtml);
 const startupRefs = finalRefs.filter((ref) => ref.parsed && (
     /\.pioneer\.(?:bundle\.)?min\.js$/i.test(ref.parsed.cleanSource)
 ));
-if (startupRefs.length !== 4) {
-    throw new Error(`Pioneer request consolidation expected 4 generated startup scripts, found ${startupRefs.length}.`);
+const expectedStartupScripts = [
+    'pioneer-foundation.pioneer.bundle.min.js',
+    'ai-core.pioneer.min.js',
+    'pioneer-systems.pioneer.bundle.min.js',
+    'exoplanet-pioneer.pioneer.min.js',
+    'site-runtime.pioneer.min.js'
+];
+const actualStartupScripts = startupRefs.map(ref => ref.parsed.cleanSource.replace(/^\//, ''));
+if (JSON.stringify(actualStartupScripts) !== JSON.stringify(expectedStartupScripts)) {
+    throw new Error(`Pioneer request consolidation expected ${expectedStartupScripts.join(', ')}, found ${actualStartupScripts.join(', ')}.`);
 }
 
 fs.writeFileSync(htmlPath, rewrittenHtml, 'utf8');

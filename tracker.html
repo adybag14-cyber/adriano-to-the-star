@@ -1,188 +1,119 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" data-theme="midnight">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tracker - Adriano To The Star</title>
-    
-    <meta name="description" content="Explore Tracker on Adriano To The Star. Your portal to exoplanet discovery, space exploration, and AI-driven galactic analysis in the Kepler Archive.">
-    <meta name="keywords" content="Tracker, Exoplanet Discovery, Space Exploration, Kepler Archive, Adriano To The Star">
-    <link rel="canonical" href="https://adrianotothestar.com/tracker.html">
-    <!-- Open Graph -->
-    <meta property="og:title" content="Tracker - Adriano To The Star">
-    <meta property="og:description" content="Explore Tracker on Adriano To The Star. Your portal to exoplanet discovery, space exploration, and AI-driven galactic analysis in the Kepler Archive.">
-    <meta property="og:url" content="https://adrianotothestar.com/tracker.html">
-    <meta property="og:image" content="https://adrianotothestar.com/images/bg-large.jpg">
-    <meta property="og:type" content="website">
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Tracker - Adriano To The Star">
-    <meta name="twitter:description" content="Explore Tracker on Adriano To The Star. Your portal to exoplanet discovery, space exploration, and AI-driven galactic analysis in the Kepler Archive.">
-    <meta name="twitter:image" content="https://adrianotothestar.com/images/bg-large.jpg">
-    
-    <script type="application/ld+json">
-    [
-      {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "Adriano To The Star",
-        "url": "https://adrianotothestar.com",
-        "logo": { "@type": "ImageObject", "url": "https://adrianotothestar.com/images/ita_logo.png", "width": 112, "height": 112 },
-        "sameAs": [ "https://twitter.com/AdrianoToTheStar", "https://www.facebook.com/AdrianoToTheStar" ],
-        "contactPoint": { "@type": "ContactPoint", "contactType": "customer support", "email": "contact@adrianotothestar.com" }
-      },
-      {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "Adriano To The Star",
-        "url": "https://adrianotothestar.com",
-        "potentialAction": { "@type": "SearchAction", "target": "https://adrianotothestar.com/database.html?q={search_term_string}", "query-input": "required name=search_term_string" }
-      },
-      {
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://adrianotothestar.com/index.html" }
-          , { "@type": "ListItem", "position": 2, "name": "Tracker", "item": "https://adrianotothestar.com/tracker.html" }
-        ]
-      },
-      {
-        "@context": "https://schema.org",
-        "@type": "WebPage",
-        "name": "Tracker - Adriano To The Star",
-        "speakable": { "@type": "SpeakableSpecification", "xpath": ["/html/head/title", "/html/head/meta[@name=\"description\"]/@content"] },
-        "url": "https://adrianotothestar.com/tracker.html"
-      }
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Nearby Star &amp; NASA Discovery Tracker | Adriano To The Star</title>
+  <meta name="description" content="Explore a provenance-rich 3D map of the local stellar neighbourhood and recent Kepler, K2, and TESS discoveries from a build-cached NASA Exoplanet Archive snapshot.">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+  <meta name="theme-color" content="#030611">
+  <link rel="canonical" href="https://adrianotothestar.com/tracker.html">
+  <link rel="icon" href="images/ita_logo.png">
+  <link rel="manifest" href="manifest.json">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Adriano To The Star">
+  <meta property="og:title" content="Nearby Star &amp; NASA Discovery Tracker">
+  <meta property="og:description" content="A responsive Three.js map and research catalogue built from authoritative Gaia, CNS5, and NASA Exoplanet Archive sources.">
+  <meta property="og:url" content="https://adrianotothestar.com/tracker.html">
+  <meta property="og:image" content="https://adrianotothestar.com/images/bg-large.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Nearby Star &amp; NASA Discovery Tracker">
+  <meta name="twitter:description" content="Navigate the local stellar neighbourhood and inspect current NASA mission discovery records with full data provenance.">
+  <meta name="twitter:image" content="https://adrianotothestar.com/images/bg-large.jpg">
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@graph":[
+      {"@type":"WebApplication","@id":"https://adrianotothestar.com/tracker.html#app","name":"Nearby Star and NASA Discovery Tracker","url":"https://adrianotothestar.com/tracker.html","applicationCategory":"EducationalApplication","operatingSystem":"Any modern browser with JavaScript and WebGL","browserRequirements":"JavaScript and WebGL recommended; accessible HTML fallback included","isAccessibleForFree":true,"description":"An interactive teaching map of nearby stars and NASA mission exoplanet discoveries using a same-origin scientific-data snapshot."},
+      {"@type":"Dataset","@id":"https://adrianotothestar.com/tracker.html#dataset","name":"Adriano To The Star nearby-star teaching snapshot","description":"A compact derivative teaching snapshot of nearby stellar landmarks and confirmed exoplanet data with source-level provenance.","url":"https://adrianotothestar.com/data/tracker/stellar-neighborhood.json","license":"https://science.nasa.gov/nasa-information-on-the-web/","creator":[{"@type":"Organization","name":"NASA Exoplanet Science Institute / IPAC"},{"@type":"Organization","name":"ESA Gaia DPAC"}],"isBasedOn":["https://doi.org/10.26133/NEA12","https://doi.org/10.1051/0004-6361/202039498","https://doi.org/10.1051/0004-6361/202244250"],"dateModified":"2026-08-30","spatialCoverage":"Solar neighbourhood within 25 parsecs for plotted stars"},
+      {"@type":"WebPage","@id":"https://adrianotothestar.com/tracker.html#webpage","url":"https://adrianotothestar.com/tracker.html","name":"Nearby Star & NASA Discovery Tracker | Adriano To The Star","inLanguage":"en","mainEntity":{"@id":"https://adrianotothestar.com/tracker.html#app"},"breadcrumb":{"@id":"https://adrianotothestar.com/tracker.html#breadcrumb"}},
+      {"@type":"BreadcrumbList","@id":"https://adrianotothestar.com/tracker.html#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://adrianotothestar.com/"},{"@type":"ListItem","position":2,"name":"Nearby Star Tracker","item":"https://adrianotothestar.com/tracker.html"}]}
     ]
-    </script>
-
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="pages-styles.css">
-    <link rel="stylesheet" href="loader-minimal.css">
-    <link rel="stylesheet" href="theme-styles.css">
-    <link rel="stylesheet" href="accessibility-styles.css">
-    <link rel="stylesheet" href="i18n-styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="icon" type="image/x-icon" href="images/ita_logo.png">
-    <link rel="manifest" href="manifest.json">
-
-    <script src="loader.js"></script>
-    <script src="i18n.js" defer></script>
-    <script src="animations.js" defer></script>
-    <script src="navigation.js" defer></script>
-    <script src="universal-graphics.js" defer></script>
-    <script src="cosmic-music-player.js" defer></script>
-    <script src="theme-toggle.js" defer></script>
-    <script src="accessibility.js" defer></script>
-    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
-    <script src="universal-simulation-hub.js"></script>
-    <script src="void-warfare-engine.js"></script>
-    <script src="planetary-environment-engine.js"></script>
-    <script src="galactic-governance-engine.js"></script>
-    <script src="mining-resource-engine.js"></script>
-    <script src="xeno-intelligence-engine.js"></script>
-    <script src="quantum-propulsion-engine.js"></script>
-    <script src="intelligence-shadow-engine.js"></script>
-    <script src="fleet-command-mega-engine.js"></script>
-    <script src="deep-space-industry-engine.js"></script>
-    <script src="procedural-content-engine.js"></script>
-    <script src="galactic-commerce-engine.js"></script>
-    <script src="metaphysics-apotheosis-engine.js"></script>
+  }
+  </script>
+  <link rel="stylesheet" href="site-experience.css">
+  <link rel="stylesheet" href="i18n-styles.css">
+  <link rel="stylesheet" href="ita-music-player.css">
+  <link rel="stylesheet" href="theme-styles.css">
+  <link rel="stylesheet" href="tracker.css">
+  <link rel="preload" href="data/tracker/stellar-neighborhood.json" as="fetch" crossorigin="anonymous">
+  <script src="i18n.js" defer></script>
+  <script src="navigation.js" defer></script>
+  <script src="cosmic-music-player.js" defer></script>
+  <script src="theme-toggle.js" defer></script>
+  <script src="three.min.js" defer></script>
+  <script src="vendor/tracker/react-18.3.1.production.min.js" defer></script>
+  <script src="vendor/tracker/react-dom-18.3.1.production.min.js" defer></script>
+  <script src="tracker-visualization.js" defer></script>
+  <script src="tracker-app.js" defer></script>
 </head>
-<body>
-    <main>
-        <section class="page-hero" data-entrance="fadeIn">
-            <h1 class="page-title" data-scroll-animate>Secure Tracker</h1>
-            <p class="page-subtitle">Locate devices with an authenticated session</p>
-        </section>
+<body class="ita-site-refresh ita-site-standard tracker-page">
+  <a class="tracker-skip-link" href="#main-content">Skip to stellar tracker</a>
+  <header class="tracker-header">
+    <div class="tracker-nav-shell">
+      <a class="tracker-brand" href="/" title="Home"><span class="tracker-brand-mark" aria-hidden="true">A</span><span><strong>ADRIANO</strong><small>TO THE STAR · I.T.A</small></span></a>
+      <nav aria-label="Primary navigation"><a href="database.html">World database</a><a href="education.html">Education</a><a href="star-maps.html">Star maps</a><button type="button" class="ita-atlas-trigger" data-atlas-trigger aria-label="Open systems atlas" aria-haspopup="dialog" aria-expanded="false">Systems</button></nav>
+      <div class="ita-language-slot" aria-label="Language controls"></div>
+    </div>
+  </header>
+  <nav class="ita-breadcrumb" aria-label="Breadcrumb"><ol><li><a href="/">Home</a><span aria-hidden="true">/</span></li><li><span aria-current="page">Nearby Star Tracker</span></li></ol></nav>
 
-        <section class="content-section" data-entrance="slideUp">
-            <div class="content-container">
-                <p class="highlight" style="font-size:1rem;">
-                    This page provides a secure interface for recording and reviewing the last known status of your phone.
-                    Tracker below stores updates in your browser only.
-                </p>
+  <main id="main-content" tabindex="-1">
+    <section class="tracker-hero" aria-labelledby="tracker-title">
+      <div>
+        <p class="tracker-overline"><span class="tracker-live-dot" aria-hidden="true"></span> LOCAL NEIGHBOURHOOD / NASA MISSION INTELLIGENCE</p>
+        <h1 id="tracker-title">Measure the stars nearest home.</h1>
+        <p class="tracker-hero-lead">Navigate a heliocentric 3D teaching map, inspect nearby confirmed planet hosts, and follow recently updated Kepler, K2, and TESS discoveries without exposing each visit to a cross-origin science API.</p>
+        <div class="tracker-hero-links"><a href="#tracker-react-root">Open the map</a><a href="#tracker-methods">Read methods &amp; provenance</a></div>
+      </div>
+      <dl>
+        <div><dt>Spatial scope</dt><dd>0–25 parsecs</dd></div>
+        <div><dt>Planet authority</dt><dd>NASA Exoplanet Archive</dd></div>
+        <div><dt>Neighbourhood context</dt><dd>Gaia GCNS · CNS5</dd></div>
+        <div><dt>Runtime data path</dt><dd>Same-origin JSON snapshot</dd></div>
+      </dl>
+    </section>
 
-                <div class="tracker-grid">
-                    <div class="tracker-panel" id="login-panel">
-                        <h2 class="tracker-title">Authenticate</h2>
-                        <form id="tracker-login-form" class="tracker-form">
-                            <label for="tracker-username">Username</label>
-                            <input type="text" id="tracker-username" autocomplete="username" placeholder="owner" required>
-                            <label for="tracker-password">Password</label>
-                            <input type="password" id="tracker-password" autocomplete="current-password" placeholder="••••••••" required>
-                            <button type="submit" class="cta-button">Unlock Tracker</button>
-                        </form>
-                        <p id="tracker-login-feedback" class="tracker-feedback"></p>
-                    </div>
+    <p id="tracker-boot-status" class="tracker-boot-status" role="status" aria-live="polite">Loading the enhanced React and Three.js tracker. The accessible catalogue remains available during startup.</p>
+    <div id="tracker-react-root" aria-busy="true"></div>
 
-                    <div class="tracker-panel tracker-panel--secure" id="tracker-console" aria-hidden="true" style="display: none;">
-                        <div class="tracker-console__header">
-                            <div>
-                                <h2 class="tracker-title">Device status</h2>
-                                <p class="tracker-description">Last sync <span id="tracker-last-sync"></span></p>
-                            </div>
-                            <button type="button" class="outline-btn" id="tracker-lock-button">Lock Console</button>
-                        </div>
-                        <div class="tracker-status-cards">
-                            <div class="status-card"><p class="status-label">Connection</p><p class="status-value" id="tracker-connection"></p></div>
-                            <div class="status-card"><p class="status-label">Battery</p><p class="status-value" id="tracker-battery"></p></div>
-                            <div class="status-card"><p class="status-label">Mode</p><p class="status-value" id="tracker-mode"></p></div>
-                        </div>
-                        <div class="tracker-map" id="tracker-map">
-                            <div class="tracker-map__badge">Last known location</div>
-                            <div class="tracker-map__coords" id="tracker-coords"></div>
-                            <p class="tracker-map__note" id="tracker-note"></p>
-                        </div>
-                        <div class="tracker-actions">
-                            <button type="button" class="cta-button" id="tracker-ping">Ping device</button>
-                            <button type="button" class="outline-btn" id="tracker-export">Export local log</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
+    <section id="tracker-static-fallback" class="tracker-static-fallback" aria-labelledby="fallback-title">
+      <p class="tracker-overline">ACCESSIBLE HTML FALLBACK</p>
+      <h2 id="fallback-title">Nearest systems and confirmed planet hosts</h2>
+      <p>This table remains usable without React, WebGL, or a cross-origin data connection. Distances are rounded teaching values. Use the linked source catalogues for precision research and uncertainty analysis.</p>
+      <div class="tracker-table-region" role="region" aria-label="Static nearby-star table" tabindex="0">
+        <table>
+          <thead><tr><th scope="col">System</th><th scope="col">Distance</th><th scope="col">Class</th><th scope="col">Research context</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Proxima Centauri</th><td>4.24 ly</td><td>M5.5 V</td><td>Nearest stellar neighbour; confirmed planet host in the NASA Exoplanet Archive.</td></tr>
+            <tr><th scope="row">Alpha Centauri A/B</th><td>4.39 ly</td><td>G2 V / K1 V</td><td>Nearest Sun-like stellar pair; part of the triple system with Proxima.</td></tr>
+            <tr><th scope="row">Barnard’s Star</th><td>5.96 ly</td><td>M3.5–4 V</td><td>High-proper-motion red dwarf with confirmed planet rows.</td></tr>
+            <tr><th scope="row">Wolf 359</th><td>7.86 ly</td><td>M6 V</td><td>Low-mass flare star in the local 10 pc sample.</td></tr>
+            <tr><th scope="row">Lalande 21185</th><td>8.31 ly</td><td>M2 V</td><td>High-proper-motion red dwarf in Ursa Major.</td></tr>
+            <tr><th scope="row">Sirius A/B</th><td>8.60 ly</td><td>A1 V / DA2</td><td>Main-sequence star and white-dwarf binary.</td></tr>
+            <tr><th scope="row">Epsilon Eridani</th><td>10.45 ly</td><td>K-type</td><td>Nearby confirmed giant-planet host.</td></tr>
+            <tr><th scope="row">Ross 128</th><td>11.01 ly</td><td>M4</td><td>Nearby confirmed rocky-planet host.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="tracker-fallback-sources">
+        <a href="https://exoplanetarchive.ipac.caltech.edu/" rel="external noopener">NASA Exoplanet Archive ↗</a>
+        <a href="https://www.cosmos.esa.int/web/gaia/edr3-gcns" rel="external noopener">Gaia Catalogue of Nearby Stars ↗</a>
+        <a href="https://doi.org/10.1051/0004-6361/202244250" rel="external noopener">CNS5 paper ↗</a>
+      </div>
+    </section>
 
-    <footer class="site-footer">
-        <p>&copy; 2025 ADRIANO TO THE STAR - I.T.A (Interstellar Travel Agency)</p>
-        <p><a href="index.html">Back to Home</a></p>
-    </footer>
+    <section id="tracker-methods" class="tracker-methods-intro" aria-labelledby="methods-title">
+      <p class="tracker-overline">SCIENTIFIC BOUNDARY</p>
+      <h2 id="methods-title">A teaching instrument, not a navigation solution.</h2>
+      <p>The visualisation turns catalogue coordinates into a legible local frame and exposes selection effects, provenance, and missing values. It does not propagate full astrometric covariance, binary orbits, radial motion, light-time, relativistic frames, or spacecraft trajectory constraints. For assessed research, query the cited archives and carry their uncertainties and selection functions through the analysis.</p>
+    </section>
+  </main>
 
-    <script>
-        (function () {
-            const PASSWORD_HASH = 'b39dfb6202ac9c25fadf31e5e7e7780b9b232e59ec524a6196f7bab64ff29afa'; // tracker2024
-            const loginPanel = document.getElementById('login-panel');
-            const consolePanel = document.getElementById('tracker-console');
-            const loginForm = document.getElementById('tracker-login-form');
-            const lockButton = document.getElementById('tracker-lock-button');
-
-            async function hashPassword(value) {
-                const encoder = new TextEncoder();
-                const data = encoder.encode(value);
-                const digest = await crypto.subtle.digest('SHA-256', data);
-                return Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
-            }
-
-            loginForm?.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const user = document.getElementById('tracker-username').value.trim();
-                const pass = document.getElementById('tracker-password').value;
-                if (user === 'owner' && (await hashPassword(pass)) === PASSWORD_HASH) {
-                    loginPanel.style.display = 'none';
-                    consolePanel.style.display = 'block';
-                } else {
-                    alert('Invalid credentials');
-                }
-            });
-
-            lockButton?.addEventListener('click', () => {
-                loginPanel.style.display = 'block';
-                consolePanel.style.display = 'none';
-            });
-        })();
-    </script>
-    <script src="pwa-loader.js"></script>
+  <footer class="tracker-footer">
+    <div><a class="tracker-brand" href="/" title="Home"><span class="tracker-brand-mark" aria-hidden="true">A</span><span><strong>ADRIANO</strong><small>TO THE STAR · I.T.A</small></span></a><p>Authoritative sources. Visible uncertainty. Browser-native exploration.</p></div>
+    <nav aria-label="Footer navigation"><a href="/">Home</a><a href="education.html">Education</a><a href="star-maps.html">Star maps</a><a href="privacy.html">Privacy</a></nav>
+    <p>© <span data-current-year>2026</span> ADRIANO TO THE STAR</p>
+  </footer>
 </body>
 </html>

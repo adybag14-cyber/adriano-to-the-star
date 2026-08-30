@@ -13,6 +13,21 @@
     <link rel="stylesheet" href="loader-minimal.css">
     <link rel="stylesheet" href="theme-styles.css">
     <link rel="icon" type="image/x-icon" href="images/ita_logo.png">
+    <style>
+        .monitor-shell { max-width: 1120px; margin: 0 auto; padding: 7rem 1rem 4rem; }
+        .monitor-header { display:flex; justify-content:space-between; align-items:end; gap:1rem; margin-bottom:1.5rem; }
+        .monitor-kicker { color:#67e8f9; letter-spacing:.17em; font-size:.72rem; text-transform:uppercase; }
+        .monitor-title { margin:.35rem 0; color:#f8fafc; font-size:clamp(2rem,6vw,4.5rem); letter-spacing:-.04em; }
+        .monitor-copy { max-width:46rem; color:#cbd5e1; line-height:1.65; }
+        .monitor-refresh { min-height:44px; padding:.7rem 1rem; border:1px solid rgba(103,232,249,.45); border-radius:.75rem; background:linear-gradient(135deg,rgba(8,145,178,.58),rgba(99,102,241,.5)); color:#fff; cursor:pointer; }
+        .monitor-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1rem; }
+        .monitor-card { min-height:150px; padding:1.2rem; border:1px solid rgba(103,232,249,.2); border-radius:1rem; background:linear-gradient(145deg,rgba(3,10,24,.95),rgba(18,14,51,.84)); box-shadow:0 24px 70px rgba(0,0,0,.38); }
+        .monitor-card span { display:block; color:#94a3b8; font-size:.74rem; letter-spacing:.1em; text-transform:uppercase; }
+        .monitor-card strong { display:block; margin:.65rem 0 .35rem; color:#f8fafc; font-size:1.35rem; overflow-wrap:anywhere; }
+        .monitor-card small { color:#a5b4fc; line-height:1.5; }
+        .monitor-boundary { margin-top:1rem; padding:1rem; border-left:3px solid #67e8f9; background:rgba(14,165,233,.08); color:#cbd5e1; line-height:1.6; }
+        @media(max-width:640px){.monitor-header{align-items:stretch;flex-direction:column}.monitor-refresh{width:100%}}
+    </style>
 
     <script src="loader.js"></script>
     <script src="navigation.js" defer></script>
@@ -34,24 +49,55 @@
     <script src="metaphysics-apotheosis-engine.js"></script>
 </head>
 <body>
-    <main class="content-container" style="padding-top: 100px;">
-        <h1 style="color: #67e8f9; border-bottom: 2px solid #67e8f9; padding-bottom: 1rem; margin-bottom: 2rem;">System Monitor</h1>
-        
-        <div class="monitor-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
-            <div class="stat-card" style="background: rgba(0, 0, 0, 0.4); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(103, 232, 249, 0.3);">
-                <h3 style="color: #67e8f9; margin-top: 0;">Network Status</h3>
-                <div id="network-status" style="color: #4ade80;">Online</div>
-            </div>
-            <div class="stat-card" style="background: rgba(0, 0, 0, 0.4); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(103, 232, 249, 0.3);">
-                <h3 style="color: #67e8f9; margin-top: 0;">Storage Sync</h3>
-                <div id="sync-status" style="color: #4ade80;">Synchronized</div>
-            </div>
+    <main class="monitor-shell">
+        <header class="monitor-header">
+            <div><span class="monitor-kicker">Local diagnostic console</span><h1 class="monitor-title">SYSTEM MONITOR</h1><p class="monitor-copy">A privacy-preserving snapshot of this browser and the page currently loaded. It does not claim that account, mail, API, tunnel, or inference services are healthy.</p></div>
+            <button type="button" class="monitor-refresh" id="monitor-refresh">Refresh local snapshot</button>
+        </header>
+        <div class="monitor-grid" id="monitor-grid" aria-live="polite">
+            <article class="monitor-card"><span>Browser network hint</span><strong id="network-status">Checking…</strong><small id="network-note">Navigator status only; no endpoint is contacted.</small></article>
+            <article class="monitor-card"><span>Delivery context</span><strong id="context-status">Checking…</strong><small id="context-note"></small></article>
+            <article class="monitor-card"><span>Offline runtime</span><strong id="worker-status">Checking…</strong><small id="worker-note"></small></article>
+            <article class="monitor-card"><span>Browser storage</span><strong id="storage-status">Checking…</strong><small id="storage-note"></small></article>
+            <article class="monitor-card"><span>Graphics capability</span><strong id="graphics-status">Checking…</strong><small id="graphics-note"></small></article>
+            <article class="monitor-card"><span>Snapshot time</span><strong id="snapshot-status">Pending</strong><small>Local time on this device.</small></article>
         </div>
+        <p class="monitor-boundary"><strong>Boundary:</strong> this page intentionally performs no health-check fetch. Service availability requires a separately authorised operational audit.</p>
     </main>
 
     <footer class="site-footer">
         <p>&copy; 2025 ADRIANO TO THE STAR - MONITORING DIVISION</p>
         <p><a href="index.html">Back to Home</a></p>
     </footer>
+    <script>
+        (() => {
+            const formatBytes = bytes => {
+                if (!Number.isFinite(bytes)) return 'Unavailable';
+                const units = ['B','KB','MB','GB']; let value = bytes; let unit = 0;
+                while (value >= 1024 && unit < units.length - 1) { value /= 1024; unit++; }
+                return `${value.toFixed(unit > 1 ? 1 : 0)} ${units[unit]}`;
+            };
+            async function refreshMonitor() {
+                const online = navigator.onLine;
+                document.getElementById('network-status').textContent = online ? 'Browser online' : 'Browser offline';
+                document.getElementById('network-note').textContent = 'Navigator status only; no endpoint is contacted.';
+                document.getElementById('context-status').textContent = window.isSecureContext ? 'Secure context' : 'Non-secure context';
+                document.getElementById('context-note').textContent = `${location.protocol}//${location.host}`;
+                const workerSupported = 'serviceWorker' in navigator;
+                document.getElementById('worker-status').textContent = workerSupported ? (navigator.serviceWorker.controller ? 'Active controller' : 'Supported') : 'Unsupported';
+                document.getElementById('worker-note').textContent = workerSupported ? 'Page delivery cache capability detected.' : 'No Service Worker API in this browser.';
+                const estimate = navigator.storage?.estimate ? await navigator.storage.estimate().catch(() => null) : null;
+                document.getElementById('storage-status').textContent = estimate ? `${formatBytes(estimate.usage)} used` : 'Estimate unavailable';
+                document.getElementById('storage-note').textContent = estimate ? `${formatBytes(estimate.quota)} browser quota` : 'The browser did not expose an estimate.';
+                document.getElementById('graphics-status').textContent = navigator.gpu ? 'WebGPU available' : 'WebGL path';
+                document.getElementById('graphics-note').textContent = navigator.gpu ? 'A compatible adapter may be requested by an explicit lab action.' : 'WebGPU is not exposed; compatible pages should fall back.';
+                document.getElementById('snapshot-status').textContent = new Date().toLocaleTimeString();
+            }
+            document.getElementById('monitor-refresh')?.addEventListener('click', refreshMonitor);
+            window.addEventListener('online', refreshMonitor);
+            window.addEventListener('offline', refreshMonitor);
+            refreshMonitor();
+        })();
+    </script>
 </body>
 </html>

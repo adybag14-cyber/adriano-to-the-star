@@ -106,17 +106,25 @@
         <section class="content-section" data-entrance="slideUp">
             <div class="content-container">
                 <div class="section-header">
-                    <h1 class="section-title">FLASH GAMES ARCHIVE</h1>
-                    <p class="section-subtitle">A collection of classic Flash games, preserved for eternity.</p>
+                    <h1 class="section-title">LEGACY GAMES VAULT</h1>
+                    <p class="section-subtitle">A searchable, paginated preservation catalogue powered by Ruffle-compatible browser emulation.</p>
                 </div>
             </div>
         </section>
 
         <section class="content-section" data-entrance="slideUp">
             <div class="content-container">
-                <div class="search-filter-section">
-                    <input type="text" id="game-search" placeholder="Search games..." class="game-search-input">
-                    <p id="game-count" class="game-count">Loading games...</p>
+                <div class="search-filter-section" role="search">
+                    <label class="sr-only" for="game-search">Search the games archive</label>
+                    <input type="search" id="game-search" placeholder="Search the archive…" class="game-search-input" autocomplete="off">
+                    <label class="sr-only" for="game-sort">Sort archived games</label>
+                    <select id="game-sort" class="game-sort" aria-label="Sort archived games">
+                        <option value="name-asc">Name A–Z</option>
+                        <option value="name-desc">Name Z–A</option>
+                        <option value="size-asc">Smallest first</option>
+                        <option value="size-desc">Largest first</option>
+                    </select>
+                    <p id="game-count" class="game-count" role="status">Loading the same-origin catalogue…</p>
                 </div>
             </div>
         </section>
@@ -124,23 +132,23 @@
         <section class="content-section" data-entrance="slideUp">
             <div class="content-container">
                 <div id="games-grid" class="games-grid"></div>
-                <div id="loading-indicator" class="loading-indicator">Loading games...</div>
+                <div id="loading-indicator" class="loading-indicator" role="status">Loading games…</div>
                 <a href="https://mega.nz/folder/loEEwSyK#jSp-o-9ZdcUbV9aXlKd3AA" target="_blank" rel="noopener noreferrer" class="cta-button" style="margin-top: 2rem;">
                     Download from MEGA
                 </a>
             </div>
         </section>
 
-        <div id="game-modal" class="game-modal" style="display: none;">
+        <div id="game-modal" class="game-modal" role="dialog" aria-modal="true" aria-labelledby="game-modal-title" aria-hidden="true" style="display: none;">
             <div class="game-modal-content">
                 <div class="game-modal-header">
                     <h2 id="game-modal-title">Game Title</h2>
-                    <button id="close-game-modal" class="close-modal-btn">×</button>
+                    <button type="button" id="close-game-modal" class="close-modal-btn" aria-label="Close game">×</button>
                 </div>
                 <div class="game-modal-body"><div id="game-container" class="game-container"></div></div>
                 <div class="game-modal-footer">
-                    <button id="fullscreen-btn" class="cta-button">Fullscreen</button>
-                    <button id="close-game-btn" class="cta-button">Close Game</button>
+                    <button type="button" id="fullscreen-btn" class="cta-button">Fullscreen</button>
+                    <button type="button" id="close-game-btn" class="cta-button">Close Game</button>
                 </div>
             </div>
         </div>

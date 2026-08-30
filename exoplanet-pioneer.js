@@ -235,8 +235,9 @@ class ExoplanetPioneer {
         this.localSystemExplorer = null;
         this.rayTracingRenderer = null;
 
-        // Cloud Service
-        this.cloud = new SupabaseService();
+        // Browser-local save/profile service. Method names retain compatibility
+        // with the existing game UI and regression harness.
+        this.cloud = new window.PioneerLocalService();
 
         // Alien Ecosystem
         this.ecosystem = new AlienEcosystem();
@@ -563,6 +564,9 @@ class ExoplanetPioneer {
         this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
         this.renderer.toneMappingExposure = 0.9;
+        this.renderer.domElement.tabIndex = 0;
+        this.renderer.domElement.setAttribute('role', 'application');
+        this.renderer.domElement.setAttribute('aria-label', 'Interactive Kepler-186f colony surface. Drag to orbit the camera and use the wheel to zoom.');
         this.container.appendChild(this.renderer.domElement);
 
         // PerformanceManager is created earlier in the constructor, before WebGL exists.
@@ -1438,6 +1442,7 @@ class ExoplanetPioneer {
                         <button class="ep-sys-btn ep-command-btn" id="ep-btn-tech" title="Research" aria-label="Research"><span>🔬</span><span class="ep-command-text">Research</span></button>
                         <button class="ep-sys-btn ep-command-btn" id="ep-btn-industry" title="Industrial Operations" aria-label="Industrial Operations"><span>🏭</span><span class="ep-command-text">Industry</span></button>
                         <button class="ep-sys-btn ep-command-btn" id="ep-btn-missions" title="Agent Missions" aria-label="Agent Missions"><span>📜</span><span class="ep-command-text">Missions</span></button>
+                        <button class="ep-sys-btn ep-command-btn" id="ep-btn-tutorial" title="Mission Control tutorial" aria-label="Open Mission Control tutorial"><span>?</span><span class="ep-command-text">Tutorial</span></button>
                         <button class="ep-sys-btn ep-command-btn ep-command-more" id="ep-btn-ops" title="More operations" aria-label="More operations" aria-expanded="false" aria-controls="ep-ops-drawer"><span>☷</span><span class="ep-command-text">More</span></button>
                     </div>
 
@@ -1521,12 +1526,13 @@ class ExoplanetPioneer {
 
             <button id="ep-btn-cinematic-toggle" class="ep-cinematic-toggle" title="Cinematic Mode (C)" aria-label="Cinematic Mode">🎥</button>
 
-            <aside id="ep-tutorial" class="ep-tutorial" hidden aria-live="polite" aria-label="Pioneer tutorial">
-                <div class="ep-tutorial-kicker">MISSION CONTROL · <span id="ep-tutorial-progress">1/4</span></div>
-                <h3 id="ep-tutorial-title">Welcome, Pioneer</h3>
+            <aside id="ep-tutorial" class="ep-tutorial" hidden role="region" aria-live="polite" aria-labelledby="ep-tutorial-title" aria-describedby="ep-tutorial-copy">
+                <div class="ep-tutorial-kicker">MISSION CONTROL · <span id="ep-tutorial-progress">1/7</span></div>
+                <h3 id="ep-tutorial-title" tabindex="-1">Welcome, Pioneer</h3>
                 <p id="ep-tutorial-copy">Establish a self-sustaining foothold and learn the command surface.</p>
                 <div class="ep-tutorial-actions">
                     <button id="ep-tutorial-skip" type="button">Skip</button>
+                    <button id="ep-tutorial-back" type="button">Previous</button>
                     <button id="ep-tutorial-next" type="button">Next</button>
                 </div>
             </aside>
@@ -1778,6 +1784,10 @@ class ExoplanetPioneer {
         this.container.querySelector('#ep-btn-cloud').onclick = () => { this.audio.playClick(); this.openCloudMenu(); };
         this.container.querySelector('#ep-btn-claim').onclick = () => { this.audio.playClick(); this.claimCurrentSystem(); };
         this.container.querySelector('#ep-btn-cinematic').onclick = () => { this.toggleCinematicMode(); };
+        this.container.querySelector('#ep-btn-tutorial').onclick = () => {
+            this.audio.playClick();
+            this.startTutorial(true);
+        };
 
         // Toggle Listener
         this.container.querySelector('#ep-btn-cinematic-toggle').onclick = () => { this.toggleCinematicMode(); };
@@ -1798,6 +1808,10 @@ class ExoplanetPioneer {
             this.audio.playClick();
             this.advanceTutorial();
         };
+        this.container.querySelector('#ep-tutorial-back').onclick = () => {
+            this.audio.playClick();
+            this.retreatTutorial();
+        };
         this.container.querySelector('#ep-tutorial-skip').onclick = () => this.completeTutorial(true);
         this.container.querySelector('#ep-ops-drawer').addEventListener('click', (event) => {
             if (event.target.closest('button.ep-sys-btn')) {
@@ -1816,10 +1830,13 @@ class ExoplanetPioneer {
 
     getTutorialSteps() {
         return [
-            { title: 'Survey the world', copy: 'Drag the planet to orbit your view. Use the mouse wheel to zoom. The camera stays centred on the colony world.', focus: 'canvas' },
-            { title: 'Follow the mission path', copy: 'NEXT OBJECTIVE is the fastest route to a stable colony. It always points at the next useful action instead of leaving you in a menu maze.', focus: '#ep-colony-path' },
-            { title: 'Deploy to the surface', copy: 'Select a ready structure, move across the surface and click a green site. Red sites are blocked or incompatible.', focus: '.ep-build-dock' },
-            { title: 'Control simulation time', copy: 'Construction and production run on simulation time. Speed up routine waits, pause when you need to inspect the colony, and use ESC to cancel context first.', focus: '#ep-time-controls' }
+            { title: 'Survey the world', copy: 'Drag the planet to orbit your view and use the wheel or pinch gesture to zoom. The camera remains centred on the active colony world.', focus: 'canvas' },
+            { title: 'Follow Mission Control', copy: 'NEXT OBJECTIVE is the fastest route to a stable colony. It points to a useful action without forcing you through every advanced system.', focus: '#ep-colony-path' },
+            { title: 'Read life-support telemetry', copy: 'Resource chips report both stored quantity and net flow. Food and oxygen are safety-critical; Mission Control automatically slows or pauses time before a high-speed run becomes catastrophic.', focus: '#ep-res-panel' },
+            { title: 'Deploy to the surface', copy: 'Select a ready structure, move across the surface and activate a green site. Red sites are blocked, occupied or incompatible with that structure.', focus: '.ep-build-dock' },
+            { title: 'Control simulation time', copy: 'Use Pause, 1x and 2x for inspection. A first 5x or 10x request is intercepted when projected life-support runway is short; repeat within five seconds only if you understand the risk.', focus: '#ep-time-controls' },
+            { title: 'Fly an intercept', copy: 'Open Combat, steer with W A S D, accelerate with Arrow Up and boost with Shift. Your interceptor is faster than hostile pursuit craft, so you can close range or disengage.', focus: '.ep-command-combat' },
+            { title: 'Acquire a missile solution', copy: 'Press T while a target is inside the reticle. Keep it there until the acquisition bar confirms lock, select missiles with 2, then fire with Space. Missiles lead, home and report impact.', focus: '.ep-command-combat' }
         ];
     }
 
@@ -1831,12 +1848,13 @@ class ExoplanetPioneer {
         if (forced || !completed) this.startTutorial();
     }
 
-    startTutorial() {
+    startTutorial(force = false) {
         this.tutorialStep = 0;
         this.tutorialActive = true;
         const el = this.container?.querySelector('#ep-tutorial');
         if (el) el.hidden = false;
         this.renderTutorialStep();
+        if (force) requestAnimationFrame(() => this.container?.querySelector('#ep-tutorial-title')?.focus());
     }
 
     renderTutorialStep() {
@@ -1850,6 +1868,8 @@ class ExoplanetPioneer {
         this.container.querySelector('#ep-tutorial-copy').textContent = step.copy;
         const next = this.container.querySelector('#ep-tutorial-next');
         next.textContent = this.tutorialStep === steps.length - 1 ? 'Begin mission' : 'Next';
+        const back = this.container.querySelector('#ep-tutorial-back');
+        back.disabled = this.tutorialStep === 0;
         this.container.querySelectorAll('.ep-tutorial-focus').forEach((el) => el.classList.remove('ep-tutorial-focus'));
         if (step.focus && step.focus !== 'canvas') this.container.querySelector(step.focus)?.classList.add('ep-tutorial-focus');
     }
@@ -1861,6 +1881,12 @@ class ExoplanetPioneer {
         else this.renderTutorialStep();
     }
 
+    retreatTutorial() {
+        if (!this.tutorialActive) return;
+        this.tutorialStep = Math.max(0, this.tutorialStep - 1);
+        this.renderTutorialStep();
+    }
+
     completeTutorial(skipped = false) {
         this.tutorialActive = false;
         this.container?.querySelectorAll('.ep-tutorial-focus').forEach((el) => el.classList.remove('ep-tutorial-focus'));
@@ -1868,6 +1894,7 @@ class ExoplanetPioneer {
         if (panel) panel.hidden = true;
         try { localStorage.setItem(this.tutorialStorageKey, '1'); } catch { }
         if (!skipped) this.notify('Mission control online. Establish power to begin.', 'success');
+        this.container?.querySelector('#ep-btn-tutorial')?.focus();
     }
 
     toggleOperationsMenu(force = null) {
@@ -2104,6 +2131,7 @@ class ExoplanetPioneer {
                 this.resizeManagedWindowTo(element, element.getBoundingClientRect().width + dx, element.getBoundingClientRect().height + dy);
             });
         }
+        this.updateManagedWindowResizeAria(element, grip);
     }
 
     makeDraggable(element, handle) {
@@ -2188,7 +2216,21 @@ class ExoplanetPioneer {
         element.style.width = `${Math.round(width)}px`;
         element.style.height = `${Math.round(height)}px`;
         this.clampManagedWindow(element);
+        this.updateManagedWindowResizeAria(element);
         element.dispatchEvent(new CustomEvent('ep-window-resized', { bubbles: false, detail: { width, height } }));
+    }
+
+    updateManagedWindowResizeAria(element, providedGrip = null) {
+        const grip = providedGrip || element?.querySelector?.(':scope > .ep-window-resize-handle');
+        if (!element || !grip) return;
+        const limits = this.getManagedWindowLimits(element);
+        const rect = element.getBoundingClientRect();
+        const width = Math.round(rect.width || limits.minWidth);
+        const height = Math.round(rect.height || limits.minHeight);
+        grip.setAttribute('aria-valuemin', String(Math.round(limits.minWidth)));
+        grip.setAttribute('aria-valuemax', String(Math.round(limits.maxWidth)));
+        grip.setAttribute('aria-valuenow', String(width));
+        grip.setAttribute('aria-valuetext', `${width} by ${height} pixels`);
     }
 
     beginManagedWindowDrag(event, element, handle) {
@@ -8995,6 +9037,7 @@ class ExoplanetPioneer {
                 const delta = after - before;
                 this.resourceRates[key] = Number.isFinite(delta) ? delta : 0;
             });
+            this.evaluateSimulationSafety();
             this.rebuildColonyInfrastructure();
             this.updateResourceUI();
         }, 1000);
@@ -9114,10 +9157,53 @@ class ExoplanetPioneer {
         this.updateResourceUI();
     }
 
-    setTimeSpeed(index) {
+    getSimulationRunway(speed = this.timeScale || 1) {
+        const population = Math.max(1, Array.isArray(this.colonists) ? this.colonists.length : 1);
+        const safeSpeed = Math.max(0.1, Number(speed) || 1);
+        const foodUse = population * 0.1 * safeSpeed;
+        const oxygenUse = population * 0.05 * safeSpeed;
+        return {
+            food: Number(this.resources?.food || 0) / foodUse,
+            oxygen: Number(this.resources?.oxygen || 0) / oxygenUse,
+            population
+        };
+    }
+
+    evaluateSimulationSafety() {
+        const runway = this.getSimulationRunway();
+        const exhausted = Number(this.resources?.food || 0) <= 0 || Number(this.resources?.oxygen || 0) <= 0;
+        if (exhausted && this.timeScale > 0) {
+            this.setTimeSpeed(0, { bypassSafety: true, silent: true });
+            this.notify('Emergency pause: food or oxygen is exhausted. Stabilize life support before resuming.', 'danger');
+            return;
+        }
+        if (this.timeScale > 2 && Math.min(runway.food, runway.oxygen) < 12) {
+            this.setTimeSpeed(2, { bypassSafety: true, silent: true });
+            this.notify('Mission Control reduced the simulation to 2x: life-support runway is below 12 seconds.', 'warning');
+        }
+    }
+
+    setTimeSpeed(index, options = {}) {
         if (index < 0 || index >= this.timeSpeeds.length) return;
+        const requestedSpeed = this.timeSpeeds[index];
+        const bypassSafety = options?.bypassSafety === true;
+        if (!bypassSafety && requestedSpeed >= 5) {
+            const runway = this.getSimulationRunway(requestedSpeed);
+            const minimumRunway = Math.min(runway.food, runway.oxygen);
+            const now = Date.now();
+            const confirmed = this._timeSafetyPending?.index === index && this._timeSafetyPending.expires > now;
+            if (minimumRunway < 45 && !confirmed) {
+                const pendingSafetyOverride = { index, expires: now + 5000 };
+                const safeIndex = this.timeSpeeds.indexOf(2);
+                this.setTimeSpeed(safeIndex >= 0 ? safeIndex : 1, { bypassSafety: true, silent: true });
+                this._timeSafetyPending = pendingSafetyOverride;
+                this.notify(`High-speed safeguard: projected life-support runway is ${Math.max(0, Math.floor(minimumRunway))} seconds. Press ${requestedSpeed}x again within 5 seconds to override.`, 'warning');
+                return;
+            }
+        }
+        this._timeSafetyPending = null;
         this.timeSpeedIndex = index;
-        this.timeScale = this.timeSpeeds[index];
+        this.timeScale = requestedSpeed;
         this.isPaused = (this.timeScale === 0);
 
         const label = document.getElementById('ep-time-label');
@@ -9130,12 +9216,13 @@ class ExoplanetPioneer {
         if (container) {
             const btns = container.querySelectorAll('.ep-time-btn');
             btns.forEach((btn, i) => {
+                btn.setAttribute('aria-pressed', String(i === index));
                 btn.style.background = (i === index) ? 'rgba(56, 189, 248, 0.3)' : 'transparent';
                 btn.style.borderColor = (i === index) ? '#38bdf8' : 'rgba(148, 163, 184, 0.3)';
             });
         }
 
-        if (this.isPaused) this.notify('Simulation paused.', 'info');
+        if (this.isPaused && options?.silent !== true) this.notify('Simulation paused.', 'info');
     }
 
     animate() {
@@ -10660,19 +10747,22 @@ class ExoplanetPioneer {
         return fleet;
     }
 
-    // --- CLOUD ---
+    // --- BROWSER-LOCAL PROFILE AND SAVE VAULT ---
     async openCloudMenu() { document.getElementById('ep-cloud-modal').style.display = 'flex'; await this.cloud.checkSession(); this.updateCloudUI(); }
 
     updateCloudUI() {
         const content = document.getElementById('ep-cloud-content');
         if (!content) return;
         if (this.cloud.user) {
+            const localEmail = String(this.cloud.user.email || this.cloud.user.username || 'local profile')
+                .replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
             content.innerHTML = `
-                <div>Logged in: <span style="color:#38bdf8">${this.cloud.user.email}</span></div>
+                <div>Local profile: <span style="color:#38bdf8">${localEmail}</span></div>
+                <p style="color:#94a3b8;font-size:.72rem;line-height:1.5;">Saves and rankings stay in this browser. They are not synchronized or backed up.</p>
                 <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
-                    <button class="ep-sys-btn" onclick="window.game.saveToCloud()">☁️ Save Cloud</button>
-                    <button class="ep-sys-btn" onclick="window.game.loadFromCloud()">☁️ Load Cloud</button>
-                    <button class="ep-sys-btn" onclick="window.game.openLeaderboard()">🏆 Leaderboard</button>
+                    <button class="ep-sys-btn" onclick="window.game.saveToCloud()">💾 Save locally</button>
+                    <button class="ep-sys-btn" onclick="window.game.loadFromCloud()">📂 Load local save</button>
+                    <button class="ep-sys-btn" onclick="window.game.openLeaderboard()">🏆 Local rankings</button>
                     <button class="ep-sys-btn" style="border-color:#ef4444; color:#ef4444;" onclick="window.game.logoutCloud()">Logout</button>
                 </div>
             `;
@@ -10723,7 +10813,7 @@ class ExoplanetPioneer {
                 : []
         };
         await this.cloud.saveGame('ep', 1, data);
-        this.notify('Saved to Cloud', 'success');
+        this.notify('Saved in this browser', 'success');
     }
     async loadFromCloud() {
         const { data } = await this.cloud.loadGame('ep', 1);
@@ -10735,7 +10825,7 @@ class ExoplanetPioneer {
             if (this.npcSystem && data.npcMemories) this.npcSystem.importState(data.npcMemories);
             if (this.techTree && data.techTree) this.techTree.importState(data.techTree);
 
-            this.notify('Loaded from Cloud', 'success');
+            this.notify('Loaded from this browser', 'success');
         }
     }
 
@@ -10842,15 +10932,15 @@ class ExoplanetPioneer {
         this.notify(`Territorial claim established: ${name}.`, 'success');
         this.audio?.playSuccess?.();
 
-        // Cloud ownership is an optional synchronization layer, not a requirement for single-player sovereignty.
+        // Local claim records supplement the single-player save and have no legal or network authority.
         if (this.cloud?.user && typeof this.cloud.claimSystem === 'function') {
             try {
                 const coords = star?.position ? { x: star.position.x || 0, y: star.position.y || 0, z: star.position.z || 0 } : { x: 0, y: 0, z: 0 };
                 const result = await this.cloud.claimSystem(systemId, name, coords);
-                if (result?.error) this.notify('Local claim saved; cloud territory sync is unavailable.', 'info');
+                if (result?.error) this.notify('Claim kept in the current local save.', 'info');
                 else this.cloud.submitScore?.('ep', this.achievements?.score || 100, { action: 'claim', system: name });
             } catch {
-                this.notify('Local claim saved; cloud territory sync is unavailable.', 'info');
+                this.notify('Claim kept in the current local save.', 'info');
             }
         }
         return true;
@@ -10866,7 +10956,7 @@ class ExoplanetPioneer {
             modal.className = 'ep-modal';
             modal.innerHTML = `
                  <div class="ep-modal-content">
-                     <h2>🏆 Galactic Leaderboard</h2>
+                     <h2>🏆 Browser-local rankings</h2>
                      <div id="ep-lb-list" style="min-height:200px; max-height:500px; overflow-y:auto; margin-bottom:15px; text-align:left;">
                         Loading...
                      </div>
@@ -11103,6 +11193,12 @@ class ExoplanetPioneer {
         const ui = document.getElementById('ep-ui');
         if (ui) ui.style.display = 'none';
 
+        const dataOverlay = document.getElementById('ep-data-overlay');
+        if (dataOverlay) {
+            dataOverlay.dataset.combatPreviousDisplay = dataOverlay.style.display || '';
+            dataOverlay.style.display = 'none';
+        }
+
         if (this.cursorMesh) this.cursorMesh.visible = false;
 
         // 2. Start Combat Scene with Squadron
@@ -11181,6 +11277,12 @@ class ExoplanetPioneer {
         // 2. Show Planet UI
         const ui = document.getElementById('ep-ui');
         if (ui) ui.style.display = '';
+
+        const dataOverlay = document.getElementById('ep-data-overlay');
+        if (dataOverlay) {
+            dataOverlay.style.display = dataOverlay.dataset.combatPreviousDisplay || '';
+            delete dataOverlay.dataset.combatPreviousDisplay;
+        }
 
         const retreatBtn = document.getElementById('ep-btn-retreat');
         if (retreatBtn) retreatBtn.style.display = 'none';

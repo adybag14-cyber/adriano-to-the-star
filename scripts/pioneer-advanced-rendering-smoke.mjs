@@ -77,7 +77,7 @@ try {
     assert(startup.tiles === 1000, 'Pioneer initializes all 1,000 logical terrain tiles', startup);
     assert(startup.terrainVersion === 'catalog-informed-v4-geology', 'Pioneer uses the v4 geology terrain pipeline', startup);
     assert(startup.meshSegments === 160, 'High planet mesh quality defaults to 160 segments', startup);
-    assert(startup.generated.length === 4, 'Pages artifact keeps the four-request Pioneer startup shape', startup.generated);
+    assert(startup.generated.length === 5, 'Pages artifact keeps the five-request Pioneer startup shape with the shared site runtime', startup.generated);
     assert(startup.systemClass === 'function' && startup.rayClass === 'function', 'advanced system and tracing renderers are loaded', startup);
     assert(startup.graphicsControls, 'graphics settings expose renderer and quality controls');
 

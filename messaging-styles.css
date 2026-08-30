@@ -9,6 +9,30 @@
     overflow: hidden;
 }
 
+.messaging-boundary {
+    margin: 0 auto 1.25rem;
+    max-width: 1120px;
+    padding: 1rem 1.2rem;
+    border: 1px solid rgba(103, 232, 249, .38);
+    border-radius: 12px;
+    background: rgba(4, 14, 30, .86);
+    color: #dbeafe;
+    line-height: 1.6;
+}
+
+.ita-new-thread-dialog {
+    width: min(92vw, 460px);
+    border: 1px solid rgba(103, 232, 249, .5);
+    border-radius: 18px;
+    padding: 1.5rem;
+    background: #07101f;
+    color: #f8fafc;
+}
+.ita-new-thread-dialog::backdrop { background: rgba(0, 0, 0, .72); backdrop-filter: blur(5px); }
+.ita-new-thread-dialog form { display: grid; gap: 1rem; }
+.ita-new-thread-dialog input { padding: .8rem; border: 1px solid rgba(103, 232, 249, .5); border-radius: 8px; background: #030712; color: #fff; }
+.ita-new-thread-dialog menu { display: flex; justify-content: flex-end; gap: .75rem; margin: 0; padding: 0; }
+
 .users-sidebar {
     width: 300px;
     border-right: 2px solid rgba(103, 232, 249, 0.2);
@@ -309,4 +333,3 @@
         max-width: 85%;
     }
 }
-

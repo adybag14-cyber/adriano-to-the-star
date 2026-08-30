@@ -56,12 +56,6 @@
     <script src="theme-toggle.js" defer></script>
     <script src="accessibility.js" defer></script>
     
-    <script>
-        // Global API Configuration
-        window.EXOPLANET_API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-            ? 'http://localhost:3002' 
-            : 'https://api.adrianotothestar.com';
-    </script>
     <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
     <script src="universal-simulation-hub.js"></script>
     <script src="void-warfare-engine.js"></script>
@@ -105,83 +99,54 @@
     <main>
         <section class="page-hero" data-entrance="fadeIn">
             <h1 class="page-title">DEVELOPER API</h1>
-            <p class="page-subtitle">Build the future of interstellar exploration</p>
+            <p class="page-subtitle">Build with versioned, same-origin astronomy snapshots</p>
         </section>
 
         <section class="content-section" data-entrance="slideUp">
             <div class="content-container">
                 <div class="glass-panel" style="padding: 2rem; margin-bottom: 2rem; border: 2px solid rgba(103, 232, 249, 0.4);">
-                    <h2 style="color: #67e8f9; margin-top: 0;">🚀 Interstellar Endpoint</h2>
-                    <p style="font-size: 1.1rem; opacity: 0.9;">
-                        The production API is accessible via high-performance Cloudflare Edge Workers:
-                    </p>
+                    <h2 style="color: #67e8f9; margin-top: 0;">🚀 Static Data Interface</h2>
+                    <p style="font-size: 1.1rem; opacity: 0.9;">This GitLab Pages release exposes versioned, read-only data assets. It does not claim a dynamic REST service, authentication, write endpoint, service-level agreement, or rate-limit tier.</p>
                     <div style="background: rgba(0, 0, 0, 0.5); padding: 1.25rem; border-radius: 10px; font-family: monospace; border: 1px solid #4ade80;">
-                        <span style="color: #4ade80;">GET</span> <span style="color: white;">https://api.adrianotothestar.com/api/planets</span>
+                        <span style="color: #4ade80;">GET</span> <a href="data/exoplanets.jsonl" style="color:white;">/data/exoplanets.jsonl</a><br>
+                        <span style="color: #4ade80;">GET</span> <a href="data/tracker/stellar-neighborhood.json" style="color:white;">/data/tracker/stellar-neighborhood.json</a><br>
+                        <span style="color: #4ade80;">GET</span> <a href="data/space-feeds.json" style="color:white;">/data/space-feeds.json</a>
                     </div>
                 </div>
 
                 <div class="glass-panel" style="padding: 2rem; margin-bottom: 2rem; border: 2px solid rgba(103, 232, 249, 0.4);">
                     <h2 style="color: #67e8f9; margin-top: 0;">🧪 Live API Console</h2>
-                    <p style="opacity: 0.9;">Test your queries against the Exoplanet Database in real-time.</p>
+                    <p style="opacity: 0.9;">Search the shipped Kepler JSONL snapshot in a disposable browser worker. No network API is contacted.</p>
                     
-                    <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
-                        <input type="text" id="api-console-query" placeholder="Enter Planet Name (e.g. Kepler-186f)" style="flex: 1; padding: 0.75rem; background: rgba(0,0,0,0.7); border: 1px solid #67e8f9; border-radius: 8px; color: white;">
-                        <button id="api-console-send" style="padding: 0.75rem 1.5rem; background: #67e8f9; color: black; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                    <div style="display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap:wrap;">
+                        <label for="api-console-query" style="flex-basis:100%;">Planet, KOI, or KEPID</label>
+                        <input type="search" id="api-console-query" placeholder="e.g. Kepler-186 or 8120608" autocomplete="off" style="flex: 1; min-width:220px; padding: 0.75rem; background: rgba(0,0,0,0.7); border: 1px solid #67e8f9; border-radius: 8px; color: white;">
+                        <button id="api-console-send" type="button" style="padding: 0.75rem 1.5rem; background: #67e8f9; color: black; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
                             RUN QUERY
                         </button>
                     </div>
                     
                     <div id="api-console-output" style="background: #000; color: #4ade80; padding: 1rem; border-radius: 8px; font-family: monospace; min-height: 150px; max-height: 400px; overflow-y: auto; border: 1px solid rgba(74, 222, 128, 0.3);">
-                        // Response will appear here...
+                        Search results will appear here.
                     </div>
                 </div>
 
-                <div id="sdk-docs-container"></div>
-                <div id="api-rate-limit-status"></div>
+                <div class="glass-panel" style="padding:2rem;margin-bottom:2rem;">
+                    <h2>Usage example</h2>
+                    <pre style="overflow:auto;"><code>const response = await fetch('/data/tracker/stellar-neighborhood.json');
+const snapshot = await response.json();
+console.log(snapshot.statistics, snapshot.sources);</code></pre>
+                    <p>Respect source attribution embedded in each snapshot. JSONL clients should parse one JSON object per line. Data may change between site releases, so bind to documented fields and handle missing values.</p>
+                </div>
             </div>
         </section>
     </main>
 
     <footer class="site-footer">
-        <p>&copy; 2025 ADRIANO TO THE STAR - I.T.A (Interstellar Travel Agency)</p>
+        <p>&copy; <span data-current-year></span> ADRIANO TO THE STAR - I.T.A (Interstellar Travel Agency)</p>
     </footer>
 
-    <script src="planet-discovery-sdk.js"></script>
-    <script src="planet-discovery-api-rate-limiting.js"></script>
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                if (window.planetDiscoverySDK) {
-                    window.planetDiscoverySDK.renderSDKDocs('sdk-docs-container');
-                }
-                if (window.planetDiscoveryAPIRateLimiting) {
-                    window.planetDiscoveryAPIRateLimiting.renderRateLimitStatus('api-rate-limit-status');     
-                }
-    
-                // --- API Console Logic ---
-                const queryInput = document.getElementById('api-console-query');
-                const sendBtn = document.getElementById('api-console-send');
-                const output = document.getElementById('api-console-output');
-    
-                sendBtn?.addEventListener('click', async () => {
-                    const query = queryInput.value.trim();
-                    if (!query) return;
-    
-                    output.textContent = "// Fetching data from Edge Worker...";
-                    
-                    try {
-                        const apiBase = window.EXOPLANET_API_BASE || 'https://api.adrianotothestar.com';
-                        const response = await fetch(`${apiBase}/api/planets/search?q=${encodeURIComponent(query)}`);
-                        const data = await response.json();
-                        
-                        output.textContent = JSON.stringify(data, null, 2);
-                    } catch (error) {
-                        output.textContent = `Error: ${error.message}`;
-                        output.style.color = '#f87171';
-                    }
-                });
-            });
-        </script>
+    <script src="api-console.js" defer></script>
     
 </body>
 </html>
-

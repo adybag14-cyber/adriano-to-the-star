@@ -438,3 +438,6 @@ if (typeof window !== 'undefined') {
     console.log('  - Adaptive dictionary based on content type');
     console.log('[Brotli2] WARNING: This is a research prototype, not production code');
 }
+if (typeof self !== 'undefined' && typeof self.Brotli2 === 'undefined') {
+    self.Brotli2 = Brotli2;
+}

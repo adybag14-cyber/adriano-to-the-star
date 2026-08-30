@@ -88,11 +88,12 @@
     <script src="metaphysics-apotheosis-engine.js"></script>
 </head>
 <body class="stellar-ai-page">
+    <main id="main-content" tabindex="-1">
     <section class="page-hero" data-entrance="fadeIn">
         <h1 class="page-title" data-scroll-animate>🤖 STELLAR AI</h1>
-        <p class="page-subtitle">Your Intelligent Cosmic Companion</p>
+        <p class="page-subtitle">Private browser-local space chat and an offline educational demo</p>
         <p class="page-subtitle" style="opacity: 0.8; font-size: 0.95rem; margin-top: 0.5rem;">
-            Stellar AI conversations are logged and monitored with fairness checks to help keep usage responsible.
+            Conversations stay in browser storage. No model request occurs until you explicitly load Bonsai.
         </p>
     </section>
 
@@ -131,28 +132,15 @@
                 <div class="chat-controls">
                     <div class="model-selector-wrapper">
                         <label for="model-selector" class="model-label">Model:</label>
-                        <select id="model-selector" class="model-selector" title="Select AI Model">
-                            <option value="sonnet-4.5">Claude Sonnet 4.5</option>
-                            <option value="sonnet-4">Claude Sonnet 4</option>
-                            <option value="opus-4">Claude Opus 4</option>
-                            <option value="haiku-4">Claude Haiku 4</option>
-                            <option value="gpt-4o">GPT-4o</option>
-                            <option value="gpt-4-turbo">GPT-4 Turbo</option>
-                            <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
-                            <option value="gemini-2.5-flash-native-audio-preview-09-2025">Gemini 2.5 Flash Native Audio (Live) 🎤</option>
-                            <option value="gemini-2.5-flash-live">Gemini 2.5 Flash Live 🎤</option>
-                            <option value="gemini-2.5-flash-live-preview">Gemini 2.5 Flash Live Preview 🎤</option>
-                            <option value="gemini-pro">Gemini Pro</option>
-                            <option value="llama-3.1">Llama 3.1</option>
-                            <option value="qwen-3-235b-a22b-instruct-2507">Cerebras Qwen3 235B (Preview)</option>
+                        <select id="model-selector" class="model-selector" title="Select AI mode">
+                            <option value="fallback">Offline educational demo</option>
                             <option value="bonsai-local">Bonsai Local · WebGPU · Private</option>
-                            <option value="fallback">Fallback (Demo)</option>
                         </select>
                     </div>
                     <div class="chat-actions">
-                        <button id="metrics-btn" class="action-btn" title="View AI Performance Metrics">📊 Metrics</button>
-                        <button id="clear-chat-btn" class="action-btn" title="Clear Chat">🗑️ Clear</button>
-                        <button id="export-chat-btn" class="action-btn" title="Export Chat">📥 Export</button>
+                        <button type="button" id="metrics-btn" class="action-btn" title="View AI Performance Metrics">📊 Metrics</button>
+                        <button type="button" id="clear-chat-btn" class="action-btn" title="Clear Chat">🗑️ Clear</button>
+                        <button type="button" id="export-chat-btn" class="action-btn" title="Export Chat">📥 Export</button>
                     </div>
                 </div>
             </div>
@@ -191,11 +179,11 @@
                 </details>
             </section>
 
-            <div class="messages-container" id="messages-container">
+            <div class="messages-container" id="messages-container" role="log" aria-live="polite" aria-relevant="additions text" aria-label="Stellar AI conversation">
                 <div class="welcome-message">
                     <div class="welcome-icon">🌌</div>
                     <h2>Welcome to Stellar AI</h2>
-                    <p>Your intelligent cosmic companion powered by advanced AI</p>
+                    <p>Load Bonsai for private WebGPU inference or use the clearly labelled offline demo.</p>
                     <div class="welcome-features">
                         <div class="feature"><span>💬</span><span>Natural Conversations</span></div>
                         <div class="feature"><span>🖼️</span><span>Image Analysis</span></div>
@@ -204,9 +192,9 @@
                     </div>
                     <div class="example-prompts">
                         <p>Try asking:</p>
-                        <button class="example-prompt" onclick="usePrompt('Tell me about exoplanets')">Tell me about exoplanets</button>
-                        <button class="example-prompt" onclick="usePrompt('Explain the Andromeda galaxy')">Explain the Andromeda galaxy</button>
-                        <button class="example-prompt" onclick="usePrompt('What is a Kepler object?')">What is a Kepler object?</button>
+                        <button type="button" class="example-prompt" data-prompt="Tell me about exoplanets">Tell me about exoplanets</button>
+                        <button type="button" class="example-prompt" data-prompt="Explain the Andromeda galaxy">Explain the Andromeda galaxy</button>
+                        <button type="button" class="example-prompt" data-prompt="What is a Kepler object?">What is a Kepler object?</button>
                     </div>
                 </div>
             </div>
@@ -214,13 +202,14 @@
             <div class="input-container">
                 <div class="attachments-preview" id="attachments-preview"></div>
                 <div class="input-wrapper">
-                    <button id="attach-btn" class="attach-btn" title="Attach Image">📎</button>
-                    <button id="voice-input-btn" class="attach-btn" title="Voice Input">🎤</button>
-                    <button id="voice-output-btn" class="attach-btn" title="Toggle Voice Output">🔊</button>
-                    <button id="livekit-voice-btn" class="attach-btn livekit-voice-btn" title="Start Live Voice Conversation">🎙️</button>
-                    <input type="file" id="file-input" accept="image/*,.pdf,.doc,.docx,.txt" style="display: none;" multiple>
+                    <button type="button" id="attach-btn" class="attach-btn" title="Attach Image" aria-label="Attach an image or document">📎</button>
+                    <button type="button" id="voice-input-btn" class="attach-btn" title="Voice Input" aria-label="Start voice input">🎤</button>
+                    <button type="button" id="voice-output-btn" class="attach-btn" title="Toggle Voice Output" aria-label="Toggle spoken responses" aria-pressed="false">🔊</button>
+                    <button type="button" id="livekit-voice-btn" class="attach-btn livekit-voice-btn" title="LiveKit is not configured in this deployment" aria-label="LiveKit voice unavailable" disabled>🎙️</button>
+                    <input type="file" id="file-input" accept=".txt,.md,.csv,.json,text/plain,text/markdown,application/json" hidden multiple aria-label="Attach local text files">
+                    <label class="sr-only" for="message-input">Message Stellar AI</label>
                     <textarea id="message-input" class="message-input" placeholder="Ask Stellar AI anything..." rows="1"></textarea>
-                    <button id="send-btn" class="send-btn" title="Send"><span class="send-icon">➤</span></button>
+                    <button type="button" id="send-btn" class="send-btn" title="Send" aria-label="Send message"><span class="send-icon" aria-hidden="true">➤</span></button>
                 </div>
                 <div class="input-footer">
                     <span class="char-count" id="char-count">0 / 4000</span>
@@ -243,36 +232,24 @@
         </div>
     </section>
 
-    <!-- LiveKit Integration Section -->
+    <!-- LiveKit deployment boundary -->
     <section class="content-section" data-entrance="slideUp" id="livekit-integration-section">
         <div class="content-container">
-            <h2 class="section-title" style="text-align: center;">🎙️ LiveKit Integration</h2>
-            <div class="chat-container" id="livekit-chat-container">
-                <div class="chat-header">
-                    <div class="chat-title">🎙️ LiveKit Voice Agent</div>
-                    <div class="chat-actions">
-                        <button id="livekit-connect-btn" class="action-btn">🔌 Connect</button>
-                        <button id="livekit-disconnect-btn" class="action-btn" style="display: none;">🔴 Disconnect</button>
-                    </div>
-                </div>
-                <div class="messages-container" id="livekit-messages-container" style="min-height: 300px;"></div>
-            </div>
+            <h2 class="section-title" style="text-align: center;">🎙️ LiveKit status</h2>
+            <div class="chat-container" id="livekit-chat-container" role="note"><p class="livekit-availability-note">LiveKit is not configured in this static deployment. A future voice service must use a free, separately reviewed token issuer and an explicit microphone permission flow. The browser-local Bonsai and speech-to-text controls above remain available without that service.</p></div>
         </div>
     </section>
+    </main>
 
     <footer class="site-footer">
-        <p>&copy; 2025 ADRIANO TO THE STAR - I.T.A (Interstellar Travel Agency)</p>
+        <p>&copy; <span data-current-year></span> ADRIANO TO THE STAR - I.T.A (Interstellar Travel Agency)</p>
         <p><a href="index.html">Back to Home</a> · <a href="ai-fairness.html">AI &amp; Fairness</a></p>
-        <button type="button" onclick="window.toggleAIUsageOverlay()">🔍 AI Usage (Dev)</button>
+        <button type="button" id="ai-usage-btn">🔍 AI Usage (Dev)</button>
     </footer>
 
-    <script src="ai-model-performance-metrics.js" defer></script>
-    <script src="gemini-config.js" defer></script>
+    <script src="auth-local.js" defer></script>
     <script src="stellar-ai-bonsai.js" defer></script>
     <script src="stellar-ai.js" defer></script>
-    <script src="livekit-chat.js?v=1.0.2" defer></script>
     <script src="pwa-loader.js" defer></script>
-    <script src="ai-usage-logger.js" defer></script>
-    <script src="core-web-vitals-monitoring.js" defer></script>
 </body>
 </html>

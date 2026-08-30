@@ -1,306 +1,133 @@
-/**
- * Planet Claim Statistics Dashboard
- * Shows: Claim trends, popular planets, claim analytics
- */
+/** Kepler snapshot analytics plus honest browser-local activity. */
+(function () {
+  'use strict';
+  const readClaims = () => {
+    try {
+      const value = JSON.parse(localStorage.getItem('planet-claims') || '[]');
+      return Array.isArray(value) ? value : [];
+    } catch { return []; }
+  };
 
-class PlanetStatisticsDashboard {
+  class PlanetStatisticsDashboard {
     constructor() {
-        this.supabase = window.supabaseClient;
-        this.currentUser = null;
-        this.stats = null;
+      this.container = document.getElementById('planet-statistics-dashboard');
+      this.stats = null;
+      this.worker = null;
     }
 
-    async init() {
-        if (window.authManager) {
-            this.currentUser = window.authManager.getCurrentUser();
+    init() {
+      this.renderLoading();
+      this.load();
+    }
+
+    load() {
+      this.worker?.terminate();
+      if (!('Worker' in window)) {
+        this.renderError('This browser cannot run the off-main-thread catalogue analyser. Use the searchable database page instead.');
+        return;
+      }
+      const workerUrl = new URL('data-analytics-worker.js', document.currentScript?.src || location.href);
+      const dataUrl = new URL('data/exoplanets.jsonl', document.currentScript?.src || location.href);
+      this.worker = new Worker(workerUrl);
+      this.worker.addEventListener('message', event => {
+        if (event.data?.type === 'result') {
+          this.stats = event.data.stats;
+          this.render();
+          this.worker.terminate();
+        } else if (event.data?.type === 'error') {
+          this.renderError(event.data.message);
+          this.worker.terminate();
         }
-
-        await this.loadStatistics();
-        this.render();
+      });
+      this.worker.addEventListener('error', event => this.renderError(event.message || 'Catalogue worker failed.'));
+      this.worker.postMessage({ type: 'analyse', url: dataUrl.href });
     }
 
-    /**
-     * Load statistics from database
-     */
-    async loadStatistics() {
-        if (!this.supabase?.from) {
-            this.stats = this.getDefaultStats();
-            return;
-        }
-
-        try {
-            // Get all claims
-            const { data: claims, error: claimsError } = await this.supabase
-                .from('planet_claims')
-                .select('*');
-
-            if (claimsError) throw claimsError;
-
-            // Calculate statistics
-            this.stats = {
-                total_claims: claims.length,
-                unique_planets: new Set(claims.map(c => c.kepid)).size,
-                unique_users: new Set(claims.map(c => c.user_id)).size,
-                claims_by_month: this.groupByMonth(claims),
-                popular_planets: this.getPopularPlanets(claims),
-                claims_by_user: this.getClaimsByUser(claims),
-                recent_claims: claims
-                    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-                    .slice(0, 10)
-            };
-
-        } catch (error) {
-            console.error('Error loading statistics:', error);
-            this.stats = this.getDefaultStats();
-        }
+    renderLoading() {
+      this.container.innerHTML = '<section class="database-analytics-panel" aria-busy="true"><p class="analytics-kicker">SAME-ORIGIN DATA PIPELINE</p><h2>Analysing the Kepler snapshot…</h2><p>The 9,500+ JSONL records are parsed in a dedicated worker so scrolling and controls stay responsive.</p></section>';
     }
 
-    /**
-     * Group claims by month
-     */
-    groupByMonth(claims) {
-        const grouped = {};
-        claims.forEach(claim => {
-            const date = new Date(claim.created_at);
-            const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-            if (!grouped[monthKey]) {
-                grouped[monthKey] = 0;
-            }
-            grouped[monthKey]++;
-        });
-        return grouped;
+    renderError(message) {
+      this.container.replaceChildren();
+      const panel = document.createElement('section');
+      panel.className = 'database-analytics-panel analytics-error';
+      const title = document.createElement('h2');
+      title.textContent = 'Catalogue analytics unavailable';
+      const details = document.createElement('p');
+      details.textContent = message;
+      const retry = document.createElement('button');
+      retry.type = 'button';
+      retry.textContent = 'Retry analysis';
+      retry.addEventListener('click', () => { this.renderLoading(); this.load(); });
+      panel.append(title, details, retry);
+      this.container.append(panel);
     }
 
-    /**
-     * Get popular planets (most claimed)
-     */
-    getPopularPlanets(claims) {
-        const planetCounts = {};
-        claims.forEach(claim => {
-            const kepid = claim.kepid;
-            if (!planetCounts[kepid]) {
-                planetCounts[kepid] = {
-                    kepid: kepid,
-                    count: 0,
-                    planet_name: claim.planet_name || `Kepler-${kepid}`
-                };
-            }
-            planetCounts[kepid].count++;
-        });
-
-        return Object.values(planetCounts)
-            .sort((a, b) => b.count - a.count)
-            .slice(0, 10);
-    }
-
-    /**
-     * Get claims by user
-     */
-    getClaimsByUser(claims) {
-        const userCounts = {};
-        claims.forEach(claim => {
-            const userId = claim.user_id;
-            if (!userCounts[userId]) {
-                userCounts[userId] = 0;
-            }
-            userCounts[userId]++;
-        });
-
-        return Object.entries(userCounts)
-            .map(([userId, count]) => ({ user_id: userId, count }))
-            .sort((a, b) => b.count - a.count)
-            .slice(0, 10);
-    }
-
-    /**
-     * Get default stats (fallback)
-     */
-    getDefaultStats() {
-        return {
-            total_claims: 0,
-            unique_planets: 0,
-            unique_users: 0,
-            claims_by_month: {},
-            popular_planets: [],
-            claims_by_user: [],
-            recent_claims: []
-        };
-    }
-
-    /**
-     * Render dashboard
-     */
     render() {
-        const container = document.getElementById('planet-statistics-dashboard');
-        if (!container) {
-            // Create container if it doesn't exist
-            const newContainer = document.createElement('div');
-            newContainer.id = 'planet-statistics-dashboard';
-            document.body.appendChild(newContainer);
-            this.renderContent(newContainer);
-        } else {
-            this.renderContent(container);
-        }
+      const stats = this.stats;
+      const claims = readClaims();
+      const activeClaims = claims.filter(item => item.status === 'active' || item.confirmed).length;
+      this.container.innerHTML = `<section class="database-analytics-panel"><header class="database-analytics-heading"><div><p class="analytics-kicker">KEPLER CATALOGUE SNAPSHOT</p><h2>Catalogue signal overview</h2><p>Counts come from the same-origin <code>data/exoplanets.jsonl</code> release asset. Local claim cards are calculated separately and never presented as site-wide activity.</p></div><div class="database-analytics-actions"><button id="analytics-reload" type="button">Reanalyse</button><button id="analytics-export" type="button">Export summary</button></div></header><div class="database-stat-grid"><article><span>Catalogue rows</span><strong>${stats.rows.toLocaleString()}</strong><small>${stats.uniqueSystems.toLocaleString()} unique KEPIDs</small></article><article><span>Confirmed planets</span><strong>${stats.confirmed.toLocaleString()}</strong><small>${(stats.confirmed / stats.rows * 100).toFixed(1)}% of rows</small></article><article><span>Candidate rows</span><strong>${stats.candidates.toLocaleString()}</strong><small>Catalogue classification</small></article><article><span>Named Kepler worlds</span><strong>${stats.named.toLocaleString()}</strong><small>Rows with Kepler names</small></article><article><span>Local claims</span><strong>${claims.length.toLocaleString()}</strong><small>${activeClaims} active in this browser</small></article></div><div class="database-chart-grid"><section tabindex="0" role="region" aria-label="Scrollable catalogue classification chart"><h3>Catalogue classification</h3><canvas id="classification-chart" width="720" height="340" role="img" aria-label="Bar chart of confirmed, candidate, false-positive, and other catalogue rows"></canvas></section><section tabindex="0" role="region" aria-label="Scrollable disposition score chart"><h3>Disposition score distribution</h3><canvas id="score-chart" width="720" height="340" role="img" aria-label="Bar chart of catalogue score bins from zero to one"></canvas></section></div><footer class="database-analytics-source"><p><strong>Source boundary:</strong> this page makes no runtime request to a database backend and reports no global users, revenue, or transactions.</p><a href="database.html">Search the full local catalogue</a></footer><p id="database-analytics-status" role="status" aria-live="polite">Analysis complete.</p></section>`;
+      this.drawChart('classification-chart', ['Confirmed', 'Candidate', 'False positive', 'Other'], [stats.confirmed, stats.candidates, stats.falsePositives, stats.other]);
+      this.drawChart('score-chart', ['0–.2', '.2–.4', '.4–.6', '.6–.8', '.8–1'], stats.scoreBins);
+      document.getElementById('analytics-reload').addEventListener('click', () => { this.renderLoading(); this.load(); });
+      document.getElementById('analytics-export').addEventListener('click', () => this.export({ catalogue: stats, browserLocal: { claims: claims.length, activeClaims }, generatedAt: new Date().toISOString() }));
     }
 
-    /**
-     * Render dashboard content
-     */
-    renderContent(container) {
-        if (!this.stats) {
-            container.innerHTML = '<p>Loading statistics...</p>';
-            return;
-        }
-
-        const monthlyData = Object.entries(this.stats.claims_by_month)
-            .sort((a, b) => a[0].localeCompare(b[0]))
-            .slice(-12); // Last 12 months
-
-        container.innerHTML = `
-            <div class="statistics-dashboard">
-                <h2>📊 Planet Claim Statistics</h2>
-
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-value">${this.stats.total_claims.toLocaleString()}</div>
-                        <div class="stat-label">Total Claims</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">${this.stats.unique_planets.toLocaleString()}</div>
-                        <div class="stat-label">Unique Planets</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">${this.stats.unique_users.toLocaleString()}</div>
-                        <div class="stat-label">Active Users</div>
-                    </div>
-                </div>
-
-                <div class="stats-section">
-                    <h3>📈 Claim Trends (Last 12 Months)</h3>
-                    <div class="chart-container">
-                        <canvas id="claims-chart" width="800" height="300"></canvas>
-                    </div>
-                </div>
-
-                <div class="stats-section">
-                    <h3>⭐ Most Popular Planets</h3>
-                    <div class="popular-planets">
-                        ${this.stats.popular_planets.map((planet, index) => `
-                            <div class="popular-planet-item">
-                                <span class="rank">${index + 1}.</span>
-                                <span class="planet-name">${planet.planet_name}</span>
-                                <span class="claim-count">${planet.count} claims</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-
-                <div class="stats-section">
-                    <h3>👥 Top Claimers</h3>
-                    <div class="top-claimers">
-                        ${this.stats.claims_by_user.map((user, index) => `
-                            <div class="claimer-item">
-                                <span class="rank">${index + 1}.</span>
-                                <span class="user-id">User ${user.user_id.substring(0, 8)}...</span>
-                                <span class="claim-count">${user.count} planets</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-
-                <div class="stats-section">
-                    <h3>🕒 Recent Claims</h3>
-                    <div class="recent-claims">
-                        ${this.stats.recent_claims.map(claim => `
-                            <div class="recent-claim-item">
-                                <span class="planet-name">${claim.planet_name || `Kepler-${claim.kepid}`}</span>
-                                <span class="claim-date">${new Date(claim.created_at).toLocaleDateString()}</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            </div>
-        `;
-
-        // Render chart
-        this.renderChart(monthlyData);
+    drawChart(id, labels, values) {
+      const canvas = document.getElementById(id);
+      const context = canvas.getContext('2d');
+      const width = canvas.width;
+      const height = canvas.height;
+      const margin = { top: 32, right: 24, bottom: 70, left: 76 };
+      const max = Math.max(1, ...values);
+      context.clearRect(0, 0, width, height);
+      context.strokeStyle = 'rgba(148, 163, 184, .45)';
+      context.fillStyle = '#cbd5e1';
+      context.font = '16px system-ui';
+      context.textAlign = 'right';
+      for (let step = 0; step <= 4; step += 1) {
+        const y = margin.top + (height - margin.top - margin.bottom) * (1 - step / 4);
+        context.beginPath();
+        context.moveTo(margin.left, y);
+        context.lineTo(width - margin.right, y);
+        context.stroke();
+        context.fillText(Math.round(max * step / 4).toLocaleString(), margin.left - 10, y + 5);
+      }
+      const plotWidth = width - margin.left - margin.right;
+      const slot = plotWidth / values.length;
+      values.forEach((value, index) => {
+        const barHeight = (height - margin.top - margin.bottom) * value / max;
+        const x = margin.left + index * slot + slot * .16;
+        const y = height - margin.bottom - barHeight;
+        const gradient = context.createLinearGradient(0, y, 0, height - margin.bottom);
+        gradient.addColorStop(0, '#67e8f9');
+        gradient.addColorStop(1, '#8b5cf6');
+        context.fillStyle = gradient;
+        context.fillRect(x, y, slot * .68, barHeight);
+        context.fillStyle = '#f8fafc';
+        context.textAlign = 'center';
+        context.fillText(value.toLocaleString(), x + slot * .34, Math.max(20, y - 9));
+        context.fillStyle = '#cbd5e1';
+        context.fillText(labels[index], x + slot * .34, height - margin.bottom + 28, slot * .9);
+      });
     }
 
-    /**
-     * Render chart using canvas
-     */
-    renderChart(monthlyData) {
-        const canvas = document.getElementById('claims-chart');
-        if (!canvas || monthlyData.length === 0) return;
-
-        const ctx = canvas.getContext('2d');
-        const width = canvas.width;
-        const height = canvas.height;
-        const padding = 40;
-        const chartWidth = width - padding * 2;
-        const chartHeight = height - padding * 2;
-
-        // Clear canvas
-        ctx.clearRect(0, 0, width, height);
-
-        // Find max value
-        const maxValue = Math.max(...monthlyData.map(([, count]) => count));
-
-        // Draw axes
-        ctx.strokeStyle = '#ba944f';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(padding, padding);
-        ctx.lineTo(padding, height - padding);
-        ctx.lineTo(width - padding, height - padding);
-        ctx.stroke();
-
-        // Draw bars
-        const barWidth = chartWidth / monthlyData.length;
-        monthlyData.forEach(([month, count], index) => {
-            const barHeight = (count / maxValue) * chartHeight;
-            const x = padding + index * barWidth;
-            const y = height - padding - barHeight;
-
-            // Draw bar
-            ctx.fillStyle = '#ba944f';
-            ctx.fillRect(x + 5, y, barWidth - 10, barHeight);
-
-            // Draw label
-            ctx.fillStyle = '#ffffff';
-            ctx.font = '10px Raleway';
-            ctx.textAlign = 'center';
-            ctx.fillText(count, x + barWidth / 2, y - 5);
-
-            // Draw month label
-            ctx.fillStyle = '#ba944f';
-            ctx.font = '9px Raleway';
-            ctx.save();
-            ctx.translate(x + barWidth / 2, height - padding + 15);
-            ctx.rotate(-Math.PI / 4);
-            ctx.fillText(month.substring(5), 0, 0);
-            ctx.restore();
-        });
+    export(payload) {
+      const blob = new Blob([`${JSON.stringify(payload, null, 2)}\n`], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const anchor = Object.assign(document.createElement('a'), { href: url, download: 'kepler-analytics-summary.json' });
+      anchor.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      document.getElementById('database-analytics-status').textContent = 'Summary exported.';
     }
-}
+  }
 
-// Auto-initialize if container exists
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        if (document.getElementById('planet-statistics-dashboard')) {
-            const dashboard = new PlanetStatisticsDashboard();
-            dashboard.init();
-        }
-    });
-} else {
-    if (document.getElementById('planet-statistics-dashboard')) {
-        const dashboard = new PlanetStatisticsDashboard();
-        dashboard.init();
-    }
-}
-
-// Export
-if (typeof window !== 'undefined') {
-    window.PlanetStatisticsDashboard = PlanetStatisticsDashboard;
-}
-
+  const init = () => {
+    const dashboard = new PlanetStatisticsDashboard();
+    dashboard.init();
+    window.planetStatisticsDashboard = dashboard;
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true });
+  else init();
+})();

@@ -33,13 +33,6 @@
       },
       {
         "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "Adriano To The Star",
-        "url": "https://adrianotothestar.com",
-        "potentialAction": { "@type": "SearchAction", "target": "https://adrianotothestar.com/database.html?q={search_term_string}", "query-input": "required name=search_term_string" }
-      },
-      {
-        "@context": "https://schema.org",
         "@type": "BreadcrumbList",
         "itemListElement": [
           { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://adrianotothestar.com/index.html" }
@@ -48,10 +41,12 @@
       },
       {
         "@context": "https://schema.org",
-        "@type": "WebPage",
+        "@type": "LearningResource",
         "name": "Interactive Star Maps - Adriano To The Star",
-        "speakable": { "@type": "SpeakableSpecification", "xpath": ["/html/head/title", "/html/head/meta[@name=\"description\"]/@content"] },
-        "url": "https://adrianotothestar.com/star-maps.html"
+        "url": "https://adrianotothestar.com/star-maps.html",
+        "educationalLevel": "Undergraduate",
+        "learningResourceType": "Interactive simulation",
+        "about": ["stellar astrometry", "parallax", "stellar evolution", "exoplanet host stars"]
       }
     ]
     </script>
@@ -70,44 +65,31 @@
     <script src="loader.js"></script>
     <script src="animations.js" defer></script>
     <script src="navigation.js" defer></script>
-    <script src="universal-graphics.js" defer></script>
     <script src="cosmic-music-player.js" defer></script>
     <script src="theme-toggle.js" defer></script>
     <script src="accessibility.js" defer></script>
     <script src="i18n.js" defer></script>
-    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
-    <script src="universal-simulation-hub.js"></script>
-    <script src="void-warfare-engine.js"></script>
-    <script src="planetary-environment-engine.js"></script>
-    <script src="galactic-governance-engine.js"></script>
-    <script src="mining-resource-engine.js"></script>
-    <script src="xeno-intelligence-engine.js"></script>
-    <script src="quantum-propulsion-engine.js"></script>
-    <script src="intelligence-shadow-engine.js"></script>
-    <script src="fleet-command-mega-engine.js"></script>
-    <script src="deep-space-industry-engine.js"></script>
-    <script src="procedural-content-engine.js"></script>
-    <script src="galactic-commerce-engine.js"></script>
-    <script src="metaphysics-apotheosis-engine.js"></script>
 </head>
 <body class="star-maps-page">
-    <main>
+    <a class="visually-hidden" href="#main-content">Skip to stellar map</a>
+    <main id="main-content" tabindex="-1">
         <section class="page-hero" data-entrance="fadeIn">
             <h1 class="page-title">Interactive Star Maps</h1>
-            <p class="page-subtitle">Pan, zoom, search, select and route through nearby stars and landmark exoplanet systems</p>
+            <p class="page-subtitle">A GPU-assisted undergraduate astrometry lab for exploring nearby stars, exoplanet hosts, coordinate projections and derived stellar physics</p>
         </section>
 
         <section class="content-section" data-entrance="slideUp">
             <div class="content-container">
                 <div id="star-map-container" class="star-map-container">
                     <p class="stellar-map-noscript">The interactive catalogue is loading. It includes nearby stars, Kepler targets, exoplanet hosts, keyboard navigation, search, pan and zoom.</p>
+                    <noscript><p class="stellar-map-noscript">JavaScript is required for the interactive projection. The source links remain available through NASA Exoplanet Archive, ESA Gaia and CDS SIMBAD.</p></noscript>
                 </div>
             </div>
         </section>
     </main>
 
     <footer class="site-footer">
-        <p>&copy; 2025 ADRIANO TO THE STAR - I.T.A (Interstellar Travel Agency)</p>
+        <p>&copy; <span id="star-maps-year"></span> ADRIANO TO THE STAR - I.T.A (Interstellar Travel Agency)</p>
         <p><a href="index.html">Back to Home</a></p>
     </footer>
 
@@ -122,6 +104,8 @@
                     setTimeout(init, 500);
                 }
             };
+            const year = document.getElementById('star-maps-year');
+            if (year) year.textContent = String(new Date().getFullYear());
             init();
         });
     </script>

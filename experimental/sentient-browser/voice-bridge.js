@@ -19,7 +19,12 @@ class VoiceBridge {
 
         if (!SpeechRecognition) {
             console.warn("Speech Recognition API not supported.");
-            document.getElementById('voice-btn').style.display = 'none';
+            const unsupportedButton = document.getElementById('voice-btn');
+            if (unsupportedButton) {
+                unsupportedButton.disabled = true;
+                unsupportedButton.title = 'Voice recognition is unavailable in this browser';
+                unsupportedButton.setAttribute('aria-label', 'Voice recognition unavailable');
+            }
             return;
         }
 
@@ -31,14 +36,20 @@ class VoiceBridge {
 
         this.recognition.onstart = () => {
             this.isListening = true;
-            document.getElementById('voice-btn').classList.add('active');
+            const button = document.getElementById('voice-btn');
+            button?.classList.add('active');
+            button?.setAttribute('aria-pressed', 'true');
+            button?.setAttribute('aria-label', 'Stop voice command');
             if (this.halEye) this.halEye.classList.add('listening');
             console.log("Listen start");
         };
 
         this.recognition.onend = () => {
             this.isListening = false;
-            document.getElementById('voice-btn').classList.remove('active');
+            const button = document.getElementById('voice-btn');
+            button?.classList.remove('active');
+            button?.setAttribute('aria-pressed', 'false');
+            button?.setAttribute('aria-label', 'Start voice command');
             if (this.halEye) this.halEye.classList.remove('listening');
             console.log("Listen end");
         };
@@ -55,6 +66,12 @@ class VoiceBridge {
                     this.inputField.value = '';
                 }
             }
+        };
+        this.recognition.onerror = event => {
+            const button = document.getElementById('voice-btn');
+            button?.setAttribute('aria-pressed', 'false');
+            const status = document.getElementById('connection-status');
+            if (status) status.textContent = `VOICE UNAVAILABLE // ${event.error || 'permission denied'}`;
         };
 
         // Setup Button

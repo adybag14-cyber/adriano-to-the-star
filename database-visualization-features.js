@@ -1,5 +1,3 @@
-/* global Planet3DViewer */
-
 // Database Visualization Features
 // Includes: Planet size comparison, discovery timeline
 
@@ -154,13 +152,20 @@ class DatabaseVisualizationFeatures {
 
         const view3dBtn = document.getElementById('view-3d-btn');
         if (view3dBtn) {
-            view3dBtn.addEventListener('click', () => {
-                this.show3DViewer();
+            view3dBtn.addEventListener('click', async () => {
+                view3dBtn.disabled = true;
+                view3dBtn.setAttribute('aria-busy', 'true');
+                try {
+                    await this.show3DViewer();
+                } finally {
+                    view3dBtn.disabled = false;
+                    view3dBtn.removeAttribute('aria-busy');
+                }
             });
         }
     }
 
-    show3DViewer() {
+    async show3DViewer() {
         if (!window.databaseAdvancedFeatures || window.databaseAdvancedFeatures.comparisonList.length === 0) {
             alert('Please select a planet first (click ⚖️ on a planet)');
             return;
@@ -175,10 +180,17 @@ class DatabaseVisualizationFeatures {
             return;
         }
 
-        if (!window.planet3DViewer) {
-            window.planet3DViewer = new Planet3DViewer();
+        try {
+            if (typeof window.ensureDatabase3D !== 'function' || typeof window.viewPlanet3D !== 'function') {
+                throw new Error('The database 3D runtime is unavailable.');
+            }
+            await window.ensureDatabase3D();
+            return await window.viewPlanet3D(kepid);
+        } catch (error) {
+            console.error('Unable to open the selected planet in 3D:', error);
+            alert('The 3D viewer could not be loaded. Please try again.');
+            return false;
         }
-        window.planet3DViewer.visualizePlanet(planet);
     }
 
     showTimeline() {

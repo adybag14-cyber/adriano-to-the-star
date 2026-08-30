@@ -5,13 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hardware Telemetry | Native Integration</title>
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../styles.css">
     <style>
         body {
             margin: 0;
-            background: #000;
-            color: #4af626;
+            background: radial-gradient(circle at 80% 10%,rgba(124,58,237,.16),transparent 32rem),#020611;
+            color: #a5f3fc;
             font-family: 'Share Tech Mono', monospace;
             display: flex;
             flex-direction: column;
@@ -21,7 +20,7 @@
 
         .header {
             padding: 20px;
-            border-bottom: 2px solid #4af626;
+            border-bottom: 1px solid rgba(103,232,249,.3);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -61,15 +60,15 @@
             flex: 1;
             background: #111;
             border: 1px solid #333;
-            color: #4af626;
+            color: #a5f3fc;
             padding: 10px;
             font-family: inherit;
         }
 
         button {
-            background: #4af626;
-            color: #000;
-            border: none;
+            background: linear-gradient(135deg,#0891b2,#6366f1);
+            color: #fff;
+            border: 1px solid rgba(103,232,249,.35);
             padding: 10px 20px;
             font-family: inherit;
             font-weight: bold;
@@ -91,47 +90,39 @@
             pointer-events: none;
             background: radial-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 90%);
         }
+        button.secondary{background:rgba(8,47,73,.65)}button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #67e8f9;outline-offset:3px}.header-actions{display:flex;align-items:center;gap:.6rem}.terminal{scrollbar-color:#38bdf8 transparent}
+        .home-logo{position:fixed;right:1rem;bottom:1rem;z-index:5;width:auto}.home-logo .ita-logo{position:static;width:40px;height:40px;object-fit:contain}
+        @media(max-width:720px){.header{align-items:stretch;gap:1rem;flex-direction:column}.header-actions{display:grid;grid-template-columns:1fr 1fr}.header-actions a{grid-column:1 / -1}.input-area{padding:.7rem;flex-wrap:wrap}.input-area input{min-width:0}.terminal{padding:12px}}
+        @media(prefers-reduced-motion:reduce){.crt-overlay{display:none}}
     </style>
-    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
-    <script src="/universal-simulation-hub.js"></script>
-    <script src="/void-warfare-engine.js"></script>
-    <script src="/planetary-environment-engine.js"></script>
-    <script src="/galactic-governance-engine.js"></script>
-    <script src="/mining-resource-engine.js"></script>
-    <script src="/xeno-intelligence-engine.js"></script>
-    <script src="/quantum-propulsion-engine.js"></script>
-    <script src="/intelligence-shadow-engine.js"></script>
-    <script src="/fleet-command-mega-engine.js"></script>
-    <script src="/deep-space-industry-engine.js"></script>
-    <script src="/procedural-content-engine.js"></script>
-    <script src="/galactic-commerce-engine.js"></script>
-    <script src="/metaphysics-apotheosis-engine.js"></script>
 </head>
 
 <body>
-    <a href="../../index.html">
+    <a href="../../index.html" class="home-logo" aria-label="Return to Adriano To The Star home">
         <img src="../../images/ita_logo.png" alt="ITA Logo" class="ita-logo">
     </a>
     <div class="header">
         <div>
             <h1 style="margin:0; font-size:1.5rem">HARDWARE TELEMETRY LINK</h1>
-            <span id="connection-status">DISCONNECTED</span>
+            <span id="connection-status" role="status" aria-live="polite">DISCONNECTED</span>
         </div>
-        <div>
+        <div class="header-actions">
             <a href="../../projects.html" style="color: #4af626; text-decoration: none; margin-right: 20px;">[EXIT]</a>
-            <button id="connect-btn">CONNECT DEVICE</button>
+            <button type="button" id="simulate-btn" class="secondary">START SIMULATION</button>
+            <button type="button" id="connect-btn">CONNECT DEVICE</button>
         </div>
     </div>
 
-    <div class="terminal" id="terminal">
+    <div class="terminal" id="terminal" role="log" aria-live="polite" aria-relevant="additions">
         <div class="line sys">SYSTEM READY...</div>
         <div class="line sys">WAITING FOR SERIAL CONNECTION...</div>
     </div>
     <div class="crt-overlay"></div>
 
     <div class="input-area">
-        <input type="text" id="cmd-input" placeholder="Enter command..." disabled>
-        <button id="send-btn" disabled>SEND</button>
+        <label for="cmd-input" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">Telemetry command</label>
+        <input type="text" id="cmd-input" placeholder="Enter command…" disabled>
+        <button type="button" id="send-btn" disabled>SEND</button>
     </div>
 
     <script type="module">
@@ -140,6 +131,7 @@
         const bridge = new NativeBridge();
         const term = document.getElementById('terminal');
         const connectBtn = document.getElementById('connect-btn');
+        const simulateBtn = document.getElementById('simulate-btn');
         const sendBtn = document.getElementById('send-btn');
         const input = document.getElementById('cmd-input');
         const status = document.getElementById('connection-status');
@@ -152,26 +144,18 @@
             div.className = `line ${type}`;
             div.textContent = msg;
             term.appendChild(div);
+            while (term.children.length > 220) term.firstElementChild?.remove();
             term.scrollTop = term.scrollHeight;
         }
 
         connectBtn.addEventListener('click', async () => {
-            if (simulationInterval) {
-                // Stop Sim
-                clearInterval(simulationInterval);
-                simulationInterval = null;
-                connectBtn.textContent = 'CONNECT DEVICE';
-                status.textContent = 'DISCONNECTED';
-                log('SIMULATION ENDED.', 'sys');
-                return;
-            }
-
             if (bridge.port) {
                 await bridge.disconnectSerial();
                 connectBtn.textContent = 'CONNECT DEVICE';
                 status.textContent = 'DISCONNECTED';
                 input.disabled = true;
                 sendBtn.disabled = true;
+                simulateBtn.disabled = false;
                 log('CONNECTION TERMINATED.', 'sys');
                 return;
             }
@@ -184,6 +168,7 @@
                 connectBtn.textContent = 'DISCONNECT';
                 input.disabled = false;
                 sendBtn.disabled = false;
+                simulateBtn.disabled = true;
                 log('SERIAL PORT OPENED.', 'sys');
 
                 // Handle Incoming Data
@@ -193,21 +178,33 @@
                 };
 
             } catch (e) {
-                if (e.name === 'NotFoundError') {
-                    // User cancelled -> Start Simulation
-                    startSimulation();
-                } else {
-                    log('ERROR: ' + e.message, 'sys');
-                }
+                if (e.name === 'NotFoundError') log('DEVICE SELECTION CANCELLED. NO CONNECTION WAS OPENED.', 'sys');
+                else log('ERROR: ' + e.message, 'sys');
             }
         });
 
         function startSimulation() {
-            log('NO DEVICE SELECTED. STARTING SIMULATION MODE...', 'sys');
+            if (bridge.port) {
+                log('DISCONNECT THE SERIAL DEVICE BEFORE STARTING SIMULATION.', 'sys');
+                return;
+            }
+            if (simulationInterval) {
+                clearInterval(simulationInterval);
+                simulationInterval = null;
+                simulateBtn.textContent = 'START SIMULATION';
+                status.textContent = 'DISCONNECTED';
+                input.disabled = true;
+                sendBtn.disabled = true;
+                connectBtn.disabled = !bridge.supportsSerial;
+                log('SIMULATION ENDED.', 'sys');
+                return;
+            }
+            log('STARTING BROWSER-LOCAL SIMULATION MODE…', 'sys');
             status.textContent = 'SIMULATION';
-            connectBtn.textContent = 'STOP SIMULATION';
+            simulateBtn.textContent = 'STOP SIMULATION';
             input.disabled = false;
             sendBtn.disabled = false;
+            connectBtn.disabled = true;
 
             simulationInterval = setInterval(() => {
                 const temp = (Math.random() * 5 + 20).toFixed(2);
@@ -216,9 +213,11 @@
             }, 1000);
         }
 
+        simulateBtn.addEventListener('click', startSimulation);
+
         sendBtn.addEventListener('click', sendCommand);
-        input.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendCommand();
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') { e.preventDefault(); sendCommand(); }
         });
 
         async function sendCommand() {
@@ -235,6 +234,8 @@
         // Check API
         if (!bridge.supportsSerial) {
             log('WARNING: WebSerial API not supported. Only simulation mode available.', 'sys');
+            connectBtn.disabled = true;
+            connectBtn.textContent = 'DEVICE API UNAVAILABLE';
         }
     </script>
 </body>

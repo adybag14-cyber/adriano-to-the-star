@@ -1538,6 +1538,224 @@ body.ep-data-open #ep-notifications {
     }
 }
 
+/* === Pioneer combat flight model, target acquisition and touch deck === */
+.ep-visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+#hud-lock {
+    top: 18px;
+    left: 50%;
+    width: min(360px, calc(100vw - 210px));
+    transform: translateX(-50%);
+    text-align: center;
+    letter-spacing: 0.09em;
+}
+
+#hud-lock-status {
+    color: #a5f3fc;
+    font-size: 0.72rem;
+    font-weight: 750;
+}
+
+#hud-lock-help {
+    margin-top: 0.38rem;
+    color: #7f9bb2;
+    font: 650 0.52rem/1.3 Inter, sans-serif;
+    letter-spacing: 0.045em;
+}
+
+.hud-lock-track {
+    height: 4px;
+    margin-top: 0.48rem;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgba(148, 163, 184, 0.15);
+}
+
+#hud-lock-bar {
+    display: block;
+    width: 0;
+    height: 100%;
+    background: linear-gradient(90deg, #22d3ee, #a78bfa 62%, #bef264);
+    box-shadow: 0 0 14px rgba(103, 232, 249, 0.7);
+    transition: width 90ms linear;
+}
+
+#crosshair.acquiring {
+    border-color: rgba(251, 191, 36, 0.9);
+    border-style: dashed;
+    animation: ep-lock-acquire 0.75s linear infinite;
+}
+
+#crosshair.locked {
+    border-color: rgba(190, 242, 100, 0.95) !important;
+    box-shadow: 0 0 18px rgba(190, 242, 100, 0.48);
+}
+
+#crosshair.missile-fired { animation: ep-missile-kick 260ms ease-out; }
+
+#hud-target-bracket.acquiring {
+    border-color: rgba(251, 191, 36, 0.82);
+    border-style: dashed;
+}
+
+#hud-target-bracket.locked {
+    border-color: rgba(190, 242, 100, 0.9);
+    box-shadow: 0 0 20px rgba(190, 242, 100, 0.42), inset 0 0 12px rgba(190, 242, 100, 0.12);
+    animation: ep-lock-bracket 1.4s ease-in-out infinite;
+}
+
+#hud-combat-flash {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at 50% 58%, rgba(56, 189, 248, 0.2), transparent 34%);
+}
+
+#hud-combat-flash.missile-launch { animation: ep-missile-flash 420ms ease-out; }
+
+#combat-touch-controls {
+    position: absolute;
+    inset: auto 12px 12px;
+    display: none;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+    pointer-events: none;
+}
+
+body.ep-combat-active .ep-back-btn,
+body.ep-combat-active .ep-cinematic-toggle,
+body.ep-combat-active #ep-touch-controls { display: none !important; }
+
+.combat-touch-steering {
+    display: grid;
+    grid-template-columns: repeat(3, 48px);
+    grid-template-areas: ". up ." "left down right";
+    gap: 5px;
+}
+
+.combat-touch-steering button:nth-child(1) { grid-area: up; }
+.combat-touch-steering button:nth-child(2) { grid-area: left; }
+.combat-touch-steering button:nth-child(3) { grid-area: down; }
+.combat-touch-steering button:nth-child(4) { grid-area: right; }
+
+.combat-touch-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(58px, 76px));
+    gap: 6px;
+}
+
+#combat-touch-controls button {
+    min-width: 48px;
+    min-height: 48px;
+    padding: 0.35rem;
+    border: 1px solid rgba(103, 232, 249, 0.42);
+    border-radius: 12px;
+    background: rgba(2, 12, 29, 0.8);
+    color: #dffaff;
+    box-shadow: inset 0 1px rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(8px);
+    pointer-events: auto;
+    touch-action: none;
+    font: 750 0.62rem/1 Orbitron, sans-serif;
+}
+
+#combat-touch-controls button[aria-pressed="true"] {
+    border-color: #bef264;
+    background: rgba(190, 242, 100, 0.18);
+    color: #f7fee7;
+}
+
+body.ep-combat-launching #combat-hud::before {
+    content: "ORBITAL INSERTION";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgba(226, 252, 255, 0.86);
+    font: 750 clamp(0.85rem, 2.4vw, 1.4rem)/1 Orbitron, sans-serif;
+    letter-spacing: 0.22em;
+    text-shadow: 0 0 18px rgba(34, 211, 238, 0.72);
+    animation: ep-launch-label 1.75s ease both;
+}
+
+@keyframes ep-lock-acquire { to { transform: translate(-50%, -50%) rotate(360deg) scale(var(--crosshair-scale, 1)); } }
+@keyframes ep-lock-bracket { 50% { transform: translate(-50%, -50%) scale(1.08); } }
+@keyframes ep-missile-kick { 50% { transform: translate(-50%, -50%) scale(1.35); } }
+@keyframes ep-missile-flash { 0% { opacity: 0.9; } 100% { opacity: 0; } }
+@keyframes ep-launch-label { 0%, 100% { opacity: 0; } 20%, 70% { opacity: 1; } }
+
+@media (hover: none), (pointer: coarse) {
+    #combat-touch-controls { display: flex; }
+    #hud-speed { bottom: 174px !important; font-size: 0.86rem !important; }
+    #hud-target { top: 82px !important; right: 8px !important; width: min(250px, calc(100vw - 16px)) !important; }
+}
+
+@media (max-width: 680px) {
+    #combat-touch-controls { display: flex; }
+    #hud-lock {
+        top: 108px;
+        left: 8px;
+        width: calc(100vw - 16px);
+        transform: none;
+        padding: 7px;
+    }
+    #hud-lock-help { display: none; }
+    #hud-target {
+        top: 158px !important;
+        right: 8px !important;
+        bottom: auto !important;
+        left: 8px !important;
+        box-sizing: border-box;
+        width: calc(100vw - 16px) !important;
+        min-height: 50px;
+        font-size: 0.58rem;
+    }
+    #hud-status {
+        top: 8px;
+        left: 8px;
+        width: 166px;
+        padding: 6px;
+        font-size: 0.6rem;
+    }
+    #ep-btn-retreat {
+        top: 8px !important;
+        right: 8px !important;
+        min-height: 44px;
+    }
+    #hud-speed {
+        right: 8px !important;
+        bottom: 154px !important;
+        max-width: calc(100vw - 16px);
+        padding: 6px 8px;
+        font-size: 0.68rem !important;
+    }
+    #combat-touch-controls { inset: auto 7px 7px; }
+    .combat-touch-steering { grid-template-columns: repeat(3, 44px); }
+    #combat-touch-controls button { min-width: 44px; min-height: 44px; }
+    .combat-touch-actions { grid-template-columns: repeat(2, minmax(52px, 66px)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #crosshair.acquiring,
+    #hud-target-bracket.locked,
+    #crosshair.missile-fired,
+    #hud-combat-flash.missile-launch,
+    body.ep-combat-launching #combat-hud::before { animation: none !important; }
+    #hud-lock-bar { transition: none; }
+}
+
 
 /* Pioneer tutorial + construction feedback */
 .ep-tutorial { position:absolute; right:18px; bottom:76px; z-index:2600; width:min(350px,calc(100vw - 36px)); padding:15px 16px 14px; border:1px solid rgba(103,232,249,.34); border-radius:16px; background:linear-gradient(145deg,rgba(4,13,28,.97),rgba(3,9,20,.94)); box-shadow:0 24px 70px rgba(0,0,0,.5),inset 0 1px rgba(255,255,255,.035); backdrop-filter:blur(18px) saturate(1.12); pointer-events:auto; }

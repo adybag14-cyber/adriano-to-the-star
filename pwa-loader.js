@@ -1,146 +1,55 @@
-/* global navigator */
+/* Conservative PWA registration and non-overlapping install prompt. */
+(function () {
+  'use strict';
+  if (!('serviceWorker' in navigator) || location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') return;
+  const smoke = new URLSearchParams(location.search).get('cb') === 'smoke-functional';
+  let deferredPrompt = null;
 
-/**
- * PWA Service Worker Register & Install Button
- * Handles registration of the service worker and custom install UI
- */
+  function register() {
+    if (smoke) return;
+    const version = document.querySelector('script[src*="pwa-loader.js"]')?.src
+      ? new URL(document.querySelector('script[src*="pwa-loader.js"]').src).searchParams.get('v')
+      : '';
+    const url = version ? `/sw.js?v=${encodeURIComponent(version)}` : '/sw.js';
+    navigator.serviceWorker.register(url, { scope: '/', updateViaCache: 'none' }).catch(() => {
+      // PWA support is optional; ordinary navigation remains unaffected.
+    });
+  }
 
-let deferredPrompt;
+  function schedule() {
+    const run = () => 'requestIdleCallback' in window ? requestIdleCallback(register, { timeout: 3000 }) : setTimeout(register, 1000);
+    if (document.readyState === 'complete') run();
+    else addEventListener('load', run, { once: true });
+  }
 
-const isSmokeFunctionalPwaLoader = (() => {
-    try {
-        if (typeof window === 'undefined' || !window.location) return false;
-        return new URLSearchParams(window.location.search || '').get('cb') === 'smoke-functional';
-    } catch {
-        return false;
-    }
-})();
-
-const registerServiceWorker = () => {
-    try {
-        if (!navigator.serviceWorker || typeof navigator.serviceWorker.register !== 'function') return;
-
-        const registrationPromise = navigator.serviceWorker.register('/sw.js');
-        if (!registrationPromise || typeof registrationPromise.then !== 'function') {
-            console.log('ServiceWorker registration did not return a Promise');
-            return;
-        }
-
-        registrationPromise
-            .then(registration => {
-                console.log('ServiceWorker registration successful with scope: ', registration.scope);
-            })
-            .catch(err => {
-                console.log('ServiceWorker registration failed: ', err);
-            });
-    } catch (err) {
-        console.log('ServiceWorker registration failed: ', err);
-    }
-};
-
-const scheduleServiceWorkerRegistration = () => {
-    const runWhenIdle = () => {
-        if (typeof window.requestIdleCallback === 'function') {
-            window.requestIdleCallback(registerServiceWorker, { timeout: 3000 });
-        } else {
-            window.setTimeout(registerServiceWorker, 1000);
-        }
-    };
-
-    if (document.readyState === 'complete') {
-        runWhenIdle();
-    } else {
-        window.addEventListener('load', runWhenIdle, { once: true });
-    }
-};
-
-if (!isSmokeFunctionalPwaLoader && 'serviceWorker' in navigator) {
-    scheduleServiceWorkerRegistration();
-}
-
-// Handle PWA Install Prompt
-window.addEventListener('beforeinstallprompt', (e) => {
-    // Prevent Chrome 67 and earlier from automatically showing the prompt
-    e.preventDefault();
-    // Stash the event so it can be triggered later.
-    deferredPrompt = e;
-
-    // Create and show the install button
-    showInstallButton();
-});
-
-function showInstallButton() {
-    // Check if button already exists
+  function showInstallButton() {
     if (document.getElementById('pwa-install-btn')) return;
-
-    const btn = document.createElement('button');
-    btn.id = 'pwa-install-btn';
-    btn.textContent = '📲 Install App';
-    btn.style.cssText = `
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        z-index: 9999;
-        padding: 12px 24px;
-        background: linear-gradient(135deg, #0891b2, #7c3aed);
-        color: white;
-        border: 1px solid rgba(103, 232, 249, 0.42);
-        border-radius: 50px;
-        font-family: 'Raleway', sans-serif;
-        font-weight: 600;
-        cursor: pointer;
-        box-shadow: 0 12px 30px rgba(0,0,0,0.42), 0 0 22px rgba(56,189,248,0.14);
-        transition: transform 0.3s ease, opacity 0.3s ease;
-        opacity: 0;
-        transform: translateY(20px);
-    `;
-
-    btn.addEventListener('click', async () => {
-        console.log('📲 PWA Install button clicked');
-
-        if (deferredPrompt) {
-            console.log('🚀 Triggering install prompt...');
-            btn.textContent = 'Installing...';
-            btn.disabled = true;
-            btn.style.opacity = '0.7';
-            btn.style.cursor = 'wait';
-
-            try {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                console.log(`User response to the install prompt: ${outcome}`);
-
-                // We've used the prompt, so clear it
-                deferredPrompt = null;
-
-                // Hide button regardless of outcome (if accepted, app installs; if dismissed, we hide until next visit)
-                btn.style.display = 'none';
-            } catch (err) {
-                console.error('❌ Error showing install prompt:', err);
-                alert('Failed to open install prompt. Please try using your browser menu to install the app.');
-                btn.textContent = '📲 Install App';
-                btn.disabled = false;
-                btn.style.opacity = '1';
-                btn.style.cursor = 'pointer';
-            }
-        } else {
-            console.warn('⚠️ deferredPrompt is missing!');
-            alert('Installation is not available right now. Please try using your browser menu (Add to Home Screen).');
-            btn.style.display = 'none';
-        }
+    const button = document.createElement('button');
+    button.id = 'pwa-install-btn';
+    button.type = 'button';
+    button.textContent = 'Install I.T.A';
+    button.setAttribute('aria-label', 'Install Adriano To The Star as an app');
+    button.style.cssText = 'position:fixed;left:16px;bottom:170px;z-index:9500;min-height:44px;max-width:calc(100vw - 32px);padding:.75rem 1rem;border:1px solid rgba(103,232,249,.52);border-radius:999px;background:linear-gradient(135deg,#075985,#6d28d9);color:#fff;font:700 .78rem/1.2 system-ui,sans-serif;box-shadow:0 14px 38px rgba(0,0,0,.45);cursor:pointer';
+    button.addEventListener('click', async () => {
+      if (!deferredPrompt) { button.remove(); return; }
+      button.disabled = true;
+      button.textContent = 'Opening install…';
+      try {
+        await deferredPrompt.prompt();
+        await deferredPrompt.userChoice;
+      } finally {
+        deferredPrompt = null;
+        button.remove();
+      }
     });
+    document.body.append(button);
+  }
 
-    document.body.appendChild(btn);
-
-    // Animate in
-    requestAnimationFrame(() => {
-        btn.style.opacity = '1';
-        btn.style.transform = 'translateY(0)';
-    });
-}
-
-window.addEventListener('appinstalled', () => {
-    console.log('PWA was installed');
-    const btn = document.getElementById('pwa-install-btn');
-    if (btn) btn.style.display = 'none';
-});
+  addEventListener('beforeinstallprompt', event => {
+    event.preventDefault();
+    deferredPrompt = event;
+    showInstallButton();
+  });
+  addEventListener('appinstalled', () => document.getElementById('pwa-install-btn')?.remove());
+  schedule();
+})();

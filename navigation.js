@@ -100,6 +100,7 @@
       this.search = null;
       this.lastFocus = null;
       this.triggers = [];
+      this.inertSiblings = [];
       this.onKeyDown = this.onKeyDown.bind(this);
       this.init();
     }
@@ -174,6 +175,8 @@
       overlay.setAttribute('role', 'dialog');
       overlay.setAttribute('aria-modal', 'true');
       overlay.setAttribute('aria-label', 'I.T.A systems atlas');
+      overlay.setAttribute('aria-hidden', 'true');
+      overlay.hidden = true;
       overlay.innerHTML = `
         <div class="ita-atlas-shell">
           <div class="ita-atlas-topbar">
@@ -213,10 +216,17 @@
     }
 
     setupEventListeners() {
-      this.triggers.forEach(trigger => trigger.addEventListener('click', event => {
-        event.preventDefault();
-        this.toggleMenu();
-      }));
+      this.triggers.forEach(trigger => {
+        trigger.addEventListener('click', event => {
+          event.preventDefault();
+          this.toggleMenu();
+        });
+        trigger.addEventListener('keydown', event => {
+          if (event.key !== 'Enter' && event.key !== ' ') return;
+          event.preventDefault();
+          this.toggleMenu();
+        });
+      });
       this.overlay.querySelector('.ita-atlas-close')?.addEventListener('click', () => this.closeMenu());
       this.overlay.addEventListener('click', event => { if (event.target === this.overlay) this.closeMenu(); });
       this.search?.addEventListener('input', () => this.filter(this.search.value));
@@ -233,7 +243,8 @@
         .filter(node => !node.closest('[hidden]') && node.offsetParent !== null);
       if (!focusable.length) return;
       const first = focusable[0], last = focusable[focusable.length - 1];
-      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      if (!this.overlay.contains(document.activeElement)) { event.preventDefault(); (event.shiftKey ? last : first).focus(); }
+      else if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
       else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
     }
 
@@ -256,18 +267,26 @@
       if (!this.overlay || this.isOpen) return;
       this.lastFocus = document.activeElement;
       this.isOpen = true;
+      this.overlay.hidden = false;
       this.overlay.classList.add('is-open');
+      this.overlay.setAttribute('aria-hidden', 'false');
       document.body.classList.add('ita-atlas-open');
       this.triggers.forEach(trigger => trigger.setAttribute('aria-expanded', 'true'));
-      this.search?.focus({ preventScroll: true });
+      this.inertSiblings = [...document.body.children].filter(node => node !== this.overlay && !['SCRIPT', 'STYLE'].includes(node.tagName));
+      this.inertSiblings.forEach(node => { node.inert = true; });
+      requestAnimationFrame(() => this.search?.focus({ preventScroll: true }));
     }
 
     closeMenu() {
       if (!this.overlay || !this.isOpen) return;
       this.isOpen = false;
       this.overlay.classList.remove('is-open');
+      this.overlay.setAttribute('aria-hidden', 'true');
+      this.overlay.hidden = true;
       document.body.classList.remove('ita-atlas-open');
       this.triggers.forEach(trigger => trigger.setAttribute('aria-expanded', 'false'));
+      this.inertSiblings.forEach(node => { node.inert = false; });
+      this.inertSiblings = [];
       if (this.search) { this.search.value = ''; this.filter(''); }
       this.lastFocus?.focus?.({ preventScroll: true });
     }
@@ -294,6 +313,8 @@
       document.removeEventListener('keydown', this.onKeyDown);
       this.overlay?.remove();
       document.body.classList.remove('ita-atlas-open');
+      this.inertSiblings.forEach(node => { node.inert = false; });
+      this.inertSiblings = [];
     }
   }
 

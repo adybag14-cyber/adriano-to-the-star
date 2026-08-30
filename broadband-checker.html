@@ -95,30 +95,32 @@
 <body>
     <main>
         <section class="page-hero" data-entrance="fadeIn">
-            <h1 class="page-title" data-scroll-animate>🌐 BROADBAND DEAL CHECKER</h1>
-            <p class="page-subtitle">Find the Best Broadband Deals Across 339+ UK Providers</p>
+            <h1 class="page-title" data-scroll-animate>BROADBAND SIGNAL ATLAS</h1>
+            <p class="page-subtitle">Search the build-cached UK provider directory, then verify an offer with its authoritative source.</p>
         </section>
 
         <section class="content-section" data-entrance="slideUp">
             <div class="content-container">
                 <div class="broadband-search-section">
-                    <div class="search-container">
-                        <input type="text" id="provider-search" placeholder="Search providers..." class="search-input">
-                        <button id="search-btn" class="search-button">🔍 Search</button>
+                    <div class="search-container" role="search">
+                        <label class="sr-only" for="provider-search">Search broadband providers</label>
+                        <input type="search" id="provider-search" placeholder="Search providers…" class="search-input" autocomplete="off">
+                        <button type="button" id="search-btn" class="search-button">Search directory</button>
                     </div>
                     <div class="filter-container" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem;">
-                        <select id="speed-filter" class="filter-select"><option value="">All Speeds</option><option value="fibre">Fibre</option><option value="gigabit">Gigabit</option></select>
-                        <select id="type-filter" class="filter-select"><option value="">All Types</option><option value="residential">Residential</option><option value="business">Business</option></select>
-                        <button id="clear-filters" class="cta-button" style="padding: 0.5rem 1rem;">Clear Filters</button>
+                        <label><span class="sr-only">Speed capability</span><select id="speed-filter" class="filter-select" aria-label="Filter by speed capability"><option value="">All Speeds</option><option value="fibre">Fibre</option><option value="gigabit">Gigabit</option></select></label>
+                        <label><span class="sr-only">Provider type</span><select id="type-filter" class="filter-select" aria-label="Filter by provider type"><option value="">All Types</option><option value="residential">Residential</option><option value="business">Business</option></select></label>
+                        <button type="button" id="clear-filters" class="cta-button" style="padding: 0.5rem 1rem;">Clear filters</button>
                     </div>
+                    <p class="broadband-boundary-note"><strong>Snapshot boundary:</strong> prices are catalogue observations, not live quotes. Opening an official source is always a separate, explicit action.</p>
                 </div>
             </div>
         </section>
 
         <section class="content-section" data-entrance="slideUp">
             <div class="content-container">
-                <div id="provider-results" class="provider-results"></div>
-                <div id="loading-message" class="loading-message"><p>Loading providers...</p></div>
+                <div id="provider-results" class="provider-results" aria-live="polite"></div>
+                <div id="loading-message" class="loading-message" role="status"><p>Loading the provider snapshot…</p></div>
                 <div id="no-results" class="no-results" hidden>
                     <h2>No matching providers</h2>
                     <p>Try a broader search or clear the filters to see every provider.</p>

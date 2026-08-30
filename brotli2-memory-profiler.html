@@ -1,151 +1,53 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brotli2 Memory Profiler</title>
-    <style>
-        body {
-            font-family: 'Courier New', monospace;
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #1e1e1e;
-            color: #d4d4d4;
-        }
-        h1 {
-            color: #4ec9b0;
-            border-bottom: 2px solid #4ec9b0;
-            padding-bottom: 10px;
-        }
-        h2 {
-            color: #569cd6;
-            margin-top: 30px;
-        }
-        .status {
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 4px;
-        }
-        .status.running {
-            background-color: #1e3a8a;
-            border-left: 4px solid #3b82f6;
-        }
-        .status.complete {
-            background-color: #065f46;
-            border-left: 4px solid #10b981;
-        }
-        .status.error {
-            background-color: #7f1d1d;
-            border-left: 4px solid #ef4444;
-        }
-        .status.warning {
-            background-color: #92400e;
-            border-left: 4px solid #f59e0b;
-        }
-        pre {
-            background-color: #2d2d2d;
-            padding: 15px;
-            border-radius: 4px;
-            overflow-x: auto;
-            border: 1px solid #404040;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        th, td {
-            padding: 8px 12px;
-            text-align: left;
-            border-bottom: 1px solid #404040;
-        }
-        th {
-            background-color: #2d2d2d;
-            color: #4ec9b0;
-        }
-        tr:hover {
-            background-color: #3d3d3d;
-        }
-        button {
-            background-color: #4ec9b0;
-            color: #1e1e1e;
-            border: none;
-            padding: 12px 24px;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 4px;
-            margin: 10px 0;
-        }
-        button:hover {
-            background-color: #3db89a;
-        }
-        button:disabled {
-            background-color: #555;
-            cursor: not-allowed;
-        }
-        .pass { color: #10b981; }
-        .fail { color: #ef4444; }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Brotli2 Memory Profiler</title>
+  <meta name="description" content="Run bounded, cancellable Brotli2 research-prototype memory experiments without blocking the browser interface.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="theme-styles.css">
+  <link rel="stylesheet" href="brotli2-memory-profiler.css">
+  <link rel="manifest" href="manifest.json">
+  <script src="navigation.js" defer></script>
+  <script src="theme-toggle.js" defer></script>
+  <script src="i18n.js" defer></script>
+  <script src="cosmic-music-player.js" defer></script>
+  <script src="brotli2-memory-profiler.js" defer></script>
 </head>
 <body>
-    <h1>Brotli2 Memory Profiler</h1>
-    
-    <div id="status" class="status">
-        <p>Status: <span id="statusText">Ready</span></p>
-    </div>
-    
-    <button id="runMemoryProfile" onclick="runMemoryProfile()">Run Memory Profile</button>
-    
-    <div id="results">
-        <h2>Results</h2>
-        <pre id="output"></pre>
-    </div>
+  <main id="main-content" class="profiler-shell" tabindex="-1">
+    <header class="profiler-hero">
+      <p class="profiler-kicker">ENGINEERING LAB // BOUNDED WORKER</p>
+      <h1>Brotli2 Memory Profiler</h1>
+      <p>Inspect the research prototype without allocating its former 1 MB quadratic case on the UI thread. This is not the standardized Brotli codec and its output must not be used for production data.</p>
+    </header>
 
-    <!-- Load Brotli2 prototype -->
-    <script src="brotli2-prototype.js"></script>
-    <script src="brotli2-memory-profiler.js"></script>
-    
-    <script>
-        function runMemoryProfile() {
-            const statusText = document.getElementById('statusText');
-            const statusDiv = document.getElementById('status');
-            const output = document.getElementById('output');
-            const button = document.getElementById('runMemoryProfile');
-            
-            button.disabled = true;
-            statusText.textContent = 'Running...';
-            statusDiv.className = 'status running';
-            output.textContent = '';
-            
-            // Capture console output
-            const logs = [];
-            const originalLog = console.log;
-            console.log = function(...args) {
-                logs.push(args.join(' '));
-                originalLog.apply(console, args);
-                output.textContent = logs.join('\n');
-            };
-            
-            window.brotli2MemoryProfiler.runMemoryProfile()
-                .then(() => {
-                    statusText.textContent = 'Complete';
-                    statusDiv.className = 'status complete';
-                    console.log = originalLog;
-                    button.disabled = false;
-                })
-                .catch((error) => {
-                    if (error.message.includes('Memory API not available')) {
-                        statusText.textContent = 'Warning: Memory API not available';
-                        statusDiv.className = 'status warning';
-                    } else {
-                        statusText.textContent = 'Error: ' + error.message;
-                        statusDiv.className = 'status error';
-                    }
-                    console.log = originalLog;
-                    button.disabled = false;
-                });
-        }
-    </script>
+    <aside class="profiler-boundary" aria-labelledby="profiler-boundary-title">
+      <h2 id="profiler-boundary-title">Safety boundary</h2>
+      <ul><li>All compression work runs in a disposable Web Worker.</li><li>Input is capped at 16 KB and each run has an eight-second circuit breaker.</li><li>Cancel immediately terminates the worker.</li><li>Heap figures are shown only when the browser exposes an applicable API; buffer estimates are labelled separately.</li></ul>
+    </aside>
+
+    <section class="profiler-console" aria-labelledby="profiler-controls-title">
+      <div><h2 id="profiler-controls-title">Experiment controls</h2><p id="status" class="status" role="status" aria-live="polite">Ready.</p></div>
+      <div class="profiler-controls">
+        <label for="profile-size">Maximum case size</label>
+        <select id="profile-size"><option value="4096">4 KB</option><option value="8192">8 KB</option><option value="16384" selected>16 KB</option></select>
+        <button id="run-memory-profile" type="button">Run profile</button>
+        <button id="cancel-memory-profile" type="button" disabled>Cancel</button>
+        <button id="export-memory-profile" type="button" disabled>Export JSON</button>
+      </div>
+    </section>
+
+    <section class="profiler-results" aria-labelledby="profiler-results-title">
+      <h2 id="profiler-results-title">Results</h2>
+      <div class="profiler-table-wrap" tabindex="0" role="region" aria-label="Compression profiling results" aria-describedby="profiler-table-help">
+        <p id="profiler-table-help" class="sr-only">Scroll horizontally to inspect all columns on a small screen.</p>
+        <table><thead><tr><th>Case</th><th>Input</th><th>Output</th><th>Ratio</th><th>Compress</th><th>Decompress</th><th>Round-trip</th></tr></thead><tbody id="profile-results"><tr><td colspan="7">Run the bounded experiment to populate results.</td></tr></tbody></table>
+      </div>
+      <pre id="profile-diagnostics" aria-label="Profiler diagnostics">No diagnostics yet.</pre>
+    </section>
+  </main>
+  <footer class="site-footer"><p>&copy; <span data-current-year></span> ADRIANO TO THE STAR - I.T.A</p><p><a href="projects.html">Back to Projects</a></p></footer>
 </body>
 </html>

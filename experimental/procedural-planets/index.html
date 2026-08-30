@@ -5,8 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D Procedural Planet | V3 High Fidelity</title>
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;600&display=swap"
-        rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
@@ -15,7 +13,7 @@
         body {
             margin: 0;
             overflow: hidden;
-            background: #000;
+            background: #020611;
             font-family: 'Share Tech Mono', monospace;
         }
 
@@ -31,7 +29,7 @@
             z-index: 10;
             background: rgba(0, 0, 0, 0.8);
             padding: 20px;
-            border: 1px solid rgba(186, 148, 79, 0.4);
+            border: 1px solid rgba(103, 232, 249, .3);
             border-radius: 12px;
             backdrop-filter: blur(15px);
             color: #fff;
@@ -41,17 +39,17 @@
 
         h1 {
             margin: 0 0 15px 0;
-            color: #ba944f;
+            color: #67e8f9;
             font-size: 1.3rem;
             text-transform: uppercase;
             letter-spacing: 2px;
-            text-shadow: 0 0 10px rgba(186, 148, 79, 0.5);
+            text-shadow: 0 0 10px rgba(103, 232, 249, .35);
         }
 
         .version-badge {
             display: inline-block;
-            background: linear-gradient(135deg, #ba944f, #d4a95a);
-            color: #000;
+            background: linear-gradient(135deg, #0891b2, #6366f1);
+            color: #fff;
             padding: 2px 8px;
             border-radius: 4px;
             font-size: 0.7rem;
@@ -75,7 +73,7 @@
         input[type="range"] {
             width: 100%;
             cursor: pointer;
-            accent-color: #ba944f;
+            accent-color: #67e8f9;
             height: 6px;
         }
 
@@ -92,8 +90,8 @@
 
         button {
             width: 100%;
-            background: linear-gradient(135deg, #ba944f, #d4a95a);
-            color: #000;
+            background: linear-gradient(135deg, #0891b2, #6366f1);
+            color: #fff;
             border: none;
             padding: 12px;
             font-family: 'Inter', sans-serif;
@@ -108,7 +106,7 @@
 
         button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(186, 148, 79, 0.4);
+            box-shadow: 0 4px 20px rgba(56, 189, 248, .24);
         }
 
         .back-link {
@@ -121,7 +119,7 @@
         }
 
         .back-link:hover {
-            color: #ba944f;
+            color: #67e8f9;
         }
 
         .stats {
@@ -164,7 +162,7 @@
         }
 
         .checkbox-group input[type="checkbox"] {
-            accent-color: #ba944f;
+            accent-color: #67e8f9;
             width: 16px;
             height: 16px;
         }
@@ -174,33 +172,24 @@
             color: #ccc;
             margin: 0;
         }
+        .control-value { float:right; color:#a5f3fc; }
+        .forge-status { margin:.8rem 0 0; color:#a5f3fc; font-size:.72rem; line-height:1.45; }
+        select:focus-visible,input:focus-visible,button:focus-visible,.back-link:focus-visible{outline:3px solid #67e8f9;outline-offset:3px}
+        @media(max-width:700px){body{overflow:auto}.ui-overlay{position:relative;top:auto;left:auto;margin:.6rem;width:calc(100% - 1.2rem);max-width:none;max-height:48svh;overflow:auto;padding:1rem}#canvas-container{position:fixed;inset:0}.stats{display:none}}
+        @media(prefers-reduced-motion:reduce){*{transition-duration:.001ms!important;animation-duration:.001ms!important}}
     </style>
-    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
-    <script src="/universal-simulation-hub.js"></script>
-    <script src="/void-warfare-engine.js"></script>
-    <script src="/planetary-environment-engine.js"></script>
-    <script src="/galactic-governance-engine.js"></script>
-    <script src="/mining-resource-engine.js"></script>
-    <script src="/xeno-intelligence-engine.js"></script>
-    <script src="/quantum-propulsion-engine.js"></script>
-    <script src="/intelligence-shadow-engine.js"></script>
-    <script src="/fleet-command-mega-engine.js"></script>
-    <script src="/deep-space-industry-engine.js"></script>
-    <script src="/procedural-content-engine.js"></script>
-    <script src="/galactic-commerce-engine.js"></script>
-    <script src="/metaphysics-apotheosis-engine.js"></script>
 </head>
 
 <body>
-    <div id="loading">INITIALIZING PLANETARY FORGE V3...</div>
+    <div id="loading" role="status">INITIALIZING PLANETARY FORGE V4…</div>
     <div id="canvas-container"></div>
 
     <div class="ui-overlay">
         <a href="../../projects.html" class="back-link">← BACK TO PROJECTS</a>
-        <h1>Planetary Forge <span class="version-badge">V3</span></h1>
+        <h1>Planetary Forge <span class="version-badge">V4</span></h1>
 
         <div class="control-group">
-            <label>Planet Type</label>
+            <label for="planet-type">Planet Type</label>
             <select id="planet-type">
                 <option value="terran">Terran (Earth-like)</option>
                 <option value="archipelago">Archipelago (Water World)</option>
@@ -213,23 +202,23 @@
         </div>
 
         <div class="control-group">
-            <label>Water Level</label>
-            <input type="range" id="water-level" min="0" max="1" step="0.01" value="0.5">
+            <label for="water-level">Water Level <output class="control-value" id="water-value">0.50</output></label>
+            <input type="range" id="water-level" min="0" max="1" step="0.01" value="0.5" aria-describedby="water-value">
         </div>
 
         <div class="control-group">
-            <label>Terrain Scale</label>
-            <input type="range" id="roughness" min="0.5" max="4" step="0.1" value="1.8">
+            <label for="roughness">Terrain Scale <output class="control-value" id="roughness-value">1.8</output></label>
+            <input type="range" id="roughness" min="0.5" max="4" step="0.1" value="1.8" aria-describedby="roughness-value">
         </div>
 
         <div class="control-group">
-            <label>Atmosphere Density</label>
-            <input type="range" id="atmosphere-density" min="0" max="2" step="0.05" value="1.0">
+            <label for="atmosphere-density">Atmosphere Density <output class="control-value" id="atmosphere-value">1.00</output></label>
+            <input type="range" id="atmosphere-density" min="0" max="2" step="0.05" value="1.0" aria-describedby="atmosphere-value">
         </div>
 
         <div class="control-group">
-            <label>Cloud Coverage</label>
-            <input type="range" id="cloud-coverage" min="0" max="1" step="0.01" value="0.5">
+            <label for="cloud-coverage">Cloud Coverage <output class="control-value" id="cloud-value">0.50</output></label>
+            <input type="range" id="cloud-coverage" min="0" max="1" step="0.01" value="0.5" aria-describedby="cloud-value">
         </div>
 
         <div class="checkbox-group">
@@ -247,9 +236,11 @@
             <label for="enable-city-lights">City Lights (Night Side)</label>
         </div>
 
-        <button id="generate-btn">Generate New Planet</button>
-        <button id="day-mode-btn"
+        <button type="button" id="generate-btn">Generate New Planet</button>
+        <button type="button" id="day-mode-btn" aria-pressed="false"
             style="background: linear-gradient(135deg, #4f94ba, #5ad4d1); margin-top: 15px;">Toggle Day Mode</button>
+        <button type="button" id="reset-camera-btn" style="background:rgba(8,47,73,.75);border:1px solid rgba(103,232,249,.35);">Reset Camera</button>
+        <p class="forge-status" id="forge-status" role="status" aria-live="polite">Terran seed ready.</p>
     </div>
 
     <div class="stats">
@@ -260,9 +251,9 @@
         <span style="margin-top: 5px; display: inline-block;">WebGL 2.0 • Icosahedron Geometry • PBR Shading</span>
     </div>
 
-    <!-- Three.js CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <!-- Same-origin rendering runtime -->
+    <script src="../../three.min.js"></script>
+    <script src="../../OrbitControls-r128.js"></script>
 
     <script>
         /**
@@ -867,7 +858,15 @@
             renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.outputEncoding = THREE.sRGBEncoding;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 1.05;
             container.appendChild(renderer.domElement);
+            renderer.domElement.setAttribute('aria-label', 'Interactive procedural planet preview');
+            renderer.domElement.addEventListener('webglcontextlost', event => {
+                event.preventDefault();
+                document.getElementById('forge-status').textContent = 'Graphics context lost. Reload the page to restore the forge.';
+            });
 
             controls = new THREE.OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
@@ -924,7 +923,7 @@
             const seed = Math.random() * 1000;
 
             // Planet geometry (high detail icosahedron)
-            const geometry = new THREE.IcosahedronGeometry(1, 128);
+            const geometry = new THREE.IcosahedronGeometry(1, 6);
 
             // Planet uniforms
             planetUniforms = {
@@ -955,7 +954,7 @@
             scene.add(planet);
 
             // Atmosphere
-            const atmGeometry = new THREE.IcosahedronGeometry(1, 32);
+            const atmGeometry = new THREE.IcosahedronGeometry(1, 5);
 
             atmosphereUniforms = {
                 uSunDirection: { value: new THREE.Vector3(1, 0.3, 0.5).normalize() },
@@ -978,7 +977,7 @@
             scene.add(atmosphere);
 
             // Clouds
-            const cloudGeometry = new THREE.IcosahedronGeometry(1, 64);
+            const cloudGeometry = new THREE.IcosahedronGeometry(1, 5);
 
             cloudUniforms = {
                 uTime: { value: 0 },
@@ -1019,20 +1018,24 @@
 
             document.getElementById('water-level').addEventListener('input', (e) => {
                 planetUniforms.uWaterLevel.value = parseFloat(e.target.value);
+                document.getElementById('water-value').textContent = Number(e.target.value).toFixed(2);
             });
 
             document.getElementById('roughness').addEventListener('input', (e) => {
                 planetUniforms.uRoughness.value = parseFloat(e.target.value);
+                document.getElementById('roughness-value').textContent = Number(e.target.value).toFixed(1);
             });
 
             document.getElementById('atmosphere-density').addEventListener('input', (e) => {
                 atmosphereUniforms.uAtmosphereDensity.value = parseFloat(e.target.value);
+                document.getElementById('atmosphere-value').textContent = Number(e.target.value).toFixed(2);
             });
 
             document.getElementById('cloud-coverage').addEventListener('input', (e) => {
                 const val = parseFloat(e.target.value);
                 cloudUniforms.uCloudCoverage.value = val;
                 planetUniforms.uCloudCoverage.value = val; // Sync for shadows
+                document.getElementById('cloud-value').textContent = val.toFixed(2);
             });
 
             document.getElementById('enable-clouds').addEventListener('change', (e) => {
@@ -1063,6 +1066,7 @@
                     planetUniforms.uAmbientIntensity.value = 3.5; // Massive boost for Day look
 
                     btn.textContent = "Switch to Space Mode";
+                    btn.setAttribute('aria-pressed', 'true');
                     btn.style.background = "linear-gradient(135deg, #ba944f, #d4a95a)"; // Gold
                 } else {
                     scene.background = new THREE.Color(0x000000); // Space Black
@@ -1077,8 +1081,15 @@
                     planetUniforms.uAmbientIntensity.value = 1.0;
 
                     btn.textContent = "Toggle Day Mode";
+                    btn.setAttribute('aria-pressed', 'false');
                     btn.style.background = "linear-gradient(135deg, #4f94ba, #5ad4d1)"; // Blue
                 }
+            });
+            document.getElementById('reset-camera-btn').addEventListener('click', () => {
+                camera.position.set(0, 0, 4);
+                controls.target.set(0, 0, 0);
+                controls.update();
+                document.getElementById('forge-status').textContent = 'Camera reset to orbital overview.';
             });
         }
 
@@ -1086,6 +1097,7 @@
             const newSeed = Math.random() * 1000;
             planetUniforms.uSeed.value = newSeed;
             cloudUniforms.uSeed.value = newSeed;
+            document.getElementById('forge-status').textContent = `Generated seed ${newSeed.toFixed(2)}.`;
         }
 
         function applyPreset(presetName) {
@@ -1110,6 +1122,8 @@
             }
 
             atmosphereUniforms.uAtmosphereColor.value.set(...preset.atmosphereColor);
+            document.getElementById('water-value').textContent = Number(preset.waterLevel).toFixed(2);
+            document.getElementById('forge-status').textContent = `${document.getElementById('planet-type').selectedOptions[0].textContent} preset applied.`;
             regeneratePlanet();
         }
 
@@ -1118,12 +1132,13 @@
 
             const elapsed = (Date.now() - startTime) / 1000;
 
-            if (planetUniforms) planetUniforms.uTime = { value: elapsed };
+            if (planetUniforms) planetUniforms.uTime.value = elapsed;
             if (cloudUniforms) cloudUniforms.uTime.value = elapsed;
 
             // Slow rotation
-            if (planet) planet.rotation.y += 0.0005;
-            if (clouds) clouds.rotation.y += 0.0007;
+            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (planet && !reduceMotion) planet.rotation.y += 0.0005;
+            if (clouds && !reduceMotion) clouds.rotation.y += 0.0007;
 
             controls.update();
             renderer.render(scene, camera);

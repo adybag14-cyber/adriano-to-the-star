@@ -69,10 +69,9 @@
     <!-- Post Processing -->
     <script data-cfasync="false" src="CopyShader-r128.js" defer></script>
 
-    <!-- Supabase -->
-    <!-- Supabase client retired: production data/auth uses Cloudflare Workers + D1. -->
-    <script data-cfasync="false" src="supabase-config.js?v=2026_V126_ULTIMATE_FIX" defer></script>
-    <script data-cfasync="false" src="supabase-integration.js?v=2026_V126_ULTIMATE_FIX" defer></script>
+    <!-- Browser-local profile and save adapter; no application cloud backend. -->
+    <script data-cfasync="false" src="auth-local.js" defer></script>
+    <script data-cfasync="false" src="pioneer-local-service.js" defer></script>
     <!-- Gemini helper is not used by Pioneer startup; AI Game Master uses its local fallback. -->
     <script data-cfasync="false" src="ai-game-master.js?v=2026_V126_ULTIMATE_FIX" defer></script>
     <script data-cfasync="false" src="alien-ecosystem.js?v=2026_V126_ULTIMATE_FIX" defer></script>
@@ -91,7 +90,7 @@
     <script data-cfasync="false" src="combat-system.js?v=2026_V126_ULTIMATE_FIX" defer></script>
     <script data-cfasync="false" src="victory-system.js?v=2026_V126_ULTIMATE_FIX" defer></script>
     <script data-cfasync="false" src="achievement-system.js?v=2026_V126_ULTIMATE_FIX" defer></script>
-    <!-- Legacy Supabase multiplayer is disabled with the retired cloud backend. -->
+    <!-- Legacy network multiplayer is retired; the simulation remains single-player. -->
     <script data-cfasync="false" src="performance-system.js?v=2026_V126_ULTIMATE_FIX" defer></script>
     <script data-cfasync="false" src="voxel-terrain-system.js?v=2026_V126_ULTIMATE_FIX" defer></script>
     <script data-cfasync="false" src="fluid-dynamics-system.js?v=2026_V126_ULTIMATE_FIX" defer></script>
@@ -454,6 +453,8 @@
         #hud-target {
             top: 90px;
             right: 20px;
+            bottom: auto;
+            left: auto;
             width: 260px;
             text-align: right;
         }
@@ -635,17 +636,26 @@
         </div>
     </div>
 
-    <div id="game-container"></div>
+    <main id="game-container" aria-label="Exoplanet Pioneer simulation"></main>
     <canvas id="quantum-layer"
         style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:1; display:none;"></canvas>
 
     <!-- Combat HUD Overlay -->
-    <div id="combat-hud">
-        <div id="crosshair"></div>
+    <div id="combat-hud" role="region" aria-label="Space combat cockpit" aria-describedby="combat-instructions">
+        <p id="combat-instructions" class="ep-visually-hidden">Use W A S D to steer, Q and E to roll, arrow up or Shift to accelerate, 1 for laser, 2 for missile, T to acquire a target lock, Space to fire, Tab to change ship, and R to retreat.</p>
+        <div id="crosshair" aria-hidden="true"></div>
 
-        <div id="hud-target-bracket"></div>
+        <div id="hud-target-bracket" aria-hidden="true"></div>
 
-        <div id="hud-lead-indicator"></div>
+        <div id="hud-lead-indicator" aria-hidden="true"></div>
+
+        <div id="hud-combat-flash" aria-hidden="true"></div>
+
+        <div id="hud-lock" class="hud-panel" aria-live="polite">
+            <div id="hud-lock-status">SEEKING TARGET</div>
+            <div class="hud-lock-track" aria-hidden="true"><span id="hud-lock-bar"></span></div>
+            <div id="hud-lock-help">T: acquire · 2: missile · SPACE: fire</div>
+        </div>
 
         <div id="hud-target" class="hud-panel">
             <div>TARGET</div>
@@ -669,6 +679,21 @@
 
         <div id="hud-speed" class="hud-panel">
             SPD: 0
+        </div>
+
+        <div id="combat-touch-controls" aria-label="Touch combat controls">
+            <div class="combat-touch-steering" aria-label="Steering controls">
+                <button type="button" data-combat-key="KeyW" aria-label="Pitch down">▲</button>
+                <button type="button" data-combat-key="KeyA" aria-label="Turn left">◀</button>
+                <button type="button" data-combat-key="KeyS" aria-label="Pitch up">▼</button>
+                <button type="button" data-combat-key="KeyD" aria-label="Turn right">▶</button>
+            </div>
+            <div class="combat-touch-actions">
+                <button type="button" data-combat-action="boost" aria-label="Hold to boost">BOOST</button>
+                <button type="button" data-combat-action="lock" aria-label="Acquire or release target lock">LOCK</button>
+                <button type="button" data-combat-action="weapon" aria-label="Switch weapon">WPN</button>
+                <button type="button" data-combat-action="fire" aria-label="Fire current weapon">FIRE</button>
+            </div>
         </div>
     </div>
 

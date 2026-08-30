@@ -1,5 +1,3 @@
-/* global Planet3DViewer */
-
 // Advanced Database Features
 // Includes: Advanced filters, favorites, export, comparison, notifications
 
@@ -30,51 +28,14 @@ class DatabaseAdvancedFeatures {
         } catch (e) { /* Silent fail */ }
     }
 
-    // Load favorites from localStorage and Supabase
+    // Load favourites from browser-local storage.
     loadFavorites() {
         const favorites = JSON.parse(localStorage.getItem('planet_favorites') || '[]');
-
-        // Try to load from Supabase if authenticated
-        if (typeof authManager !== 'undefined' && authManager && authManager.isAuthenticated()) {
-            this.loadFavoritesFromSupabase().then(supabaseFavorites => {
-                if (supabaseFavorites && supabaseFavorites.length > 0) {
-                    // Merge and deduplicate
-                    const merged = [...new Set([...favorites, ...supabaseFavorites])];
-                    localStorage.setItem('planet_favorites', JSON.stringify(merged));
-                    return merged;
-                }
-            }).catch(err => {
-                console.error('Error loading favorites from Supabase:', err);
-            });
-        }
-
         return favorites;
     }
 
-    async loadFavoritesFromSupabase() {
-        if (!authManager || !authManager.isAuthenticated() || !authManager.supabase) {
-            return [];
-        }
-
-        try {
-            const user = authManager.getCurrentUser();
-            if (!user || !user.id) return [];
-
-            const { data, error } = await authManager.supabase
-                .from('planet_favorites')
-                .select('kepid')
-                .eq('user_id', user.id);
-
-            if (error) throw error;
-            return data ? data.map(f => f.kepid) : [];
-        } catch (err) {
-            console.error('Supabase favorites error:', err);
-            return [];
-        }
-    }
-
-    // Save favorite to localStorage and Supabase
-    async toggleFavorite(kepid) {
+    // Save favourite to browser-local storage.
+    toggleFavorite(kepid) {
         const index = this.favorites.indexOf(kepid);
 
         if (index > -1) {
@@ -90,50 +51,8 @@ class DatabaseAdvancedFeatures {
         // Save to localStorage
         localStorage.setItem('planet_favorites', JSON.stringify(this.favorites));
 
-        // Save to Supabase if authenticated
-        if (typeof authManager !== 'undefined' && authManager && authManager.isAuthenticated()) {
-            await this.saveFavoriteToSupabase(kepid, index === -1);
-        }
-
         // Update UI
         this.updateFavoriteButtons();
-    }
-
-    async saveFavoriteToSupabase(kepid, isFavorite) {
-        if (!authManager || !authManager.isAuthenticated() || !authManager.supabase) {
-            return;
-        }
-
-        try {
-            const user = authManager.getCurrentUser();
-            if (!user || !user.id) return;
-
-            if (isFavorite) {
-                // Add favorite
-                const { error } = await authManager.supabase
-                    .from('planet_favorites')
-                    .insert({
-                        user_id: user.id,
-                        kepid: kepid,
-                        created_at: new Date().toISOString()
-                    });
-
-                if (error && error.code !== '23505') { // Ignore duplicate key errors
-                    throw error;
-                }
-            } else {
-                // Remove favorite
-                const { error } = await authManager.supabase
-                    .from('planet_favorites')
-                    .delete()
-                    .eq('user_id', user.id)
-                    .eq('kepid', kepid);
-
-                if (error) throw error;
-            }
-        } catch (err) {
-            console.error('Error saving favorite to Supabase:', err);
-        }
     }
 
     // Create advanced filter controls
@@ -827,16 +746,25 @@ class DatabaseAdvancedFeatures {
             view3DBtn.textContent = '🪐';
             view3DBtn.title = 'View in 3D';
             view3DBtn.style.cssText = 'flex: 1; background: rgba(186, 148, 79, 0.2); border: 1px solid rgba(186, 148, 79, 0.5); color: #ba944f; padding: 0.5rem; border-radius: 5px; cursor: pointer; font-size: 1rem; font-weight: 600;';
-            view3DBtn.addEventListener('click', (e) => {
+            view3DBtn.addEventListener('click', async (e) => {
                 e.stopPropagation();
                 const planet = this.db.allData.find(p => p.kepid === kepid);
                 if (planet) {
-                    if (!window.Planet3DViewer) {
-                        this.showNotification('3D Viewer not available', 'error');
-                        return;
+                    view3DBtn.disabled = true;
+                    view3DBtn.setAttribute('aria-busy', 'true');
+                    try {
+                        if (typeof window.ensureDatabase3D !== 'function' || typeof window.viewPlanet3D !== 'function') {
+                            throw new Error('The database 3D runtime is unavailable.');
+                        }
+                        await window.ensureDatabase3D();
+                        await window.viewPlanet3D(kepid);
+                    } catch (error) {
+                        console.error('Unable to open this planet in 3D:', error);
+                        this.showNotification('3D Viewer could not be loaded', 'error');
+                    } finally {
+                        view3DBtn.disabled = false;
+                        view3DBtn.removeAttribute('aria-busy');
                     }
-                    const viewer = new Planet3DViewer();
-                    viewer.visualizePlanet(planet);
                 }
             });
 
@@ -924,4 +852,3 @@ if (typeof window !== 'undefined') {
         }, 2000);
     });
 }
-

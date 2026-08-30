@@ -12,8 +12,8 @@ export class NativeBridge {
         this.keepReading = false;
 
         // Feature Detection
-        this.supportsFileSystem = 'showOpenFilePicker' in window;
-        this.supportsSerial = 'serial' in navigator;
+        this.supportsFileSystem = window.isSecureContext && 'showOpenFilePicker' in window && 'showSaveFilePicker' in window;
+        this.supportsSerial = window.isSecureContext && 'serial' in navigator;
     }
 
     // --- File System API ---
@@ -59,9 +59,14 @@ export class NativeBridge {
 
     async connectSerial(baudRate = 9600) {
         if (!this.supportsSerial) throw new Error("WebSerial API not supported.");
+        if (this.port) return this.port.getInfo();
+        const normalizedBaudRate = Number(baudRate);
+        if (!Number.isInteger(normalizedBaudRate) || normalizedBaudRate < 300 || normalizedBaudRate > 3000000) {
+            throw new RangeError('Baud rate must be an integer between 300 and 3000000.');
+        }
 
         this.port = await navigator.serial.requestPort();
-        await this.port.open({ baudRate });
+        await this.port.open({ baudRate: normalizedBaudRate });
 
         this.keepReading = true;
         this.readLoop();
@@ -72,7 +77,7 @@ export class NativeBridge {
     async disconnectSerial() {
         if (this.port) {
             this.keepReading = false;
-            if (this.reader) await this.reader.cancel();
+            if (this.reader) await this.reader.cancel().catch(() => {});
             await this.port.close();
             this.port = null;
         }
@@ -90,7 +95,8 @@ export class NativeBridge {
                     }
                 }
             } catch (error) {
-                console.error(error);
+                if (this.onSerialError) this.onSerialError(error);
+                else console.info('Serial read stopped:', error?.message || error);
             } finally {
                 this.reader.releaseLock();
             }
@@ -100,9 +106,12 @@ export class NativeBridge {
     async sendSerial(data) {
         if (this.port && this.port.writable) {
             const writer = this.port.writable.getWriter();
-            const encoder = new TextEncoder();
-            await writer.write(encoder.encode(data));
-            writer.releaseLock();
+            try {
+                const encoder = new TextEncoder();
+                await writer.write(encoder.encode(String(data)));
+            } finally {
+                writer.releaseLock();
+            }
         }
     }
 }

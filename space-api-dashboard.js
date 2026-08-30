@@ -1,6 +1,6 @@
 /**
  * Space API Dashboard UI
- * Displays real-time data from NASA, ESA, SpaceX, and space news
+ * Displays the same-origin release snapshot prepared from authoritative space sources.
  */
 
 class SpaceAPIDashboard {
@@ -9,6 +9,7 @@ class SpaceAPIDashboard {
         this.container = null;
         this.updateInterval = null;
         this.isVisible = false;
+        this.snapshot = null;
     }
     
     /**
@@ -23,7 +24,6 @@ class SpaceAPIDashboard {
         }
         
         this.render();
-        this.startAutoUpdate();
     }
     
     /**
@@ -35,23 +35,23 @@ class SpaceAPIDashboard {
         this.container.innerHTML = `
             <div class="space-api-dashboard">
                 <div class="dashboard-header">
-                    <h2>🌌 Real-Time Space Updates</h2>
-                    <button class="refresh-btn" id="refresh-space-data">🔄 Refresh</button>
+                    <div><span class="snapshot-kicker">RELEASE SNAPSHOT</span><h2>Mission Data Array</h2></div>
+                    <button type="button" class="refresh-btn" id="refresh-space-data">Reload snapshot</button>
                 </div>
                 
-                <div class="dashboard-tabs">
-                    <button class="tab-btn active" data-tab="all">All Updates</button>
-                    <button class="tab-btn" data-tab="exoplanets">Exoplanets</button>
-                    <button class="tab-btn" data-tab="apod">APOD</button>
-                    <button class="tab-btn" data-tab="neo">NEO</button>
-                    <button class="tab-btn" data-tab="launches">Launches</button>
-                    <button class="tab-btn" data-tab="telescopes">Telescopes</button>
-                    <button class="tab-btn" data-tab="news">News</button>
-                    <button class="tab-btn" data-tab="esa">ESA</button>
+                <div class="dashboard-tabs" role="tablist" aria-label="Mission data views">
+                    <button type="button" class="tab-btn active" data-tab="all" role="tab" aria-selected="true">All Updates</button>
+                    <button type="button" class="tab-btn" data-tab="exoplanets" role="tab" aria-selected="false">Exoplanets</button>
+                    <button type="button" class="tab-btn" data-tab="apod" role="tab" aria-selected="false">APOD</button>
+                    <button type="button" class="tab-btn" data-tab="neo" role="tab" aria-selected="false">NEO</button>
+                    <button type="button" class="tab-btn" data-tab="launches" role="tab" aria-selected="false">Launches</button>
+                    <button type="button" class="tab-btn" data-tab="telescopes" role="tab" aria-selected="false">Telescopes</button>
+                    <button type="button" class="tab-btn" data-tab="news" role="tab" aria-selected="false">News</button>
+                    <button type="button" class="tab-btn" data-tab="esa" role="tab" aria-selected="false">ESA</button>
                 </div>
                 
                 <div class="dashboard-content">
-                    <div id="space-data-loading" class="loading-state">
+                    <div id="space-data-loading" class="loading-state" role="status">
                         <div class="spinner"></div>
                         <p>Loading space data...</p>
                     </div>
@@ -80,6 +80,7 @@ class SpaceAPIDashboard {
         tabButtons.forEach(btn => {
             btn.addEventListener('click', () => {
                 tabButtons.forEach(b => b.classList.remove('active'));
+                tabButtons.forEach(b => b.setAttribute('aria-selected', String(b === btn)));
                 btn.classList.add('active');
                 const tab = btn.dataset.tab;
                 this.showTab(tab);
@@ -102,11 +103,13 @@ class SpaceAPIDashboard {
         const content = this.container.querySelector('#space-data-content');
         if (!content) return;
         
-        if (tab === 'all') {
-            await this.loadData();
-        } else {
-            await this.loadTabData(tab);
-        }
+        if (!this.snapshot) await this.loadData();
+        const data = this.snapshot || { exoplanets: [], launches: [], news: [], telescopes: {} };
+        if (tab === 'all') this.renderAllData(data);
+        else if (tab === 'exoplanets') this.renderExoplanets(data.exoplanets || []);
+        else if (tab === 'launches') this.renderLaunches({ upcoming: data.launches || [], latest: [] });
+        else if (tab === 'news') this.renderNews(data.news || []);
+        else this.renderSnapshotBoundary(tab);
     }
     
     /**
@@ -121,97 +124,35 @@ class SpaceAPIDashboard {
         if (content) content.style.display = 'none';
         if (error) error.style.display = 'none';
         
-        let hasCachedPreview = false;
         try {
-            if (forceRefresh) {
-                // Clear cache to force refresh
-                this.api.cache.clear();
-            } else if (typeof this.api.getBuildCachedUpdates === 'function') {
-                const cached = await this.api.getBuildCachedUpdates();
-                if (cached.exoplanets.length || cached.launches.length || cached.news.length) {
-                    hasCachedPreview = true;
-                    if (loading) loading.style.display = 'none';
-                    if (content) {
-                        content.style.display = 'block';
-                        this.renderAllData(cached);
-                    }
-                }
-            }
-            
-            const data = await this.api.getAllUpdates();
-            
+            if (forceRefresh) this.api.staticFeedPromise = null;
+            if (typeof this.api.getBuildCachedUpdates !== 'function') throw new Error('Build-cached feed adapter is unavailable');
+            const data = await this.api.getBuildCachedUpdates();
+            this.snapshot = data;
             if (loading) loading.style.display = 'none';
             if (content) {
                 content.style.display = 'block';
                 this.renderAllData(data);
             }
         } catch (err) {
-            if (hasCachedPreview) {
-                console.info('Live space data is unavailable; keeping the build-cached snapshot.', err?.message || err);
-                return;
-            }
-            console.error('Error loading space data:', err);
+            console.info('Build-cached space data is unavailable.', err?.message || err);
             if (loading) loading.style.display = 'none';
             if (error) error.style.display = 'block';
         }
+    }
+
+    renderSnapshotBoundary(tab) {
+        const content = this.container.querySelector('#space-data-content');
+        if (!content) return;
+        const labels = { apod: 'Astronomy Picture of the Day', neo: 'Near-Earth Objects', telescopes: 'Telescope updates', esa: 'ESA updates' };
+        content.innerHTML = `<section class="snapshot-boundary" role="status"><span aria-hidden="true">◎</span><h3>${labels[tab] || 'Data view'}</h3><p>This release snapshot does not contain that feed. The dashboard will not bypass CORS or call a live third-party API from your browser.</p></section>`;
     }
     
     /**
      * Load data for specific tab
      */
     async loadTabData(tab) {
-        const content = this.container.querySelector('#space-data-content');
-        if (!content) return;
-        
-        try {
-            let data;
-            switch (tab) {
-                case 'exoplanets':
-                    data = await this.api.getNASAExoplanets(20);
-                    this.renderExoplanets(data);
-                    break;
-                case 'apod':
-                    data = await this.api.getNASAAPOD();
-                    this.renderAPOD(data);
-                    break;
-                case 'neo':
-                    try {
-                        data = await this.api.getNASANEO();
-                        this.renderNEO(data);
-                    } catch (err) {
-                        content.innerHTML = `<p class="error">⚠️ NASA API key required for NEO data. Please configure your API key.</p>`;
-                    }
-                    break;
-                case 'launches':
-                    const [upcoming, latest] = await Promise.all([
-                        this.api.getSpaceXLaunches(5),
-                        this.api.getSpaceXLatestLaunches(5)
-                    ]);
-                    this.renderLaunches({ upcoming, latest });
-                    break;
-                case 'telescopes':
-                    data = await this.api.getAllTelescopeData();
-                    this.renderTelescopes(data);
-                    break;
-                case 'news':
-                    data = await this.api.getAllSpaceNews(10);
-                    this.renderNews(data);
-                    break;
-                case 'esa':
-                    const [esaNews, esaMissions] = await Promise.allSettled([
-                        this.api.getESANews(10),
-                        this.api.getESAMissions(10)
-                    ]);
-                    this.renderESA({
-                        news: esaNews.status === 'fulfilled' ? esaNews.value : [],
-                        missions: esaMissions.status === 'fulfilled' ? esaMissions.value : []
-                    });
-                    break;
-            }
-        } catch (err) {
-            console.error(`Error loading ${tab} data:`, err);
-            content.innerHTML = `<p class="error">⚠️ Error loading ${tab} data</p>`;
-        }
+        return this.showTab(tab);
     }
     
     /**

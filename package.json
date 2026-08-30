@@ -22,11 +22,11 @@
     "analyze": "webpack-bundle-analyzer dist/stats.json",
     "format": "prettier --write \"src/**/*.{js,ts,css,html}\"",
     "type-check": "tsc --noEmit",
-    "deploy:exoplanet": "npm run build:vite && wrangler pages deploy dist --project-name=exoplanet-pioneer --functions=functions --config=wrangler-exoplanet.toml",
-    "deploy:exoplanet:preview": "npm run build:vite && wrangler pages deploy dist --project-name=exoplanet-pioneer --functions=functions --config=wrangler-exoplanet.toml --branch=preview",
-    "local:exoplanet": "wrangler pages dev dist --functions=functions --local --config=wrangler-exoplanet.toml"
+    "data:tracker": "node scripts/update-tracker-data.mjs",
+    "build:pages": "powershell -ExecutionPolicy Bypass -File build-pages.ps1"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
     "@babel/core": "^7.23.0",
     "@babel/plugin-transform-runtime": "^7.23.0",
     "@babel/preset-env": "^7.23.0",
@@ -51,12 +51,13 @@
     "vitest": "^4.1.10",
     "webpack": "^5.89.0",
     "webpack-bundle-analyzer": "^4.9.1",
-    "webpack-cli": "^5.1.4",
-    "wrangler": "^4.59.2"
+    "webpack-cli": "^5.1.4"
   },
   "dependencies": {
     "@babel/runtime": "^7.28.4",
-    "@supabase/supabase-js": "^2.39.0",
+    "bitgpu": "0.19.1",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
     "three": "^0.160.0"
   },
   "engines": {

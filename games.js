@@ -1,7 +1,6 @@
 /**
  * Ruffle Games Manager
- * Handles SWF game loading and playback for 1122+ games
- * Enhanced with comprehensive error debugging
+ * Handles the build-cached SWF catalogue with paginated, accessible launch controls.
  */
 
 class RuffleGamesManager {
@@ -10,9 +9,12 @@ class RuffleGamesManager {
         this.filteredGames = [];
         this.currentGame = null;
         this.rufflePlayer = null;
-        this.debugMode = true; // Enable detailed logging
+        this.debugMode = false;
         this.r2BaseUrl = (window.AppConfig && window.AppConfig.urls.r2Base) || 'https://starisdons-swf-worker.adybag14.workers.dev'; // Use config or fallback
         this.currentSort = 'name-asc'; // Default sort
+        this.currentPage = 1;
+        this.pageSize = 48;
+        this.lastLaunchControl = null;
         this.init();
     }
 
@@ -43,37 +45,11 @@ class RuffleGamesManager {
     }
 
     async fetchJSON(url, options = {}) {
-        try {
-            // First attempt: direct fetch
-            const response = await fetch(url, options);
-            if (response.ok) return await response.json();
-            throw new Error(`HTTP error! status: ${response.status}`);
-        } catch (error) {
-            this.log(`Direct fetch failed for ${url}, trying proxies...`, 'warning');
-            
-            // Second attempt: AllOrigins proxy
-            try {
-                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
-                const proxyRes = await fetch(proxyUrl);
-                if (proxyRes.ok) {
-                    const data = await proxyRes.json();
-                    return typeof data.contents === 'string' ? JSON.parse(data.contents) : data.contents;
-                }
-            } catch (proxyError) {
-                this.log('AllOrigins proxy failed', 'warning');
-            }
-
-            // Third attempt: corsproxy.io fallback
-            try {
-                const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
-                const proxyRes = await fetch(proxyUrl, options);
-                if (proxyRes.ok) return await proxyRes.json();
-            } catch (proxyError) {
-                this.log('All proxies failed', 'error');
-            }
-
-            throw error; // Rethrow original error if all fail
-        }
+        const resolved = new URL(url, document.baseURI);
+        if (resolved.origin !== window.location.origin) throw new Error('Cross-origin catalogue requests are not allowed');
+        const response = await fetch(resolved.href, options);
+        if (!response.ok) throw new Error(`HTTP ${response.status} while loading the game catalogue`);
+        return response.json();
     }
 
     async loadGames() {
@@ -81,15 +57,9 @@ class RuffleGamesManager {
             this.log('📥 Loading games manifest...', 'info');
 
             // Try multiple paths for games-manifest.json (GitLab Pages compatibility)
-            const basePath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')) || '';
             const manifestPaths = [
                 'games-manifest.json',
-                './games-manifest.json',
-                '/games-manifest.json',
-                `${basePath}/games-manifest.json`,
-                `${window.location.origin}/games-manifest.json`,
-                'games/games-manifest.json',
-                `${basePath}/games/games-manifest.json`
+                './games-manifest.json'
             ];
 
             let allGames = null;
@@ -158,6 +128,7 @@ class RuffleGamesManager {
             if (sortSelect) {
                 sortSelect.addEventListener('change', (e) => {
                     this.currentSort = e.target.value;
+                    this.currentPage = 1;
                     this.log(`🔄 Sort changed to: ${this.currentSort}`, 'info');
                     this.sortGames();
                     this.renderGames();
@@ -170,6 +141,7 @@ class RuffleGamesManager {
                 gamesGrid.addEventListener('click', (e) => {
                     const gameCard = e.target.closest('.game-card');
                     if (gameCard) {
+                        this.lastLaunchControl = gameCard;
                         const gameFile = gameCard.dataset.game;
                         const gameName = gameCard.dataset.name;
                         this.log(`🎯 Game clicked: ${gameName}`, 'info');
@@ -218,6 +190,7 @@ class RuffleGamesManager {
             this.filteredGames = this.games.filter(game =>
                 game.name.toLowerCase().includes(term)
             );
+            this.currentPage = 1;
             this.sortGames(); // Apply current sort
             this.log(`🔍 Filtered to ${this.filteredGames.length} games`, 'info');
             this.renderGames();
@@ -261,7 +234,7 @@ class RuffleGamesManager {
 
     renderGames() {
         try {
-            this.log(`🎨 Rendering ${this.filteredGames.length} games...`, 'info');
+            this.log(`🎨 Rendering page ${this.currentPage} of the filtered archive...`, 'info');
 
             const gamesGrid = document.getElementById('games-grid');
             const loadingIndicator = document.getElementById('loading-indicator');
@@ -276,6 +249,7 @@ class RuffleGamesManager {
                 loadingIndicator.style.display = 'none';
             }
 
+            document.querySelector('.games-pager')?.remove();
             if (this.filteredGames.length === 0) {
                 gamesGrid.innerHTML = '<div class="no-games"><p>No games found. Try a different search term.</p></div>';
                 if (gameCount) {
@@ -287,26 +261,49 @@ class RuffleGamesManager {
                 return;
             }
 
+            const totalPages = Math.max(1, Math.ceil(this.filteredGames.length / this.pageSize));
+            this.currentPage = Math.min(Math.max(1, this.currentPage), totalPages);
+            const start = (this.currentPage - 1) * this.pageSize;
+            const visibleGames = this.filteredGames.slice(start, start + this.pageSize);
+
             // Update game count display
             if (gameCount) {
-                gameCount.innerHTML = `Showing <span id="visible-count">${this.filteredGames.length}</span> of ${this.games.length} deployed games`;
+                gameCount.innerHTML = `Showing <span id="visible-count">${visibleGames.length}</span> of ${this.filteredGames.length} matches · ${this.games.length} archived games`;
                 if (visibleCount) {
-                    visibleCount.textContent = this.filteredGames.length;
+                    visibleCount.textContent = visibleGames.length;
                 }
             }
 
-            gamesGrid.innerHTML = this.filteredGames.map(game => {
+            gamesGrid.innerHTML = visibleGames.map(game => {
                 // Sanitize name to prevent XSS
-                const safeName = this.formatGameName(game.name).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                const safeName = this.escapeAttribute(this.formatGameName(game.name));
                 return `
-                <div class="game-card" data-game="${game.file}" data-name="${game.name.replace(/"/g, '&quot;')}">
+                <button type="button" class="game-card" data-game="${this.escapeAttribute(game.file)}" data-name="${this.escapeAttribute(game.name)}" aria-label="Launch ${safeName}">
                     <div class="game-thumbnail">
                         <div class="play-icon">▶️</div>
                         <div class="game-name">${safeName}</div>
                     </div>
                     <div class="game-size">${Math.round(game.size)} KB</div>
-                </div>
+                </button>
             `}).join('');
+
+            if (totalPages > 1) {
+                const pager = document.createElement('nav');
+                pager.className = 'games-pager';
+                pager.setAttribute('aria-label', 'Games archive pages');
+                pager.innerHTML = `
+                    <button type="button" data-page="previous" ${this.currentPage === 1 ? 'disabled' : ''}>Previous</button>
+                    <span aria-live="polite">Page ${this.currentPage} of ${totalPages}</span>
+                    <button type="button" data-page="next" ${this.currentPage === totalPages ? 'disabled' : ''}>Next</button>`;
+                pager.addEventListener('click', event => {
+                    const action = event.target.closest('button')?.dataset.page;
+                    if (!action) return;
+                    this.currentPage += action === 'next' ? 1 : -1;
+                    this.renderGames();
+                    document.getElementById('games-grid')?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+                });
+                gamesGrid.after(pager);
+            }
 
             this.log(`✅ Rendered ${this.filteredGames.length} game cards`, 'success');
         } catch (error) {
@@ -321,6 +318,14 @@ class RuffleGamesManager {
             .replace(/[_-]/g, ' ')
             .replace(/\b\w/g, l => l.toUpperCase())
             .substring(0, 50) + (name.length > 50 ? '...' : '');
+    }
+
+    escapeAttribute(value) {
+        return String(value || '')
+            .replaceAll('&', '&amp;')
+            .replaceAll('"', '&quot;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;');
     }
 
     async playGame(gameFile, gameName) {
@@ -338,6 +343,7 @@ class RuffleGamesManager {
 
             // Show modal
             modal.style.display = 'flex';
+            modal.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
 
             const skipAnimations = typeof document !== 'undefined' && document && document.visibilityState !== 'visible';
@@ -355,6 +361,7 @@ class RuffleGamesManager {
             if (modalTitle) {
                 modalTitle.textContent = this.formatGameName(gameName);
             }
+            document.getElementById('close-game-modal')?.focus();
 
             // Clear previous game
             gameContainer.innerHTML = '<div style="color: white; text-align: center; padding: 2rem;">Loading game...</div>';
@@ -401,36 +408,8 @@ class RuffleGamesManager {
                     </div>
                 `;
 
-                // Perform explicit fetch to check for 404/403
-                const swfUrl = `${this.r2BaseUrl}/${gameFile}`;
-                fetch(swfUrl).then(response => {
-                    const debugEl = document.getElementById('fetch-debug');
-                    if (debugEl) {
-                        debugEl.innerHTML = `
-                            <strong>Network Check:</strong><br>
-                            Status: ${response.status} ${response.statusText}<br>
-                            URL: ${swfUrl}<br>
-                            Type: ${response.type}<br>
-                            Size: ${response.headers.get('content-length') || 'Unknown'} bytes
-                        `;
-                        if (!response.ok) {
-                            debugEl.style.color = '#ff5555';
-                        } else {
-                            debugEl.style.color = '#55ff55';
-                            debugEl.innerHTML += '<br>File exists but Ruffle failed to load it.';
-                        }
-                    }
-                }).catch(fetchErr => {
-                    const debugEl = document.getElementById('fetch-debug');
-                    if (debugEl) {
-                        debugEl.innerHTML = `
-                            <strong>Network Check Failed:</strong><br>
-                            ${fetchErr.message}<br>
-                            Possible CORS or Network Block.
-                        `;
-                        debugEl.style.color = '#ff5555';
-                    }
-                });
+                const debugEl = document.getElementById('fetch-debug');
+                if (debugEl) debugEl.textContent = 'The catalogue entry is intact, but the remote SWF runtime or asset could not be opened.';
             }
 
             // Reset player instance
@@ -460,6 +439,7 @@ class RuffleGamesManager {
 
             this.currentGame = null;
             modal.style.display = 'none';
+            modal.setAttribute('aria-hidden', 'true');
             document.body.style.overflow = '';
 
             modal.style.animation = '';
@@ -467,6 +447,7 @@ class RuffleGamesManager {
             modal.style.visibility = '';
 
             this.log('✅ Game closed', 'success');
+            this.lastLaunchControl?.focus();
         } catch (error) {
             this.log(`❌ Error closing game: ${error.message}`, 'error');
         }

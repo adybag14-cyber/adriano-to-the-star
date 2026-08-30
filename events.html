@@ -98,16 +98,20 @@
 
         <section class="content-section" data-entrance="slideUp">
             <div class="content-container">
-                <h2>Upcoming Events</h2>
+                <h2>Event Archive</h2>
                 <div class="event-card" style="border: 1px solid rgba(255, 255, 255, 0.1); padding: 2rem; margin-top: 2rem; border-radius: 8px; background: rgba(0, 0, 0, 0.3);">
                     <img src="images/event-opening.png" alt="Andromeda Star Kepler Object Opening Ceremony" style="width: 100%; max-width: 400px; margin-bottom: 1.5rem; border-radius: 8px;">
                     <h3>Andromeda Star Kepler Object Opening Ceremony</h3>
                     <div class="event-details" style="margin-top: 1.5rem;">
                         <p><strong>Date:</strong> Friday, 31 January 2025</p>
                         <p><strong>Location:</strong> Online</p>
-                        <p style="margin-top: 1rem; opacity: 0.8;">Join us for the official opening ceremony of the Andromeda Star Kepler Object project.</p>
+                        <p style="margin-top: 1rem; opacity: 0.8;">Archived programme record for the Andromeda Star Kepler Object opening ceremony.</p>
                     </div>
-                    <button class="cta-button" style="margin-top: 2rem; padding: 0.75rem 2rem;">More info</button>
+                    <button type="button" id="event-more-info" class="cta-button" aria-expanded="false" aria-controls="event-more-panel" style="margin-top: 2rem; padding: 0.75rem 2rem;">Show archive details</button>
+                    <div id="event-more-panel" hidden style="margin-top:1rem;padding:1rem;border:1px solid rgba(103,232,249,.24);border-radius:.75rem;background:rgba(8,47,73,.2);">
+                        <p>This event took place on 31 January 2025. For current launch and astronomy signals, open the build-cached mission calendar.</p>
+                        <a class="cta-button" href="event-calendar.html">Open mission event array</a>
+                    </div>
                 </div>
             </div>
         </section>
@@ -118,5 +122,17 @@
         <p><a href="index.html">Back to Home</a></p>
     </footer>
     <script src="pwa-loader.js"></script>
+    <script>
+        (() => {
+            const button = document.getElementById('event-more-info');
+            const panel = document.getElementById('event-more-panel');
+            button?.addEventListener('click', () => {
+                const open = panel.hidden;
+                panel.hidden = !open;
+                button.setAttribute('aria-expanded', String(open));
+                button.textContent = open ? 'Hide archive details' : 'Show archive details';
+            });
+        })();
+    </script>
 </body>
 </html>

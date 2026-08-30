@@ -28,6 +28,12 @@
     width: min(1200px, calc(100% - 2rem));
 }
 
+/* The browser-local dashboard is injected after parsing. Reserve its measured
+   footprint so the footer never jumps while that honest local snapshot mounts. */
+#analytics-container {
+    min-height: 900px;
+}
+
 .analytics-overview,
 .analytics-page :is(.analytics-dashboard, .popular-planet-trends, .claim-statistics-dashboard, .discovery-statistics-widget, .performance-dashboard) {
     border: 1px solid var(--analytics-line) !important;
@@ -117,6 +123,67 @@
     color: var(--analytics-muted);
     font-size: 0.78rem;
     line-height: 1.45;
+}
+
+.analytics-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin: 1rem 0 1.35rem;
+}
+
+.analytics-controls button {
+  min-height: 42px;
+  padding: 0 0.9rem;
+  border: 1px solid rgba(103, 232, 249, 0.28);
+  border-radius: 999px;
+  background: rgba(8, 47, 73, 0.4);
+  color: #dffcff;
+  cursor: pointer;
+}
+
+.analytics-controls button[aria-pressed="true"],
+.analytics-controls button:hover,
+.analytics-controls button:focus-visible {
+  border-color: rgba(103, 232, 249, 0.7);
+  background: rgba(14, 116, 144, 0.42);
+  outline: 2px solid #bef264;
+  outline-offset: 2px;
+}
+
+.analytics-privacy-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.85rem;
+  margin-top: 1rem;
+}
+
+.analytics-privacy-grid article {
+  padding: 1rem;
+  border: 1px solid rgba(103, 232, 249, 0.18);
+  border-radius: 16px;
+  background: rgba(7, 14, 31, 0.72);
+}
+
+.analytics-privacy-grid h3 {
+  margin-top: 0;
+  color: #8cf7ff;
+}
+
+@media (max-width: 760px) {
+  #analytics-container {
+    min-height: 1350px;
+  }
+
+  .analytics-privacy-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  #analytics-container {
+    min-height: 1875px;
+  }
 }
 
 .analytics-data-note {

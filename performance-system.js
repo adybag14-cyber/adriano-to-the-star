@@ -137,12 +137,13 @@ class PerformanceManager {
         // Create touch UI
         const touchUI = document.createElement('div');
         touchUI.id = 'ep-touch-controls';
+        touchUI.setAttribute('aria-label', 'Planet camera touch controls');
         touchUI.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:15px;z-index:1000;';
         touchUI.innerHTML = `
-            <button class="ep-touch-btn" onclick="window.game.controls.rotateLeft()" style="width:50px;height:50px;font-size:1.5em;background:#1e293b;border:1px solid #38bdf8;border-radius:50%;color:#38bdf8;">◀</button>
-            <button class="ep-touch-btn" onclick="window.game.controls.zoomIn()" style="width:50px;height:50px;font-size:1.5em;background:#1e293b;border:1px solid #38bdf8;border-radius:50%;color:#38bdf8;">+</button>
-            <button class="ep-touch-btn" onclick="window.game.controls.zoomOut()" style="width:50px;height:50px;font-size:1.5em;background:#1e293b;border:1px solid #38bdf8;border-radius:50%;color:#38bdf8;">−</button>
-            <button class="ep-touch-btn" onclick="window.game.controls.rotateRight()" style="width:50px;height:50px;font-size:1.5em;background:#1e293b;border:1px solid #38bdf8;border-radius:50%;color:#38bdf8;">▶</button>
+            <button class="ep-touch-btn" aria-label="Rotate planet left" onclick="window.game.controls.rotateLeft()" style="width:50px;height:50px;font-size:1.5em;background:#1e293b;border:1px solid #38bdf8;border-radius:50%;color:#38bdf8;">◀</button>
+            <button class="ep-touch-btn" aria-label="Zoom planet camera in" onclick="window.game.controls.zoomIn()" style="width:50px;height:50px;font-size:1.5em;background:#1e293b;border:1px solid #38bdf8;border-radius:50%;color:#38bdf8;">+</button>
+            <button class="ep-touch-btn" aria-label="Zoom planet camera out" onclick="window.game.controls.zoomOut()" style="width:50px;height:50px;font-size:1.5em;background:#1e293b;border:1px solid #38bdf8;border-radius:50%;color:#38bdf8;">−</button>
+            <button class="ep-touch-btn" aria-label="Rotate planet right" onclick="window.game.controls.rotateRight()" style="width:50px;height:50px;font-size:1.5em;background:#1e293b;border:1px solid #38bdf8;border-radius:50%;color:#38bdf8;">▶</button>
         `;
         document.body.appendChild(touchUI);
 

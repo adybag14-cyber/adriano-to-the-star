@@ -16,40 +16,9 @@ class LargeExoplanetLoader {
     }
 
     async fetchJSON(url, options = {}) {
-        try {
-            const res = await fetch(url, options);
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            return res; // Return the response object for streaming
-        } catch (e) {
-            console.warn(`[large-exoplanet-loader] Direct fetch failed for ${url}, attempting proxy...`, e.message);
-            
-            // Try AllOrigins first
-            try {
-                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
-                const proxyRes = await fetch(proxyUrl);
-                if (!proxyRes.ok) throw new Error(`Proxy HTTP ${proxyRes.status}`);
-                const data = await proxyRes.json();
-                if (data && data.contents) {
-                    // AllOrigins returns the content as a string in 'contents'
-                    return new Response(data.contents, {
-                        headers: { 'Content-Type': 'application/json' }
-                    });
-                }
-            } catch (proxyError) {
-                console.warn('[large-exoplanet-loader] AllOrigins proxy failed, trying corsproxy.io...', proxyError.message);
-            }
-
-            // Fallback to corsproxy.io
-            try {
-                const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
-                const proxyRes = await fetch(proxyUrl, options);
-                if (!proxyRes.ok) throw new Error(`Proxy HTTP ${proxyRes.status}`);
-                return proxyRes;
-            } catch (proxyError) {
-                console.error('[large-exoplanet-loader] All proxies failed:', proxyError.message);
-                throw e; // Re-throw original error
-            }
-        }
+        const response = await fetch(url, { ...options, cache: 'no-cache' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response;
     }
 
     /**
@@ -58,7 +27,7 @@ class LargeExoplanetLoader {
      */
     async loadLargeDataset(filePath) {
         if (this.isLoading) {
-            console.log('â³ Already loading dataset...');
+            console.info('Catalogue load is already in progress.');
             return;
         }
 
@@ -67,7 +36,7 @@ class LargeExoplanetLoader {
         this.largeDataset = [];
         this.searchIndex.clear();
 
-        console.log(`ðŸš€ Loading large exoplanet dataset from: ${filePath}`);
+        console.info(`Loading same-origin exoplanet dataset from ${filePath}.`);
 
         try {
             const response = await this.fetchJSON(filePath);
@@ -113,7 +82,7 @@ class LargeExoplanetLoader {
                                 this.loadedRecords = lineCount;
                                 this.loadProgress = (lineCount / (this.totalRecords || 1000000)) * 100;
                                 this.updateProgressUI();
-                                console.log(`ðŸ“Š Loaded ${lineCount.toLocaleString()} records...`);
+                                console.info(`Indexed ${lineCount.toLocaleString()} catalogue rows.`);
                             }
                         } catch (_e) {
                             // Skip invalid JSON lines
@@ -138,56 +107,41 @@ class LargeExoplanetLoader {
             this.totalRecords = lineCount;
             this.loadProgress = 100;
 
-            console.log(`âœ… Loaded ${this.largeDataset.length.toLocaleString()} exoplanets from large dataset`);
+            console.info(`Loaded ${this.largeDataset.length.toLocaleString()} exoplanet catalogue rows.`);
             this.updateProgressUI();
             this.isLoading = false;
 
             return this.largeDataset;
 
         } catch (error) {
-            console.error('âŒ Error loading large dataset:', error);
+            console.error('Error loading same-origin exoplanet dataset:', error);
             this.isLoading = false;
             return [];
         }
     }
 
-    /**
-     * Process and normalize a planet record
-     * Only includes planets with false_positive_flag: 0 (or missing flag)
-     */
+    /** Process and normalize every catalogue row, preserving disposition. */
     processPlanetRecord(planet) {
-        // Filter: Only include planets with false_positive_flag: 0
-        // This ensures we only include valid planets (not false positives)
-        const falsePositiveFlag = planet.false_positive_flag !== undefined ? planet.false_positive_flag : 
+        const falsePositiveFlag = planet.false_positive_flag !== undefined ? planet.false_positive_flag :
                                  (planet.falsePositiveFlag !== undefined ? planet.falsePositiveFlag : undefined);
-        
-        // Include if false_positive_flag is 0, undefined, or null (treat missing as valid)
-        // Only exclude if flag is explicitly 1 (false positive)
-        if (falsePositiveFlag === 1) {
-            return; // Skip false positives
-        }
-        
-        // Normalize the planet data
+        const radius = this.extractRadius(planet);
         const normalized = {
             kepid: planet.kepid || planet.koi_id || null,
             kepoi_name: planet.kepoi_name || planet.koi_name || `KOI-${planet.kepid || 'unknown'}`,
             kepler_name: planet.kepler_name || planet.planet_name || null,
             status: this.normalizeStatus(planet.status || planet.koi_disposition || planet.disposition),
             score: planet.score || planet.koi_score || planet.confidence || 0,
-            radius: this.extractRadius(planet),
+            radius,
             mass: this.extractMass(planet),
             distance: this.extractDistance(planet),
             disc_year: this.extractDiscoveryYear(planet),
-            type: this.classifyPlanet(this.extractRadius(planet)),
+            type: this.classifyPlanet(radius),
             availability: 'available', // Default to available
             source: 'large-dataset', // Mark as from large dataset
             false_positive_flag: falsePositiveFlag // Preserve the flag
         };
 
         this.largeDataset.push(normalized);
-
-        // Build search index
-        this.indexPlanet(normalized);
     }
 
     /**
@@ -216,7 +170,7 @@ class LargeExoplanetLoader {
                planet.planet_radius || 
                planet.r_planet || 
                (planet.r_star && planet.r_planet ? planet.r_planet / planet.r_star : null) ||
-               this.estimateRadius(planet);
+               null;
     }
 
     /**
@@ -225,9 +179,9 @@ class LargeExoplanetLoader {
     extractMass(planet) {
         return planet.mass || 
                planet.koi_mass || 
-               planet.planet_mass || 
-               planet.m_planet || 
-               this.estimateMass(planet);
+               planet.planet_mass ||
+               planet.m_planet ||
+               null;
     }
 
     /**
@@ -236,9 +190,9 @@ class LargeExoplanetLoader {
     extractDistance(planet) {
         return planet.distance || 
                planet.st_dist || 
-               planet.host_distance || 
-               planet.distance_pc || 
-               this.estimateDistance(planet.kepid || planet.koi_id);
+               planet.host_distance ||
+               planet.distance_pc ||
+               null;
     }
 
     /**
@@ -246,9 +200,9 @@ class LargeExoplanetLoader {
      */
     extractDiscoveryYear(planet) {
         return planet.disc_year || 
-               planet.discovery_year || 
-               planet.year || 
-               this.estimateDiscoveryYear(planet);
+               planet.discovery_year ||
+               planet.year ||
+               null;
     }
 
     /**

@@ -58,7 +58,7 @@ test.describe('production site overhaul', () => {
     }
   });
 
-  test('Spanish can switch back to the version-matched English landing copy', async ({ page }) => {
+  test('Spanish and English can round-trip with version-matched landing copy', async ({ page }) => {
     const requests = [];
     page.on('request', request => { if (/\/translations\/(?:en|es)\.json/.test(request.url())) requests.push(request.url()); });
     await page.goto('/index.html', { waitUntil: 'domcontentloaded' });
@@ -69,7 +69,35 @@ test.describe('production site overhaul', () => {
     await expect(page.locator('[data-i18n="hero.line1"]')).toHaveText('THE UNIVERSE IS');
     await expect(page.locator('[data-i18n="hero.line2"]')).toHaveText('NOW A DESTINATION.');
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+    await expect(page.locator('.ita-language-toggle')).toHaveAttribute('aria-label', /English \(EN\)/);
+    await page.evaluate(() => window.i18n().setLanguage('es'));
+    await expect(page.locator('html')).toHaveAttribute('lang', 'es');
+    await expect(page.locator('[data-i18n="hero.line1"]')).not.toHaveText('THE UNIVERSE IS');
+    await expect(page.locator('.ita-language-toggle')).toHaveAttribute('aria-label', /Español \(ES\)/);
     expect(requests.some(url => /\/translations\/en\.json\?v=/.test(url)), 'versioned English translation request').toBeTruthy();
+    expect(requests.some(url => /\/translations\/es\.json\?v=/.test(url)), 'versioned Spanish translation request').toBeTruthy();
+  });
+
+  test('landing theme menu supports keyboard-ready selection and persistence', async ({ page }) => {
+    await page.goto('/index.html', { waitUntil: 'domcontentloaded' });
+    const toggle = page.locator('#theme-toggle-btn');
+    await expect(toggle).toBeVisible();
+    await expect(toggle).toHaveAttribute('aria-haspopup', 'menu');
+    await toggle.click();
+    await expect(page.locator('#theme-selector-menu')).toBeVisible();
+    await page.locator('.theme-option[data-theme="dark"]').click();
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+    await expect(toggle).toHaveAttribute('aria-label', /Current theme: Deep contrast/);
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+    await page.locator('#theme-toggle-btn').click();
+    await page.locator('.theme-option[data-theme="cosmic"]').click();
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'cosmic');
+    for (const route of ['/education.html', '/projects.html', '/stellar-ai.html']) {
+      await page.goto(route, { waitUntil: 'domcontentloaded' });
+      await expect(page.locator('#theme-toggle-btn'), `${route} theme control`).toBeVisible();
+      await expect(page.locator('html')).toHaveAttribute('data-theme', 'cosmic');
+    }
   });
 
   test('Education exposes all eight local planet textures', async ({ page }) => {

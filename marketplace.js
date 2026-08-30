@@ -1,580 +1,155 @@
-/**
- * Planet Marketplace
- * Buy, sell, and trade exoplanet claims
- */
+/** Educational celestial registry. Browsing only; no ownership or payment system. */
+(function () {
+  'use strict';
+  const systems = [
+    ['Kepler-186 f', '8120608'], ['TRAPPIST-1 e', 'TRAPPIST-1'], ['Proxima Centauri b', 'Proxima Cen'],
+    ['TOI-700 d', 'TOI-700'], ['Kepler-452 b', '8311864'], ['LHS 1140 b', 'LHS 1140'],
+    ['K2-18 b', 'K2-18'], ['55 Cancri e', '55 Cnc'], ['WASP-39 b', 'WASP-39'],
+    ['HD 209458 b', 'HD 209458']
+  ];
+  const types = ['sell', 'trade', 'auction'];
+  const examples = Array.from({ length: 30 }, (_, index) => {
+    const [name, catalogId] = systems[index % systems.length];
+    const type = types[index % types.length];
+    return {
+      id: `teaching-${index + 1}`,
+      kepid: catalogId,
+      planet_data: { pl_name: name },
+      listing_type: type,
+      price: 25 + index * 7.5,
+      trade_description: 'Exchange research notes, observing plans, or educational mission designs.',
+      created_at: new Date(Date.UTC(2026, 7, Math.max(1, 30 - index))).toISOString(),
+      seller_username: 'Educational registry example',
+      sourceUrl: `https://exoplanetarchive.ipac.caltech.edu/overview/${encodeURIComponent(name)}`
+    };
+  });
 
-class Marketplace {
+  class Marketplace {
     constructor() {
-        this.supabase = window.supabaseClient;
-        this.currentUser = null;
-        this.listings = [];
-        this.userClaims = [];
-        this.filter = 'all'; // all, sell, trade, auction
-        this.sortBy = 'newest'; // newest, oldest, price_low, price_high
-        this.reputationSystem = null;
+      this.listings = examples;
+      this.filter = 'all';
+      this.sortBy = 'newest';
+      this.currentPage = 1;
+      this.pageSize = 18;
     }
 
-    async init() {
-        const container = document.getElementById('marketplace-container');
-        if (!container) {
-            console.error('Marketplace container not found');
-            return;
-        }
-
-        this.supabase = this.supabase || window.supabaseClient || window.supabase;
-
-        const supabaseAvailable =
-            this.supabase &&
-            this.supabase.auth &&
-            typeof this.supabase.auth.getUser === 'function' &&
-            typeof this.supabase.from === 'function';
-
-        if (!supabaseAvailable) {
-            console.warn('⚠️ Supabase client not available - Marketplace features disabled');
-            container.innerHTML = '<div class="error-message">Marketplace is unavailable right now. Please try again later.</div>';
-            return;
-        }
-
-        try {
-            // Check authentication
-            const userResult = await this.supabase.auth.getUser();
-            this.currentUser = userResult && userResult.data ? userResult.data.user : null;
-
-            // Initialize reputation system
-            if (window.ReputationSystem) {
-                this.reputationSystem = new window.ReputationSystem();
-                await this.reputationSystem.init();
-            }
-
-            this.render();
-            await this.loadListings();
-            await this.loadUserClaims();
-        } catch (error) {
-            console.error('Error initializing marketplace:', error);
-            container.innerHTML = '<div class="error-message">Failed to initialize marketplace. Please refresh the page.</div>';
-        }
+    init() {
+      if (!document.getElementById('marketplace-container')) return;
+      this.setupFeatureTabs();
+      this.render();
     }
 
-    /**
-     * Render the marketplace UI
-     */
     render() {
-        const container = document.getElementById('marketplace-container');
-        if (!container) return;
-
-        container.innerHTML = `
-            <div class="marketplace">
-                <div class="marketplace-header">
-                    <h2>🌌 Planet Trading Marketplace</h2>
-                    ${this.currentUser ? `
-                        <button class="create-listing-btn" id="create-listing-btn">
-                            + Create Listing
-                        </button>
-                    ` : `
-                        <p class="login-prompt">Please <a href="login.html">login</a> to create listings</p>
-                    `}
-                </div>
-
-                <div class="marketplace-filters">
-                    <div class="filter-group">
-                        <label>Filter:</label>
-                        <select id="filter-select">
-                            <option value="all">All Listings</option>
-                            <option value="sell">For Sale</option>
-                            <option value="trade">For Trade</option>
-                            <option value="auction">Auctions</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label>Sort:</label>
-                        <select id="sort-select">
-                            <option value="newest">Newest First</option>
-                            <option value="oldest">Oldest First</option>
-                            <option value="price_low">Price: Low to High</option>
-                            <option value="price_high">Price: High to Low</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div id="listings-container" class="listings-container">
-                    <div class="loading-state">
-                        <div class="spinner"></div>
-                        <p>Loading marketplace...</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Create Listing Modal -->
-            <div id="create-listing-modal" class="modal" style="display: none;">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3>Create New Listing</h3>
-                        <button class="modal-close" id="modal-close">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="listing-form">
-                            <div class="form-group">
-                                <label>Select Your Planet Claim:</label>
-                                <select id="claim-select" required>
-                                    <option value="">-- Select a planet --</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Listing Type:</label>
-                                <select id="listing-type" required>
-                                    <option value="sell">For Sale</option>
-                                    <option value="trade">For Trade</option>
-                                    <option value="auction">Auction</option>
-                                </select>
-                            </div>
-                            <div class="form-group" id="price-group">
-                                <label>Price (USD):</label>
-                                <input type="number" id="listing-price" min="0" step="0.01" placeholder="0.00">
-                            </div>
-                            <div class="form-group" id="trade-group" style="display: none;">
-                                <label>Trade Description:</label>
-                                <textarea id="trade-description" rows="4" placeholder="What are you looking for in trade?"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label>Expiration Date (optional):</label>
-                                <input type="datetime-local" id="expires-at">
-                            </div>
-                            <div class="form-actions">
-                                <button type="submit" class="submit-btn">Create Listing</button>
-                                <button type="button" class="cancel-btn" id="cancel-listing">Cancel</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        `;
-
-        this.setupEventListeners();
+      const container = document.getElementById('marketplace-container');
+      container.innerHTML = `<section class="marketplace" aria-labelledby="registry-title"><header class="marketplace-header"><div><h2 id="registry-title">Astronomical registry teaching models</h2><p>Explore how a future catalogue interface might organize non-legal claim, exchange, and auction concepts.</p></div></header><div class="marketplace-filters"><div class="filter-group"><label for="filter-select">Model type</label><select id="filter-select"><option value="all">All models</option><option value="sell">Fixed-price examples</option><option value="trade">Research exchanges</option><option value="auction">Auction examples</option></select></div><div class="filter-group"><label for="sort-select">Sort</label><select id="sort-select"><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="price_low">Display value: low to high</option><option value="price_high">Display value: high to low</option></select></div></div><p class="marketplace-boundary"><strong>Browsing-only boundary:</strong> display values are fictional teaching data. There is no checkout, wallet, payment processor, ownership transfer, account write, or legal registry behind this page.</p><div id="listings-container" class="listings-container"></div></section>`;
+      document.getElementById('filter-select').addEventListener('change', event => {
+        this.filter = event.target.value;
+        this.currentPage = 1;
+        this.renderListings();
+      });
+      document.getElementById('sort-select').addEventListener('change', event => {
+        this.sortBy = event.target.value;
+        this.currentPage = 1;
+        this.renderListings();
+      });
+      this.renderListings();
     }
 
-    /**
-     * Setup event listeners
-     */
-    setupEventListeners() {
-        // Filter and sort
-        const filterSelect = document.getElementById('filter-select');
-        const sortSelect = document.getElementById('sort-select');
-        
-        if (filterSelect) {
-            filterSelect.addEventListener('change', (e) => {
-                this.filter = e.target.value;
-                this.renderListings();
-            });
-        }
-
-        if (sortSelect) {
-            sortSelect.addEventListener('change', (e) => {
-                this.sortBy = e.target.value;
-                this.renderListings();
-            });
-        }
-
-        // Create listing button
-        const createBtn = document.getElementById('create-listing-btn');
-        if (createBtn) {
-            createBtn.addEventListener('click', () => this.showCreateModal());
-        }
-
-        // Modal close
-        const modalClose = document.getElementById('modal-close');
-        const cancelBtn = document.getElementById('cancel-listing');
-        const modal = document.getElementById('create-listing-modal');
-
-        if (modalClose) {
-            modalClose.addEventListener('click', () => this.hideCreateModal());
-        }
-        if (cancelBtn) {
-            cancelBtn.addEventListener('click', () => this.hideCreateModal());
-        }
-        if (modal) {
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) this.hideCreateModal();
-            });
-        }
-
-        // Listing type change
-        const listingType = document.getElementById('listing-type');
-        if (listingType) {
-            listingType.addEventListener('change', (e) => {
-                const priceGroup = document.getElementById('price-group');
-                const tradeGroup = document.getElementById('trade-group');
-                
-                if (e.target.value === 'trade') {
-                    priceGroup.style.display = 'none';
-                    tradeGroup.style.display = 'block';
-                    document.getElementById('listing-price').required = false;
-                    document.getElementById('trade-description').required = true;
-                } else {
-                    priceGroup.style.display = 'block';
-                    tradeGroup.style.display = 'none';
-                    document.getElementById('listing-price').required = true;
-                    document.getElementById('trade-description').required = false;
-                }
-            });
-        }
-
-        // Form submission
-        const form = document.getElementById('listing-form');
-        if (form) {
-            form.addEventListener('submit', (e) => {
-                e.preventDefault();
-                this.createListing();
-            });
-        }
-    }
-
-    /**
-     * Load marketplace listings
-     */
-    async loadListings() {
-        try {
-            const { data, error } = await this.supabase
-                .from('marketplace_listings')
-                .select('*')
-                .eq('status', 'active')
-                .order('created_at', { ascending: false });
-
-            if (error) throw error;
-
-            this.listings = data || [];
-            this.renderListings();
-        } catch (error) {
-            console.error('Error loading listings:', error);
-            this.showError('Failed to load marketplace listings');
-        }
-    }
-
-    /**
-     * Load user's planet claims
-     */
-    async loadUserClaims() {
-        if (!this.currentUser) return;
-
-        try {
-            const { data, error } = await this.supabase
-                .from('planet_claims')
-                .select('*')
-                .eq('user_id', this.currentUser.id)
-                .eq('status', 'active');
-
-            if (error) throw error;
-
-            this.userClaims = data || [];
-            this.populateClaimSelect();
-        } catch (error) {
-            console.error('Error loading user claims:', error);
-        }
-    }
-
-    /**
-     * Populate claim select dropdown
-     */
-    populateClaimSelect() {
-        const select = document.getElementById('claim-select');
-        if (!select) return;
-
-        select.innerHTML = '<option value="">-- Select a planet --</option>';
-        
-        this.userClaims.forEach(claim => {
-            const planetName = claim.planet_data?.pl_name || `KEPID ${claim.kepid}`;
-            const option = document.createElement('option');
-            option.value = claim.id;
-            option.textContent = `${planetName} (KEPID: ${claim.kepid})`;
-            option.dataset.kepid = claim.kepid;
-            option.dataset.planetData = JSON.stringify(claim.planet_data);
-            select.appendChild(option);
+    setupFeatureTabs() {
+      const views = {
+        'view-all-listings': 'marketplace-container',
+        'view-rentals': 'rentals-container',
+        'view-investments': 'investments-container',
+        'view-crowdfunding': 'crowdfunding-container'
+      };
+      const buttons = Object.keys(views).map(id => document.getElementById(id)).filter(Boolean);
+      const activate = button => {
+        buttons.forEach(item => {
+          const selected = item === button;
+          item.classList.toggle('active', selected);
+          item.setAttribute('aria-selected', String(selected));
+          item.tabIndex = selected ? 0 : -1;
+          document.getElementById(views[item.id]).hidden = !selected;
         });
+        this.renderPanel(button.id);
+      };
+      buttons.forEach((button, index) => {
+        button.addEventListener('click', () => activate(button));
+        button.addEventListener('keydown', event => {
+          if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+          event.preventDefault();
+          let next = index;
+          if (event.key === 'ArrowRight') next = (index + 1) % buttons.length;
+          if (event.key === 'ArrowLeft') next = (index - 1 + buttons.length) % buttons.length;
+          if (event.key === 'Home') next = 0;
+          if (event.key === 'End') next = buttons.length - 1;
+          buttons[next].focus();
+          activate(buttons[next]);
+        });
+      });
+      activate(buttons[0]);
     }
 
-    /**
-     * Render listings
-     */
+    renderPanel(id) {
+      const panels = {
+        'view-rentals': ['Rental mission models', 'Compare fictional time-bounded access to observatory schedules, simulated habitats, and classroom mission assets. No real property or observing time is offered.', ['Duration and renewal scenarios', 'Mission-resource allocation', 'Transparent non-ownership status']],
+        'view-investments': ['Research portfolio simulator', 'Explore how a hypothetical science portfolio could distribute a fixed classroom budget across spectroscopy, transit timing, atmospheric models, and outreach.', ['Risk and uncertainty notes', 'No securities or financial return', 'Browser-local planning only']],
+        'view-crowdfunding': ['Mission-funding design lab', 'Study the components of an accountable public science campaign: milestones, open data, peer review, risk disclosure, and refund rules.', ['Milestone-based releases', 'Source and methods disclosure', 'No donations are collected here']]
+      };
+      if (id === 'view-all-listings') return;
+      const panel = document.getElementById({ 'view-rentals': 'rentals-container', 'view-investments': 'investments-container', 'view-crowdfunding': 'crowdfunding-container' }[id]);
+      const [title, description, items] = panels[id];
+      panel.innerHTML = `<section class="marketplace-panel-card"><h2>${title}</h2><p>${description}</p><ul>${items.map(item => `<li>${item}</li>`).join('')}</ul><a href="business-promise.html">Read the platform transparency commitment</a></section>`;
+    }
+
     renderListings() {
-        const container = document.getElementById('listings-container');
-        if (!container) return;
-
-        // Filter listings
-        let filtered = this.listings;
-        if (this.filter !== 'all') {
-            filtered = filtered.filter(l => l.listing_type === this.filter);
-        }
-
-        // Sort listings
-        filtered = [...filtered].sort((a, b) => {
-            switch (this.sortBy) {
-                case 'oldest':
-                    return new Date(a.created_at) - new Date(b.created_at);
-                case 'price_low':
-                    return (a.price || 0) - (b.price || 0);
-                case 'price_high':
-                    return (b.price || 0) - (a.price || 0);
-                default: // newest
-                    return new Date(b.created_at) - new Date(a.created_at);
-            }
+      let filtered = this.filter === 'all' ? [...this.listings] : this.listings.filter(item => item.listing_type === this.filter);
+      const sorters = {
+        newest: (a, b) => b.created_at.localeCompare(a.created_at),
+        oldest: (a, b) => a.created_at.localeCompare(b.created_at),
+        price_low: (a, b) => a.price - b.price,
+        price_high: (a, b) => b.price - a.price
+      };
+      filtered.sort(sorters[this.sortBy]);
+      const pageCount = Math.max(1, Math.ceil(filtered.length / this.pageSize));
+      this.currentPage = Math.min(pageCount, Math.max(1, this.currentPage));
+      const visible = filtered.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize);
+      const target = document.getElementById('listings-container');
+      target.innerHTML = `<div class="listings-grid">${visible.map(listing => this.card(listing)).join('')}</div>`;
+      if (pageCount > 1) {
+        const pager = document.createElement('nav');
+        pager.className = 'marketplace-pager';
+        pager.setAttribute('aria-label', 'Registry pages');
+        pager.innerHTML = `<button type="button" data-page="previous" ${this.currentPage === 1 ? 'disabled' : ''}>Previous</button><span aria-live="polite">Page ${this.currentPage} of ${pageCount}</span><button type="button" data-page="next" ${this.currentPage === pageCount ? 'disabled' : ''}>Next</button>`;
+        pager.addEventListener('click', event => {
+          const action = event.target.closest('[data-page]')?.dataset.page;
+          if (!action) return;
+          this.currentPage += action === 'next' ? 1 : -1;
+          this.renderListings();
+          target.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
         });
-
-        if (filtered.length === 0) {
-            container.innerHTML = '<div class="no-listings">No listings found</div>';
-            return;
-        }
-
-        container.innerHTML = `
-            <div class="listings-grid">
-                ${filtered.map(listing => this.renderListingCard(listing)).join('')}
-            </div>
-        `;
-
-        // Add event listeners to listing cards
-        container.querySelectorAll('.listing-card').forEach(card => {
-            const buyBtn = card.querySelector('.buy-btn');
-            if (buyBtn) {
-                buyBtn.addEventListener('click', () => {
-                    const listingId = card.dataset.listingId;
-                    this.handlePurchase(listingId);
-                });
-            }
-        });
+        target.append(pager);
+      }
     }
 
-    /**
-     * Render a single listing card
-     */
-    renderListingCard(listing) {
-        const planetName = listing.planet_data?.pl_name || `KEPID ${listing.kepid}`;
-        const listingTypeLabel = {
-            'sell': 'For Sale',
-            'trade': 'For Trade',
-            'auction': 'Auction'
-        }[listing.listing_type] || listing.listing_type;
-
-        return `
-            <div class="listing-card" data-listing-id="${listing.id}">
-                <div class="listing-header">
-                    <span class="listing-type-badge ${listing.listing_type}">${listingTypeLabel}</span>
-                    <span class="listing-date">${new Date(listing.created_at).toLocaleDateString()}</span>
-                </div>
-                <div class="listing-planet">
-                    <h3>${planetName}</h3>
-                    <p class="kepid">KEPID: ${listing.kepid}</p>
-                </div>
-                ${listing.listing_type === 'sell' || listing.listing_type === 'auction' ? `
-                    <div class="listing-price">
-                        <span class="price">$${parseFloat(listing.price || 0).toFixed(2)}</span>
-                        <span class="currency">${listing.currency || 'USD'}</span>
-                    </div>
-                ` : ''}
-                ${listing.listing_type === 'trade' ? `
-                    <div class="listing-trade">
-                        <p><strong>Looking for:</strong></p>
-                        <p>${listing.trade_description || 'Open to any trade offers'}</p>
-                    </div>
-                ` : ''}
-                <div class="listing-seller">
-                    <span>Seller: ${listing.seller_username || 'Unknown'}</span>
-                </div>
-                ${this.currentUser && this.currentUser.id !== listing.seller_id ? `
-                    <button class="buy-btn">${listing.listing_type === 'auction' ? 'Place Bid' : listing.listing_type === 'trade' ? 'Propose Trade' : 'Buy Now'}</button>
-                ` : ''}
-            </div>
-        `;
+    card(listing) {
+      const labels = { sell: 'Fixed-value model', trade: 'Research exchange', auction: 'Auction model' };
+      const name = this.escape(listing.planet_data.pl_name);
+      return `<article class="listing-card"><div class="listing-header"><span class="listing-type-badge ${listing.listing_type}">${labels[listing.listing_type]}</span><time datetime="${listing.created_at}">${new Date(listing.created_at).toLocaleDateString()}</time></div><div class="listing-planet"><h3>${name}</h3><p class="kepid">Catalogue: ${this.escape(listing.kepid)}</p></div>${listing.listing_type === 'trade' ? `<div class="listing-trade"><p>${this.escape(listing.trade_description)}</p></div>` : `<div class="listing-price"><span class="price">${listing.price.toFixed(2)}</span><span class="currency">fictional credits</span></div>`}<p class="listing-seller">Educational example; not legal title.</p><a class="buy-btn" href="${listing.sourceUrl}" target="_blank" rel="noopener noreferrer">View NASA archive record</a></article>`;
     }
 
-    /**
-     * Show create listing modal
-     */
-    showCreateModal() {
-        if (!this.currentUser) {
-            alert('Please login to create a listing');
-            return;
-        }
-
-        if (this.userClaims.length === 0) {
-            alert('You need to claim a planet first before creating a listing');
-            return;
-        }
-
-        const modal = document.getElementById('create-listing-modal');
-        if (modal) {
-            modal.style.display = 'flex';
-        }
+    escape(value) {
+      return String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
     }
+  }
 
-    /**
-     * Hide create listing modal
-     */
-    hideCreateModal() {
-        const modal = document.getElementById('create-listing-modal');
-        if (modal) {
-            modal.style.display = 'none';
-            document.getElementById('listing-form')?.reset();
-        }
+  window.Marketplace = Marketplace;
+  const start = () => {
+    if (!window.marketplace) {
+      window.marketplace = new Marketplace();
+      window.marketplace.init();
     }
-
-    /**
-     * Create a new listing
-     */
-    async createListing() {
-        if (!this.currentUser) return;
-
-        const form = document.getElementById('listing-form');
-        const formData = new FormData(form);
-        
-        const claimId = document.getElementById('claim-select').value;
-        const listingType = document.getElementById('listing-type').value;
-        const price = listingType !== 'trade' ? parseFloat(document.getElementById('listing-price').value) : null;
-        const tradeDescription = listingType === 'trade' ? document.getElementById('trade-description').value : null;
-        const expiresAt = document.getElementById('expires-at').value || null;
-
-        if (!claimId) {
-            alert('Please select a planet claim');
-            return;
-        }
-
-        // Get claim data
-        const claim = this.userClaims.find(c => c.id === claimId);
-        if (!claim) {
-            alert('Selected claim not found');
-            return;
-        }
-
-        // Check if listing already exists for this claim
-        const { data: existing } = await this.supabase
-            .from('marketplace_listings')
-            .select('id')
-            .eq('claim_id', claimId)
-            .eq('status', 'active')
-            .single();
-
-        if (existing) {
-            alert('This planet already has an active listing');
-            return;
-        }
-
-        try {
-            const { data, error } = await this.supabase
-                .from('marketplace_listings')
-                .insert({
-                    seller_id: this.currentUser.id,
-                    seller_username: this.currentUser.user_metadata?.username || this.currentUser.email,
-                    claim_id: claimId,
-                    kepid: claim.kepid,
-                    planet_data: claim.planet_data,
-                    listing_type: listingType,
-                    price: price,
-                    trade_description: tradeDescription,
-                    expires_at: expiresAt ? new Date(expiresAt).toISOString() : null,
-                    status: 'active'
-                })
-                .select()
-                .single();
-
-            if (error) throw error;
-
-            alert('Listing created successfully!');
-            
-            // Update reputation
-            if (this.reputationSystem) {
-                await this.reputationSystem.updateActivity('listing_created');
-            }
-            
-            this.hideCreateModal();
-            await this.loadListings();
-        } catch (error) {
-            console.error('Error creating listing:', error);
-            alert('Failed to create listing: ' + error.message);
-        }
-    }
-
-    /**
-     * Handle purchase/trade/auction
-     */
-    async handlePurchase(listingId) {
-        if (!this.currentUser) {
-            alert('Please login to purchase');
-            return;
-        }
-
-        const listing = this.listings.find(l => l.id === listingId);
-        if (!listing) {
-            alert('Listing not found');
-            return;
-        }
-
-        if (listing.seller_id === this.currentUser.id) {
-            alert('You cannot purchase your own listing');
-            return;
-        }
-
-        // For now, we'll just mark it as sold
-        // In a real implementation, you'd handle payment processing here
-        const confirmed = confirm(
-            `Are you sure you want to ${listing.listing_type === 'trade' ? 'propose a trade for' : 'purchase'} this planet?`
-        );
-
-        if (!confirmed) return;
-
-        try {
-            // Update listing status
-            const { error: updateError } = await this.supabase
-                .from('marketplace_listings')
-                .update({
-                    status: 'sold',
-                    buyer_id: this.currentUser.id,
-                    buyer_username: this.currentUser.user_metadata?.username || this.currentUser.email,
-                    sold_at: new Date().toISOString()
-                })
-                .eq('id', listingId);
-
-            if (updateError) throw updateError;
-
-            // Transfer the claim to the buyer
-            const { error: transferError } = await this.supabase
-                .from('planet_claims')
-                .update({
-                    user_id: this.currentUser.id,
-                    username: this.currentUser.user_metadata?.username || this.currentUser.email,
-                    email: this.currentUser.email,
-                    updated_at: new Date().toISOString()
-                })
-                .eq('id', listing.claim_id);
-
-            if (transferError) throw transferError;
-
-            alert('Transaction completed successfully!');
-            
-            // Update reputation for both buyer and seller
-            if (this.reputationSystem) {
-                await this.reputationSystem.updateActivity('transaction_completed');
-            }
-            
-            await this.loadListings();
-        } catch (error) {
-            console.error('Error processing purchase:', error);
-            alert('Failed to process transaction: ' + error.message);
-        }
-    }
-
-    /**
-     * Show error message
-     */
-    showError(message) {
-        const container = document.getElementById('listings-container');
-        if (container) {
-            container.innerHTML = `<div class="error-state">⚠️ ${message}</div>`;
-        }
-    }
-}
-
-// Export for use in other modules
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = Marketplace;
-}
-
-// Make available globally
-window.Marketplace = Marketplace;
-
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
+  else start();
+})();

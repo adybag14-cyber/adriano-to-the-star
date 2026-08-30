@@ -1,8 +1,8 @@
 /**
  * Broadband Deal Checker v3.0
  * 
- * Advanced UK Broadband Provider Search with Real-time Price Checking via Google Cloud.
- * Searches and filters 300+ UK broadband providers with caching and fallback support.
+ * Browser-safe UK broadband provider explorer backed by the build-cached catalogue.
+ * Searches and filters 300+ providers without calling a scraping or pricing service.
  * 
  * @class BroadbandChecker
  * @author Adriano To The Star
@@ -433,8 +433,7 @@ class BroadbandChecker {
     /**
      * Create a new BroadbandChecker instance
      * 
-     * Initializes provider database, price cache, and user data storage.
-     * Sets up Google Cloud Function URL for real-time price scraping.
+     * Initializes the provider catalogue and browser-local comparison state.
      * 
      * @constructor
      */
@@ -444,11 +443,8 @@ class BroadbandChecker {
         this.searchTimeout = null;
         this.eventHandlers = {};
         this.currentIframe = null;
-        this.priceCache = new Map(); // Cache for fetched prices
-        this.priceCacheExpiry = 30 * 60 * 1000; // 30 minutes cache
-
-        // Google Cloud Function URL for real-time price scraping
-        this.cloudFunctionUrl = 'https://europe-west2-adriano-broadband.cloudfunctions.net/broadband-price-scraper';
+        this.currentPage = 1;
+        this.pageSize = 24;
 
         // User Data
         this.bookmarks = [];
@@ -506,8 +502,7 @@ class BroadbandChecker {
     /**
      * Load broadband providers from data source
      * 
-     * Loads from known provider database and enriches with real-time prices
-     * via Google Cloud Function if available.
+     * Loads the same-origin, build-cached provider snapshot.
      * 
      * @private
      * @async
@@ -883,6 +878,7 @@ class BroadbandChecker {
             return matchesSearch && matchesSpeed && matchesType && matchesStatus;
         });
 
+        this.currentPage = 1;
         this.renderProviders();
         this.updateStatistics();
     }
@@ -905,6 +901,7 @@ class BroadbandChecker {
         if (statusFilter) statusFilter.value = '';
 
         this.filteredProviders = [...this.providers];
+        this.currentPage = 1;
         this.renderProviders();
         this.updateStatistics();
     }
@@ -936,9 +933,33 @@ class BroadbandChecker {
 
         noResults.hidden = true;
         noResults.style.display = 'none';
-        resultsContainer.innerHTML = this.filteredProviders.map((provider, index) =>
-            this.createProviderCardHTML(provider, index)
+        const pageCount = Math.max(1, Math.ceil(this.filteredProviders.length / this.pageSize));
+        this.currentPage = Math.min(Math.max(1, this.currentPage), pageCount);
+        const offset = (this.currentPage - 1) * this.pageSize;
+        const visibleProviders = this.filteredProviders.slice(offset, offset + this.pageSize);
+
+        resultsContainer.innerHTML = visibleProviders.map((provider, index) =>
+            this.createProviderCardHTML(provider, offset + index)
         ).join('');
+
+        if (pageCount > 1) {
+            const pager = document.createElement('nav');
+            pager.className = 'provider-pager';
+            pager.setAttribute('aria-label', 'Provider result pages');
+            pager.innerHTML = `
+                <button type="button" data-page-action="previous" ${this.currentPage === 1 ? 'disabled' : ''}>Previous</button>
+                <span aria-live="polite">Page ${this.currentPage} of ${pageCount} · ${this.filteredProviders.length} providers</span>
+                <button type="button" data-page-action="next" ${this.currentPage === pageCount ? 'disabled' : ''}>Next</button>
+            `;
+            pager.addEventListener('click', event => {
+                const action = event.target.closest('button')?.dataset.pageAction;
+                if (!action) return;
+                this.currentPage += action === 'next' ? 1 : -1;
+                this.renderProviders();
+                document.getElementById('provider-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+            resultsContainer.appendChild(pager);
+        }
 
         this.attachViewButtonListeners();
         this.attachActionListeners();
@@ -959,11 +980,18 @@ class BroadbandChecker {
         return div.innerHTML;
     }
 
+    safeProviderUrl(value) {
+        try {
+            const url = new URL(value);
+            return url.protocol === 'https:' ? this.escapeHtml(url.href) : '';
+        } catch { return ''; }
+    }
+
     /**
      * Render deals section for a provider card
      * 
      * Shows known deals, scraped prices, or generic placeholders.
-     * Includes "Check Live Price" button for active providers.
+     * Includes a build-cached offer preview and an authoritative source link.
      * 
      * @private
      * @param {Object} provider - Provider object
@@ -998,7 +1026,7 @@ class BroadbandChecker {
                     ${hasWebsite && !isCeased ? `
                         <div class="more-deals" style="margin-top: 8px;">
                             <button class="check-price-btn" data-provider="${this.escapeHtml(provider.name)}" data-url="${this.escapeHtml(provider.website)}">
-                                🔄 Check Live Price
+                                View offer snapshot
                             </button>
                         </div>
                     ` : ''}
@@ -1021,7 +1049,7 @@ class BroadbandChecker {
                     ${hasWebsite && !isCeased ? `
                         <div class="more-deals" style="margin-top: 8px;">
                             <button class="check-price-btn" data-provider="${this.escapeHtml(provider.name)}" data-url="${this.escapeHtml(provider.website)}">
-                                🔄 Check Live Price
+                                View offer snapshot
                             </button>
                         </div>
                     ` : ''}
@@ -1052,7 +1080,7 @@ class BroadbandChecker {
                     <div class="deal-speed">${speedText}</div>
                     <div class="deal-note">Check website for current deals</div>
                     <button class="check-price-btn" data-provider="${this.escapeHtml(provider.name)}" data-url="${this.escapeHtml(provider.website)}">
-                        🔄 Check Live Price
+                        View offer snapshot
                     </button>
                 </div>
             </div>
@@ -1062,8 +1090,7 @@ class BroadbandChecker {
     /**
      * Attach event listeners for price checking buttons
      * 
-     * Handles "Show all deals" and "Check Live Price" button clicks.
-     * Integrates with Google Cloud Function for real-time price fetching.
+     * Handles build-cached offer previews without a browser-side pricing service.
      * 
      * @private
      * @returns {void}
@@ -1077,230 +1104,17 @@ class BroadbandChecker {
             });
         });
 
-        // Check price buttons - NOW WITH REAL-TIME CLOUD FUNCTION CALLS
+        // Offer buttons show the build-cached snapshot. No scraping endpoint is contacted.
         document.querySelectorAll('.check-price-btn').forEach(btn => {
-            btn.addEventListener('click', async (e) => {
+            btn.addEventListener('click', () => {
                 const providerName = btn.getAttribute('data-provider');
-                const url = btn.getAttribute('data-url');
-                btn.disabled = true;
-                btn.innerHTML = '⏳ Fetching live price...';
-
-                try {
-                    // Call Google Cloud Function for real-time price
-                    const result = await this.fetchRealtimePrice(providerName, url);
-
-                    if (result.success && result.deals && result.deals.length > 0) {
-                        const deal = result.deals[0];
-                        btn.innerHTML = `✓ From £${deal.price}/mo`;
-                        btn.style.background = 'rgba(74, 222, 128, 0.2)';
-                        btn.style.color = '#4ade80';
-
-                        // Update the provider card with new price data
-                        this.updateProviderWithRealtimePrice(providerName, result);
-                    } else {
-                        // Check if provider has known deals to show instead
-                        const provider = this.providers.find(p =>
-                            p.name.toLowerCase() === providerName.toLowerCase()
-                        );
-
-                        if (provider && provider.knownDeals && provider.knownDeals.length > 0) {
-                            // Show known deals instead of error
-                            const cheapest = provider.knownDeals.reduce((min, d) =>
-                                parseFloat(d.price) < parseFloat(min.price) ? d : min
-                            );
-                            btn.innerHTML = `📋 From £${cheapest.price}/mo (known)`;
-                            btn.style.background = 'rgba(186, 148, 79, 0.2)';
-                            btn.style.color = '#ba944f';
-                        } else {
-                            // Check if there's an error message
-                            const errorMsg = result.error || 'No price data available';
-                            let displayMsg = '⚠ No price found';
-
-                            // Provide more specific messages
-                            if (errorMsg.includes('timeout') || errorMsg.includes('timed out')) {
-                                displayMsg = '⏱ Timeout - try again';
-                            } else if (errorMsg.includes('Connection') || errorMsg.includes('SSL')) {
-                                displayMsg = '🔌 Connection error';
-                            } else if (errorMsg.includes('No price data')) {
-                                displayMsg = '📭 No deals found';
-                            }
-
-                            btn.innerHTML = displayMsg;
-                            btn.style.background = 'rgba(251, 191, 36, 0.2)';
-                            btn.style.color = '#fbbf24';
-                        }
-                    }
-                } catch (error) {
-                    console.error('Price fetch error:', error);
-                    btn.innerHTML = '✗ Check website';
-                    btn.style.background = 'rgba(239, 68, 68, 0.2)';
-                    btn.style.color = '#ef4444';
-                }
-
-                // Re-enable after 5 seconds
-                setTimeout(() => {
-                    btn.disabled = false;
-                }, 5000);
+                this.showAllDealsModal(providerName);
             });
         });
     }
 
     // ============================================================================
-    // REAL-TIME PRICE FETCHING VIA GOOGLE CLOUD FUNCTION
-    // ============================================================================
-
-    /**
-     * Fetch real-time price from Google Cloud Function
-     * 
-     * Uses caching to avoid redundant API calls. Falls back to cached data
-     * if available and not expired.
-     * 
-     * @private
-     * @async
-     * @param {string} providerName - Name of the provider
-     * @param {string|null} providerUrl - Optional provider website URL
-     * @returns {Promise<Object>} Price data with deals array and metadata
-     * @throws {Error} If API call fails
-     */
-    async fetchRealtimePrice(providerName, providerUrl = null) {
-        // Check cache first
-        const cacheKey = providerName.toLowerCase();
-        const cached = this.priceCache.get(cacheKey);
-
-        if (cached && (Date.now() - cached.timestamp) < this.priceCacheExpiry) {
-            console.log(`Using cached price for ${providerName}`);
-            return cached.data;
-        }
-
-        // Build API URL
-        let apiUrl = `${this.cloudFunctionUrl}?provider=${encodeURIComponent(providerName)}`;
-        if (providerUrl) {
-            apiUrl += `&url=${encodeURIComponent(providerUrl)}`;
-        }
-
-        console.log(`Fetching real-time price for ${providerName}...`);
-
-        try {
-            // Create abort controller for timeout (increased for AI processing)
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 seconds for AI processing
-
-            const response = await fetch(apiUrl, {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                },
-                signal: controller.signal
-            });
-
-            clearTimeout(timeoutId);
-
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            }
-
-            const data = await response.json();
-
-            // Cache the result
-            this.priceCache.set(cacheKey, {
-                data: data,
-                timestamp: Date.now()
-            });
-
-            console.log(`Real-time price for ${providerName}:`, data);
-            return data;
-
-        } catch (error) {
-            console.error(`Failed to fetch price for ${providerName}:`, error);
-            throw error;
-        }
-    }
-
-    /**
-     * Update provider object and DOM with real-time price data
-     * 
-     * @private
-     * @param {string} providerName - Name of the provider
-     * @param {Object} priceData - Price data from API
-     * @returns {void}
-     */
-    updateProviderWithRealtimePrice(providerName, priceData) {
-        // Find the provider in our list
-        const provider = this.providers.find(p =>
-            p.name.toLowerCase() === providerName.toLowerCase()
-        );
-
-        if (!provider) return;
-
-        // Update provider with real-time data
-        if (priceData.deals && priceData.deals.length > 0) {
-            provider.realtimeDeals = priceData.deals;
-            provider.realtimeSource = priceData.source || 'direct';
-            provider.realtimeTimestamp = new Date().toISOString();
-
-            // Update the card in the DOM
-            const card = document.querySelector(`[data-provider-index="${this.providers.indexOf(provider)}"]`);
-            if (card) {
-                const dealsContainer = card.querySelector('.provider-deals');
-                if (dealsContainer) {
-                    dealsContainer.innerHTML = ''; // Clear existing content
-                    const content = this.renderRealtimeDealsElement(priceData.deals, priceData.source);
-                    if (content) {
-                        dealsContainer.appendChild(content);
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Render real-time deals DOM element
-     * 
-     * @private
-     * @param {Array<Object>} deals - Array of deal objects
-     * @param {string} source - Source of the data (e.g., 'uswitch', 'direct')
-     * @returns {HTMLElement|null} DOM element for real-time deals or null if no deals
-     */
-    renderRealtimeDealsElement(deals, source) {
-        if (!deals || deals.length === 0) return null;
-
-        const container = document.createElement('div');
-        container.className = 'provider-deals realtime-deals';
-
-        const badge = document.createElement('div');
-        badge.className = 'realtime-badge';
-        badge.textContent = `⚡ Real-time Price ${source === 'uswitch' ? '(via Uswitch)' : '(Live AI)'}`;
-        container.appendChild(badge);
-
-        deals.slice(0, 2).forEach(deal => {
-            const dealCard = document.createElement('div');
-            dealCard.className = 'deal-card';
-
-            if (deal.speed) {
-                const speedDiv = document.createElement('div');
-                speedDiv.className = 'deal-speed';
-                speedDiv.textContent = deal.speed;
-                dealCard.appendChild(speedDiv);
-            }
-
-            const priceDiv = document.createElement('div');
-            priceDiv.className = 'deal-price';
-            priceDiv.textContent = `From £${deal.price}/mo`;
-            dealCard.appendChild(priceDiv);
-
-            const noteDiv = document.createElement('div');
-            noteDiv.className = 'deal-note';
-            noteDiv.textContent = deal.name || 'Current Deal';
-            dealCard.appendChild(noteDiv);
-
-            container.appendChild(dealCard);
-        });
-
-        return container;
-    }
-
-    // ============================================================================
-    // REFRESH ALL PRICES - Uses Live AI Models for Unlimited Requests
+    // REFRESH THE SAME-ORIGIN SNAPSHOT
     // ============================================================================
 
     /**
@@ -1317,159 +1131,19 @@ class BroadbandChecker {
     async refreshAllPrices() {
         const refreshBtn = document.getElementById('refresh-prices-btn');
         if (!refreshBtn) return;
-
-        // Disable button and show loading state
         refreshBtn.disabled = true;
         const originalText = refreshBtn.innerHTML;
-        refreshBtn.innerHTML = '⏳ Refreshing...';
-
-        // Clear price cache to force fresh fetch
-        this.priceCache.clear();
-
-        // Get all visible providers (filtered providers)
-        const providersToRefresh = this.filteredProviders.length > 0
-            ? this.filteredProviders
-            : this.providers;
-
-        // Filter to only providers with websites (from knownProviderData OR provider.website)
-        const providersWithWebsites = providersToRefresh.filter(provider => {
-            const providerData = this.knownProviderData[provider.name];
-            // Include if has website in knownProviderData OR has website property
-            return (providerData && providerData.website) || (provider.website && provider.website.trim() !== '');
-        });
-
-        console.log(`🔄 Refreshing prices for ${providersWithWebsites.length} providers using Live AI (unlimited RPM/RPD)...`);
-
-        // Show progress indicator
-        const progressContainer = document.createElement('div');
-        progressContainer.id = 'refresh-progress';
-        progressContainer.className = 'refresh-progress';
-        progressContainer.innerHTML = `
-            <div class="progress-bar">
-                <div class="progress-fill" id="progress-fill"></div>
-            </div>
-            <div class="progress-text" id="progress-text">Refreshing 0/${providersWithWebsites.length} providers...</div>
-        `;
-        document.querySelector('.broadband-search-section')?.appendChild(progressContainer);
-
-        let successCount = 0;
-        let failCount = 0;
-        let completedCount = 0;
-
-        // Parallel processing for better performance (process 10 providers at a time)
-        const batchSize = 10;
-        const totalBatches = Math.ceil(providersWithWebsites.length / batchSize);
-
-        // Process providers in parallel batches
-        for (let batchIndex = 0; batchIndex < totalBatches; batchIndex++) {
-            const batchStart = batchIndex * batchSize;
-            const batchEnd = Math.min(batchStart + batchSize, providersWithWebsites.length);
-            const batch = providersWithWebsites.slice(batchStart, batchEnd);
-
-            // Process batch in parallel
-            const batchPromises = batch.map(async (provider) => {
-                const providerData = this.knownProviderData[provider.name];
-
-                try {
-                    // Get website URL (from knownProviderData or provider.website)
-                    const websiteUrl = (providerData && providerData.website) || provider.website;
-                    if (!websiteUrl || websiteUrl.trim() === '') {
-                        return { provider: provider.name, success: false, error: 'No website URL' };
-                    }
-
-                    // Fetch real-time price using Live AI (unlimited requests)
-                    const priceData = await this.fetchRealtimePrice(provider.name, websiteUrl);
-
-                    // Check if the API call was successful (even if no deals found)
-                    if (priceData) {
-                        // If we got a response, it's a success (API worked)
-                        if (priceData.deals && priceData.deals.length > 0) {
-                            this.updateProviderWithRealtimePrice(provider.name, priceData);
-                            return { provider: provider.name, success: true, deals: priceData.deals.length };
-                        } else {
-                            // API responded but no deals found - check if we have known deals as fallback
-                            const providerData = this.knownProviderData[provider.name];
-                            if (providerData && providerData.deals && providerData.deals.length > 0) {
-                                // Use known deals as fallback
-                                console.log(`ℹ️ ${provider.name}: Using cached deals (${providerData.deals.length} deals)`);
-                                return { provider: provider.name, success: true, deals: providerData.deals.length, cached: true };
-                            } else if (priceData.success === false && priceData.error) {
-                                // API responded but couldn't find deals - still count as success
-                                return { provider: provider.name, success: true, error: priceData.error };
-                            } else {
-                                // API responded successfully but no deals array and no cached deals
-                                return { provider: provider.name, success: true, deals: 0 };
-                            }
-                        }
-                    } else {
-                        return { provider: provider.name, success: false, error: 'No response from API' };
-                    }
-                } catch (error) {
-                    const errorMsg = error.message || error.toString();
-                    return { provider: provider.name, success: false, error: errorMsg };
-                }
-            });
-
-            // Wait for batch to complete
-            const batchResults = await Promise.all(batchPromises);
-
-            // Update counts and progress
-            for (const result of batchResults) {
-                completedCount++;
-                if (result.success) {
-                    successCount++;
-                    if (result.deals > 0) {
-                        if (result.cached) {
-                            console.log(`✅ Refreshed ${result.provider}: ${result.deals} deals found (cached)`);
-                        } else {
-                            console.log(`✅ Refreshed ${result.provider}: ${result.deals} deals found`);
-                        }
-                    } else {
-                        console.log(`⚠️ ${result.provider}: API worked but no deals found (website may require postcode or have no public pricing)`);
-                    }
-                } else {
-                    failCount++;
-                    console.error(`❌ Failed to refresh ${result.provider}: ${result.error}`);
-                }
-
-                // Update progress
-                const progressFill = document.getElementById('progress-fill');
-                const progressText = document.getElementById('progress-text');
-                if (progressFill && progressText) {
-                    const percent = (completedCount / providersWithWebsites.length) * 100;
-                    progressFill.style.width = `${percent}%`;
-                    progressText.textContent = `Refreshing ${completedCount}/${providersWithWebsites.length} providers... (${successCount} success, ${failCount} failed)`;
-                }
-            }
-
-            // Small delay between batches to avoid overwhelming
-            if (batchIndex < totalBatches - 1) {
-                await new Promise(resolve => setTimeout(resolve, 200));
-            }
+        refreshBtn.textContent = 'Refreshing snapshot…';
+        try {
+            await this.loadProviders();
+            this.currentPage = 1;
+            this.renderProviders();
+            this.updateStatistics();
+            this.showToast('Build-cached provider snapshot refreshed', 'success');
+        } finally {
+            refreshBtn.disabled = false;
+            refreshBtn.innerHTML = originalText;
         }
-
-        // Remove progress indicator
-        const progressEl = document.getElementById('refresh-progress');
-        if (progressEl) {
-            progressEl.remove();
-        }
-
-        // Re-render providers to show updated prices
-        this.renderProviders();
-
-        // Re-enable button
-        refreshBtn.disabled = false;
-        refreshBtn.innerHTML = originalText;
-
-        // Show completion message
-        const message = `✅ Refreshed ${successCount} providers, ${failCount} failed`;
-        console.log(message);
-
-        // Show toast notification
-        this.showToast(message, 'success');
-
-        // Update statistics
-        this.updateStatistics();
     }
 
     /**
@@ -1547,7 +1221,7 @@ class BroadbandChecker {
                         `).join('')}
                     </div>
                     <div style="margin-top: 2rem; text-align: center;">
-                        <a href="${provider.website}" target="_blank" class="provider-link provider-external-btn" style="display: inline-block; padding: 1rem 2rem;">
+                        <a href="${this.safeProviderUrl(provider.website)}" target="_blank" rel="noopener noreferrer" class="provider-link provider-external-btn" style="display: inline-block; padding: 1rem 2rem;">
                             Visit ${this.escapeHtml(providerName)} Website →
                         </a>
                     </div>
@@ -1653,9 +1327,9 @@ class BroadbandChecker {
             ${provider.website ? `
                 <div class="provider-actions">
                     <button class="provider-link provider-view-btn" data-url="${this.escapeHtml(provider.website)}" data-name="${this.escapeHtml(provider.name)}">
-                        🌐 View in Page
+                        Preview provider
                     </button>
-                    <a href="${this.escapeHtml(provider.website)}" target="_blank" rel="noopener noreferrer" class="provider-link provider-external-btn">
+                    <a href="${this.safeProviderUrl(provider.website)}" target="_blank" rel="noopener noreferrer" class="provider-link provider-external-btn">
                         ↗ Open in New Tab
                     </a>
                 </div>
@@ -1690,7 +1364,7 @@ class BroadbandChecker {
     }
 
     /**
-     * Open provider website in modal iframe
+     * Open a CORS-safe, local provider preview with an authoritative source link.
      * 
      * @private
      * @param {string} url - Provider website URL
@@ -1698,78 +1372,46 @@ class BroadbandChecker {
      * @returns {void}
      */
     openProviderInPage(url, providerName) {
-        let modal = document.getElementById('provider-viewer-modal');
-        if (!modal) {
-            modal = this.createViewerModal();
-            document.body.appendChild(modal);
-        }
-
+        document.getElementById('provider-viewer-modal')?.remove();
+        const provider = this.providers.find(item => item.name === providerName);
+        const safeUrl = (() => {
+            try {
+                const parsed = new URL(url);
+                return /^https:$/.test(parsed.protocol) ? parsed.href : '';
+            } catch { return ''; }
+        })();
+        const modal = document.createElement('div');
+        modal.id = 'provider-viewer-modal';
+        modal.className = 'provider-viewer-modal';
+        modal.setAttribute('role', 'dialog');
+        modal.setAttribute('aria-modal', 'true');
+        modal.setAttribute('aria-labelledby', 'provider-preview-title');
         modal.style.display = 'flex';
+        modal.innerHTML = `
+            <div class="viewer-overlay" data-close-preview></div>
+            <section class="viewer-container provider-preview-card">
+                <header class="viewer-header">
+                    <div><span class="snapshot-kicker">BUILD-CACHED DIRECTORY</span><h2 id="provider-preview-title" class="viewer-title">${this.escapeHtml(providerName)}</h2></div>
+                    <button type="button" class="viewer-btn close-btn" aria-label="Close provider preview">✕</button>
+                </header>
+                <div class="provider-preview-content">
+                    <p>This preview is assembled from the website's same-origin provider catalogue. No scraper, cloud pricing function, or embedded third-party page was contacted.</p>
+                    <dl>
+                        <div><dt>Status</dt><dd>${this.escapeHtml(provider?.status || 'Unverified')}</dd></div>
+                        <div><dt>Type</dt><dd>${this.escapeHtml(provider?.type || 'Not specified')}</dd></div>
+                        <div><dt>Catalogue date</dt><dd>${this.escapeHtml(this.lastUpdated || 'Not supplied')}</dd></div>
+                        <div><dt>Recorded offers</dt><dd>${provider?.knownDeals?.length || 0}</dd></div>
+                    </dl>
+                    ${safeUrl ? `<a class="provider-link provider-external-btn" href="${this.escapeHtml(safeUrl)}" target="_blank" rel="noopener noreferrer">Open the provider's authoritative website ↗</a>` : '<p class="no-data">No verified provider URL is recorded.</p>'}
+                </div>
+            </section>`;
+        document.body.appendChild(modal);
         document.body.style.overflow = 'hidden';
-
-        const titleEl = modal.querySelector('.viewer-title');
-        if (titleEl) {
-            titleEl.textContent = `${providerName} - Website Viewer`;
-        }
-
-        let iframe = modal.querySelector('.provider-iframe');
-        if (!iframe) {
-            iframe = document.createElement('iframe');
-            iframe.className = 'provider-iframe';
-            iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox');
-            iframe.setAttribute('loading', 'lazy');
-            const iframeContainer = modal.querySelector('.iframe-container');
-            if (iframeContainer) {
-                iframeContainer.appendChild(iframe);
-            }
-        }
-
-        iframe.src = url;
-        this.currentIframe = iframe;
-
-        const loadingEl = modal.querySelector('.iframe-loading');
-        if (loadingEl) {
-            loadingEl.style.display = 'flex';
-            loadingEl.innerHTML = '<div class="spinner"></div><p>Loading website...</p>';
-        }
-
-        const loadTimeout = setTimeout(() => {
-            if (loadingEl && loadingEl.style.display !== 'none') {
-                loadingEl.innerHTML = `
-                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 1rem;">⏳ Website is taking longer than expected to load...</p>
-                    <p style="color: rgba(255,255,255,0.5); font-size: 0.9rem;">This may be due to slow connection or site restrictions.</p>
-                    <a href="${url}" target="_blank" rel="noopener noreferrer" 
-                       style="display: inline-block; margin-top: 1rem; padding: 0.75rem 1.5rem; 
-                              background: rgba(186, 148, 79, 0.3); border: 2px solid rgba(186, 148, 79, 0.5); 
-                              border-radius: 8px; color: #ba944f; text-decoration: none; font-weight: 600;">
-                        ↗ Open in New Tab Instead
-                    </a>
-                `;
-            }
-        }, 10000);
-
-        iframe.onload = () => {
-            clearTimeout(loadTimeout);
-            if (loadingEl) {
-                loadingEl.style.display = 'none';
-            }
-        };
-
-        iframe.onerror = () => {
-            clearTimeout(loadTimeout);
-            if (loadingEl) {
-                loadingEl.innerHTML = `
-                    <p style="color: #ff6b6b; margin-bottom: 1rem;">⚠️ Could not load website in iframe.</p>
-                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 1rem;">Some websites block iframe embedding for security reasons.</p>
-                    <a href="${url}" target="_blank" rel="noopener noreferrer" 
-                       style="display: inline-block; padding: 0.75rem 1.5rem; background: rgba(186, 148, 79, 0.3); 
-                              border: 2px solid rgba(186, 148, 79, 0.5); border-radius: 8px; color: #ba944f; 
-                              text-decoration: none; font-weight: 600;">
-                        ↗ Open in New Tab Instead
-                    </a>
-                `;
-            }
-        };
+        const close = () => { modal.remove(); document.body.style.overflow = ''; };
+        modal.querySelector('.close-btn')?.addEventListener('click', close);
+        modal.querySelector('[data-close-preview]')?.addEventListener('click', close);
+        modal.addEventListener('keydown', event => { if (event.key === 'Escape') close(); });
+        modal.querySelector('.close-btn')?.focus();
     }
 
     /**
@@ -2009,7 +1651,7 @@ class BroadbandChecker {
                                     <div style="text-align: right;">
                                         ${price ? `<div style="color: #fff; font-weight: 600;">From £${price}/mo</div>` : ''}
                                         ${provider.website ? `
-                                            <a href="${provider.website}" target="_blank" rel="noopener noreferrer" 
+                                            <a href="${this.safeProviderUrl(provider.website)}" target="_blank" rel="noopener noreferrer"
                                                style="color: #ba944f; text-decoration: underline; font-size: 0.9rem;">
                                                 Check deals →
                                             </a>
@@ -2308,7 +1950,7 @@ class BroadbandChecker {
                             </div>
                             
                             <div style="margin-top: 2rem; text-align: center;">
-                                <a href="${p.website}" target="_blank" class="provider-link provider-external-btn" style="width: 100%;">Visit Website</a>
+                                <a href="${this.safeProviderUrl(p.website)}" target="_blank" rel="noopener noreferrer" class="provider-link provider-external-btn" style="width: 100%;">Visit Website</a>
                             </div>
                         </div>
                     `}).join('')}

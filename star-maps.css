@@ -11,6 +11,8 @@
   --map-muted: #aab9d2;
 }
 
+.star-map-container { min-height: 1500px; }
+
 .star-maps-page .page-hero {
   padding-block: clamp(4.5rem, 10vw, 8rem) clamp(2.5rem, 7vw, 5rem);
 }
@@ -295,4 +297,296 @@
 
 @media (prefers-reduced-motion: reduce) {
   .stellar-map-button { transition: none; }
+}
+
+/* 2026 Astrometry Console */
+.stellar-map-command {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.15rem;
+  border-bottom: 1px solid var(--map-line);
+  background: linear-gradient(90deg, rgba(8, 47, 73, 0.34), rgba(30, 27, 75, 0.18));
+}
+
+.stellar-map-command h2,
+.stellar-map-catalogue h3 {
+  margin: 0.22rem 0 0;
+  color: var(--map-text);
+  font-size: clamp(1rem, 2vw, 1.35rem);
+  letter-spacing: -0.02em;
+}
+
+.stellar-map-eyebrow {
+  margin: 0;
+  color: var(--map-cyan) !important;
+  font: 750 0.58rem/1.45 "DM Mono", ui-monospace, monospace;
+  letter-spacing: 0.13em;
+}
+
+.stellar-map-toolbar {
+  grid-template-columns: minmax(190px, 1.3fr) minmax(150px, 0.72fr) minmax(140px, 0.65fr) repeat(3, auto);
+}
+
+.stellar-map-tutorial-button {
+  flex: 0 0 auto;
+  border-color: rgba(190, 242, 100, 0.46);
+  color: #eaffc2;
+}
+
+.stellar-map-stage {
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 340px);
+}
+
+.stellar-map-viewport {
+  isolation: isolate;
+}
+
+.stellar-map-cosmos,
+.stellar-map-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.stellar-map-cosmos {
+  z-index: 0;
+  display: block;
+  background:
+    radial-gradient(circle at 44% 42%, rgba(14, 116, 144, 0.24), transparent 45%),
+    radial-gradient(circle at 74% 66%, rgba(88, 28, 135, 0.18), transparent 42%),
+    #01030a;
+}
+
+.stellar-map-canvas {
+  z-index: 1;
+  background: transparent;
+}
+
+.stellar-map-hud,
+.stellar-map-zoom { z-index: 2; }
+
+.stellar-map-detail {
+  max-height: 720px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.stellar-map-equation {
+  padding: 0.8rem;
+  border: 1px solid rgba(167, 139, 250, 0.22);
+  border-radius: 12px;
+  background: rgba(91, 33, 182, 0.08);
+}
+
+.stellar-map-equation > span {
+  color: #c4b5fd;
+  font: 750 0.58rem/1.3 "DM Mono", ui-monospace, monospace;
+  letter-spacing: 0.1em;
+}
+
+.stellar-map-equation p {
+  margin: 0.45rem 0 0;
+  color: #b9c7dc !important;
+  font: 550 0.72rem/1.55 "DM Mono", ui-monospace, monospace;
+}
+
+.stellar-map-catalogue {
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr);
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem;
+  border-top: 1px solid var(--map-line);
+  background: rgba(3, 8, 20, 0.78);
+}
+
+.stellar-map-object-list {
+  display: flex;
+  gap: 0.55rem;
+  overflow-x: auto;
+  padding: 0.25rem 0.1rem 0.5rem;
+  scrollbar-width: thin;
+  scroll-snap-type: x proximity;
+}
+
+.stellar-map-object {
+  flex: 0 0 150px;
+  min-height: 76px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.3rem;
+  align-content: center;
+  padding: 0.72rem;
+  border: 1px solid rgba(103, 232, 249, 0.16);
+  border-radius: 12px;
+  background: rgba(4, 10, 23, 0.88);
+  color: var(--map-muted);
+  text-align: left;
+  cursor: pointer;
+  scroll-snap-align: start;
+}
+
+.stellar-map-object strong {
+  grid-column: 1 / -1;
+  color: var(--map-text);
+  font-size: 0.78rem;
+}
+
+.stellar-map-object span {
+  font: 650 0.58rem/1.2 "DM Mono", ui-monospace, monospace;
+}
+
+.stellar-map-object-spectrum { color: var(--map-cyan); }
+
+.stellar-map-object:hover,
+.stellar-map-object[aria-selected="true"] {
+  border-color: rgba(190, 242, 100, 0.58);
+  background: rgba(190, 242, 100, 0.08);
+}
+
+.stellar-map-object:focus-visible,
+.stellar-map-source-links a:focus-visible,
+.stellar-map-detail-actions a:focus-visible {
+  outline: 3px solid var(--map-lime);
+  outline-offset: 2px;
+}
+
+.stellar-map-provenance {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem;
+  border-top: 1px solid var(--map-line);
+  background: rgba(2, 6, 16, 0.9);
+}
+
+.stellar-map-provenance p {
+  margin: 0;
+  color: #9eacc2 !important;
+  font-size: 0.72rem;
+  line-height: 1.55;
+}
+
+.stellar-map-source-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.42rem;
+}
+
+.stellar-map-source-links a {
+  padding: 0.48rem 0.62rem;
+  border: 1px solid rgba(103, 232, 249, 0.18);
+  border-radius: 999px;
+  color: var(--map-cyan) !important;
+  font: 700 0.58rem/1 "DM Mono", ui-monospace, monospace;
+  text-decoration: none;
+}
+
+.stellar-map-tutorial-dialog {
+  width: min(620px, calc(100vw - 2rem));
+  padding: 0;
+  border: 1px solid rgba(103, 232, 249, 0.42);
+  border-radius: 20px;
+  background: linear-gradient(150deg, rgba(4, 14, 32, 0.99), rgba(18, 10, 40, 0.99));
+  color: var(--map-text);
+  box-shadow: 0 28px 100px rgba(0, 0, 0, 0.78), 0 0 48px rgba(34, 211, 238, 0.12);
+}
+
+.stellar-map-tutorial-dialog::backdrop {
+  background: rgba(0, 3, 12, 0.78);
+  backdrop-filter: blur(8px);
+}
+
+.stellar-map-tutorial-dialog form { padding: 1.3rem; }
+.stellar-map-tutorial-dialog h2 { margin: 0.65rem 0 0.5rem; color: #f8fafc; }
+.stellar-map-tutorial-dialog p:not(.stellar-map-eyebrow) { color: #b8c7dc !important; line-height: 1.7; }
+
+.stellar-map-tutorial-progress {
+  height: 3px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.16);
+}
+
+.stellar-map-tutorial-progress span {
+  display: block;
+  width: 20%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--map-cyan), var(--map-violet), var(--map-lime));
+  transition: width 180ms ease;
+}
+
+.stellar-map-tutorial-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.55rem;
+  margin-top: 1.1rem;
+}
+
+.stellar-map-button-primary {
+  border-color: rgba(190, 242, 100, 0.55);
+  background: rgba(190, 242, 100, 0.12);
+  color: #eaffc2;
+}
+
+.star-maps-page .visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+@media (max-width: 1120px) {
+  .stellar-map-toolbar { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .stellar-map-provenance { grid-template-columns: 1fr; }
+  .stellar-map-source-links { justify-content: flex-start; }
+}
+
+@media (max-width: 900px) {
+  .stellar-map-command { align-items: flex-start; }
+  .stellar-map-stage { grid-template-columns: 1fr; }
+  .stellar-map-detail { max-height: none; }
+  .stellar-map-catalogue { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 680px) {
+  .star-map-container { min-height: 2500px; }
+  .star-maps-page .content-section { margin-inline: 0.5rem; }
+  .stellar-map-shell { border-radius: 17px; }
+  .stellar-map-command { display: grid; }
+  .stellar-map-tutorial-button { width: 100%; }
+  .stellar-map-toolbar { grid-template-columns: 1fr 1fr; padding: 0.7rem; }
+  .stellar-map-toolbar .stellar-map-field:first-child { grid-column: 1 / -1; }
+  .stellar-map-toolbar .stellar-map-button { padding-inline: 0.55rem; font-size: 0.68rem; }
+  .stellar-map-stage,
+  .stellar-map-viewport,
+  .stellar-map-canvas,
+  .stellar-map-cosmos { min-height: 500px; }
+  .stellar-map-detail { padding: 1rem; }
+  .stellar-map-facts > div { grid-template-columns: minmax(0, 1fr) minmax(110px, auto); }
+  .stellar-map-facts dd { overflow-wrap: anywhere; }
+  .stellar-map-object { flex-basis: 138px; }
+  .stellar-map-tutorial-actions { display: grid; grid-template-columns: 1fr 1fr; }
+  .stellar-map-tutorial-actions #stellar-map-tutorial-next { grid-column: 1 / -1; grid-row: 1; }
+}
+
+@media (max-width: 430px) {
+  .stellar-map-toolbar { grid-template-columns: 1fr; }
+  .stellar-map-toolbar .stellar-map-field:first-child { grid-column: auto; }
+  .stellar-map-status { max-width: calc(100vw - 130px); line-height: 1.3; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stellar-map-tutorial-progress span { transition: none; }
 }

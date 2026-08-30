@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    const BITGPU = 'https://esm.sh/bitgpu@0.19.1';
+    const RUNTIME_BASE = new URL('vendor/bitgpu/', document.currentScript?.src || location.href);
     const MODEL_ASSETS = 'https://cdn.jsdelivr.net/gh/stfurkan/bitgpu@v0.19.1/models';
     const CACHE_NAME = 'ita-bitgpu-models-v0.19.1';
     const prism = repository => `https://huggingface.co/prism-ml/${repository}/resolve/main`;
@@ -10,22 +10,26 @@
         'bonsai-1.7b-gguf': {
             data: `${prism('Bonsai-1.7B-gguf')}/Bonsai-1.7B-Q1_0.gguf`,
             tokenizer: onnx('Bonsai-1.7B-ONNX'),
-            aux: 'Bonsai-1.7B-Q1_0.aux.bin'
+            aux: 'Bonsai-1.7B-Q1_0.aux.bin',
+            downloadBytes: 240 * 1024 * 1024
         },
         'bonsai-4b-gguf': {
             data: `${prism('Bonsai-4B-gguf')}/Bonsai-4B-Q1_0.gguf`,
             tokenizer: onnx('Bonsai-4B-ONNX'),
-            aux: 'Bonsai-4B-Q1_0.aux.bin'
+            aux: 'Bonsai-4B-Q1_0.aux.bin',
+            downloadBytes: 570 * 1024 * 1024
         },
         'bonsai-8b-gguf': {
             data: `${prism('Bonsai-8B-gguf')}/Bonsai-8B-Q1_0.gguf`,
             tokenizer: onnx('Bonsai-8B-ONNX'),
-            aux: 'Bonsai-8B-Q1_0.aux.bin'
+            aux: 'Bonsai-8B-Q1_0.aux.bin',
+            downloadBytes: 1.2 * 1024 * 1024 * 1024
         },
         'bonsai-27b-gguf': {
             data: `${prism('Bonsai-27B-gguf')}/Bonsai-27B-Q1_0.gguf`,
             tokenizer: prism('Bonsai-27B-unpacked'),
             aux: 'Bonsai-27B-Q1_0.aux.bin',
+            downloadBytes: 3.8 * 1024 * 1024 * 1024,
             generation: { temperature: 0.5, topP: 0.85, topK: 20 }
         }
     };
@@ -70,12 +74,12 @@
 
     async function cachedResponse(url) {
         if (!('caches' in window)) {
-            return fetch(url, { signal: loadController?.signal });
+            return fetch(url, { signal: loadController?.signal, cache: 'no-store' });
         }
         const cache = await caches.open(CACHE_NAME);
         const hit = await cache.match(url);
         if (hit) return hit;
-        const response = await fetch(url, { signal: loadController?.signal });
+        const response = await fetch(url, { signal: loadController?.signal, cache: 'no-store' });
         if (!response.ok) throw new Error(`Model asset request failed with HTTP ${response.status}.`);
         cache.put(url, response.clone()).catch(() => {});
         return response;
@@ -104,8 +108,20 @@
             setStatus('WebGPU is unavailable. Use a current desktop Chrome or Edge browser with WebGPU enabled.', 'error');
             return;
         }
+        if (key === 'bonsai-27b-gguf' && !confirm('Bonsai 27B downloads about 3.8 GB and is intended for systems with at least 16 GB of available memory. Continue this explicit download?')) return;
+        try {
+            const estimate = await navigator.storage?.estimate?.();
+            if (estimate?.quota && estimate?.usage != null && estimate.quota - estimate.usage < model.downloadBytes * 1.15) {
+                setStatus(`This browser reports less than the recommended free storage for ${key}. Free space or choose a smaller model.`, 'error');
+                return;
+            }
+        } catch {}
 
         loadController?.abort();
+        engine?.dispose?.();
+        engine = null;
+        chat = null;
+        activeModel = null;
         loadController = new AbortController();
         setLoadingUi(true);
         if (progress) {
@@ -117,8 +133,8 @@
             setStatus('Loading the pinned BitGPU runtime. Model weights have not started until this action.', 'loading');
             navigator.storage?.persist?.().catch(() => {});
             const [{ createEngine, WebGPUUnavailableError }, { createChat }] = await Promise.all([
-                import(BITGPU),
-                import(`${BITGPU}/chat`)
+                import(new URL('index.js', RUNTIME_BASE).href),
+                import(new URL('chat.js', RUNTIME_BASE).href)
             ]);
             setStatus(`Loading ${key}. The first run downloads and caches its weights in this browser.`, 'loading');
             try {
@@ -202,11 +218,12 @@
     async function removeDownloads() {
         loadController?.abort();
         generationController?.abort();
+        engine?.dispose?.();
         engine = null;
         chat = null;
         activeModel = null;
         if ('caches' in window) await caches.delete(CACHE_NAME);
-        setStatus('Downloaded Bonsai model files were removed from this browser.', 'idle');
+        setStatus('Bonsai Cache Storage entries were removed from this browser. Browser-managed HTTP cache is not used by this loader.', 'idle');
         await refreshStorage();
     }
 

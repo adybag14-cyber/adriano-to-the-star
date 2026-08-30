@@ -8,6 +8,60 @@
     margin-bottom: 2rem;
 }
 
+/* 2026 deep-space directory refresh */
+.broadband-search-section,
+.provider-card,
+.provider-preview-card {
+    background: linear-gradient(145deg, rgba(4, 11, 25, .96), rgba(9, 11, 35, .9));
+    border-color: rgba(103, 232, 249, .28);
+    box-shadow: 0 24px 80px rgba(0, 0, 0, .42), inset 0 1px rgba(255, 255, 255, .035);
+}
+
+.broadband-boundary-note {
+    margin: 1rem 0 0;
+    padding: .85rem 1rem;
+    border-left: 3px solid #67e8f9;
+    background: rgba(14, 165, 233, .08);
+    color: #cbd5e1;
+    line-height: 1.6;
+}
+
+.provider-pager {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    border: 1px solid rgba(103, 232, 249, .2);
+    border-radius: 1rem;
+    background: rgba(2, 8, 23, .88);
+}
+
+.provider-pager button,
+.provider-preview-card .viewer-btn {
+    min-height: 44px;
+    border: 1px solid rgba(103, 232, 249, .45);
+    border-radius: .75rem;
+    background: rgba(8, 47, 73, .65);
+    color: #e0f2fe;
+    cursor: pointer;
+}
+
+.provider-pager button:disabled { opacity: .4; cursor: not-allowed; }
+.snapshot-kicker { color: #67e8f9; font-size: .72rem; letter-spacing: .16em; }
+.provider-preview-content { padding: clamp(1rem, 4vw, 2rem); color: #dbeafe; }
+.provider-preview-content dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+.provider-preview-content dl div { padding: .85rem; border: 1px solid rgba(129, 140, 248, .2); border-radius: .75rem; background: rgba(15, 23, 42, .72); }
+.provider-preview-content dt { color: #94a3b8; font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; }
+.provider-preview-content dd { margin: .3rem 0 0; color: #f8fafc; }
+
+@media (max-width: 640px) {
+    .provider-pager { flex-wrap: wrap; }
+    .provider-pager span { order: -1; width: 100%; text-align: center; }
+    .provider-preview-content dl { grid-template-columns: 1fr; }
+}
+
 .search-container {
     display: flex;
     gap: 1rem;

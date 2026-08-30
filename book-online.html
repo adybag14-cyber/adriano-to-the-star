@@ -59,7 +59,7 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="pages-styles.css">
     <link rel="stylesheet" href="loader-minimal.css">
-    <link rel="stylesheet" href="cosmic-styles.css">
+    <link rel="stylesheet" href="book-online.css">
     <link rel="stylesheet" href="theme-styles.css">
     <link rel="stylesheet" href="accessibility-styles.css">
     <link rel="stylesheet" href="i18n-styles.css">
@@ -75,6 +75,7 @@
     <script src="cosmic-music-player.js" defer></script>
     <script src="theme-toggle.js" defer></script>
     <script src="accessibility.js" defer></script>
+    <script src="i18n.js" defer></script>
     <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
     <script src="universal-simulation-hub.js"></script>
     <script src="void-warfare-engine.js"></script>
@@ -93,23 +94,35 @@
 <body>
     <main>
         <section class="page-hero" data-entrance="fadeIn">
-            <h1 class="page-title" data-scroll-animate>📅 BOOK ONLINE</h1>
-            <p class="page-subtitle">Claim Your Celestial Property</p>
+            <h1 class="page-title" data-scroll-animate>📅 MISSION SESSION PLANNER</h1>
+            <p class="page-subtitle">Design a free, self-guided astronomy experience</p>
         </section>
 
         <section class="content-section" data-entrance="slideUp">
-            <div class="content-container" style="text-align: center; max-width: 800px; margin: 0 auto;">
-                <h2>Browse Our Exoplanet Database</h2>
-                <p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 2rem;">Welcome to our booking portal. To claim your celestial body, please browse our comprehensive database of over 9,500+ exoplanets.</p>
-                <a href="database.html" class="cta-button" style="padding: 1.5rem 3rem; font-size: 1.2rem;">🚀 Explore Database & Book Now</a>
+            <div class="content-container booking-shell">
+                <header><p class="booking-kicker">NO PAYMENT // NO ACCOUNT // NO RESERVATION BACKEND</p><h2>Build your observing route</h2><p>This planner creates a private itinerary from public pages. Saving uses this browser only; exporting creates a local calendar file.</p></header>
+                <form id="mission-plan-form" class="mission-plan-form">
+                    <label for="mission-experience">Primary experience</label>
+                    <select id="mission-experience"><option value="tracker">Nearby-star tracker</option><option value="maps">Interactive star maps</option><option value="education">Planetary education</option><option value="database">Kepler database research</option><option value="pioneer">Exoplanet Pioneer simulation</option></select>
+                    <label for="mission-focus">Learning focus</label>
+                    <select id="mission-focus"><option value="astrometry">Astrometry and reference frames</option><option value="exoplanets">Exoplanet discovery methods</option><option value="planetary">Planetary surfaces and atmospheres</option><option value="missions">Mission design and systems thinking</option></select>
+                    <label for="mission-duration">Session duration</label>
+                    <select id="mission-duration"><option value="30">30 minutes</option><option value="60" selected>60 minutes</option><option value="90">90 minutes</option><option value="120">120 minutes</option></select>
+                    <label for="mission-start">Optional start date and time</label>
+                    <input id="mission-start" type="datetime-local">
+                    <div class="mission-plan-actions"><button type="submit">Generate route</button><button type="button" id="save-mission-plan" disabled>Save on this device</button><button type="button" id="export-mission-plan" disabled>Export calendar</button><button type="button" id="clear-mission-plan">Clear local plan</button></div>
+                    <p id="mission-plan-status" role="status" aria-live="polite"></p>
+                </form>
+                <section id="mission-plan-output" class="mission-plan-output" aria-live="polite"><h3>Your route will appear here</h3><p>Choose the controls above and generate a self-guided session.</p></section>
             </div>
         </section>
     </main>
 
     <footer class="site-footer">
-        <p>&copy; 2025 ADRIANO TO THE STAR - I.T.A (Interstellar Travel Agency)</p>
+        <p>&copy; <span data-current-year></span> ADRIANO TO THE STAR - I.T.A (Interstellar Travel Agency)</p>
         <p><a href="index.html">Back to Home</a></p>
     </footer>
     <script src="pwa-loader.js"></script>
+    <script src="book-online.js" defer></script>
 </body>
 </html>

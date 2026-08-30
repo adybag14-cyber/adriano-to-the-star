@@ -52,7 +52,12 @@ function Test-IsNonProductionRootWebFile {
         "play.html",
         "starsector_4.2_final.html",
         "cj3_debug.js",
-        "temp-music-player-backup.js"
+        "temp-music-player-backup.js",
+        "auth-supabase.js",
+        "supabase-config.js",
+        "supabase-integration.js",
+        "firebase-config.js",
+        "auth.js"
     )) { return $true }
     if ($Name -match '(?i)^test(?:[-_].*|\.html$)') { return $true }
     if ($Name -match '(?i)(?:^|[-_])(?:test|debug)(?:[-_].*)?\.html$') { return $true }
@@ -124,6 +129,56 @@ $Directories = @(
 )
 foreach ($directory in $Directories) {
     Copy-DirectorySafely $directory "public\$directory"
+}
+
+# Vendor the exact React runtime used by tracker.html. The production browser never
+# depends on a third-party CDN for the core tracker UI.
+$TrackerVendorFiles = @{
+    "node_modules\react\umd\react.production.min.js" = "public\vendor\tracker\react-18.3.1.production.min.js"
+    "node_modules\react-dom\umd\react-dom.production.min.js" = "public\vendor\tracker\react-dom-18.3.1.production.min.js"
+    "node_modules\react\LICENSE" = "public\vendor\tracker\react-LICENSE.txt"
+    "node_modules\react-dom\LICENSE" = "public\vendor\tracker\react-dom-LICENSE.txt"
+}
+foreach ($entry in $TrackerVendorFiles.GetEnumerator()) {
+    if (-not (Test-Path -LiteralPath $entry.Key)) {
+        throw "Required tracker runtime is missing: $($entry.Key). Run npm ci before the Pages build."
+    }
+    New-Item -ItemType Directory -Path (Split-Path -Parent $entry.Value) -Force | Out-Null
+    Copy-Item -LiteralPath $entry.Key -Destination $entry.Value -Force
+}
+
+$BitGpuVendorFiles = @{
+    "node_modules\bitgpu\dist\index.js" = "public\vendor\bitgpu\index.js"
+    "node_modules\bitgpu\dist\chat.js" = "public\vendor\bitgpu\chat.js"
+    "node_modules\bitgpu\LICENSE" = "public\vendor\bitgpu\LICENSE.txt"
+    "node_modules\bitgpu\THIRD_PARTY_LICENSES.md" = "public\vendor\bitgpu\THIRD_PARTY_LICENSES.md"
+}
+foreach ($entry in $BitGpuVendorFiles.GetEnumerator()) {
+    if (-not (Test-Path -LiteralPath $entry.Key)) {
+        throw "Required Bonsai runtime file is missing: $($entry.Key). Run npm ci before the Pages build."
+    }
+    New-Item -ItemType Directory -Path (Split-Path -Parent $entry.Value) -Force | Out-Null
+    Copy-Item -LiteralPath $entry.Key -Destination $entry.Value -Force
+}
+
+# Refresh the nearby-star/NASA discovery snapshot before page preparation. Failure
+# is non-destructive: the checked-in, already-copied same-origin snapshot remains.
+$TrackerFeedUpdater = "scripts\update-tracker-data.mjs"
+$TrackerFeedSnapshot = "public\data\tracker\stellar-neighborhood.json"
+if (Test-Path -LiteralPath $TrackerFeedUpdater) {
+    try {
+        & node $TrackerFeedUpdater "--output=$TrackerFeedSnapshot"
+        if ($LASTEXITCODE -ne 0) { throw "tracker updater exited with code $LASTEXITCODE" }
+    }
+    catch {
+        Write-Warning "Tracker refresh failed; retaining the checked-in snapshot. $($_.Exception.Message)"
+        if (-not (Test-Path -LiteralPath $TrackerFeedSnapshot)) {
+            throw "Tracker refresh failed and no fallback snapshot exists in the Pages artifact."
+        }
+    }
+}
+elseif (-not (Test-Path -LiteralPath $TrackerFeedSnapshot)) {
+    throw "Tracker updater and fallback snapshot are both missing."
 }
 
 # Never publish nested developer fixtures from otherwise production-facing directories.
@@ -224,7 +279,7 @@ if (-not $AssetVersion) {
 }
 
 $Utf8WithoutBom = [System.Text.UTF8Encoding]::new($false)
-$LocalAssetAttributePattern = '(?i)(?<prefix>\b(?:href|src)\s*=\s*(?<quote>["'']))(?<path>(?!https?:|//|data:|#|mailto:)[^"''?#]+?\.(?:css|js))(?<query>\?[^"'']*)?\k<quote>'
+$LocalAssetAttributePattern = '(?i)(?<prefix>\b(?:href|src)\s*=\s*(?<quote>["'']))(?<path>(?!https?:|//|data:|#|mailto:)[^"''?#]+?\.(?:css|js|json))(?<query>\?[^"'']*)?\k<quote>'
 $LocalScriptTagPattern = '(?i)<script(?![^>]*\bdata-cfasync\s*=)(?=[^>]*\bsrc\s*=\s*["''](?!https?:|//|data:)[^"'']+\.js(?:\?[^"'']*)?["''])'
 $VersionedHtmlReferenceCount = 0
 $RocketLoaderExclusionCount = 0
@@ -264,7 +319,8 @@ foreach ($HtmlFile in Get-ChildItem "public" -Recurse -File -Filter "*.html") {
 # from an intermediary/browser cache after the JavaScript itself has been upgraded.
 $LocalAssetStringPattern = '(?i)(?<quote>["''])(?<path>(?!https?:|//|data:|#|mailto:)[^"''?#\r\n]+?\.(?:css|js|json))(?<query>\?[^"'']*)?\k<quote>'
 $VersionedJavaScriptReferenceCount = 0
-foreach ($JavaScriptFile in Get-ChildItem "public" -Recurse -File -Filter "*.js") {
+foreach ($JavaScriptFile in Get-ChildItem "public" -Recurse -File -Filter "*.js" |
+    Where-Object { $_.FullName -notlike "*\public\vendor\*" }) {
     $JavaScriptContent = [System.IO.File]::ReadAllText($JavaScriptFile.FullName)
     $UpdatedJavaScriptContent = [regex]::Replace(
         $JavaScriptContent,
@@ -329,8 +385,14 @@ $RequiredFiles = @(
     "ita-music-player.css",
     "i18n.js",
     "i18n-styles.css",
-    "auth-supabase.js",
+    "auth-local.js",
+    "pioneer-local-service.js",
+    "site-runtime.js",
     "large-exoplanet-loader.js",
+    "database-3d-loader.js",
+    "three.min.js",
+    "OrbitControls-r128.js",
+    "planet-3d-viewer.js",
     "theme-styles.css",
     "loader-minimal.css",
     "code-splitting.js",
@@ -340,7 +402,22 @@ $RequiredFiles = @(
     "database-ita-shell.css",
     "database-experience.js",
     "education.html",
+    "education-bootstrap.js",
     "education-viewer.js",
+    "privacy.html",
+    "tracker.html",
+    "tracker-app.js",
+    "tracker-visualization.js",
+    "tracker.css",
+    "vendor\tracker\react-18.3.1.production.min.js",
+    "vendor\tracker\react-dom-18.3.1.production.min.js",
+    "vendor\tracker\react-LICENSE.txt",
+    "vendor\tracker\react-dom-LICENSE.txt",
+    "vendor\bitgpu\index.js",
+    "vendor\bitgpu\chat.js",
+    "vendor\bitgpu\LICENSE.txt",
+    "vendor\bitgpu\THIRD_PARTY_LICENSES.md",
+    "data\tracker\stellar-neighborhood.json",
     "images\earth_texture_map.png",
     "images\textures\mercury.jpg",
     "images\textures\venus.jpg",
@@ -408,6 +485,15 @@ if ($DatabasePage.Contains("supabase.co") -or $DatabasePage.Contains("@supabase/
 }
 if (-not $DatabasePage.Contains("large-exoplanet-loader.js?v=$AssetVersion")) {
     throw "Database page does not contain the production large exoplanet loader."
+}
+if (-not $DatabasePage.Contains("database-3d-loader.js?v=$AssetVersion")) {
+    throw "Database page does not contain the versioned lazy 3D loader."
+}
+if ($DatabasePage -match '<script[^>]+src="[^"]*(?:three\.min\.js|OrbitControls-r128\.js|planet-3d-viewer\.js)') {
+    throw "Database page eagerly loads the 3D rendering stack instead of using the lazy loader."
+}
+if ($DatabasePage.Contains("kepler_data_parsed.js")) {
+    throw "Database page still loads the duplicate generated JavaScript catalogue instead of the JSONL snapshot."
 }
 if (-not $DatabasePage.Contains("database-ita-shell.css?v=$AssetVersion") -or -not $DatabasePage.Contains("database-experience.js?v=$AssetVersion")) {
     throw "Database I.T.A experience assets are not versioned in the production artifact."

@@ -2,13 +2,13 @@
  * WebGPU Galaxy N-Body Simulation
  * 
  * Uses Compute Shaders to calculate gravitational N-Body interactions 
- * for up to 1,000,000 particles in real-time.
+ * for up to 500,000 particles in real-time, with bounded spectral telemetry.
  */
 
 // --- Configuration ---
 const CONFIG = {
     initialParticleCount: 50000,
-    maxParticleCount: 1000000,
+    maxParticleCount: 500000,
     workgroupSize: 64,
 };
 
@@ -58,8 +58,8 @@ fn main(@builtin(global_invocation_id) GlobalInvocationID : vec3<u32>) {
     // 1. Center attraction (Galaxy Core)
     let center = vec2<f32>(0.0, 0.0);
     let toCenter = center - p.pos;
-    let distToCenter = length(toCenter);
-    let dirToCenter = normalize(toCenter);
+    let distToCenter = max(length(toCenter), 0.001);
+    let dirToCenter = toCenter / distToCenter;
     
     // Spiral Galaxy Force (Tangential)
     let tangent = vec2<f32>(-dirToCenter.y, dirToCenter.x);
@@ -222,6 +222,10 @@ class GalaxySim {
         this.renderBindGroup = null; // Only needs uniforms?
 
         this.step = 0; // 0 or 1 for ping-pong variables
+        this.frameTimes = [];
+        this.lastFrameAt = performance.now();
+        this.lastTelemetryAt = 0;
+        this.animationFrame = null;
 
         this.init();
     }
@@ -233,13 +237,21 @@ class GalaxySim {
         }
 
         try {
-            this.adapter = await navigator.gpu.requestAdapter();
+            this.adapter = await navigator.gpu.requestAdapter({ powerPreference: 'high-performance' });
             if (!this.adapter) throw new Error('No GPU adapter found');
 
             // Check for limits (optional, but good for heavy sims)
             // const limits = this.adapter.limits;
 
             this.device = await this.adapter.requestDevice();
+            this.device.lost.then(info => {
+                this.isPlaying = false;
+                const overlay = document.getElementById('error-overlay');
+                if (overlay) {
+                    overlay.style.display = 'block';
+                    overlay.querySelector('p').textContent = `GPU device lost: ${info.message || info.reason}`;
+                }
+            });
 
             this.context = this.canvas.getContext('webgpu');
             const format = navigator.gpu.getPreferredCanvasFormat();
@@ -248,6 +260,7 @@ class GalaxySim {
                 format: format,
                 alphaMode: 'premultiplied',
             });
+            this.resizeCanvas();
 
             this.initParticles();
             this.initPipelines(format);
@@ -260,13 +273,15 @@ class GalaxySim {
             this.animate();
 
         } catch (e) {
-            console.error('WebGPU Init Failed:', e);
+            console.info('WebGPU unavailable; showing the compatibility boundary.', e?.message || e);
             document.getElementById('error-overlay').style.display = 'block';
             document.getElementById('error-overlay').querySelector('p').textContent = e.message;
         }
     }
 
     initParticles() {
+        this.particleBuffers.forEach(buffer => buffer?.destroy());
+        this.uniformBuffer?.destroy();
         // Particle Struct: vec2 pos, vec2 vel, f32 mass, f32 color => 6 floats = 24 bytes
         // Align to 32 bytes for safety? No, storage buffer stride just needs to match WGSL.
         // WGSL struct alignment rules... vec2 is 8 bytes.
@@ -288,14 +303,8 @@ class GalaxySim {
             const idx = i * 6;
 
             // Initial position: Spiral Galaxy Distribution
-            // Random angle and distance
-            const angle = Math.random() * Math.PI * 2;
-            const armOffset = Math.random() * 0.5; // Spread of arms
+            // Random radial distance; arm assignment is deterministic by particle index.
             const dist = Math.random(); // 0 to 1
-
-            // 3 Arms
-            const arm = Math.floor(Math.random() * 3);
-            const finalAngle = angle + (arm * (Math.PI * 2 / 3)); // ?
 
             // Actually, simpler spiral:
             // angle = dist * factor
@@ -370,16 +379,16 @@ class GalaxySim {
         // Let's verify strict WGSL layout rules.
         // float, float, float -> 12 bytes.
         // vec2 requires 8-byte alignment. So next available is 16. Correct.
-        view.setFloat32(16, (this.params.mousePos[0] / window.innerWidth) * 2 - 1, true);
-        view.setFloat32(20, -(this.params.mousePos[1] / window.innerHeight) * 2 + 1, true); // Flip Y
+        view.setFloat32(16, (this.params.mousePos[0] / Math.max(1, this.canvas.clientWidth)) * 2 - 1, true);
+        view.setFloat32(20, -(this.params.mousePos[1] / Math.max(1, this.canvas.clientHeight)) * 2 + 1, true); // Flip Y
 
         // mouseActive (offset 24)
         view.setUint32(24, this.params.mouseActive, true);
         // time (offset 28)
         view.setFloat32(28, this.params.time, true);
         // screenSize (offset 32)
-        view.setFloat32(32, window.innerWidth, true);
-        view.setFloat32(36, window.innerHeight, true);
+        view.setFloat32(32, this.canvas.width, true);
+        view.setFloat32(36, this.canvas.height, true);
 
         this.device.queue.writeBuffer(this.uniformBuffer, 0, uniformData);
     }
@@ -481,7 +490,7 @@ class GalaxySim {
         const starCountSlider = document.getElementById('star-count-slider');
         const starCountLabel = document.getElementById('star-count-label');
         starCountSlider.addEventListener('change', (e) => {
-            const val = parseInt(e.target.value);
+            const val = Math.min(CONFIG.maxParticleCount, parseInt(e.target.value, 10));
             starCountLabel.textContent = val.toLocaleString();
             this.particleCount = val;
             this.initParticles(); // Re-init
@@ -490,7 +499,7 @@ class GalaxySim {
             this.initPipelines(format);
         });
         starCountSlider.addEventListener('input', (e) => {
-            starCountLabel.textContent = parseInt(e.target.value).toLocaleString();
+            starCountLabel.textContent = parseInt(e.target.value, 10).toLocaleString();
         });
 
         // Time Dilation
@@ -506,28 +515,83 @@ class GalaxySim {
             timeLabel.textContent = this.params.timeScale.toFixed(1);
         });
 
-        // Mouse interaction
-        window.addEventListener('mousemove', (e) => {
-            this.params.mousePos = [e.clientX, e.clientY];
+        const pauseButton = document.getElementById('pause-simulation');
+        pauseButton?.addEventListener('click', () => {
+            this.isPlaying = !this.isPlaying;
+            pauseButton.setAttribute('aria-pressed', String(!this.isPlaying));
+            pauseButton.textContent = this.isPlaying ? 'Pause simulation' : 'Resume simulation';
         });
-        window.addEventListener('mousedown', () => { this.params.mouseActive = 1; });
-        window.addEventListener('mouseup', () => { this.params.mouseActive = 0; });
+
+        // Pointer interaction is scoped to the simulation canvas.
+        this.canvas.addEventListener('pointermove', (e) => {
+            const rect = this.canvas.getBoundingClientRect();
+            this.params.mousePos = [e.clientX - rect.left, e.clientY - rect.top];
+        });
+        this.canvas.addEventListener('pointerdown', () => { this.params.mouseActive = 1; });
+        window.addEventListener('pointerup', () => { this.params.mouseActive = 0; });
 
         // Resize
         window.addEventListener('resize', () => {
-            this.params.screenSize = [window.innerWidth, window.innerHeight];
-            this.canvas.width = window.innerWidth;
-            this.canvas.height = window.innerHeight;
-            // Need to recreate depth texture if used, but we don't use it.
-            // Just update uniform.
+            this.resizeCanvas();
+        });
+        document.addEventListener('visibilitychange', () => {
+            this.lastFrameAt = performance.now();
+        });
+    }
+
+    resizeCanvas() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const width = Math.max(1, Math.floor(this.canvas.clientWidth * dpr));
+        const height = Math.max(1, Math.floor(this.canvas.clientHeight * dpr));
+        if (this.canvas.width !== width || this.canvas.height !== height) {
+            this.canvas.width = width;
+            this.canvas.height = height;
+        }
+        this.params.screenSize = [width, height];
+    }
+
+    renderSpectrum() {
+        const canvas = document.getElementById('spectrum-canvas');
+        if (!canvas || this.frameTimes.length < 16) return;
+        const context = canvas.getContext('2d');
+        const samples = this.frameTimes.slice(-64);
+        const mean = samples.reduce((sum, value) => sum + value, 0) / samples.length;
+        const bins = Math.min(24, Math.floor(samples.length / 2));
+        const spectrum = [];
+        for (let frequency = 1; frequency <= bins; frequency++) {
+            let real = 0, imaginary = 0;
+            for (let index = 0; index < samples.length; index++) {
+                const angle = 2 * Math.PI * frequency * index / samples.length;
+                const centered = samples[index] - mean;
+                real += centered * Math.cos(angle);
+                imaginary -= centered * Math.sin(angle);
+            }
+            spectrum.push(Math.hypot(real, imaginary) / samples.length);
+        }
+        const peak = Math.max(...spectrum, 0.001);
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        const gradient = context.createLinearGradient(0, 0, canvas.width, 0);
+        gradient.addColorStop(0, '#67e8f9');
+        gradient.addColorStop(1, '#8b5cf6');
+        context.fillStyle = gradient;
+        const gap = 2;
+        const width = canvas.width / bins;
+        spectrum.forEach((value, index) => {
+            const height = Math.max(2, value / peak * (canvas.height - 6));
+            context.fillRect(index * width, canvas.height - height, Math.max(1, width - gap), height);
         });
     }
 
     animate() {
-        if (!this.isPlaying) return;
+        this.animationFrame = requestAnimationFrame(() => this.animate());
+        if (!this.isPlaying || document.hidden || !this.device) return;
 
         const now = performance.now();
-        const dt = 0.016 * (this.params.timeScale || 1.0); // Apply Time Dilation
+        const rawFrameTime = Math.min(50, Math.max(1, now - this.lastFrameAt));
+        this.lastFrameAt = now;
+        this.frameTimes.push(rawFrameTime);
+        if (this.frameTimes.length > 64) this.frameTimes.shift();
+        const dt = Math.min(0.033, rawFrameTime / 1000) * (this.params.timeScale || 1.0);
         this.params.time += dt;
 
         // Update Uniforms
@@ -577,10 +641,15 @@ class GalaxySim {
         this.step = (this.step + 1) % 2;
 
         // UI Stats
-        document.getElementById('particle-count').textContent = this.particleCount.toLocaleString();
-        document.getElementById('compute-time').textContent = (performance.now() - now).toFixed(2) + 'ms';
-
-        requestAnimationFrame(() => this.animate());
+        if (now - this.lastTelemetryAt > 250) {
+            const average = this.frameTimes.reduce((sum, value) => sum + value, 0) / Math.max(1, this.frameTimes.length);
+            document.getElementById('particle-count').textContent = this.particleCount.toLocaleString();
+            document.getElementById('fps-counter').textContent = Math.round(1000 / average).toString();
+            document.getElementById('compute-time').textContent = `${(performance.now() - now).toFixed(2)}ms encode`;
+            document.getElementById('sim-speed').textContent = `${this.params.timeScale.toFixed(1)}x`;
+            this.renderSpectrum();
+            this.lastTelemetryAt = now;
+        }
     }
 }
 

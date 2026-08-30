@@ -95,7 +95,7 @@
     <main>
         <section class="page-hero" data-entrance="fadeIn">
             <h1 class="page-title" data-scroll-animate>BADGES & ACHIEVEMENTS</h1>
-            <p class="page-subtitle">Unlock achievements and showcase your cosmic journey</p>
+            <p class="page-subtitle">Browser-local learning milestones from your cosmic journey</p>
         </section>
 
         <section class="content-section" data-entrance="slideUp">
@@ -112,14 +112,12 @@
     </main>
 
     <footer class="site-footer">
-        <p>&copy; 2025 ADRIANO TO THE STAR - I.T.A (Interstellar Travel Agency)</p>
+        <p>&copy; <span data-current-year></span> ADRIANO TO THE STAR - I.T.A (Interstellar Travel Agency)</p>
         <p><a href="index.html">Back to Home</a></p>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="supabase-config.js"></script>
-    <script src="reputation-system.js"></script>
-    <script src="badges-page.js"></script>
+    <script src="auth-local.js" defer></script>
+    <script src="badges-page.js" defer></script>
     <script src="pwa-loader.js"></script>
 </body>
 </html>

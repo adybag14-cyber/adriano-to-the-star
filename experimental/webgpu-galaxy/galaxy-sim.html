@@ -5,16 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WebGPU Galaxy Simulation | Adriano to the Stars</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap"
-        rel="stylesheet">
     <link rel="stylesheet" href="../../styles.css">
     <link rel="stylesheet" href="../../projects.css">
     <style>
         body {
             overflow: hidden;
             /* Fullscreen canvas */
-            background: #000;
+            background: #020611;
         }
 
         #canvas-container {
@@ -56,7 +53,7 @@
         .back-btn {
             pointer-events: auto;
             background: rgba(0, 0, 0, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(103, 232, 249, .28);
             color: #fff;
             padding: 0.8rem 1.5rem;
             border-radius: 8px;
@@ -71,15 +68,15 @@
         }
 
         .back-btn:hover {
-            background: rgba(186, 148, 79, 0.2);
-            border-color: #ba944f;
+            background: rgba(14, 165, 233, .18);
+            border-color: #67e8f9;
             transform: translateX(-5px);
         }
 
         .stats-panel {
             pointer-events: auto;
             background: rgba(0, 0, 0, 0.8);
-            border: 1px solid rgba(186, 148, 79, 0.3);
+            border: 1px solid rgba(103, 232, 249, .25);
             border-radius: 12px;
             padding: 1.5rem;
             backdrop-filter: blur(15px);
@@ -96,14 +93,14 @@
         }
 
         .stat-value {
-            color: #ba944f;
+            color: #67e8f9;
             font-weight: 600;
         }
 
         .controls-panel {
             pointer-events: auto;
             background: rgba(0, 0, 0, 0.8);
-            border-top: 2px solid #ba944f;
+            border-top: 2px solid #67e8f9;
             border-radius: 12px 12px 0 0;
             padding: 2rem;
             backdrop-filter: blur(15px);
@@ -140,14 +137,14 @@
             width: 16px;
             height: 16px;
             border-radius: 50%;
-            background: #ba944f;
+            background: #67e8f9;
             cursor: pointer;
             transition: all 0.2s;
         }
 
         input[type="range"]::-webkit-slider-thumb:hover {
             transform: scale(1.2);
-            box-shadow: 0 0 10px rgba(186, 148, 79, 0.5);
+            box-shadow: 0 0 10px rgba(103, 232, 249, .5);
         }
 
         .error-message {
@@ -184,31 +181,28 @@
             letter-spacing: 1px;
             margin-left: 1rem;
         }
+        .spectral-panel { margin-top:1rem; padding-top:.8rem; border-top:1px solid rgba(103,232,249,.16); }
+        .home-logo{position:fixed;right:1rem;bottom:1rem;z-index:20;width:auto;pointer-events:auto}.home-logo .ita-logo{position:static;width:42px;height:42px;object-fit:contain}
+        .spectral-panel span { display:block; margin-bottom:.4rem; color:#94a3b8; font: .68rem 'Fira Code', monospace; letter-spacing:.1em; text-transform:uppercase; }
+        #spectrum-canvas { width:100%; height:54px; border-radius:.5rem; background:rgba(2,8,23,.78); }
+        .control-actions { display:flex; justify-content:flex-end; margin-bottom:.75rem; }
+        .control-actions button { min-height:40px; padding:.55rem .9rem; border:1px solid rgba(103,232,249,.4); border-radius:.65rem; background:rgba(8,47,73,.58); color:#e0f2fe; cursor:pointer; }
+        input:focus-visible, button:focus-visible, .back-btn:focus-visible { outline:3px solid #67e8f9; outline-offset:3px; }
+        @media(max-width:720px){
+            .ui-overlay{padding:.75rem;overflow:auto;gap:1rem}.top-bar{gap:.75rem}.stats-panel{min-width:0;width:min(58vw,260px);padding:.85rem}.controls-panel{padding:1rem;margin-top:auto}.back-btn{padding:.65rem .8rem}.stat-row{font-size:.72rem}
+        }
+        @media(prefers-reduced-motion:reduce){*{transition-duration:.001ms!important;animation-duration:.001ms!important;animation-iteration-count:1!important}}
     </style>
-    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
-    <script src="/universal-simulation-hub.js"></script>
-    <script src="/void-warfare-engine.js"></script>
-    <script src="/planetary-environment-engine.js"></script>
-    <script src="/galactic-governance-engine.js"></script>
-    <script src="/mining-resource-engine.js"></script>
-    <script src="/xeno-intelligence-engine.js"></script>
-    <script src="/quantum-propulsion-engine.js"></script>
-    <script src="/intelligence-shadow-engine.js"></script>
-    <script src="/fleet-command-mega-engine.js"></script>
-    <script src="/deep-space-industry-engine.js"></script>
-    <script src="/procedural-content-engine.js"></script>
-    <script src="/galactic-commerce-engine.js"></script>
-    <script src="/metaphysics-apotheosis-engine.js"></script>
 </head>
 
 <body>
-    <a href="../../index.html">
+    <a href="../../index.html" class="home-logo" aria-label="Return to Adriano To The Star home">
         <img src="../../images/ita_logo.png" alt="ITA Logo" class="ita-logo">
     </a>
 
 
     <div id="canvas-container">
-        <canvas id="galaxy-canvas"></canvas>
+        <canvas id="galaxy-canvas" aria-label="Interactive WebGPU particle galaxy"></canvas>
     </div>
 
     <div class="ui-overlay">
@@ -217,7 +211,7 @@
                 ← Return to Base
             </a>
 
-            <div class="stats-panel">
+            <div class="stats-panel" role="status" aria-live="polite">
                 <div
                     style="display: flex; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;">
                     <h3 style="margin: 0; font-size: 1rem; color: #fff;">Telemetry</h3>
@@ -227,6 +221,7 @@
                     <span>Particles</span>
                     <span class="stat-value" id="particle-count">0</span>
                 </div>
+                <div class="spectral-panel"><span>Frame-time spectrum · 64-sample DFT</span><canvas id="spectrum-canvas" width="256" height="54" aria-label="Frame-time frequency spectrum"></canvas></div>
                 <div class="stat-row">
                     <span>FPS</span>
                     <span class="stat-value" id="fps-counter">0</span>
@@ -236,39 +231,40 @@
                     <span class="stat-value" id="sim-speed">1.0x</span>
                 </div>
                 <div class="stat-row">
-                    <span>Compute Time</span>
+                    <span>CPU Encode</span>
                     <span class="stat-value" id="compute-time">0ms</span>
                 </div>
             </div>
         </div>
 
         <div class="controls-panel">
+            <div class="control-actions"><button type="button" id="pause-simulation" aria-pressed="false">Pause simulation</button></div>
             <div class="slider-group">
                 <div class="slider-label">
-                    <span>Star Count (Requires Restart)</span>
+                    <label for="star-count-slider">Star Count</label>
                     <span id="star-count-label">50,000</span>
                 </div>
-                <input type="range" id="star-count-slider" min="10000" max="1000000" step="10000" value="50000">
+                <input type="range" id="star-count-slider" min="10000" max="500000" step="10000" value="50000" aria-describedby="star-count-label">
             </div>
 
             <div class="slider-group">
                 <div class="slider-label">
-                    <span>Gravity Well Strength</span>
+                    <label for="gravity-slider">Gravity Well Strength</label>
                     <span id="gravity-label">1.0</span>
                 </div>
-                <input type="range" id="gravity-slider" min="0.1" max="5.0" step="0.1" value="1.0">
+                <input type="range" id="gravity-slider" min="0.1" max="5.0" step="0.1" value="1.0" aria-describedby="gravity-label">
             </div>
 
             <div class="slider-group">
                 <div class="slider-label">
-                    <span>Time Dilation</span>
+                    <label for="time-slider">Time Dilation</label>
                     <span id="time-label">1.0</span>
                 </div>
-                <input type="range" id="time-slider" min="0.1" max="5.0" step="0.1" value="1.0">
+                <input type="range" id="time-slider" min="0.1" max="5.0" step="0.1" value="1.0" aria-describedby="time-label">
             </div>
 
             <div style="text-align: center; margin-top: 1rem; font-size: 0.8rem; color: rgba(255,255,255,0.4);">
-                Powered by WebGPU Compute Shaders | <span style="color: #ba944f;">Experimental Build</span>
+                WebGPU compute particles · bounded 64-sample spectral telemetry · <span style="color:#67e8f9;">local simulation</span>
             </div>
         </div>
     </div>
@@ -277,8 +273,7 @@
         <h3>WebGPU Critical Failure</h3>
         <p>Your browser does not support WebGPU, or hardware acceleration is disabled.</p>
         <p style="font-size: 0.9rem; margin-top: 1rem; color: rgba(255,255,255,0.6);">
-            Please try using Chrome Canary or Edge Canary with the "--enable-unsafe-webgpu" flag, or ensure you have the
-            latest drivers.
+            Use a current browser with WebGPU and hardware acceleration, or return to Projects for a compatible lab.
         </p>
         <a href="../../projects.html" class="back-btn"
             style="display: inline-flex; margin-top: 1.5rem; background: rgba(174, 32, 18, 0.4); border-color: #ae2012;">

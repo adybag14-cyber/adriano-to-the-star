@@ -170,7 +170,8 @@ class PlanetViewer {
         this.currentPlanet = 'Earth';
         this.hdTexturesEnabled = false;
         try {
-            this.hdTexturesEnabled = localStorage.getItem('education_hd_textures') === 'true';
+            const savedHdPreference = localStorage.getItem('education_hd_textures');
+            if (savedHdPreference !== null) this.hdTexturesEnabled = savedHdPreference === 'true';
         } catch (e) {
             this.hdTexturesEnabled = false;
         }
@@ -180,6 +181,14 @@ class PlanetViewer {
             hdToggle.checked = this.hdTexturesEnabled;
             hdToggle.addEventListener('change', (e) => {
                 this.setHdTextures(e.target.checked);
+            });
+        }
+        const menuToggle = document.getElementById('education-menu-toggle');
+        const sidebar = document.getElementById('ui-sidebar');
+        if (menuToggle && sidebar) {
+            menuToggle.addEventListener('click', () => {
+                const open = sidebar.classList.toggle('active');
+                menuToggle.setAttribute('aria-expanded', String(open));
             });
         }
         this.init();
@@ -268,7 +277,8 @@ class PlanetViewer {
             if (this.animationFrameId === null) this.animate();
         });
         this.renderer.setSize(window.innerWidth, window.innerHeight);
-        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+        const compactViewport = window.matchMedia?.('(max-width: 760px)').matches;
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, compactViewport ? 1.5 : 2));
         this.renderer.outputEncoding = THREE.sRGBEncoding;
         this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
         this.renderer.toneMappingExposure = 0.92;
@@ -344,7 +354,15 @@ class PlanetViewer {
         this.currentPlanet = resolvedName;
         const config = this.planets[resolvedName];
         const generation = ++this.loadGeneration;
+        if (resolvedName !== 'Earth') this.container?.classList.add('education-renderer-ready');
         this.updateDataOverlay(config.data);
+        document.querySelectorAll('[data-education-planet]').forEach(button => {
+            const selected = button.dataset.educationPlanet === resolvedName;
+            button.setAttribute('aria-pressed', String(selected));
+        });
+        if (this.container) {
+            this.container.setAttribute('aria-label', `Interactive 3D view of ${config.data.name}. ${config.data.desc}`);
+        }
 
         clearTimeout(this.textureLoadTimer);
         this.textureLoadTimer = null;
@@ -358,7 +376,10 @@ class PlanetViewer {
                 this.planetMesh.geometry?.dispose?.();
                 this.planetMesh.material?.dispose?.();
             }
-            const geometry = new THREE.SphereGeometry(1, 160, 112);
+            // 128 x 96 keeps 24,320 triangles per sphere layer while reducing
+            // startup geometry work. Surface detail remains texture-native, so
+            // the 2K/5.4K Blue Marble maps are not downsampled by this change.
+            const geometry = new THREE.SphereGeometry(1, 128, 96);
             const material = new THREE.MeshPhongMaterial({ color: 0xffffff, shininess: 9 });
             this.planetMesh = new THREE.Mesh(geometry, material);
             this.planetMesh.userData.educationTextureSurface = true;
@@ -421,6 +442,7 @@ class PlanetViewer {
                 anisotropy: texture.anisotropy,
                 nativeTexture: true
             };
+            this.container?.classList.add('education-renderer-ready');
 
             if (resolvedName === 'Earth' && config.clouds) this.loadCloudLayer(config.clouds, generation, mesh.geometry);
         };
@@ -515,11 +537,19 @@ class PlanetViewer {
     }
 
     updateDataOverlay(data) {
-        document.getElementById('planet-name').textContent = data.name;
-        document.getElementById('planet-diameter').textContent = data.diameter;
-        document.getElementById('planet-distance').textContent = data.distance;
-        document.getElementById('planet-surface').textContent = data.surface;
-        document.getElementById('planet-desc').textContent = data.desc;
+        const values = {
+            'planet-name': data.name,
+            'planet-diameter': data.diameter,
+            'planet-distance': data.distance,
+            'planet-surface': data.surface,
+            'planet-desc': data.desc
+        };
+        for (const [id, value] of Object.entries(values)) {
+            const node = document.getElementById(id);
+            if (node && node.textContent.trim().replace(/\s+/g, ' ') !== String(value).trim().replace(/\s+/g, ' ')) {
+                node.textContent = value;
+            }
+        }
     }
 
     onWindowResize() {

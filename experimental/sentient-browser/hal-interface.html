@@ -5,42 +5,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>H.A.L. | Sentient Ship Computer</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Orbitron:wght@400;700;900&display=swap"
-        rel="stylesheet">
     <link rel="stylesheet" href="../../styles.css">
     <link rel="stylesheet" href="../../projects.css">
     <style>
         body {
-            background: #050505;
-            overflow: hidden;
+            margin: 0;
+            background:
+                radial-gradient(circle at 16% 12%, rgba(14, 165, 233, .16), transparent 32rem),
+                radial-gradient(circle at 88% 82%, rgba(124, 58, 237, .14), transparent 34rem),
+                #020611;
+            overflow: auto;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100svh;
+            padding: clamp(4.5rem, 8vw, 7rem) 1rem 2rem;
+            box-sizing: border-box;
         }
 
         .hal-terminal {
             width: 100%;
             max-width: 900px;
-            height: 80vh;
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid #ff3333;
+            min-height: min(780px, calc(100svh - 7rem));
+            max-height: 900px;
+            background: linear-gradient(145deg, rgba(3, 10, 24, .97), rgba(20, 14, 48, .92));
+            border: 1px solid rgba(103, 232, 249, .32);
             border-radius: 12px;
             display: flex;
             flex-direction: column;
             position: relative;
-            box-shadow: 0 0 50px rgba(255, 0, 0, 0.1);
+            box-shadow: 0 30px 100px rgba(0, 0, 0, .55), 0 0 60px rgba(56, 189, 248, .08);
             backdrop-filter: blur(20px);
         }
 
         .hal-header {
             padding: 1rem;
-            border-bottom: 2px solid #ff3333;
+            border-bottom: 1px solid rgba(103, 232, 249, .28);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(255, 51, 51, 0.1);
+            background: rgba(8, 47, 73, .22);
+            gap: 1rem;
+            flex-wrap: wrap;
         }
 
         .hal-header-right {
@@ -55,16 +61,18 @@
             gap: 8px;
             font-family: 'Fira Code', monospace;
             font-size: 0.7rem;
-            color: rgba(255, 51, 51, 0.8);
+            color: #cbd5e1;
             user-select: none;
         }
 
         .hal-toggle input {
-            accent-color: #ff3333;
+            accent-color: #67e8f9;
+            min-width: 1.1rem;
+            min-height: 1.1rem;
         }
 
         .hal-title {
-            color: #ff3333;
+            color: #f8fafc;
             font-family: 'Orbitron', sans-serif;
             letter-spacing: 2px;
             font-size: 1.2rem;
@@ -74,7 +82,7 @@
         .hal-status {
             font-family: 'Fira Code', monospace;
             font-size: 0.8rem;
-            color: #ff3333;
+            color: #a5f3fc;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -83,7 +91,7 @@
         .status-dot {
             width: 8px;
             height: 8px;
-            background: #ff3333;
+            background: #67e8f9;
             border-radius: 50%;
             animation: pulse 2s infinite;
         }
@@ -91,17 +99,17 @@
         @keyframes pulse {
             0% {
                 opacity: 1;
-                box-shadow: 0 0 10px #ff3333;
+                box-shadow: 0 0 10px #67e8f9;
             }
 
             50% {
                 opacity: 0.5;
-                box-shadow: 0 0 2px #ff3333;
+                box-shadow: 0 0 2px #67e8f9;
             }
 
             100% {
                 opacity: 1;
-                box-shadow: 0 0 10px #ff3333;
+                box-shadow: 0 0 10px #67e8f9;
             }
         }
 
@@ -117,9 +125,9 @@
         .hal-eye {
             width: 150px;
             height: 150px;
-            background: radial-gradient(circle at center, #ff9999 0%, #ff0000 40%, #550000 70%, #000 100%);
+            background: radial-gradient(circle at 46% 42%, #ffffff 0 3%, #67e8f9 8%, #2563eb 32%, #4c1d95 58%, #020617 74%);
             border-radius: 50%;
-            box-shadow: 0 0 60px rgba(255, 0, 0, 0.4);
+            box-shadow: 0 0 60px rgba(56, 189, 248, .38), inset 0 0 28px rgba(255,255,255,.12);
             transition: all 0.3s ease;
         }
 
@@ -152,7 +160,7 @@
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
-            border-top: 1px solid rgba(255, 51, 51, 0.3);
+            border-top: 1px solid rgba(103, 232, 249, .2);
         }
 
         .message {
@@ -176,8 +184,8 @@
 
         .message.hal {
             align-self: flex-start;
-            color: #ffcccc;
-            border-left: 3px solid #ff3333;
+            color: #e0f2fe;
+            border-left: 3px solid #67e8f9;
             padding-left: 1rem;
         }
 
@@ -191,7 +199,7 @@
 
         .input-area {
             padding: 1.5rem;
-            border-top: 1px solid rgba(255, 51, 51, 0.3);
+            border-top: 1px solid rgba(103, 232, 249, .2);
             display: flex;
             gap: 1rem;
             background: rgba(0, 0, 0, 0.4);
@@ -199,8 +207,8 @@
 
         #voice-btn {
             background: transparent;
-            border: 1px solid #ff3333;
-            color: #ff3333;
+            border: 1px solid #67e8f9;
+            color: #67e8f9;
             width: 50px;
             height: 50px;
             border-radius: 50%;
@@ -225,7 +233,7 @@
         #text-input {
             flex: 1;
             background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 51, 51, 0.3);
+            border: 1px solid rgba(103, 232, 249, .3);
             border-radius: 4px;
             padding: 0 1rem;
             color: #fff;
@@ -234,18 +242,18 @@
         }
 
         #text-input:focus {
-            border-color: #ff3333;
-            background: rgba(255, 51, 51, 0.05);
+            border-color: #67e8f9;
+            background: rgba(14, 165, 233, .08);
         }
 
         .system-log {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 250px;
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            width: min(250px, 38vw);
             font-family: 'Fira Code', monospace;
             font-size: 0.7rem;
-            color: rgba(255, 51, 51, 0.5);
+            color: rgba(165, 243, 252, .65);
             text-align: right;
             pointer-events: none;
         }
@@ -254,19 +262,19 @@
             position: absolute;
             top: 1rem;
             left: 1rem;
-            color: rgba(255, 51, 51, 0.6);
+            color: #a5f3fc;
             text-decoration: none;
             font-family: 'Orbitron', sans-serif;
             font-size: 0.8rem;
-            border: 1px solid rgba(255, 51, 51, 0.3);
+            border: 1px solid rgba(103, 232, 249, .3);
             padding: 0.5rem 1rem;
             border-radius: 4px;
             transition: all 0.3s;
         }
 
         .back-btn:hover {
-            border-color: #ff3333;
-            color: #ff3333;
+            border-color: #67e8f9;
+            color: #f8fafc;
         }
 
         /* WebLLM Progress */
@@ -278,77 +286,85 @@
             text-align: center;
             font-family: 'Fira Code', monospace;
             font-size: 0.8rem;
-            color: rgba(255, 51, 51, 0.7);
+            color: #bae6fd;
             background: rgba(0, 0, 0, 0.8);
             padding: 5px;
             display: none;
         }
+
+        .hal-provider-boundary { margin:0; padding:.7rem 1rem; border-bottom:1px solid rgba(129,140,248,.2); color:#cbd5e1; background:rgba(99,102,241,.08); font: .72rem/1.5 'Fira Code', monospace; }
+        .home-logo { position:fixed; top:1rem; right:1rem; z-index:20; width:auto; display:block; }
+        .home-logo .ita-logo { position:static; width:42px; height:42px; object-fit:contain; }
+        .hal-toggle:focus-within, #voice-btn:focus-visible, #text-input:focus-visible, .back-btn:focus-visible { outline:3px solid #67e8f9; outline-offset:3px; }
+        @media (max-width: 760px) {
+            body { align-items:flex-start; padding:4.5rem .6rem 1rem; }
+            .hal-terminal { min-height:calc(100svh - 5.5rem); max-height:none; }
+            .hal-header-right { width:100%; display:grid; grid-template-columns:1fr 1fr; gap:.7rem; }
+            .hal-status { grid-column:1 / -1; }
+            .hal-eye-container { min-height:130px; }
+            .hal-eye { width:105px; height:105px; }
+            .chat-area { padding:1rem; min-height:14rem; }
+            .message { max-width:94%; }
+            .input-area { padding:.85rem; gap:.65rem; }
+            .system-log { display:none; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration:.001ms !important; animation-iteration-count:1 !important; scroll-behavior:auto !important; transition-duration:.001ms !important; }
+        }
     </style>
-    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
-    <script src="/universal-simulation-hub.js"></script>
-    <script src="/void-warfare-engine.js"></script>
-    <script src="/planetary-environment-engine.js"></script>
-    <script src="/galactic-governance-engine.js"></script>
-    <script src="/mining-resource-engine.js"></script>
-    <script src="/xeno-intelligence-engine.js"></script>
-    <script src="/quantum-propulsion-engine.js"></script>
-    <script src="/intelligence-shadow-engine.js"></script>
-    <script src="/fleet-command-mega-engine.js"></script>
-    <script src="/deep-space-industry-engine.js"></script>
-    <script src="/procedural-content-engine.js"></script>
-    <script src="/galactic-commerce-engine.js"></script>
-    <script src="/metaphysics-apotheosis-engine.js"></script>
 </head>
 
 <body>
-    <a href="../../index.html">
+    <a href="../../index.html" class="home-logo" aria-label="Return to Adriano To The Star home">
         <img src="../../images/ita_logo.png" alt="ITA Logo" class="ita-logo">
     </a>
 
 
     <a href="../../projects.html" class="back-btn">← TERMINATE SESSION</a>
 
-    <div class="hal-terminal">
+    <main class="hal-terminal" aria-labelledby="hal-title">
         <div class="hal-header">
-            <span class="hal-title" id="hal-title">H.A.L. 9000 // WEB-LLM INTEGRATED</span>
+            <span class="hal-title" id="hal-title">H.A.L. 9000 // LOCAL FALLBACK</span>
             <div class="hal-header-right">
                 <label class="hal-toggle">
-                    <input type="checkbox" id="webllm-toggle">
+                    <input type="checkbox" id="webllm-toggle" aria-describedby="hal-provider-boundary">
                     <span>Local WebLLM</span>
                 </label>
                 <label class="hal-toggle">
-                    <input type="checkbox" id="cerebras-toggle">
+                    <input type="checkbox" id="cerebras-toggle" aria-describedby="hal-provider-boundary">
                     <span>Cerebras (Qwen3 235B)</span>
                 </label>
                 <div class="hal-status">
-                    <span id="connection-status">AWAITING SYSTEM BOOT...</span>
+                    <span id="connection-status" aria-live="polite">AWAITING SYSTEM BOOT...</span>
                     <div class="status-dot"></div>
                 </div>
             </div>
         </div>
+        <p class="hal-provider-boundary" id="hal-provider-boundary">Default mode is an offline deterministic demo. Enabling WebLLM explicitly downloads model assets; enabling Cerebras permits network inference only after a prompt is submitted.</p>
 
         <div class="hal-eye-container">
-            <div class="hal-eye" id="hal-eye"></div>
+            <div class="hal-eye" id="hal-eye" role="img" aria-label="Animated H.A.L. neural status indicator"></div>
         </div>
 
-        <div class="chat-area" id="chat-history">
+        <div class="chat-area" id="chat-history" role="log" aria-live="polite" aria-relevant="additions">
             <div class="message hal">
                 System initializing... <br><br>
                 Please ensure you are serving this page via a local HTTP server if using ESM modules.
             </div>
         </div>
 
-        <div id="model-status">Neural link initializing...</div>
+        <div id="model-status" role="status">Neural link initializing...</div>
 
         <div class="input-area">
-            <button id="voice-btn" title="Voice Command">
+            <button type="button" id="voice-btn" title="Voice Command" aria-label="Start voice command" aria-pressed="false">
                 🎤
             </button>
-            <input type="text" id="text-input" placeholder="Enter command or query..." autocomplete="off">
+            <label for="text-input" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">H.A.L. command</label>
+            <input type="text" id="text-input" placeholder="Enter command or query…" autocomplete="off">
         </div>
-    </div>
+    </main>
 
-    <div class="system-log" id="system-log">
+    <div class="system-log" id="system-log" aria-hidden="true">
         > SYSTEM BOOT<br>
         > MEMORY: 64TB OK<br>
         > WEBGPU: DETECTED<br>

@@ -63,12 +63,12 @@
 
     <link rel="stylesheet" href="fonts/fonts.css">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="theme-styles.css">
     <link rel="icon" type="image/x-icon" href="images/ita_logo.png">
 
-    <script data-cfasync="false" src="three.min.js" defer></script>
-    <script data-cfasync="false" src="OrbitControls-r128.js" defer></script>
-    <script data-cfasync="false" src="education-viewer.js" defer></script>
+    <script data-cfasync="false" src="education-bootstrap.js" defer></script>
     <script data-cfasync="false" src="navigation.js" async></script>
+    <script data-cfasync="false" src="theme-toggle.js" defer></script>
     <script data-cfasync="false" src="cosmic-music-player.js" async fetchpriority="low"></script>
     <script data-cfasync="false">
         window.selectEducationPlanet = function (name) {
@@ -102,6 +102,14 @@
             font-family: 'Inter', sans-serif;
         }
 
+        #main-content {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100dvh;
+            overflow: hidden;
+        }
+
         #viewer-container {
             position: absolute;
             top: 0;
@@ -116,6 +124,43 @@
                 radial-gradient(circle at 42% 78%, rgba(255,240,210,.7) 0 1px, transparent 1.3px),
                 radial-gradient(circle at center, #10131e 0%, #02030a 58%, #000 100%);
             background-size: 211px 173px, 307px 241px, 257px 293px, 100% 100%;
+        }
+
+        /* Paint a real Blue Marble preview before the deferred WebGL runtime is
+           ready. The native 2K/5.4K texture path remains authoritative; this
+           same-origin preview prevents a blank first viewport on slower phones. */
+        #viewer-container::before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: clamp(230px, 35vw, 430px);
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background:
+                radial-gradient(circle at 34% 28%, rgba(255,255,255,.2), transparent 26%),
+                radial-gradient(ellipse at 38% 35%, #5f8056 0 8%, transparent 9%),
+                radial-gradient(ellipse at 52% 57%, #456f44 0 11%, transparent 12%),
+                radial-gradient(ellipse at 68% 38%, #6d8455 0 7%, transparent 8%),
+                radial-gradient(circle at 42% 40%, #347ab8 0 43%, #174f89 58%, #07152e 72%);
+            box-shadow:
+                inset -54px -22px 70px rgba(0,0,0,.72),
+                inset 15px 8px 24px rgba(126,202,255,.14),
+                0 0 0 2px rgba(81,173,255,.28),
+                0 0 74px rgba(37,99,235,.2);
+            transform: translate(-50%, -50%);
+            transition: opacity .22s ease;
+            z-index: 0;
+        }
+
+        #viewer-container.education-renderer-ready::before {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #viewer-container > canvas {
+            position: relative;
+            z-index: 1;
         }
 
         /* Glassmorphism Sidebar */
@@ -272,16 +317,17 @@
 </head>
 
 <body>
+    <main id="main-content" tabindex="-1" aria-label="Interactive planetary education viewer">
     <!-- 3D Viewer Container -->
-    <div id="viewer-container"></div>
+    <div id="viewer-container" role="img" aria-label="Interactive 3D view of Earth with surface, clouds, atmosphere, and directional sunlight"></div>
 
     <!-- Sidebar Toggle -->
-    <button class="toggle-btn" onclick="document.getElementById('ui-sidebar').classList.toggle('active')">
+    <button id="education-menu-toggle" type="button" class="toggle-btn" aria-label="Toggle Planetary OS controls" aria-controls="ui-sidebar" aria-expanded="false">
         ☰
     </button>
 
     <!-- Sidebar UI -->
-    <div id="ui-sidebar" class="active">
+    <div id="ui-sidebar">
         <div style="display:flex; align-items:center; margin-bottom:20px;">
             <img src="images/ita_logo_64.webp" alt="Planetary OS Logo" width="30" height="30" style="width:30px; height:30px; margin-right:10px;">
             <h1
@@ -295,7 +341,7 @@
                 <span style="font-size:0.85rem; color:#ddd;">Enhanced Surface Detail</span>
                 <span style="font-size:0.7rem; color:#93c5d8; margin-top:2px;">Loads the native 5.4K surface map</span>
             </div>
-            <input id="hd-textures-toggle" type="checkbox" style="transform: scale(1.1); cursor:pointer;">
+            <input id="hd-textures-toggle" type="checkbox" aria-label="Use enhanced 5.4K planetary surface detail" style="transform: scale(1.1); cursor:pointer;">
         </div>
 
         <div class="planet-group-title">Inner Solar System</div>
@@ -330,6 +376,12 @@
             <a href="index.html" style="color: #aaa; text-decoration: none; font-size: 0.9rem;">← EXIT SIMULATION</a>
         </div>
     </div>
+    <script>
+        if (matchMedia('(min-width: 761px)').matches) {
+            document.getElementById('ui-sidebar')?.classList.add('active');
+            document.getElementById('education-menu-toggle')?.setAttribute('aria-expanded', 'true');
+        }
+    </script>
 
     <!-- Data Overlay -->
     <div id="data-overlay">
@@ -350,13 +402,14 @@
         </div>
 
         <p id="planet-desc">
-            The third planet from the Sun and the only astronomical object known to harbor life. Features a
-            nitrogen-oxygen atmosphere.
+            The third planet from the Sun, rendered with NASA Blue Marble surface data, an independent cloud layer,
+            atmospheric scattering, and directional sunlight.
         </p>
         <p style="font-size:0.68rem; color:#8ea4be; margin-top:12px;">
             Earth surface and clouds: <a href="https://science.nasa.gov/earth/earth-observatory/blue-marble-next-generation/" target="_blank" rel="noopener noreferrer" style="color:#67e8f9;">NASA Blue Marble</a>
         </p>
     </div>
+    </main>
 
 </body>
 

@@ -92,27 +92,20 @@
     <script src="metaphysics-apotheosis-engine.js"></script>
 </head>
 <body>
-    <main class="storage-page">
+    <main id="main-content" class="storage-page" tabindex="-1">
         <header class="storage-header">
             <div class="container">
-                <h1>📁 Cloud Storage</h1>
-                <p class="subtitle">1GB Free Storage Per Account</p>
+                <h1>📁 Local Mission Vault</h1>
+                <p class="subtitle">Private, on-device file storage. Files never leave this browser.</p>
             </div>
         </header>
 
-        <div id="login-required-view" class="login-required-view">
+        <div id="storage-dashboard" class="storage-dashboard">
             <div class="container">
-                <div class="login-card">
-                    <div class="login-icon">🔐</div>
-                    <h2>Login Required</h2>
-                    <p>Please log in to access your cloud storage.</p>
-                    <button onclick="showModal('login-modal')" class="cta-button">Log In</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="storage-dashboard" class="storage-dashboard" style="display: none;">
-            <div class="container">
+                <aside class="storage-privacy-note" aria-labelledby="vault-privacy-title">
+                    <h2 id="vault-privacy-title">Private by design</h2>
+                    <p>Files are stored with IndexedDB on this device only. They are not uploaded, synchronized, analyzed, or shared. Browser data removal can permanently erase them, so keep your own backups.</p>
+                </aside>
                 <div class="storage-stats">
                     <div class="stat-card">
                         <div class="stat-icon">💾</div>
@@ -120,35 +113,60 @@
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon">📊</div>
-                        <div class="stat-info"><div class="stat-label">Limit</div><div class="stat-value">1 GB</div></div>
+                        <div class="stat-info"><div class="stat-label">Browser quota</div><div class="stat-value" id="storage-limit">Checking…</div></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" aria-hidden="true">🗂️</div>
+                        <div class="stat-info"><div class="stat-label">Files</div><div class="stat-value" id="file-count">0</div></div>
+                    </div>
+                </div>
+
+                <div class="storage-progress-container">
+                    <div class="progress-label"><span id="progress-text">Calculating local storage…</span><span id="storage-percentage">0%</span></div>
+                    <div class="progress-bar" role="progressbar" aria-label="Browser storage used" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                        <div class="progress-fill" id="progress-fill" style="width:0%"></div>
                     </div>
                 </div>
 
                 <div class="upload-section">
-                    <h2>📤 Upload Files</h2>
-                    <div class="upload-area" id="upload-area">
-                        <p>Drag and drop or click to browse</p>
-                        <input type="file" id="file-input" multiple style="display: none;">
+                    <h2>📤 Add files to this device</h2>
+                    <div class="upload-area" id="upload-area" role="region" aria-label="Local file drop area" aria-describedby="upload-help">
+                        <p>Drag and drop here or use Browse Files</p>
+                        <p id="upload-help" class="upload-hint">Maximum 100 MB per file. Available capacity is controlled by your browser.</p>
+                        <input type="file" id="file-input" multiple hidden aria-label="Choose files for the local vault">
                         <button id="browse-btn" class="cta-button">Browse Files</button>
                     </div>
+                    <div id="upload-progress" class="upload-progress" role="status" aria-live="polite"></div>
                 </div>
 
                 <div class="files-section">
-                    <h2>📂 Your Files</h2>
+                    <div class="section-header">
+                        <h2>📂 Files on this device</h2>
+                        <div class="file-actions">
+                            <label class="visually-hidden" for="search-files">Search files</label>
+                            <input id="search-files" class="search-input" type="search" placeholder="Search files">
+                            <label class="visually-hidden" for="sort-files">Sort files</label>
+                            <select id="sort-files" class="sort-select">
+                                <option value="date-desc">Newest first</option>
+                                <option value="date-asc">Oldest first</option>
+                                <option value="name-asc">Name A–Z</option>
+                                <option value="name-desc">Name Z–A</option>
+                                <option value="size-desc">Largest first</option>
+                                <option value="size-asc">Smallest first</option>
+                            </select>
+                            <button id="clear-vault" class="retry-button" type="button">Clear vault</button>
+                        </div>
+                    </div>
                     <div id="files-list" class="files-list"></div>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Modals and scripts preserved... -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="supabase-config.js"></script>
-    <script src="auth-supabase.js" defer></script>
     <script src="file-storage.js" defer></script>
     <script src="pwa-loader.js"></script>
     <footer class="site-footer">
-        <p>&copy; 2025 ADRIANO TO THE STAR - I.T.A (Interstellar Travel Agency)</p>
+        <p>&copy; <span data-current-year></span> ADRIANO TO THE STAR - I.T.A (Interstellar Travel Agency)</p>
         <p><a href="index.html">Back to Home</a></p>
     </footer>
 </body>

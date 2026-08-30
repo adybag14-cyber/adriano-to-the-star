@@ -32,6 +32,11 @@ jobs:
           node-version: '22.12.0'
           cache: npm
 
+      - name: Current-tree credential gate
+        run: |
+          node scripts/check-current-tree-secrets.mjs --self-test
+          node scripts/check-current-tree-secrets.mjs --root .
+
       - name: Install dependencies
         run: npm ci --prefer-offline --no-audit
 
@@ -45,12 +50,23 @@ jobs:
           node --check scripts/site-pages.mjs
           node --check scripts/prepare-production-pages.mjs
           node --check scripts/audit-production-pages.mjs
+          node --check scripts/check-current-tree-secrets.mjs
           node --check projects.js
           node --check scripts/pioneer-playwright-workload.mjs
           node --check scripts/pioneer-advanced-rendering-smoke.mjs
           node --check tests/e2e/smoke-functional.spec.js
           node --check tests/e2e/smoke-ci.spec.js
           node --check tests/e2e/site-overhaul.spec.js
+          node --check tests/e2e/local-platform-remediation.spec.js
+          node --check tests/e2e/privacy-tracker.spec.js
+          node --check tests/e2e/pioneer-star-maps-advanced.spec.js
+          node --check tests/e2e/accessibility-all-pages.spec.js
+
+      - name: Repository lint gate
+        run: npm run lint -- --quiet
+
+      - name: Zero-vulnerability dependency gate
+        run: npm audit --audit-level=low
 
       - name: Jest regression suite with coverage
         run: npm run test:coverage -- --runInBand
@@ -64,20 +80,19 @@ jobs:
           if-no-files-found: warn
           retention-days: 7
 
-      - name: GitLab lint parity (advisory)
-        continue-on-error: true
-        run: npx eslint auth-supabase.js database-optimized.js i18n.js large-exoplanet-loader.js planet-discovery-notifications.js worker-api.js database-experience.js landing-experience.js
-
-      - name: GitLab dependency audit parity (advisory)
-        continue-on-error: true
-        run: npm audit --audit-level=moderate
-
       - name: Resolve canonical GitLab SHA
         shell: pwsh
         run: |
           $canonical = (Get-Content .gitlab-source-sha -Raw).Trim()
           if ($canonical -notmatch '^[0-9a-f]{40}$') {
             throw "Invalid .gitlab-source-sha: $canonical"
+          }
+          $manifest = Get-Content .github-ci-snapshot.json -Raw | ConvertFrom-Json
+          if ($manifest.source -ne 'gitlab.com/adybag14-group/starisdons') {
+            throw "Unexpected canonical source: $($manifest.source)"
+          }
+          if ($manifest.sourceSha -ne $canonical) {
+            throw "Snapshot manifest source SHA does not match .gitlab-source-sha."
           }
           "CI_COMMIT_SHA=$canonical" >> $env:GITHUB_ENV
           "CI_COMMIT_SHORT_SHA=$($canonical.Substring(0, 8))" >> $env:GITHUB_ENV
@@ -95,8 +110,8 @@ jobs:
         run: |
           $html = Get-Content public/exoplanet-pioneer.html -Raw
           $generated = [regex]::Matches($html, 'src="[^"]*\.pioneer\.(?:bundle\.)?min\.js\?v=')
-          if ($generated.Count -ne 4) {
-            throw "Expected 4 generated Pioneer startup scripts, found $($generated.Count)."
+          if ($generated.Count -ne 5) {
+            throw "Expected 5 generated Pioneer startup scripts, found $($generated.Count)."
           }
           if ($html -notmatch 'pioneer-foundation\.pioneer\.bundle\.min\.js' -or
               $html -notmatch 'pioneer-systems\.pioneer\.bundle\.min\.js') {
@@ -118,7 +133,7 @@ jobs:
     name: Linux Chromium production artifact smoke
     needs: pioneer-build
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 40
 
     steps:
       - name: Check out GitHub mirror
@@ -144,7 +159,7 @@ jobs:
           name: pioneer-pages-${{ github.run_id }}
           path: public
 
-      - name: Production artifact browser smoke
+      - name: Production artifact browser, control, localization and Axe suite
         shell: bash
         env:
           BASE_URL: http://127.0.0.1:8095
@@ -164,7 +179,15 @@ jobs:
             cat /tmp/adriano-smoke-server.log
             exit 1
           fi
-          npx playwright test tests/e2e/smoke-ci.spec.js tests/e2e/site-overhaul.spec.js --workers=1 --reporter=line
+          npx playwright test \
+            tests/e2e/smoke-ci.spec.js \
+            tests/e2e/site-overhaul.spec.js \
+            tests/e2e/local-platform-remediation.spec.js \
+            tests/e2e/privacy-tracker.spec.js \
+            tests/e2e/pioneer-star-maps-advanced.spec.js \
+            tests/e2e/accessibility-all-pages.spec.js \
+            --workers=1 \
+            --reporter=line
 
       - name: Upload production artifact smoke evidence
         if: always()

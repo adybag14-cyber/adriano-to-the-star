@@ -72,18 +72,18 @@
     <main>
         <section class="page-hero" data-entrance="fadeIn">
             <h1 class="page-title" data-scroll-animate>📊 MY DASHBOARD</h1>
-            <p class="page-subtitle">Your Exoplanet Collection</p>
+            <p class="page-subtitle">Your browser-local mission workspace</p>
         </section>
 
         <section class="content-section">
             <div class="content-container">
-                <div id="logged-out-view" style="text-align: center; padding: 4rem 0;">
-                    <h2>Dashboard Access</h2>
-                    <p>Log in to view your claimed exoplanets and statistics.</p>
-                    <button class="cta-button" onclick="showModal('login-modal')">Log In</button>
+                <div id="logged-out-view" style="text-align: center; padding: 1.25rem 0;">
+                    <h2>Private local workspace</h2>
+                    <p>This dashboard reads only this browser’s saved activity. A local profile is optional and does not create a server account.</p>
+                    <a class="cta-button" href="members.html">Manage local profile</a>
                 </div>
 
-                <div id="logged-in-view" style="display: none;">
+                <div id="logged-in-view">
                     <div class="dashboard-header">
                         <h2 id="welcome-message">Welcome back!</h2>
                         <p id="user-email"></p>
@@ -92,18 +92,16 @@
                         <div class="stat-card"><div class="stat-label">Total Claimed</div><div class="stat-value" id="stat-total">0</div></div>
                         <div class="stat-card"><div class="stat-label">Confirmed</div><div class="stat-value" id="stat-confirmed">0</div></div>
                     </div>
-                    <div id="claims-container"></div>
+                    <div id="claims-container" aria-live="polite"></div>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Modals and auth scripts preserved... -->
-    <script src="supabase-config.js"></script>
-    <script src="auth-supabase.js" defer></script>
-    <script src="dashboard-widgets.js" defer></script>
+    <script src="auth-local.js" defer></script>
+    <script src="dashboard-local.js" defer></script>
     <footer class="site-footer">
-        <p>&copy; 2025 ADRIANO TO THE STAR - I.T.A (Interstellar Travel Agency)</p>
+        <p>&copy; <span data-current-year></span> ADRIANO TO THE STAR - I.T.A (Interstellar Travel Agency)</p>
         <p><a href="index.html">Back to Home</a></p>
     </footer>
     <script src="pwa-loader.js"></script>

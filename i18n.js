@@ -258,12 +258,12 @@
       const container = document.createElement('div');
       container.className = 'ita-language-switcher';
       container.innerHTML = `
-        <button class="ita-language-toggle" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="Change language" data-i18n-aria-label="atlas.changeLanguage">
+        <button class="ita-language-toggle" type="button" aria-haspopup="listbox" aria-controls="ita-language-menu" aria-expanded="false" aria-label="Change language, current language ${LANGUAGES.find(language => language.code === this.currentLanguage)?.name || this.currentLanguage}">
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.6 2.5 4 5.5 4 9s-1.4 6.5-4 9M12 3c-2.6 2.5-4 5.5-4 9s1.4 6.5 4 9"></path></svg>
           <span class="ita-language-code">${this.currentLanguage.toUpperCase()}</span>
           <span class="ita-language-chevron" aria-hidden="true"></span>
         </button>
-        <div class="ita-language-menu" role="listbox" aria-label="Language" hidden>
+        <div id="ita-language-menu" class="ita-language-menu" role="listbox" aria-label="Choose language" hidden>
           ${LANGUAGES.map(language => `<button class="ita-language-option" type="button" role="option" data-lang="${language.code}" aria-selected="${language.code === this.currentLanguage}"><span>${language.name}</span><small>${language.code.toUpperCase()}</small></button>`).join('')}
         </div>`;
       const slot = document.querySelector('.ita-language-slot');
@@ -271,14 +271,39 @@
       host.appendChild(container);
       const toggle = container.querySelector('.ita-language-toggle');
       const menu = container.querySelector('.ita-language-menu');
-      const close = () => { menu.hidden = true; toggle.setAttribute('aria-expanded','false'); container.classList.remove('is-open'); };
+      const options = [...container.querySelectorAll('.ita-language-option')];
+      const close = (restoreFocus = false) => {
+        menu.hidden = true;
+        toggle.setAttribute('aria-expanded','false');
+        container.classList.remove('is-open');
+        if (restoreFocus) toggle.focus({ preventScroll: true });
+      };
       const open = () => { menu.hidden = false; toggle.setAttribute('aria-expanded','true'); container.classList.add('is-open'); menu.querySelector('[aria-selected="true"]')?.focus({ preventScroll: true }); };
       toggle.addEventListener('click', event => { event.preventDefault(); event.stopPropagation(); menu.hidden ? open() : close(); });
-      container.querySelectorAll('.ita-language-option').forEach(option => option.addEventListener('click', async () => {
-        await this.setLanguage(option.dataset.lang); close(); toggle.focus({ preventScroll: true });
-      }));
+      toggle.addEventListener('keydown', event => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        event.preventDefault();
+        menu.hidden ? open() : close(true);
+      });
+      options.forEach((option, index) => {
+        option.addEventListener('click', async () => {
+          await this.setLanguage(option.dataset.lang);
+          close(true);
+        });
+        option.addEventListener('keydown', event => {
+          let target = index;
+          if (event.key === 'ArrowDown') target = (index + 1) % options.length;
+          else if (event.key === 'ArrowUp') target = (index - 1 + options.length) % options.length;
+          else if (event.key === 'Home') target = 0;
+          else if (event.key === 'End') target = options.length - 1;
+          else if (event.key === 'Escape') { event.preventDefault(); close(true); return; }
+          else return;
+          event.preventDefault();
+          options[target].focus({ preventScroll: true });
+        });
+      });
       document.addEventListener('click', event => { if (!container.contains(event.target)) close(); });
-      document.addEventListener('keydown', event => { if (event.key === 'Escape') close(); });
+      document.addEventListener('keydown', event => { if (event.key === 'Escape' && !menu.hidden) close(true); });
       this.switcher = container;
       this.applyTranslations(container);
       this.updateLanguageSwitcher();
@@ -288,6 +313,9 @@
       if (!this.switcher) return;
       const code = this.switcher.querySelector('.ita-language-code');
       if (code) code.textContent = this.currentLanguage.toUpperCase();
+      const toggle = this.switcher.querySelector('.ita-language-toggle');
+      const languageName = LANGUAGES.find(language => language.code === this.currentLanguage)?.name || this.currentLanguage;
+      if (toggle) toggle.setAttribute('aria-label', `Change language, current language ${languageName} (${this.currentLanguage.toUpperCase()})`);
       this.switcher.querySelectorAll('.ita-language-option').forEach(option => {
         const selected = option.dataset.lang === this.currentLanguage;
         option.setAttribute('aria-selected', String(selected));

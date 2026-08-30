@@ -1,6 +1,6 @@
 /**
  * Space Events Calendar
- * Displays launches, discoveries, and space events
+ * Displays the same-origin, build-cached launch and space-news snapshot.
  */
 /* global SpaceAPIIntegrations */
 
@@ -52,13 +52,13 @@ class EventCalendar {
                 <div class="calendar-header">
                     <h2>📅 Space Events Calendar</h2>
                     <div class="calendar-controls">
-                        <button class="view-btn" id="view-month" data-view="month">Month</button>
-                        <button class="view-btn" id="view-week" data-view="week">Week</button>
-                        <button class="view-btn" id="view-day" data-view="day">Day</button>
-                        <button class="view-btn" id="view-list" data-view="list">List</button>
-                        <button class="nav-btn" id="prev-month">←</button>
-                        <button class="nav-btn" id="today-btn">Today</button>
-                        <button class="nav-btn" id="next-month">→</button>
+                        <button type="button" class="view-btn active" id="view-month" data-view="month" aria-pressed="true">Month</button>
+                        <button type="button" class="view-btn" id="view-week" data-view="week" aria-pressed="false">Week</button>
+                        <button type="button" class="view-btn" id="view-day" data-view="day" aria-pressed="false">Day</button>
+                        <button type="button" class="view-btn" id="view-list" data-view="list" aria-pressed="false">List</button>
+                        <button type="button" class="nav-btn" id="prev-month" aria-label="Previous calendar period">←</button>
+                        <button type="button" class="nav-btn" id="today-btn">Today</button>
+                        <button type="button" class="nav-btn" id="next-month" aria-label="Next calendar period">→</button>
                     </div>
                 </div>
 
@@ -85,6 +85,7 @@ class EventCalendar {
             btn.addEventListener('click', () => {
                 this.viewMode = btn.dataset.view;
                 document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.view-btn').forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
                 btn.classList.add('active');
                 this.renderCalendar();
             });
@@ -124,13 +125,16 @@ class EventCalendar {
      * Load events from APIs
      */
     async loadEvents() {
-        if (!this.spaceAPI) return;
+        if (!this.spaceAPI || typeof this.spaceAPI.getBuildCachedUpdates !== 'function') {
+            this.events = [];
+            this.renderCalendar();
+            return;
+        }
 
         try {
-            const [launches, news] = await Promise.allSettled([
-                this.spaceAPI.getSpaceXLaunches(20),
-                this.spaceAPI.getAllSpaceNews(10)
-            ]);
+            const snapshot = await this.spaceAPI.getBuildCachedUpdates();
+            const launches = { status: 'fulfilled', value: snapshot.launches || [] };
+            const news = { status: 'fulfilled', value: snapshot.news || [] };
 
             this.events = [];
 
@@ -151,45 +155,6 @@ class EventCalendar {
                             data: launch
                         });
                     }
-                });
-            } else {
-                // Fallback: Add mock future launches
-                const now = new Date();
-
-                // Launch 1: 2 days from now
-                const d1 = new Date(now); d1.setDate(d1.getDate() + 2); d1.setHours(14, 30);
-                this.events.push({
-                    id: 'mock-launch-1',
-                    title: 'Starship Orbital Test Flight',
-                    date: d1,
-                    type: 'launch',
-                    description: 'Experimental orbital test flight of the Starship vehicle.',
-                    source: 'spacex',
-                    link: 'https://www.spacex.com/launches'
-                });
-
-                // Launch 2: 5 days from now
-                const d2 = new Date(now); d2.setDate(d2.getDate() + 5); d2.setHours(9, 0);
-                this.events.push({
-                    id: 'mock-launch-2',
-                    title: 'Falcon 9 Starlink Mission',
-                    date: d2,
-                    type: 'launch',
-                    description: 'Batch deployment of Starlink satellites to low Earth orbit.',
-                    source: 'spacex',
-                    link: 'https://www.spacex.com/launches'
-                });
-
-                // Launch 3: 12 days from now
-                const d3 = new Date(now); d3.setDate(d3.getDate() + 12); d3.setHours(23, 45);
-                this.events.push({
-                    id: 'mock-launch-3',
-                    title: 'Europa Clipper Launch',
-                    date: d3,
-                    type: 'launch',
-                    description: 'NASA mission to explore Jupiter\'s moon Europa.',
-                    source: 'NASA',
-                    link: 'https://www.nasa.gov'
                 });
             }
 
@@ -240,6 +205,16 @@ class EventCalendar {
                 this.renderListView(view);
                 break;
         }
+        this.setupRenderedInteractions(view);
+    }
+
+    setupRenderedInteractions(root) {
+        root.querySelectorAll('[data-calendar-date]').forEach(control => {
+            control.addEventListener('click', () => this.selectDate(new Date(control.dataset.calendarDate)));
+        });
+        root.querySelectorAll('[data-event-id]').forEach(control => {
+            control.addEventListener('click', () => this.showEventDetails(control.dataset.eventId));
+        });
     }
 
     /**
@@ -279,16 +254,16 @@ class EventCalendar {
                 const isSelected = this.isSameDate(currentDate, this.selectedDate);
 
                 html += `
-                    <div class="calendar-day ${!isCurrentMonth ? 'other-month' : ''} ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''}"
-                         onclick="eventCalendar.selectDate(new Date('${currentDate.toISOString()}'))">
+                    <button type="button" class="calendar-day ${!isCurrentMonth ? 'other-month' : ''} ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''}"
+                         data-calendar-date="${currentDate.toISOString()}" aria-label="${currentDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}, ${dayEvents.length} events">
                         <div class="day-number">${currentDate.getDate()}</div>
                         <div class="day-events">
                             ${dayEvents.slice(0, 3).map(event => `
-                                <div class="event-dot ${event.type}" title="${event.title}"></div>
+                                <div class="event-dot ${event.type}" title="${this.escapeHtml(event.title)}"></div>
                             `).join('')}
                             ${dayEvents.length > 3 ? `<div class="more-events">+${dayEvents.length - 3}</div>` : ''}
                         </div>
-                    </div>
+                    </button>
                 `;
 
                 currentDate.setDate(currentDate.getDate() + 1);
@@ -325,10 +300,10 @@ class EventCalendar {
                                 <div class="week-day-number">${date.getDate()}</div>
                                 <div class="week-day-events">
                                     ${dayEvents.map(event => `
-                                        <div class="week-event ${event.type}" onclick="eventCalendar.showEventDetails('${event.id}')">
+                                        <button type="button" class="week-event ${event.type}" data-event-id="${this.escapeHtml(event.id)}">
                                             <div class="event-time">${this.formatTime(event.date)}</div>
-                                            <div class="event-title">${event.title}</div>
-                                        </div>
+                                            <div class="event-title">${this.escapeHtml(event.title)}</div>
+                                        </button>
                                     `).join('')}
                                 </div>
                             </div>
@@ -360,14 +335,14 @@ class EventCalendar {
                 </div>
                 <div class="day-events-list">
                     ${dayEvents.length > 0 ? dayEvents.map(event => `
-                        <div class="day-event-card ${event.type}" onclick="eventCalendar.showEventDetails('${event.id}')">
+                        <button type="button" class="day-event-card ${event.type}" data-event-id="${this.escapeHtml(event.id)}">
                             <div class="event-time">${this.formatTime(event.date)}</div>
                             <div class="event-content">
-                                <h4>${event.title}</h4>
-                                <p>${event.description || ''}</p>
-                                ${event.link ? `<a href="${event.link}" target="_blank" rel="noopener">Read More →</a>` : ''}
+                                <h4>${this.escapeHtml(event.title)}</h4>
+                                <p>${this.escapeHtml(event.description || '')}</p>
+                                ${event.link ? '<span class="event-source-note">Source link available in details</span>' : ''}
                             </div>
-                        </div>
+                        </button>
                     `).join('') : '<p class="no-events">No events scheduled for this day</p>'}
                 </div>
             </div>
@@ -380,29 +355,37 @@ class EventCalendar {
      * Render list view
      */
     renderListView(container) {
-        const upcomingEvents = this.events.filter(e => e.date >= new Date()).slice(0, 50);
+        const listedEvents = [...this.events]
+            .sort((a, b) => {
+                const now = Date.now();
+                const aFuture = a.date.getTime() >= now;
+                const bFuture = b.date.getTime() >= now;
+                if (aFuture !== bFuture) return aFuture ? -1 : 1;
+                return aFuture ? a.date - b.date : b.date - a.date;
+            })
+            .slice(0, 50);
 
         const html = `
             <div class="list-view">
-                <h3>Upcoming Events</h3>
+                <h3>Mission Snapshot</h3>
                 <div class="events-list">
-                    ${upcomingEvents.length > 0 ? upcomingEvents.map(event => `
-                        <div class="list-event-item ${event.type}" onclick="eventCalendar.showEventDetails('${event.id}')">
+                    ${listedEvents.length > 0 ? listedEvents.map(event => `
+                        <button type="button" class="list-event-item ${event.type}" data-event-id="${this.escapeHtml(event.id)}">
                             <div class="event-date">
                                 <div class="event-month">${event.date.toLocaleDateString('en-US', { month: 'short' })}</div>
                                 <div class="event-day">${event.date.getDate()}</div>
                                 <div class="event-year">${event.date.getFullYear()}</div>
                             </div>
                             <div class="event-info">
-                                <h4>${event.title}</h4>
-                                <p>${event.description || ''}</p>
+                                <h4>${this.escapeHtml(event.title)}</h4>
+                                <p>${this.escapeHtml(event.description || '')}</p>
                                 <div class="event-meta">
                                     <span class="event-type">${event.type}</span>
                                     <span class="event-time">${this.formatTime(event.date)}</span>
                                 </div>
                             </div>
-                        </div>
-                    `).join('') : '<p class="no-events">No upcoming events</p>'}
+                        </button>
+                    `).join('') : '<p class="no-events">No events are present in this release snapshot</p>'}
                 </div>
             </div>
         `;
@@ -415,7 +398,10 @@ class EventCalendar {
      */
     renderEventList() {
         const todayEvents = this.getEventsForDate(new Date());
-        const upcomingEvents = this.events.filter(e => e.date >= new Date()).slice(0, 5);
+        const futureEvents = this.events.filter(e => e.date >= new Date()).slice(0, 5);
+        const upcomingEvents = futureEvents.length
+            ? futureEvents
+            : [...this.events].sort((a, b) => b.date - a.date).slice(0, 5);
 
         const listContainer = document.querySelector('.event-list-sidebar');
         if (!listContainer) {
@@ -427,23 +413,24 @@ class EventCalendar {
                     <h4>Today's Events</h4>
                     <div class="today-events">
                         ${todayEvents.length > 0 ? todayEvents.map(event => `
-                            <div class="sidebar-event ${event.type}" onclick="eventCalendar.showEventDetails('${event.id}')">
+                            <button type="button" class="sidebar-event ${event.type}" data-event-id="${this.escapeHtml(event.id)}">
                                 <div class="event-time-small">${this.formatTime(event.date)}</div>
-                                <div class="event-title-small">${event.title}</div>
-                            </div>
+                                <div class="event-title-small">${this.escapeHtml(event.title)}</div>
+                            </button>
                         `).join('') : '<p class="no-events-small">No events today</p>'}
                     </div>
-                    <h4>Upcoming</h4>
+                    <h4>${futureEvents.length ? 'Upcoming' : 'Latest snapshot'}</h4>
                     <div class="upcoming-events">
                         ${upcomingEvents.map(event => `
-                            <div class="sidebar-event ${event.type}" onclick="eventCalendar.showEventDetails('${event.id}')">
+                            <button type="button" class="sidebar-event ${event.type}" data-event-id="${this.escapeHtml(event.id)}">
                                 <div class="event-date-small">${event.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>
-                                <div class="event-title-small">${event.title}</div>
-                            </div>
+                                <div class="event-title-small">${this.escapeHtml(event.title)}</div>
+                            </button>
                         `).join('')}
                     </div>
                 `;
                 calendar.appendChild(sidebar);
+                this.setupRenderedInteractions(sidebar);
             }
         }
     }
@@ -506,12 +493,13 @@ class EventCalendar {
 
         const details = document.getElementById('event-details');
         if (!details) return;
+        const safeLink = this.safeExternalUrl(event.link);
 
         details.style.display = 'block';
         details.innerHTML = `
             <div class="event-details-content">
-                <button class="close-details" onclick="this.closest('.event-details').style.display='none'">&times;</button>
-                <h3>${event.title}</h3>
+                <button type="button" class="close-details" aria-label="Close event details">&times;</button>
+                <h3>${this.escapeHtml(event.title)}</h3>
                 <div class="event-details-meta">
                     <span class="event-type-badge ${event.type}">${event.type}</span>
                     <span class="event-date-full">${event.date.toLocaleDateString('en-US', {
@@ -524,15 +512,32 @@ class EventCalendar {
         })}</span>
                 </div>
                 <div class="event-description">
-                    ${event.description || 'No description available.'}
+                    ${this.escapeHtml(event.description || 'No description available.')}
                 </div>
-                ${event.link ? `
-                    <a href="${event.link}" target="_blank" rel="noopener" class="event-link">
+                ${safeLink ? `
+                    <a href="${safeLink}" target="_blank" rel="noopener noreferrer" class="event-link">
                         Read Full Article →
                     </a>
                 ` : ''}
             </div>
         `;
+        details.querySelector('.close-details')?.addEventListener('click', () => {
+            details.style.display = 'none';
+        });
+        details.querySelector('.close-details')?.focus();
+    }
+
+    escapeHtml(value) {
+        const element = document.createElement('span');
+        element.textContent = String(value ?? '');
+        return element.innerHTML;
+    }
+
+    safeExternalUrl(value) {
+        try {
+            const url = new URL(value);
+            return url.protocol === 'https:' ? this.escapeHtml(url.href) : '';
+        } catch { return ''; }
     }
 }
 
@@ -542,6 +547,7 @@ let eventCalendarInstance = null;
 function initEventCalendar() {
     if (!eventCalendarInstance) {
         eventCalendarInstance = new EventCalendar();
+        window.eventCalendar = eventCalendarInstance;
     }
     return eventCalendarInstance;
 }
@@ -555,4 +561,3 @@ if (document.readyState === 'loading') {
 // Make available globally
 window.EventCalendar = EventCalendar;
 window.eventCalendar = eventCalendarInstance;
-

@@ -1,0 +1,30 @@
+.database-analytics-panel {
+  display: grid;
+  gap: 1.5rem;
+  padding: clamp(1rem, 3vw, 2rem);
+  border: 1px solid rgba(103, 232, 249, .28);
+  border-radius: 24px;
+  background: linear-gradient(145deg, rgba(5, 12, 30, .96), rgba(16, 9, 39, .9));
+  color: #f8fafc;
+  box-shadow: 0 32px 90px rgba(0, 0, 0, .35);
+}
+#planet-statistics-dashboard { min-height: 1180px; }
+.analytics-kicker { color: #67e8f9; font: 700 .72rem/1.4 ui-monospace, monospace; letter-spacing: .15em; }
+.database-analytics-heading { display: flex; justify-content: space-between; align-items: start; gap: 1rem; }
+.database-analytics-heading h2 { margin: .25rem 0; font-size: clamp(1.6rem, 4vw, 2.7rem); }
+.database-analytics-heading p { max-width: 68ch; color: #cbd5e1; line-height: 1.65; }
+.database-analytics-actions { display: flex; gap: .7rem; flex-wrap: wrap; }
+.database-analytics-panel button,
+.database-analytics-panel a { border: 1px solid rgba(103, 232, 249, .5); border-radius: 999px; padding: .7rem 1rem; background: rgba(103, 232, 249, .08); color: #dffcff; cursor: pointer; text-decoration: none; }
+.database-stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: .85rem; }
+.database-stat-grid article { padding: 1.1rem; border: 1px solid rgba(148, 163, 184, .2); border-radius: 16px; background: rgba(2, 6, 23, .72); }
+.database-stat-grid span, .database-stat-grid small { display: block; color: #b8c2d8; }
+.database-stat-grid strong { display: block; margin: .3rem 0; color: #fff; font-size: 2rem; }
+.database-chart-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.database-chart-grid section { min-width: 0; padding: 1rem; border: 1px solid rgba(148, 163, 184, .18); border-radius: 18px; background: rgba(2, 6, 23, .55); overflow: auto; }
+.database-chart-grid canvas { width: 100%; height: auto; min-width: 440px; }
+.database-analytics-source { display: flex; justify-content: space-between; gap: 1rem; align-items: center; flex-wrap: wrap; color: #cbd5e1; }
+.analytics-error { border-color: rgba(248, 113, 113, .55); }
+.database-analytics-panel :focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+@media (max-width: 820px) { #planet-statistics-dashboard { min-height: 2400px; } .database-chart-grid { grid-template-columns: 1fr; } .database-analytics-heading { flex-direction: column; } }
+@media (prefers-reduced-motion: reduce) { .database-analytics-panel * { scroll-behavior: auto !important; } }

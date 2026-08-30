@@ -150,13 +150,13 @@ body.ita-universe-enabled .content-section > .content-container {
 
 /* Scroll choreography. Elements stay readable if JS is unavailable. */
 .ita-reveal-ready {
-  opacity: 0;
+  /* Keep text and controls at full contrast throughout entrance motion. Fading
+     an entire card also fades its form values and can make otherwise compliant
+     foreground colours unreadable during the transition. */
+  opacity: 1;
   transform: translate3d(0, 26px, 0) scale(.985);
-  filter: blur(7px);
-  transition:
-    opacity .75s cubic-bezier(.2,.8,.2,1),
-    transform .75s cubic-bezier(.2,.8,.2,1),
-    filter .75s ease;
+  filter: none;
+  transition: transform .55s cubic-bezier(.2,.8,.2,1);
   transition-delay: var(--ita-reveal-delay, 0ms);
 }
 .ita-reveal-ready.ita-revealed {
@@ -468,7 +468,10 @@ body.ita-universe-enabled .ita-language-toggle {
   .ita-atlas-sector { padding: 14px 12px 11px; border-radius: 16px; }
   .ita-atlas-links { grid-template-columns: repeat(2, minmax(0,1fr)); }
   .ita-atlas-trigger--floating { top: 14px !important; right: 14px !important; }
-  body.ita-universe-enabled .ita-language-switcher:not(.site-header .ita-language-switcher) { left: 12px; bottom: 12px; }
+  body.ita-universe-enabled .ita-language-switcher:not(.site-header .ita-language-switcher) {
+    left: 12px;
+    bottom: 112px;
+  }
 }
 @media (max-width: 490px) {
   .ita-atlas-links { grid-template-columns: 1fr; }

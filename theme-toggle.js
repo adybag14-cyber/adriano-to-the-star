@@ -138,23 +138,31 @@ class ThemeToggle {
         button.className = 'theme-toggle-btn';
         button.setAttribute('aria-label', 'Toggle theme');
         button.setAttribute('title', 'Change theme');
-        button.setAttribute('aria-haspopup', 'true');
+        button.setAttribute('aria-haspopup', 'menu');
         button.setAttribute('aria-expanded', 'false');
+        button.setAttribute('aria-controls', 'theme-selector-menu');
 
         this.updateToggleButton(button);
 
         button.addEventListener('click', (e) => {
             e.stopPropagation();
-            this.showThemeSelector();
-            const expanded = button.getAttribute('aria-expanded') === 'true';
-            button.setAttribute('aria-expanded', (!expanded).toString());
+            const selector = document.getElementById('theme-selector-menu');
+            if (selector && !selector.hidden) this.hideThemeSelector();
+            else this.showThemeSelector();
         });
 
         // Click outside to close selector
         document.addEventListener('click', (e) => {
             if (!container.contains(e.target)) {
                 this.hideThemeSelector();
-                button.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        button.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                this.hideThemeSelector();
+                button.focus();
             }
         });
 
@@ -167,23 +175,15 @@ class ThemeToggle {
      */
     showThemeSelector() {
         let selector = document.getElementById('theme-selector-menu');
-        if (selector) {
-            const isVisible = selector.style.display !== 'none';
-            selector.style.display = isVisible ? 'none' : 'block';
-            if (!isVisible) {
-                const activeBtn = selector.querySelector('.theme-option.active');
-                if (activeBtn) activeBtn.focus();
-            }
-            return;
-        }
+        if (!selector) {
+            selector = document.createElement('div');
+            selector.id = 'theme-selector-menu';
+            selector.className = 'theme-selector-menu';
+            selector.setAttribute('role', 'menu');
+            selector.setAttribute('aria-label', 'Theme Selection');
+            selector.hidden = true;
 
-        selector = document.createElement('div');
-        selector.id = 'theme-selector-menu';
-        selector.className = 'theme-selector-menu';
-        selector.setAttribute('role', 'menu');
-        selector.setAttribute('aria-label', 'Theme Selection');
-
-        selector.innerHTML = `
+            selector.innerHTML = `
             <div class="theme-selector-header">
                 <h3>Choose Theme</h3>
             </div>
@@ -202,9 +202,9 @@ class ThemeToggle {
             </div>
         `;
 
-        // Add event listeners
-        const options = selector.querySelectorAll('.theme-option');
-        options.forEach((option, index) => {
+            // Add event listeners
+            const options = selector.querySelectorAll('.theme-option');
+            options.forEach((option, index) => {
             // Click handler
             option.addEventListener('click', () => {
                 const theme = option.dataset.theme;
@@ -232,15 +232,15 @@ class ThemeToggle {
                     if (toggle) toggle.focus();
                 }
             });
-        });
+            });
 
-        const container = document.getElementById('theme-toggle-container');
-        if (container) {
-            container.appendChild(selector);
-            // Focus active option immediately
-            const active = selector.querySelector('.theme-option.active');
-            if (active) active.focus();
+            const container = document.getElementById('theme-toggle-container');
+            if (container) container.appendChild(selector);
         }
+
+        selector.hidden = false;
+        document.getElementById('theme-toggle-btn')?.setAttribute('aria-expanded', 'true');
+        requestAnimationFrame(() => selector.querySelector('.theme-option.active')?.focus({ preventScroll: true }));
     }
 
     /**
@@ -249,8 +249,9 @@ class ThemeToggle {
     hideThemeSelector() {
         const selector = document.getElementById('theme-selector-menu');
         if (selector) {
-            selector.style.display = 'none';
+            selector.hidden = true;
         }
+        document.getElementById('theme-toggle-btn')?.setAttribute('aria-expanded', 'false');
     }
 
     /**

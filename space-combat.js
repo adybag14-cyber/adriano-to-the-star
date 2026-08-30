@@ -150,6 +150,9 @@ class SpaceCombatScene {
         this.projectiles = [];
         this.particles = [];
         this.targetLock = null;
+        this.targetLockState = 'idle';
+        this.targetLockProgress = 0;
+        this.targetLockAcquireSeconds = 0.72;
         this._targetLockBadTime = 0;
         this._crosshairHitTimeout = null;
         this._lastCrosshairHitAt = 0;
@@ -170,6 +173,8 @@ class SpaceCombatScene {
         this._combatOutcome = null;
         this._pendingExitTimer = 0;
         this._combatReward = null;
+        this._launchSequence = null;
+        this._touchBindings = [];
         this.cameraOffset = new THREE.Vector3(0, 8, 25); // Chase position
         this.cameraLookOffset = new THREE.Vector3(0, 5, -20); // Look ahead point
 
@@ -329,7 +334,7 @@ class SpaceCombatScene {
         const count = (typeof wave.count === 'number' && Number.isFinite(wave.count)) ? Math.max(0, Math.floor(wave.count)) : 0;
         const archetype = wave.archetype != null ? String(wave.archetype) : null;
 
-        const base = (this.player && this.player.mesh && this.player.mesh.position) ? this.player.mesh.position : new THREE.Vector3(0, 0, 0);
+        const base = this.player?.launchTarget || ((this.player && this.player.mesh && this.player.mesh.position) ? this.player.mesh.position : new THREE.Vector3(0, 0, 0));
         const centerZ = base.z - 140;
 
         for (let i = 0; i < count; i++) {
@@ -419,6 +424,7 @@ class SpaceCombatScene {
 
     start(squadronData = []) {
         this.active = true;
+        document.body.classList.add('ep-combat-active');
         const hud = document.getElementById('combat-hud');
         if (hud) hud.style.display = 'block';
 
@@ -453,7 +459,10 @@ class SpaceCombatScene {
             if (index === 2) { xOff = 20; zOff = 20; }   // Right Wing
 
             ship.formationOffset = new THREE.Vector3(xOff, 0, zOff);
-            ship.mesh.position.set(xOff, 0, zOff); // Initial pos
+            ship.launchTarget = new THREE.Vector3(xOff, 0, zOff);
+            ship.launchOrigin = new THREE.Vector3(xOff * 0.35, -34 - index * 3, 78 + zOff * 0.45);
+            ship.mesh.position.copy(ship.launchOrigin);
+            ship.mesh.scale.setScalar(0.34);
 
             this.scene.add(ship.mesh);
             this.squadron.push(ship);
@@ -462,6 +471,8 @@ class SpaceCombatScene {
         // 3. Set Player Control to Leader
         this.playerIndex = 0;
         this.player = this.squadron[0];
+        this._launchSequence = { elapsed: 0, duration: this.game?.reducedMotion ? 0.2 : 1.75 };
+        document.body.classList.add('ep-combat-launching');
 
         this.setCameraForPlayer();
 
@@ -478,6 +489,7 @@ class SpaceCombatScene {
         // Mouse Fire Listener
         this.onMouseDown = (e) => {
             this.resumeAudio();
+            if (e.button !== 0 || e.target?.closest?.('button, input, select, textarea, a')) return;
             if (this.player && this.active) this.player.shoot();
         };
         window.addEventListener('mousedown', this.onMouseDown);
@@ -496,6 +508,55 @@ class SpaceCombatScene {
             }
         }
         window.addEventListener('keydown', this.onKeyDown);
+        this.bindTouchControls();
+        this.updateLockHUD();
+    }
+
+    bindTouchControls() {
+        this.unbindTouchControls();
+        const controls = document.getElementById('combat-touch-controls');
+        if (!controls) return;
+        const bind = (node, type, handler, options) => {
+            node.addEventListener(type, handler, options);
+            this._touchBindings.push(() => node.removeEventListener(type, handler, options));
+        };
+        controls.querySelectorAll('[data-combat-key]').forEach((button) => {
+            const code = button.dataset.combatKey;
+            const press = (event) => { event.preventDefault(); event.stopPropagation(); this.keys[code] = true; button.setAttribute('aria-pressed', 'true'); };
+            const release = (event) => { event.preventDefault(); event.stopPropagation(); this.keys[code] = false; button.setAttribute('aria-pressed', 'false'); };
+            bind(button, 'pointerdown', press);
+            bind(button, 'pointerup', release);
+            bind(button, 'pointercancel', release);
+            bind(button, 'pointerleave', release);
+        });
+        const action = (name) => controls.querySelector(`[data-combat-action="${name}"]`);
+        const boost = action('boost');
+        if (boost) {
+            const press = (event) => { event.preventDefault(); event.stopPropagation(); this.keys.ShiftLeft = true; boost.setAttribute('aria-pressed', 'true'); };
+            const release = (event) => { event.preventDefault(); event.stopPropagation(); this.keys.ShiftLeft = false; boost.setAttribute('aria-pressed', 'false'); };
+            bind(boost, 'pointerdown', press);
+            bind(boost, 'pointerup', release);
+            bind(boost, 'pointercancel', release);
+            bind(boost, 'pointerleave', release);
+        }
+        const lock = action('lock');
+        if (lock) bind(lock, 'click', (event) => { event.preventDefault(); event.stopPropagation(); this.toggleTargetLock(); });
+        const weapon = action('weapon');
+        if (weapon) bind(weapon, 'click', (event) => {
+            event.preventDefault(); event.stopPropagation();
+            if (!this.player) return;
+            this.player.currentWeapon = this.player.currentWeapon === 'laser' ? 'missile' : 'laser';
+            weapon.textContent = this.player.currentWeapon === 'missile' ? 'MSL' : 'LASER';
+            this.player.updateHUD();
+        });
+        const fire = action('fire');
+        if (fire) bind(fire, 'pointerdown', (event) => { event.preventDefault(); event.stopPropagation(); this.player?.shoot(); });
+    }
+
+    unbindTouchControls() {
+        (this._touchBindings || []).forEach((unbind) => unbind());
+        this._touchBindings = [];
+        Object.keys(this.keys || {}).forEach((key) => { this.keys[key] = false; });
     }
 
     cycleShip() {
@@ -551,9 +612,13 @@ class SpaceCombatScene {
         if (crosshair) crosshair.classList.remove('locked', 'hit', 'hit-shield', 'hit-kill');
         if (this._targetBracketEl) this._targetBracketEl.style.display = 'none';
         if (this._leadIndicatorEl) this._leadIndicatorEl.style.display = 'none';
+        document.body.classList.remove('ep-combat-launching');
+        document.body.classList.remove('ep-combat-active');
+        this._launchSequence = null;
         window.removeEventListener('wheel', this.onScroll, true);
         window.removeEventListener('mousedown', this.onMouseDown);
         window.removeEventListener('keydown', this.onKeyDown);
+        this.unbindTouchControls();
         // Cleanup?
     }
 
@@ -561,6 +626,13 @@ class SpaceCombatScene {
         if (!this.active) return;
 
         const dtSafe = (typeof dt === 'number' && Number.isFinite(dt) && dt > 0) ? dt : 0;
+
+        if (this._launchSequence) {
+            this.updateLaunchSequence(dtSafe);
+            this.updateCamera(dtSafe);
+            this.player?.updateHUD();
+            return;
+        }
 
         if (this._pendingExitTimer > 0) {
             this._pendingExitTimer = Math.max(0, this._pendingExitTimer - dtSafe);
@@ -608,6 +680,30 @@ class SpaceCombatScene {
         this.updateCamera(dt);
 
         this.updateTargetLock(dt);
+    }
+
+    updateLaunchSequence(dt) {
+        if (!this._launchSequence) return;
+        this._launchSequence.elapsed += dt;
+        const raw = THREE.MathUtils.clamp(this._launchSequence.elapsed / Math.max(0.01, this._launchSequence.duration), 0, 1);
+        const eased = 1 - Math.pow(1 - raw, 3);
+        this.squadron?.forEach((ship) => {
+            if (!ship.launchOrigin || !ship.launchTarget) return;
+            ship.mesh.position.lerpVectors(ship.launchOrigin, ship.launchTarget, eased);
+            const scale = 0.34 + eased * 0.66;
+            ship.mesh.scale.setScalar(scale);
+            ship.speed = Math.max(ship.speed, ship.maxSpeed * (0.35 + eased * 0.45));
+        });
+        const status = document.getElementById('hud-lock-status');
+        if (status) status.textContent = `LAUNCH VECTOR ${Math.round(raw * 100)}%`;
+        const bar = document.getElementById('hud-lock-bar');
+        if (bar) bar.style.width = `${Math.round(raw * 100)}%`;
+        if (raw >= 1) {
+            this._launchSequence = null;
+            document.body.classList.remove('ep-combat-launching');
+            this.updateLockHUD();
+            this.game?.notify?.('Combat vector established. Acquire a target with T.', 'info');
+        }
     }
 
     updateCamera(dt) {
@@ -746,6 +842,24 @@ class SpaceCombatScene {
         }
     }
 
+    showMissileLaunchFeedback() {
+        const flash = document.getElementById('hud-combat-flash');
+        if (flash) {
+            flash.classList.remove('missile-launch');
+            void flash.offsetWidth;
+            flash.classList.add('missile-launch');
+            window.setTimeout(() => flash.classList.remove('missile-launch'), 420);
+        }
+        const crosshair = document.getElementById('crosshair');
+        if (crosshair) {
+            crosshair.classList.add('missile-fired');
+            window.setTimeout(() => crosshair.classList.remove('missile-fired'), 260);
+        }
+        this.playTone(145, 0.16, 'sawtooth', 0.055);
+        this.playTone(420, 0.08, 'triangle', 0.028, 0.05);
+        this.addCameraShake(0.14, 0.28);
+    }
+
     getBestEnemyTarget(ship, threshold = 0.95) {
         if (!ship || !ship.mesh || !Array.isArray(this.enemies) || this.enemies.length === 0) return null;
 
@@ -789,18 +903,52 @@ class SpaceCombatScene {
             return;
         }
 
-        const info = this.getBestEnemyTarget(this.player, 0.95);
+        const info = this.getBestEnemyTarget(this.player, 0.62);
         if (info && info.target) {
             this.targetLock = info.target;
+            this.targetLockState = 'acquiring';
+            this.targetLockProgress = 0;
             this._targetLockBadTime = 0;
+            this.game?.notify?.('Target solution acquired. Hold the target inside the reticle.', 'info');
+        } else {
+            this.game?.notify?.('No hostile inside the acquisition cone.', 'warning');
         }
+        this.updateLockHUD();
     }
 
     clearTargetLock() {
         this.targetLock = null;
+        this.targetLockState = 'idle';
+        this.targetLockProgress = 0;
         this._targetLockBadTime = 0;
         if (this._targetBracketEl) this._targetBracketEl.style.display = 'none';
         if (this._leadIndicatorEl) this._leadIndicatorEl.style.display = 'none';
+        this.updateLockHUD();
+    }
+
+    isTargetLockReady() {
+        return this.targetLockState === 'locked' && this.targetLockProgress >= 1 && !!this.targetLock;
+    }
+
+    updateLockHUD() {
+        const status = document.getElementById('hud-lock-status');
+        const bar = document.getElementById('hud-lock-bar');
+        const crosshair = document.getElementById('crosshair');
+        const progress = THREE.MathUtils.clamp(this.targetLockProgress || 0, 0, 1);
+        if (bar) bar.style.width = `${Math.round(progress * 100)}%`;
+        if (status) {
+            if (!this.targetLock) status.textContent = 'SEEKING TARGET';
+            else if (this.targetLockState === 'locked') status.textContent = 'MISSILE LOCK CONFIRMED';
+            else status.textContent = `ACQUIRING ${Math.round(progress * 100)}%`;
+        }
+        if (crosshair) {
+            crosshair.classList.toggle('acquiring', !!this.targetLock && this.targetLockState !== 'locked');
+            crosshair.classList.toggle('locked', this.isTargetLockReady());
+        }
+        if (this._targetBracketEl) {
+            this._targetBracketEl.classList.toggle('acquiring', !!this.targetLock && this.targetLockState !== 'locked');
+            this._targetBracketEl.classList.toggle('locked', this.isTargetLockReady());
+        }
     }
 
     updateTargetLock(dt) {
@@ -808,6 +956,7 @@ class SpaceCombatScene {
             this._targetLockBadTime = 0;
             if (this._targetBracketEl) this._targetBracketEl.style.display = 'none';
             if (this._leadIndicatorEl) this._leadIndicatorEl.style.display = 'none';
+            this.updateLockHUD();
             return;
         }
 
@@ -828,9 +977,9 @@ class SpaceCombatScene {
         }
 
         const dtSafe = (typeof dt === 'number' && Number.isFinite(dt) && dt > 0) ? dt : 0;
-        const maxLockDistance = 650;
-        const maintainDotThreshold = 0.92;
-        const graceTime = 0.35;
+        const maxLockDistance = 850;
+        const maintainDotThreshold = this.targetLockState === 'locked' ? 0.58 : 0.62;
+        const graceTime = this.targetLockState === 'locked' ? 1.15 : 0.85;
 
         const toTarget = new THREE.Vector3().subVectors(t.mesh.position, this.player.mesh.position);
         const dist = toTarget.length();
@@ -847,8 +996,19 @@ class SpaceCombatScene {
 
         if (outOfCone || outOfRange) {
             this._targetLockBadTime += dtSafe;
+            this.targetLockProgress = Math.max(0, this.targetLockProgress - dtSafe * 1.35);
         } else {
             this._targetLockBadTime = 0;
+            if (this.targetLockState !== 'locked') {
+                this.targetLockProgress = Math.min(1, this.targetLockProgress + dtSafe / this.targetLockAcquireSeconds);
+                if (this.targetLockProgress >= 1) {
+                    this.targetLockState = 'locked';
+                    this.targetLockProgress = 1;
+                    this.playTone(860, 0.09, 'sine', 0.035);
+                    window.setTimeout(() => this.playTone(1180, 0.12, 'sine', 0.035), 85);
+                    this.game?.notify?.('Missile lock confirmed.', 'success');
+                }
+            }
         }
 
         if (this._targetLockBadTime > graceTime) {
@@ -858,11 +1018,12 @@ class SpaceCombatScene {
 
         this.updateTargetBracket();
         this.updateLeadIndicator();
+        this.updateLockHUD();
     }
 
     getProjectileSpeedForWeapon(weapon) {
         const w = String(weapon || 'laser').toLowerCase();
-        return w === 'missile' ? 60 : 150;
+        return w === 'missile' ? 72 : 150;
     }
 
     getLeadAimPointForTarget(out, shooterPos, projectileSpeed, target) {
@@ -1331,20 +1492,20 @@ class ShipController {
 
         // Apply Design Stats
         this.speed = 0;
-        this.maxSpeed = 40;
+        this.maxSpeed = 52;
         this.turnSpeed = 2.0;
 
         this.maxHealth = 100;
 
         // Custom Stats from Hull
-        if (this.design.hull === 'Dreadnought') { this.maxSpeed = 20; this.turnSpeed = 0.8; this.maxHealth = 500; }
-        else if (this.design.hull === 'Bomber') { this.maxSpeed = 30; this.turnSpeed = 1.5; this.maxHealth = 200; }
+        if (this.design.hull === 'Dreadnought') { this.maxSpeed = 32; this.turnSpeed = 0.95; this.maxHealth = 500; }
+        else if (this.design.hull === 'Bomber') { this.maxSpeed = 42; this.turnSpeed = 1.6; this.maxHealth = 200; }
 
         if (this.design && this.design.stats) {
             const stats = this.design.stats;
             if (typeof stats.hp === 'number' && Number.isFinite(stats.hp)) this.maxHealth = stats.hp;
             if (typeof stats.speed === 'number' && Number.isFinite(stats.speed)) {
-                this.maxSpeed = 20 + stats.speed * 0.5;
+                this.maxSpeed = Math.max(this.maxSpeed, 30 + stats.speed * 0.62);
                 this.turnSpeed = 1.2 + stats.speed / 50;
             }
             if (typeof stats.damage === 'number' && Number.isFinite(stats.damage)) this.damage = stats.damage;
@@ -1599,11 +1760,11 @@ class ShipController {
         if (decelerating) this.speed -= 50 * dt;
 
         if (!accelerating && !decelerating) {
-            const cruiseSpeed = Math.min(20, this.maxSpeed);
-            this.speed = THREE.MathUtils.lerp(this.speed, cruiseSpeed, dt);
+            const cruiseSpeed = Math.min(30, this.maxSpeed);
+            this.speed = THREE.MathUtils.lerp(this.speed, cruiseSpeed, Math.min(1, dt * 1.6));
         }
 
-        const speedCap = boosting ? this.maxSpeed * 1.5 : this.maxSpeed;
+        const speedCap = boosting ? this.maxSpeed * 1.8 : this.maxSpeed;
         this.speed = Math.max(0, Math.min(this.speed, speedCap));
 
         // Apply Velocity (Forward direction)
@@ -1832,12 +1993,13 @@ class ShipController {
         if (this.energy < energyCost) return;
 
         const lock = this.scene ? this.scene.targetLock : null;
-        const hasLock = !!(lock && lock.mesh && typeof lock.health === 'number' && lock.health > 0);
+        const hasLock = !!(lock && lock.mesh && typeof lock.health === 'number' && lock.health > 0 && this.scene?.isTargetLockReady?.());
         if (this.currentWeapon === 'missile' && !hasLock) {
             if (now - (this._lastMissileLockWarn || 0) > 900) {
                 this._lastMissileLockWarn = now;
                 if (this.scene && this.scene.game && this.scene.game.notify) {
-                    this.scene.game.notify('Missile lock required (press T).', 'warning');
+                    const acquiring = this.scene?.targetLockState === 'acquiring';
+                    this.scene.game.notify(acquiring ? 'Target solution is still acquiring.' : 'Missile lock required (press T).', 'warning');
                 }
             }
             return;
@@ -1866,7 +2028,8 @@ class ShipController {
             }
 
             const dmg = this.weaponDamage ? this.weaponDamage[this.currentWeapon] : undefined;
-            this.scene.projectileSystem.fire(pos, direction, 'player', this.currentWeapon, dmg);
+            this.scene.projectileSystem.fire(pos, direction, 'player', this.currentWeapon, dmg, this.currentWeapon === 'missile' ? lock : null);
+            if (this.currentWeapon === 'missile') this.scene.showMissileLaunchFeedback?.();
         }
     }
 
@@ -1941,14 +2104,14 @@ class ShipController {
                 const hullText = hasHull ? `${hullPct}%` : `${hullPct}`;
 
                 const idxText = (typeof bestIndex === 'number' && Number.isFinite(bestIndex) && bestIndex >= 0) ? String(bestIndex + 1) : '?';
-                const lockText = locked ? ' [LOCK]' : '';
+                const lockText = locked ? (this.scene.isTargetLockReady?.() ? ' [LOCK]' : ` [ACQ ${Math.round((this.scene.targetLockProgress || 0) * 100)}%]`) : '';
                 targetEl.innerText = `TGT: ENEMY ${idxText}${lockText} | DST: ${Math.round(bestDist)} | SHD: ${shPct}% | HULL: ${hullText}`;
             } else {
                 targetEl.innerText = 'TGT: NONE';
             }
 
             const crosshair = document.getElementById('crosshair');
-            if (crosshair) crosshair.classList.toggle('locked', !!this.scene.targetLock);
+            if (crosshair) crosshair.classList.toggle('locked', this.scene.isTargetLockReady?.() === true);
         } else if (targetEl) {
             targetEl.innerText = 'TGT: NONE';
         }
@@ -1974,13 +2137,13 @@ class EnemyAI {
         if (archetype === 'scout') {
             maxHealth = 35;
             maxShields = 12;
-            speed = 22;
+            speed = 18;
             weaponDamage = 8;
             tintHex = 0x44aaff;
         } else if (archetype === 'ace') {
             maxHealth = 70;
             maxShields = 40;
-            speed = 18;
+            speed = 17;
             weaponDamage = 14;
             tintHex = 0xff4444;
         } else if (archetype === 'tank') {
@@ -2110,7 +2273,7 @@ class EnemyAI {
         }
 
         this.state = 'chase';
-        this.speed = speed;
+        this.speed = Math.min(20, speed);
 
         this.velocity = new THREE.Vector3();
         this._prevPos = this.mesh.position.clone();
@@ -2133,6 +2296,7 @@ class EnemyAI {
         }
 
         const dist = this.mesh.position.distanceTo(player.mesh.position);
+        const pursuitSpeed = Math.min(this.speed, Math.max(12, (player.maxSpeed || 40) * 0.62));
 
         // State Transitions
         if (this.state === 'chase') {
@@ -2151,12 +2315,12 @@ class EnemyAI {
             const targetQuat = new THREE.Quaternion().setFromRotationMatrix(lookMatrix);
             this.mesh.quaternion.slerp(targetQuat, 2.0 * dt);
 
-            this.mesh.translateZ(-this.speed * dt); // Forward
+            this.mesh.translateZ(-pursuitSpeed * dt); // Deliberately interceptable pursuit
         }
         else if (this.state === 'attack') {
             // Lock on and accelerate
             this.mesh.lookAt(player.mesh.position); // Hard lock (scary)
-            this.mesh.translateZ(-this.speed * 1.5 * dt); // Boost
+            this.mesh.translateZ(-pursuitSpeed * 1.12 * dt); // Short attack burn; player afterburner can close or escape
 
             // Fire!
             if (Math.random() > 0.95) {
@@ -2170,8 +2334,8 @@ class EnemyAI {
         else if (this.state === 'evade') {
             // Bank hard and random
             this.mesh.rotateZ(2.0 * dt);
-            this.mesh.translateZ(-this.speed * 1.2 * dt);
-            this.mesh.translateY(10 * dt); // Strafe up
+            this.mesh.translateZ(-pursuitSpeed * 0.92 * dt);
+            this.mesh.translateY(6 * dt); // Bounded evasive strafe keeps the target in engagement range
         }
 
         const dtSafe = (typeof dt === 'number' && Number.isFinite(dt) && dt > 0) ? dt : 0;
@@ -2212,14 +2376,14 @@ class ProjectileSystem {
         this.projectiles = []; // Single Pool
     }
 
-    fire(position, direction, owner, type = 'laser', damage = null) {
+    fire(position, direction, owner, type = 'laser', damage = null, lockTarget = null) {
         const quat = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 0, 1), direction.clone().negate());
-        const speed = type === 'missile' ? 60 : 150;
+        const speed = type === 'missile' ? 72 : 150;
         const velocity = direction.clone().multiplyScalar(speed);
-        this.createBullet(owner, position, quat, velocity, type, damage);
+        this.createBullet(owner, position, quat, velocity, type, damage, lockTarget);
     }
 
-    createBullet(owner, position, quaternion, velocity, type, damage) {
+    createBullet(owner, position, quaternion, velocity, type, damage, lockTarget = null) {
         // Recycle or create new
         let bullet = this.projectiles.find(p => !p.active);
 
@@ -2242,10 +2406,16 @@ class ProjectileSystem {
                 mesh.rotation.y = Math.PI;
             } else if (type === 'missile') {
                 // Procedural Missile Fallback
-                const geo = new THREE.CapsuleGeometry(0.15, 0.8, 4, 8);
-                geo.rotateX(Math.PI / 2);
                 const mat = new THREE.MeshStandardMaterial({ color: 0xcccccc, metalness: 0.8, roughness: 0.2 });
-                mesh = new THREE.Mesh(geo, mat);
+                mesh = new THREE.Group();
+                const bodyGeo = new THREE.CylinderGeometry(0.13, 0.18, 0.92, 10);
+                bodyGeo.rotateX(Math.PI / 2);
+                const body = new THREE.Mesh(bodyGeo, mat);
+                mesh.add(body);
+                const nose = new THREE.Mesh(new THREE.ConeGeometry(0.18, 0.38, 10), mat);
+                nose.rotation.x = Math.PI / 2;
+                nose.position.z = -0.64;
+                mesh.add(nose);
                 
                 // Add tiny fins
                 const finGeo = new THREE.BoxGeometry(0.4, 0.02, 0.2);
@@ -2255,6 +2425,15 @@ class ProjectileSystem {
                 const fin2 = fin1.clone();
                 fin2.rotation.z = Math.PI / 2;
                 mesh.add(fin2);
+
+                const plume = new THREE.Mesh(
+                    new THREE.ConeGeometry(0.22, 1.8, 10, 1, true),
+                    new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.66, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide })
+                );
+                plume.name = 'missile-plume';
+                plume.rotation.x = -Math.PI / 2;
+                plume.position.z = 0.98;
+                mesh.add(plume);
             } else {
                 // Fallback Laser Bolt
                 const geo = new THREE.CylinderGeometry(0.1, 0.1, 2);
@@ -2286,21 +2465,43 @@ class ProjectileSystem {
         bullet.type = type;
         if (typeof damage === 'number' && Number.isFinite(damage)) bullet.damage = damage;
         else bullet.damage = type === 'missile' ? 25 : 10;
-        bullet.life = 2.0;
+        bullet.life = type === 'missile' ? 7.5 : 2.0;
+        bullet.age = 0;
+        bullet.lockTarget = type === 'missile' ? lockTarget : null;
+        bullet.turnRate = type === 'missile' ? 5.2 : 0;
+        bullet.maxSpeed = type === 'missile' ? 112 : velocity.length();
         bullet.mesh.position.copy(position);
         bullet.mesh.quaternion.copy(quaternion);
         bullet.velocity = velocity.clone();
         bullet.mesh.visible = true;
 
-        if (type === 'missile' && bullet.mesh && !bullet.mesh.isMesh) {
-            bullet.mesh.rotateY(Math.PI);
-        }
+        if (type === 'missile' && bullet.mesh) bullet.mesh.visible = true;
     }
 
     update(dt) {
         for (const p of this.projectiles) {
             if (!p.active) continue;
 
+            p.age = (p.age || 0) + dt;
+            if (p.type === 'missile' && p.lockTarget?.mesh && p.lockTarget.health > 0) {
+                const targetVelocity = p.lockTarget.velocity?.isVector3 ? p.lockTarget.velocity : null;
+                const distance = p.mesh.position.distanceTo(p.lockTarget.mesh.position);
+                const lookAhead = THREE.MathUtils.clamp(distance / Math.max(1, p.velocity.length()), 0, 1.25);
+                const intercept = p.lockTarget.mesh.position.clone();
+                if (targetVelocity) intercept.addScaledVector(targetVelocity, lookAhead);
+                const desired = intercept.sub(p.mesh.position).normalize();
+                const current = p.velocity.clone().normalize();
+                current.lerp(desired, 1 - Math.exp(-(p.turnRate || 5) * dt)).normalize();
+                const speed = Math.min(p.maxSpeed || 112, p.velocity.length() + 34 * dt);
+                p.velocity.copy(current).multiplyScalar(speed);
+                p.mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), current.clone().negate());
+            }
+            const plume = p.type === 'missile' ? p.mesh.getObjectByName?.('missile-plume') : null;
+            if (plume) {
+                const pulse = 0.78 + Math.sin((p.age || 0) * 42) * 0.22;
+                plume.scale.set(pulse, 0.8 + pulse * 0.45, pulse);
+                plume.material.opacity = 0.46 + pulse * 0.22;
+            }
             p.mesh.position.addScaledVector(p.velocity, dt); // Use stored velocity
             p.life -= dt;
 

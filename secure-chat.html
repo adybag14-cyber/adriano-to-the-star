@@ -114,9 +114,13 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.9);
-            z-index: 2000;
+            z-index: 15000;
             justify-content: center;
             align-items: center;
+        }
+
+        .key-setup-container.active {
+            display: flex;
         }
 
         .key-setup-card {
@@ -261,7 +265,7 @@
     <main>
         <section class="page-hero" data-entrance="fadeIn">
             <h1 class="page-title" data-scroll-animate>🔐 Secure Chat</h1>
-            <p class="page-subtitle">End-to-End Encrypted Messaging</p>
+            <p class="page-subtitle">Password-encrypted, browser-local mission notebook</p>
             <div class="secure-chat-actions">
                 <div class="secure-chat-user">
                     <span class="user-display" style="display: none;">Guest</span>
@@ -274,7 +278,7 @@
                         Log Out
                     </button>
                 </div>
-                <p class="secure-chat-helper">You must be logged in to access encrypted messages.</p>
+                <p class="secure-chat-helper">A browser-local profile separates encrypted notebooks on this device. Nothing is sent to another person or service.</p>
             </div>
         </section>
 
@@ -283,8 +287,8 @@
             <!-- Sidebar -->
             <div class="chat-sidebar">
                 <div class="sidebar-header">
-                    <h3>👥 Directory</h3>
-                    <button id="refresh-users-btn" class="new-chat-btn" title="Refresh Users">
+                    <h3>🔐 Local vault</h3>
+                    <button id="refresh-users-btn" class="new-chat-btn" type="button" aria-label="Refresh local vault status">
                         🔄
                     </button>
                 </div>
@@ -292,7 +296,7 @@
                 <div class="chat-history-list" id="user-list">
                     <!-- User list will be dynamically loaded here -->
                     <div style="padding: 20px; text-align: center; color: rgba(255,255,255,0.5);">
-                        Loading users...
+                        Sign in to a browser-local profile to open its encrypted notebook.
                     </div>
                 </div>
 
@@ -301,7 +305,7 @@
                         <div class="user-avatar">👤</div>
                         <div class="user-details">
                             <div class="user-name">Guest</div>
-                            <div id="key-status" style="font-size: 0.7rem; color: #4ade80;">Checking keys...</div>
+                            <div id="key-status" style="font-size: 0.7rem; color: #4ade80;">Locked</div>
                         </div>
                     </div>
                 </div>
@@ -312,38 +316,38 @@
                 <div class="chat-header">
                     <div class="chat-title">
                         <span class="ai-indicator">[SECURE]</span>
-                        <span id="current-chat-title">Select a user to chat</span>
+                        <span id="current-chat-title">Encrypted local notebook</span>
                         <span id="secure-indicator" class="secure-badge" style="display: none;">
-                            E2E Encrypted
+                            Unlocked on this device
                         </span>
                     </div>
                     <div class="chat-controls">
-                        <button id="manage-keys-btn" class="action-btn" title="Manage Keys">
-                            Keys
+                        <button id="manage-keys-btn" class="action-btn" type="button" aria-label="Create, unlock, or lock encrypted notebook">
+                            Manage vault
                         </button>
                     </div>
                 </div>
 
-                <div class="messages-container" id="messages-container">
+                <div class="messages-container" id="messages-container" role="log" aria-live="polite" aria-label="Decrypted local notebook entries">
                     <div class="welcome-message">
                         <div class="welcome-icon">[SECURE]</div>
-                        <h2>Secure & Private</h2>
-                        <p>Messages are encrypted on your device before sending.</p>
-                        <p>Only you and the recipient can read them.</p>
+                        <h2>Encrypted on this device</h2>
+                        <p>Entries are encrypted before they are saved to browser storage.</p>
+                        <p>They are not delivered, synchronized, or backed up. Losing the password makes them unrecoverable.</p>
                     </div>
                 </div>
 
                 <div class="input-container">
                     <div class="input-wrapper">
-                        <textarea id="message-input" class="message-input" placeholder="Type a secure message..."
+                        <textarea id="message-input" class="message-input" placeholder="Write an encrypted notebook entry..."
                             rows="1" disabled></textarea>
 
-                        <button id="send-btn" class="send-btn" title="Send" disabled>
+                        <button id="send-btn" class="send-btn" type="button" aria-label="Encrypt and save entry" disabled>
                             <span class="send-icon">➤</span>
                         </button>
                     </div>
                     <div class="input-footer">
-                        <span class="model-info">Supabase Storage • RSA-2048 • AES-GCM</span>
+                        <span class="model-info">Browser-local • PBKDF2-SHA-256 • AES-GCM-256</span>
                     </div>
                 </div>
             </div>
@@ -351,7 +355,7 @@
     </main>
 
     <footer class="site-footer">
-        <p>&copy; 2025 ADRIANO TO THE STAR - I.T.A (Interstellar Travel Agency)</p>
+        <p>&copy; <span data-current-year></span> ADRIANO TO THE STAR - I.T.A (Interstellar Travel Agency)</p>
         <p><a href="index.html">Back to Home</a></p>
     </footer>
 
@@ -415,12 +419,11 @@
     <div id="key-setup-modal" class="key-setup-container">
         <div class="key-setup-card">
             <h2>🔐 Create Secure Identity</h2>
-            <p>To use Secure Chat, you need to generate a cryptographic key pair.</p>
+            <p>Create a password-encrypted notebook for this browser-local profile.</p>
 
             <div class="setup-step">
                 <p style="font-size: 0.9rem; color: rgba(255,255,255,0.7); margin-bottom: 1rem;">
-                    Your <strong>Private Key</strong> will be encrypted with a password and stored securely.
-                    You will need this password to access your messages on other devices.
+                    The password derives an encryption key in memory. The password and derived key are never saved. This notebook is not synchronized to other devices.
                 </p>
 
                 <input type="password" id="key-password" class="setup-input"
@@ -428,7 +431,7 @@
                 <input type="password" id="key-password-confirm" class="setup-input" placeholder="Confirm password">
             </div>
 
-            <button id="generate-keys-btn" class="cta-button">Generate & Save Keys</button>
+            <button id="generate-keys-btn" class="cta-button" type="button">Create encrypted notebook</button>
             <div id="setup-status" style="margin-top: 1rem; font-size: 0.9rem;"></div>
         </div>
     </div>
@@ -437,24 +440,20 @@
     <div id="key-import-modal" class="key-setup-container">
         <div class="key-setup-card">
             <h2>🔓 Unlock Secure Identity</h2>
-            <p>We found your encrypted keys in the cloud.</p>
-            <p>Enter your key password to unlock them on this device.</p>
+            <p>We found an encrypted notebook in this browser.</p>
+            <p>Enter its password to unlock it in memory.</p>
 
             <div class="setup-step">
                 <input type="password" id="import-password" class="setup-input" placeholder="Enter your key password">
             </div>
 
-            <button id="unlock-keys-btn" class="cta-button">Unlock Keys</button>
+            <button id="unlock-keys-btn" class="cta-button" type="button">Unlock notebook</button>
             <div id="unlock-status" style="margin-top: 1rem; font-size: 0.9rem;"></div>
         </div>
     </div>
 
     <!-- Scripts -->
-    <script src="supabase-config.js"></script>
-    <script src="auth-supabase.js" defer></script>
-    <script src="csrf-protection.js" defer></script>
-    <script src="security-audit-logging.js" defer></script>
-    <script src="secure-crypto.js" defer></script>
+    <script src="auth-local.js" defer></script>
     <script src="secure-chat.js" defer></script>
     <script>
         function switchAuthModal(event, target) {

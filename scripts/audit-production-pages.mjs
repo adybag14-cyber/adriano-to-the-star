@@ -65,6 +65,8 @@ for (const match of projects.matchAll(/href="(experimental\/[^"]+\.html)"/g)) {
     const target = await fs.readFile(path.join(publicRoot, ...match[1].split('/')), 'utf8');
     if (!target.includes('ita-lab-disclosure')) fail(`projects.html: ${match[1]} lacks a runtime-boundary disclosure`);
     if (!target.includes('experimental-lab.css?v=')) fail(`projects.html: ${match[1]} lacks versioned lab UI`);
+    if (!/<meta name="robots" content="noindex,follow,max-image-preview:large">/i.test(target)) fail(`projects.html: ${match[1]} is not noindex,follow`);
+    if (!target.includes(`<link rel="canonical" href="https://adrianotothestar.com/${match[1]}">`)) fail(`projects.html: ${match[1]} lacks its canonical URL`);
     if (/src=["']\/(?:universal-simulation-hub|void-warfare-engine|planetary-environment-engine|galactic-governance-engine|mining-resource-engine|xeno-intelligence-engine|quantum-propulsion-engine|intelligence-shadow-engine|fleet-command-mega-engine|deep-space-industry-engine|procedural-content-engine|galactic-commerce-engine|metaphysics-apotheosis-engine)\.js/i.test(target)) fail(`projects.html: ${match[1]} still loads unrelated mega-engine code`);
   } catch { fail(`projects.html: missing launch target ${match[1]}`); }
 }

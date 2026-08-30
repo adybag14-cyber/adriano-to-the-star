@@ -14,6 +14,54 @@
   --ita-shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
 }
 
+.ita-skip-link {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 20000;
+  max-width: calc(100vw - 20px);
+  padding: 11px 16px;
+  border: 2px solid var(--ita-lime);
+  border-radius: 999px;
+  background: #050814;
+  color: #fff !important;
+  font: 700 0.82rem/1.2 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  text-decoration: none;
+  transform: translateY(-160%);
+  transition: transform 160ms ease;
+}
+
+.ita-skip-link:focus {
+  transform: translateY(0);
+  outline: 3px solid #8cf7ff;
+  outline-offset: 3px;
+}
+
+.ita-policy-links {
+  display: flex;
+  justify-content: center;
+  gap: .75rem;
+  padding: .8rem 1rem;
+  font: 600 .72rem/1.4 var(--ita-font-mono, ui-monospace, monospace);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.ita-policy-links a { color: #67e8f9; }
+.ita-policy-links a:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+
+#main-content {
+  scroll-margin-top: 90px;
+}
+
+body.ita-site-refresh [hidden] {
+  display: none !important;
+}
+
+body.ita-modal-open {
+  overflow: hidden !important;
+}
+
 body.ita-site-refresh {
   color-scheme: dark;
   accent-color: var(--ita-cyan);
@@ -46,6 +94,19 @@ body.ita-site-standard::before {
 
 body.ita-site-refresh a { color: var(--ita-cyan); }
 body.ita-site-refresh a:hover { color: #d5faff; }
+
+body.ita-site-refresh .site-logo > a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+body.ita-site-refresh .site-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: 4px;
+}
 
 body.ita-site-refresh .site-header,
 body.ita-site-refresh > header:not(.page-header) {
@@ -88,6 +149,7 @@ body.ita-site-refresh .nav-links a.active {
   color: var(--ita-muted);
   font: 600 0.78rem/1.5 "DM Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
   letter-spacing: 0.045em;
+  pointer-events: none;
 }
 
 .ita-breadcrumb ol {
@@ -101,7 +163,7 @@ body.ita-site-refresh .nav-links a.active {
 }
 
 .ita-breadcrumb li { display: inline-flex; align-items: center; gap: 8px; }
-.ita-breadcrumb a { color: var(--ita-cyan) !important; text-decoration: none; }
+.ita-breadcrumb a { color: var(--ita-cyan) !important; text-decoration: none; pointer-events: auto; }
 .ita-breadcrumb a:hover { text-decoration: underline; text-underline-offset: 4px; }
 .ita-breadcrumb [aria-current="page"] { color: var(--ita-text); }
 
@@ -144,6 +206,15 @@ body.ita-site-standard main > section:first-child {
     linear-gradient(315deg, rgba(167, 139, 250, 0.13), transparent 46%),
     var(--ita-surface);
   box-shadow: var(--ita-shadow);
+}
+
+/* The first viewport must be readable before enhancement scripts run. Later
+   sections may retain entrance effects, but an initial hero never starts hidden. */
+body.ita-site-refresh main > :first-child[data-entrance],
+body.ita-site-refresh .page-hero[data-entrance] {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
 }
 
 body.ita-site-standard h1,

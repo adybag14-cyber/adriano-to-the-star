@@ -165,7 +165,22 @@ async function waitForGame() {
 async function clickTimeSpeed(title) {
     const button = page.locator(`#ep-time-controls button[title="${title}"]`);
     await button.click();
-    log('interaction', { action: 'click-time-speed', title });
+    const expectedByTitle = { 'Pause': 0, '1x Speed': 1, '2x Speed': 2, '5x Speed': 5, '10x Speed': 10 };
+    const expected = expectedByTitle[title];
+    let actual = await page.evaluate(() => window.game.timeScale);
+    let safetyOverride = false;
+    if (expected >= 5 && actual !== expected) {
+        // Pioneer intentionally requires a second high-speed request within five
+        // seconds when life-support runway is short. Workload phases that ask
+        // for accelerated deterministic progression explicitly exercise that
+        // documented override; the dedicated UI spec separately verifies the
+        // first-click safeguard.
+        await button.click();
+        safetyOverride = true;
+        await page.waitForTimeout(80);
+        actual = await page.evaluate(() => window.game.timeScale);
+    }
+    log('interaction', { action: 'click-time-speed', title, expected, actual, safetyOverride });
 }
 async function getWindowRect(selector) {
     return page.locator(selector).evaluate((element) => {
@@ -641,11 +656,13 @@ try {
     await page.waitForTimeout(250);
     await page.mouse.wheel(0, 180);
     log('interaction', { action: 'tutorial-orbit-and-zoom' });
-    for (let step = 1; step <= 4; step += 1) {
+    const tutorialStepCount = await page.evaluate(() => window.game.getTutorialSteps().length);
+    log('tutorial-plan', { steps: tutorialStepCount });
+    for (let step = 0; step < tutorialStepCount; step += 1) {
         const before = await page.evaluate(() => ({ step: window.game.tutorialStep, title: document.querySelector('#ep-tutorial-title')?.textContent, progress: document.querySelector('#ep-tutorial-progress')?.textContent }));
         log('tutorial-step', before);
         await page.locator('#ep-tutorial-next').click();
-        await page.waitForTimeout(120);
+        await page.waitForFunction((previousStep) => !window.game.tutorialActive || window.game.tutorialStep > previousStep, before.step, { timeout: ciTimeout(3000) });
     }
     const tutorialDone = await page.evaluate(() => ({ active: window.game.tutorialActive, hidden: document.querySelector('#ep-tutorial').hidden, stored: localStorage.getItem(window.game.tutorialStorageKey) }));
     assert(!tutorialDone.active && tutorialDone.hidden && tutorialDone.stored === '1', 'tutorial completes through real UI controls', tutorialDone);
@@ -666,16 +683,21 @@ try {
     await screenshot('solar-building');
     await clickTimeSpeed('10x Speed');
     await waitForConstruction('solar', 7000);
+    await clickTimeSpeed('1x Speed');
+    await page.waitForTimeout(1100);
+    const solarRateAtOne = await page.evaluate(() => window.game.resourceRates?.energy ?? 0);
+    await clickTimeSpeed('10x Speed');
     await page.waitForTimeout(1100);
     const solarFlow = await page.evaluate(() => ({
         capacity: window.game.powerGrid?.capacity ?? 0,
         energyRate: window.game.resourceRates?.energy ?? 0,
         ratePill: document.querySelector('[data-resource="energy"] .ep-res-rate')?.textContent?.trim() || '',
-        solarPowered: window.game.structures.find((s) => s.type === 'solar')?.powered
+        solarPowered: window.game.structures.find((s) => s.type === 'solar')?.powered,
+        timeScale: window.game.timeScale
     }));
     assert(solarFlow.capacity > 0, 'completed Solar Array contributes power', solarFlow);
     assert(solarFlow.solarPowered === true, 'completed Solar Array reports powered state', solarFlow);
-    assert(solarFlow.energyRate > 40, '10x simulation scales Solar Array production above 1x output', solarFlow);
+    assert(solarFlow.energyRate > Math.max(0, solarRateAtOne) * 5, '10x simulation scales Solar Array production above measured 1x output', { solarRateAtOne, ...solarFlow });
     assert(/^\+/.test(solarFlow.ratePill), 'desktop resource HUD exposes positive live energy flow', solarFlow);
 
     await setPhase('habitat-construction');
@@ -941,8 +963,13 @@ try {
     await page.locator('[data-galaxy-action="probe"]').click();
     await page.waitForFunction((id) => window.game.universe.galacticMap.probes.some((p) => p.targetId === id), galaxyProbeTargetId, { timeout: ciTimeout(3000) });
     assert(await page.evaluate((id) => window.game.universe.galacticMap.probes.some((p) => p.targetId === id), galaxyProbeTargetId), 'Launch Probe creates a real exploration job');
-    await page.locator('[data-galaxy-action="speed"][data-speed-index="4"]').click();
-    assert(await page.locator('[data-galaxy-action="speed"][data-speed-index="4"]').evaluate((el) => el.classList.contains('active')), 'Galactic Chart exposes an active real 10x simulation control');
+    const galaxyTenX = page.locator('[data-galaxy-action="speed"][data-speed-index="4"]');
+    await galaxyTenX.click();
+    if (!(await galaxyTenX.evaluate((el) => el.classList.contains('active')))) {
+        await galaxyTenX.click();
+        await page.waitForTimeout(80);
+    }
+    assert(await galaxyTenX.evaluate((el) => el.classList.contains('active')), 'Galactic Chart exposes an active real 10x simulation control after the documented safety override');
     await page.waitForFunction((id) => window.game.universe.galacticMap.stars.find((s) => s.id === id)?.discovered === true, galaxyProbeTargetId, { timeout: ciTimeout(12000) });
     assert(await page.evaluate((id) => !window.game.universe.galacticMap.probes.some((p) => p.targetId === id), galaxyProbeTargetId), 'probe completes and retires after discovering its target');
 

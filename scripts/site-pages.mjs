@@ -37,6 +37,7 @@ export const SITE_PAGES = [
   ['newsletter.html', 'Space Newsletter | Adriano To The Star', 'Subscribe for Adriano To The Star updates about exoplanets, astronomy, interactive projects, and future missions.'],
   ['offline.html', 'Offline | Adriano To The Star', 'A resilient offline fallback for previously visited Adriano To The Star content.', { indexable: false }],
   ['projects.html', 'Advanced Browser Projects | Adriano To The Star', 'Launch tested WebGPU, procedural-graphics, local-AI, WebXR, peer-to-peer, and device-integration experiments from the Adriano To The Star flight lab.'],
+  ['privacy.html', 'Privacy Centre | Adriano To The Star', 'Learn what Adriano To The Star processes, which browser-local features store data on your device, how external services are disclosed, and how to exercise your privacy rights.'],
   ['secure-chat.html', 'Secure Chat | Adriano To The Star', 'Review the Adriano To The Star secure-chat experiment, privacy guidance, and current availability.'],
   ['service-page/galaxy-object-trading.html', 'Galaxy Object Trading | Adriano To The Star', 'Explore the clearly labeled Galaxy Object Trading concept for celestial assets, claims, and marketplace activity.', { parent: ['Marketplace', 'marketplace.html'] }],
   ['shop.html', 'Shop | Adriano To The Star', 'Browse space-themed digital products, collectibles, services, and Adriano To The Star merchandise.'],
@@ -46,7 +47,7 @@ export const SITE_PAGES = [
   ['starsector.html', 'Opening Starsector | Adriano To The Star', 'Redirect to the separately hosted Starsector browser experience.', { indexable: false }],
   ['stellar-ai.html', 'Stellar AI Cosmic Assistant | Adriano To The Star', 'Explore the Stellar AI experiment for space-data questions, celestial context, and clearly labeled AI-assisted responses.'],
   ['total-war-2.html', 'Medieval II: Total War Archive | Adriano To The Star', 'Explore the Adriano To The Star Medieval II: Total War archive and browser-play information.'],
-  ['tracker.html', 'Project Tracker | Adriano To The Star', 'Track selected Adriano To The Star activities, progress, and project information.']
+  ['tracker.html', 'Stellar Neighbourhood Tracker | Adriano To The Star', 'Explore a responsive 3D map of nearby stars, confirmed exoplanet hosts, and recent NASA mission discoveries using an authoritative build-time research snapshot.']
 ].map(([path, title, description, options = {}]) => ({ path, title, description, indexable: true, ...options }));
 
 export function canonicalUrl(page) {

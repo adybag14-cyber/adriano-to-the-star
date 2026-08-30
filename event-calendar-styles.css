@@ -9,6 +9,57 @@
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
 }
 
+/* 2026 mission-array refresh */
+.event-calendar {
+    background: linear-gradient(145deg, rgba(3, 10, 24, .96), rgba(17, 14, 48, .86));
+    border-color: rgba(103, 232, 249, .22);
+    box-shadow: 0 30px 90px rgba(0, 0, 0, .46);
+}
+
+.calendar-controls button {
+    min-height: 44px;
+    border-color: rgba(103, 232, 249, .32);
+    background: rgba(8, 47, 73, .48);
+    color: #e0f2fe;
+}
+.calendar-controls button.active,
+.calendar-controls button[aria-pressed="true"] {
+    background: linear-gradient(135deg, rgba(8, 145, 178, .7), rgba(99, 102, 241, .55));
+    box-shadow: 0 0 24px rgba(56, 189, 248, .18);
+}
+
+button.calendar-day,
+button.week-event,
+button.day-event-card,
+button.list-event-item,
+button.sidebar-event {
+    width: 100%;
+    appearance: none;
+    text-align: inherit;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+}
+button.calendar-day:focus-visible,
+button.week-event:focus-visible,
+button.day-event-card:focus-visible,
+button.list-event-item:focus-visible,
+button.sidebar-event:focus-visible,
+.calendar-controls button:focus-visible {
+    outline: 3px solid #67e8f9;
+    outline-offset: 2px;
+}
+
+.event-source-note { display: inline-block; margin-top: .6rem; color: #67e8f9; font-size: .82rem; }
+
+@media (max-width: 720px) {
+    .calendar-header { align-items: stretch; }
+    .calendar-controls { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .calendar-controls .nav-btn { grid-column: auto / span 1; }
+    .calendar-grid { overflow-x: auto; }
+    .calendar-weekdays, .calendar-days { min-width: 42rem; }
+}
+
 .calendar-header {
     display: flex;
     justify-content: space-between;
@@ -624,4 +675,3 @@
         gap: 1rem;
     }
 }
-

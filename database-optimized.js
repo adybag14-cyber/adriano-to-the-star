@@ -1,5 +1,3 @@
-/* global Planet3DViewer */
-
 /**
  * Optimized Database System with Pagination & Statistics
  * 
@@ -13,7 +11,7 @@
  * - Pagination for performance
  * - Statistics calculation
  * - Planet claiming system
- * - User claims integration (Supabase + localStorage)
+ * - Browser-local teaching claim records
  * 
  * @class OptimizedDatabase
  * @example
@@ -272,7 +270,7 @@ class OptimizedDatabase {
         const container = document.getElementById('nasa-data-container');
         if (!container) return;
 
-        container.addEventListener('click', (e) => {
+        container.addEventListener('click', async (e) => {
             const btn = e.target.closest('button');
             if (!btn) return;
 
@@ -290,7 +288,7 @@ class OptimizedDatabase {
             } else if (btn.classList.contains('claim-button')) {
                 if (typeof window.claimPlanet === 'function') window.claimPlanet(kepid);
             } else if (btn.classList.contains('view-3d-btn')) {
-                if (typeof window.viewPlanet3D === 'function') window.viewPlanet3D(kepid);
+                if (typeof window.viewPlanet3D === 'function') await window.viewPlanet3D(kepid);
             } else if (btn.classList.contains('habitability-btn')) {
                 if (typeof window.analyzeHabitability === 'function') window.analyzeHabitability(kepid);
             } else if (btn.classList.contains('details-btn')) {
@@ -401,40 +399,14 @@ class OptimizedDatabase {
             }));
             console.log(`✅ Loaded ${keplerData.length} exoplanets from Kepler database`);
         } else {
-            // Fallback sample data
-            keplerData = this.generateSampleData(100);
-            console.log('⚠️ Using sample data (100 planets)');
+            await this.loadLargeDataset();
+            keplerData = this.largeDatasetLoader?.largeDataset || [];
+            if (!keplerData.length) throw new Error('The checked-in Kepler JSONL snapshot could not be loaded.');
+            console.info(`Loaded ${keplerData.length.toLocaleString()} rows from the same-origin Kepler snapshot.`);
         }
 
-        // Start with Kepler data
         this.allData = [...keplerData];
-
-        // Build search index for initial data
         this.buildSearchIndex();
-
-        // Try to load large dataset asynchronously (non-blocking)
-        // Don't wait for it - load it in background and merge when ready
-        this.loadLargeDataset().then(() => {
-            // Merge datasets when large dataset is loaded
-            this.mergeDatasets();
-            // Rebuild search index after merging
-            this.indexBuilt = false;
-            this.buildSearchIndex();
-            this.calculateStatistics();
-            this.createStatsSection();
-            // Update filters with new stats
-            this.createFilterButtons();
-            // Re-render with updated data
-            if (this.filteredData.length > 0) {
-                this.renderPage();
-            }
-        }).catch(error => {
-            console.log('⚠️ Large dataset loading failed or not available:', error.message);
-            // Continue with just Kepler data - no action needed
-        });
-
-        // Continue with just Kepler data for now (don't wait for large dataset)
-        // mergeDatasets() will be called when large dataset loads, or skipped if it doesn't
 
         this.filteredData = [...this.allData];
         this.calculateStatistics();
@@ -674,7 +646,7 @@ class OptimizedDatabase {
             return this.allData;
         }
 
-        const tokens = q.split(/\s+/).filter(Boolean);
+        const tokens = q.split(/[^a-z0-9]+/).filter(Boolean);
         if (tokens.length === 0) {
             return this.allData;
         }
@@ -852,158 +824,24 @@ class OptimizedDatabase {
         }
     }
 
-    /**
-     * Load user's claimed planets from backend or localStorage
-     * 
-     * Attempts to load from backend API first (localhost only),
-     * falls back to localStorage/Supabase on GitLab Pages.
-     * Updates planet availability status accordingly.
-     * 
-     * @private
-     * @async
-     * @returns {Promise<void>}
-     */
+    /** Load this profile's browser-local teaching claim records. */
     async loadUserClaims() {
-        if (typeof authManager === 'undefined' || !authManager || !authManager.isAuthenticated()) {
-            await this.loadLocalClaims();
-            return;
-        }
-
-        const apiBase = window.EXOPLANET_API_BASE || 'https://api.adrianotothestar.com';
-
-        try {
-            console.log(`🔌 Loading claims from backend: ${apiBase}...`);
-            const response = await fetch(`${apiBase}/api/planets/my-claims`, {
-                headers: {
-                    'Authorization': authManager.getHeaders ? authManager.getHeaders()['Authorization'] : `Bearer ${authManager.token || ''}`
-                },
-                signal: AbortSignal.timeout(5000)
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                if (data && data.success && data.claims) {
-                    console.log('✅ Loaded claims from backend:', data.claims.length);
-                    const claimedKepids = new Set(data.claims.map(c => c.kepid));
-                    this.allData.forEach(planet => {
-                        if (claimedKepids.has(planet.kepid)) {
-                            planet.availability = 'claimed';
-                        }
-                    });
-
-                    const user = authManager.getCurrentUser();
-                    if (user) {
-                        localStorage.setItem('user_claims', JSON.stringify(data.claims.map(c => ({
-                            ...c,
-                            userId: user.id
-                        }))));
-                    }
-
-                    if (this.filteredData.length > 0) {
-                        this.calculateStatistics();
-                        this.createStatsSection();
-                        this.renderPage();
-                    }
-                }
-            } else {
-                console.warn('⚠️ Backend returned error, loading from localStorage');
-                await this.loadLocalClaims();
-            }
-        } catch (error) {
-            console.log('⚠️ Could not load claims from backend, using localStorage:', error.message);
-            await this.loadLocalClaims();
-        }
+        await this.loadLocalClaims();
     }
 
-    /**
-     * Load claims from Supabase and localStorage
-     * 
-     * Loads user's planet claims from Supabase first, then localStorage.
-     * Syncs data between both sources and updates planet availability.
-     * 
-     * @private
-     * @async
-     * @returns {Promise<void>}
-     */
     async loadLocalClaims() {
         try {
             const user = (typeof authManager !== 'undefined' && authManager && typeof authManager.getCurrentUser === 'function')
                 ? authManager.getCurrentUser()
                 : null;
-            if (!user) {
-                console.log('💾 No user logged in, skipping local claims load');
-                return;
-            }
-
-            let userClaims = [];
-
-            // Try to load from Supabase first
-            if (authManager.useSupabase && authManager.supabase) {
-                try {
-                    console.log('☁️ Loading claims from Supabase...');
-                    const { data, error } = await authManager.supabase
-                        .from('planet_claims')
-                        .select('*')
-                        .eq('user_id', user.id)
-                        .eq('status', 'active');
-
-                    if (error) {
-                        console.error('✗ Supabase query error:', error);
-                    } else if (data && data.length > 0) {
-                        console.log('✅ Loaded claims from Supabase:', data.length);
-                        // Convert Supabase format to our format
-                        userClaims = data.map(claim => ({
-                            id: claim.id,
-                            userId: claim.user_id,
-                            username: claim.username,
-                            email: claim.email,
-                            kepid: claim.kepid,
-                            planet: claim.planet_data,
-                            status: claim.status,
-                            claimedAt: claim.claimed_at,
-                            certificate: {
-                                number: claim.certificate_number,
-                                issued: claim.claimed_at
-                            }
-                        }));
-
-                        // Sync to localStorage as backup
-                        const existingClaims = JSON.parse(localStorage.getItem('user_claims') || '[]');
-                        const mergedClaims = [...existingClaims];
-
-                        // Add Supabase claims that aren't in localStorage
-                        userClaims.forEach(supabaseClaim => {
-                            const exists = mergedClaims.find(lc =>
-                                this.compareKepid(lc.kepid, supabaseClaim.kepid) &&
-                                (lc.userId === supabaseClaim.userId || lc.email === supabaseClaim.email)
-                            );
-                            if (!exists) {
-                                mergedClaims.push(supabaseClaim);
-                            }
-                        });
-
-                        localStorage.setItem('user_claims', JSON.stringify(mergedClaims));
-                        console.log('💾 Synced Supabase claims to localStorage');
-                    } else {
-                        console.log('💾 No claims found in Supabase');
-                    }
-                } catch (supabaseError) {
-                    console.error('✗ Supabase error:', supabaseError);
-                }
-            }
-
-            // If no Supabase claims, load from localStorage
-            if (userClaims.length === 0) {
-                const claims = JSON.parse(localStorage.getItem('user_claims') || '[]');
-                userClaims = claims.filter(c => {
-                    // Match by userId, username, or email
-                    const matchesUserId = c.userId && user.id && c.userId === user.id;
-                    const matchesUsername = c.username && user.username && c.username.toLowerCase() === user.username.toLowerCase();
-                    const matchesEmail = c.email && user.email && c.email.toLowerCase() === user.email.toLowerCase();
-                    return matchesUserId || matchesUsername || matchesEmail;
-                });
-                console.log('💾 Loaded claims from localStorage:', userClaims.length);
-            }
+            if (!user) return;
+            const legacy = JSON.parse(localStorage.getItem('user_claims') || '[]');
+            const canonical = JSON.parse(localStorage.getItem('planet-claims') || '[]');
+            const combined = [...legacy, ...canonical];
+            const userClaims = combined.filter((claim, index, all) => {
+                const ownerMatches = claim.userId === user.id || claim.email === user.email || claim.username === user.username;
+                return ownerMatches && all.findIndex(other => String(other.kepid) === String(claim.kepid) && (other.userId || other.email) === (claim.userId || claim.email)) === index;
+            });
 
             if (userClaims.length > 0) {
                 // Update availability for claimed planets
@@ -1015,7 +853,7 @@ class OptimizedDatabase {
                         updatedCount++;
                     }
                 });
-                console.log(`✓ Updated ${updatedCount} planets as claimed`);
+                console.info(`Updated ${updatedCount} local claim markers.`);
 
                 // Recalculate stats and re-render if page is already rendered
                 if (this.filteredData.length > 0) {
@@ -1023,8 +861,6 @@ class OptimizedDatabase {
                     this.createStatsSection();
                     this.renderPage();
                 }
-            } else {
-                console.log('💾 No claims found for this user');
             }
         } catch (error) {
             console.error('Error loading local claims:', error);
@@ -1385,7 +1221,7 @@ class OptimizedDatabase {
             <div class="filter-group" style="display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
                 <div class="filter-section" style="flex: 1; min-width: 200px;">
                     <label style="display: block; margin-bottom: 0.5rem; color: #ba944f; font-weight: 600;">Status:</label>
-                    <select id="filter-status" class="filter-select" style="width: 100%; padding: 0.75rem; background: rgba(0, 0, 0, 0.7); border: 2px solid rgba(186, 148, 79, 0.3); border-radius: 10px; color: white;">
+                    <select id="filter-status" class="filter-select" aria-label="Filter planets by catalogue status" style="width: 100%; padding: 0.75rem; background: rgba(0, 0, 0, 0.7); border: 2px solid rgba(186, 148, 79, 0.3); border-radius: 10px; color: white;">
                         <option value="all">All (${this.stats.total})</option>
                         <option value="CONFIRMED">Confirmed (${this.stats.confirmed})</option>
                         <option value="CANDIDATE">Candidates (${this.stats.candidates})</option>
@@ -1394,7 +1230,7 @@ class OptimizedDatabase {
                 
                 <div class="filter-section" style="flex: 1; min-width: 200px;">
                     <label style="display: block; margin-bottom: 0.5rem; color: #ba944f; font-weight: 600;">Type:</label>
-                    <select id="filter-type" class="filter-select" style="width: 100%; padding: 0.75rem; background: rgba(0, 0, 0, 0.7); border: 2px solid rgba(186, 148, 79, 0.3); border-radius: 10px; color: white;">
+                    <select id="filter-type" class="filter-select" aria-label="Filter planets by size class" style="width: 100%; padding: 0.75rem; background: rgba(0, 0, 0, 0.7); border: 2px solid rgba(186, 148, 79, 0.3); border-radius: 10px; color: white;">
                         <option value="all">All Types</option>
                         <option value="Earth-like">Earth-like (${this.stats.earthLike})</option>
                         <option value="Super-Earth">Super-Earths (${this.stats.superEarths})</option>
@@ -1405,7 +1241,7 @@ class OptimizedDatabase {
                 
                 <div class="filter-section" style="flex: 1; min-width: 200px;">
                     <label style="display: block; margin-bottom: 0.5rem; color: #ba944f; font-weight: 600;">Availability:</label>
-                    <select id="filter-availability" class="filter-select" style="width: 100%; padding: 0.75rem; background: rgba(0, 0, 0, 0.7); border: 2px solid rgba(186, 148, 79, 0.3); border-radius: 10px; color: white;">
+                    <select id="filter-availability" class="filter-select" aria-label="Filter planets by local claim status" style="width: 100%; padding: 0.75rem; background: rgba(0, 0, 0, 0.7); border: 2px solid rgba(186, 148, 79, 0.3); border-radius: 10px; color: white;">
                         <option value="all">All</option>
                         <option value="available">Available (${this.stats.available})</option>
                         <option value="claimed">Claimed (${this.stats.claimed})</option>
@@ -2314,6 +2150,13 @@ class OptimizedDatabase {
                 const radiusValue = Math.max(Number(planet.radius) || 1, 0.25);
                 const planetScale = Math.min(1.08, Math.max(0.88, 0.88 + Math.log2(radiusValue + 1) * 0.075)).toFixed(3);
                 const planetName = planet.kepler_name || planet.kepoi_name;
+                const formatMeasurement = (value, digits, suffix) => Number.isFinite(Number(value))
+                    ? `${Number(value).toFixed(digits)} ${suffix}`
+                    : 'Not reported';
+                const radiusText = formatMeasurement(planet.radius, 2, 'R&#8853;');
+                const massText = formatMeasurement(planet.mass, 2, 'M&#8853;');
+                const distanceText = formatMeasurement(planet.distance, 0, 'ly');
+                const discoveryText = Number.isFinite(Number(planet.disc_year)) ? String(planet.disc_year) : 'Not reported';
 
                 htmlChunk += `
                     <article class="planet-card ita-planet-card" data-entrance="slideUp" data-kepid="${planet.kepid}" data-name="${planetName}" data-radius="${planet.radius}" data-mass="${planet.mass}" data-distance="${planet.distance}" data-planet-type="${typeClass}" data-status="${statusClass}" style="--card-index:${cardIndex};--planet-shift:${hueShift}deg;--planet-tilt:${orbitTilt}deg;--planet-scale:${planetScale}">
@@ -2335,14 +2178,14 @@ class OptimizedDatabase {
 
                         <div class="ita-card-metrics" aria-label="Planet telemetry">
                             <div class="ita-metric"><span>Class</span><strong>${planet.type}</strong></div>
-                            <div class="ita-metric"><span>Radius</span><strong>${planet.radius.toFixed(2)} R&#8853;</strong></div>
-                            <div class="ita-metric"><span>Mass</span><strong>${planet.mass.toFixed(2)} M&#8853;</strong></div>
-                            <div class="ita-metric"><span>Range</span><strong>${planet.distance.toFixed(0)} ly</strong></div>
+                            <div class="ita-metric"><span>Radius</span><strong>${radiusText}</strong></div>
+                            <div class="ita-metric"><span>Mass</span><strong>${massText}</strong></div>
+                            <div class="ita-metric"><span>Range</span><strong>${distanceText}</strong></div>
                         </div>
 
                         <div class="ita-card-telemetry">
                             <div><span>Confidence</span><strong>${(planet.score * 100).toFixed(0)}%</strong></div>
-                            <div><span>Discovered</span><strong>${planet.disc_year}</strong></div>
+                            <div><span>Discovered</span><strong>${discoveryText}</strong></div>
                         </div>
 
                         <div class="ita-card-actions">
@@ -2378,19 +2221,12 @@ class OptimizedDatabase {
                 this.setupLazyLoading();
 
                 document.querySelectorAll('.view-3d-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
+                    if (btn.dataset.database3dBound === 'true') return;
+                    btn.dataset.database3dBound = 'true';
+                    btn.addEventListener('click', async (e) => {
                         e.stopPropagation();
-                        const kepid = e.target.dataset.kepid;
-                        const planet = this.allData.find(p => this.compareKepid(p.kepid, kepid));
-                        if (planet) {
-                            if (typeof Planet3DViewer !== 'undefined') {
-                                const viewer = new Planet3DViewer();
-                                viewer.visualizePlanet(planet);
-                            } else {
-                                console.error('Planet3DViewer not loaded');
-                                alert('3D Viewer component is missing. Please reload the page.');
-                            }
-                        }
+                        const kepid = e.currentTarget.dataset.kepid;
+                        if (typeof window.viewPlanet3D === 'function') await window.viewPlanet3D(kepid);
                     });
                 });
 
@@ -2879,70 +2715,7 @@ async function claimPlanet(kepid) {
             return;
         }
 
-        // User is logged in, proceed with claim
-        console.log('🚀 Claiming planet:', kepid);
-
-        const apiBase = window.EXOPLANET_API_BASE || 'https://api.adrianotothestar.com';
-
-        try {
-            console.log(`🔌 Attempting to claim via backend: ${apiBase}...`);
-            const response = await fetch(`${apiBase}/api/planets/claim`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': authManager.getHeaders ? authManager.getHeaders()['Authorization'] : `Bearer ${authManager.token || ''}`
-                },
-                body: JSON.stringify({ kepid: kepid }),
-                signal: AbortSignal.timeout(3000)
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                if (data && data.success) {
-                    console.log('✅ Planet claimed successfully via backend');
-                    const planetName = (data && data.planet && data.planet.kepler_name)
-                        || (data && data.planet && data.planet.kepoi_name)
-                        || `Kepler-${kepid}`;
-
-                    if (window.databaseInstance) {
-                        window.databaseInstance.showSuccessNotification(
-                            `Successfully claimed exoplanet!`,
-                            `Planet: ${planetName}`,
-                            'View Dashboard',
-                            () => window.location.href = 'dashboard.html'
-                        );
-                    }
-
-                    updatePlanetAvailability(kepid, 'claimed');
-                    saveClaimToLocalStorage(kepid, data.planet);
-
-                    if (window.getReputationSystem) {
-                        const repSystem = window.getReputationSystem();
-                        await repSystem.init();
-                        await repSystem.updateActivity('planet_claimed');
-                    }
-
-                    if (window.databaseInstance) {
-                        window.databaseInstance.isClaiming = false;
-                    }
-
-                    setTimeout(() => {
-                        location.reload();
-                    }, 1000);
-                    return;
-                }
-            }
-            
-            console.log('🔄 Falling back to localStorage...');
-            await claimPlanetLocal(kepid);
-        } catch (error) {
-            console.error('✗ Error claiming planet:', error);
-            await claimPlanetLocal(kepid);
-        } finally {
-            if (window.databaseInstance) {
-                window.databaseInstance.isClaiming = false;
-            }
-        }
+        await claimPlanetLocal(kepid);
     } catch (e) {
         console.error('Unexpected error in claimPlanet:', e);
         if (window.databaseInstance) {
@@ -2951,9 +2724,9 @@ async function claimPlanet(kepid) {
     }
 }
 
-// Claim planet using localStorage and Supabase (for GitLab Pages or backend fallback)
+// Save a non-legal teaching claim in this browser only.
 async function claimPlanetLocal(kepid) {
-    console.log('💾 Claiming planet using localStorage and Supabase:', kepid);
+    console.info('Saving browser-local teaching claim:', kepid);
 
     try {
         // Normalize kepid to number for comparison (do this first)
@@ -2978,7 +2751,7 @@ async function claimPlanetLocal(kepid) {
         }
         console.log('✅ User found:', user.email || user.username);
 
-        // Check if already claimed (check Supabase first, then localStorage)
+        // Check this profile's browser-local records.
         console.log('🔍 Checking if planet already claimed...');
         const existingClaim = await checkIfPlanetClaimed(kepid, user);
         if (existingClaim) {
@@ -3129,113 +2902,30 @@ async function claimPlanetLocal(kepid) {
             }
         };
 
-        // Try to save to Supabase first
-        let savedToSupabase = false;
-        if (authManager.useSupabase && authManager.supabase) {
-            try {
-                console.log('☁️ Saving claim to Supabase...');
-                const { data, error } = await authManager.supabase
-                    .from('planet_claims')
-                    .insert([{
-                        user_id: user.id,
-                        username: newClaim.username,
-                        email: user.email,
-                        kepid: kepid,
-                        planet_data: newClaim.planet,
-                        status: 'active',
-                        claimed_at: newClaim.claimedAt,
-                        certificate_number: newClaim.certificate.number
-                    }])
-                    .select();
-
-                if (error) {
-                    console.error('✗ Supabase insert error:', error);
-                    // Continue to localStorage fallback
-                } else {
-                    console.log('✅ Claim saved to Supabase:', data);
-                    savedToSupabase = true;
-                }
-            } catch (supabaseError) {
-                console.error('✗ Supabase error:', supabaseError);
-                // Continue to localStorage fallback
-            }
-        }
-
-        // Always save to localStorage as backup
+        // Preserve the legacy key for existing installations and the canonical key
+        // used by the refreshed dashboard/analytics pages.
         const existingClaims = JSON.parse(localStorage.getItem('user_claims') || '[]');
         existingClaims.push(newClaim);
         localStorage.setItem('user_claims', JSON.stringify(existingClaims));
-        console.log('💾 Claim saved to localStorage');
+        const canonicalClaims = JSON.parse(localStorage.getItem('planet-claims') || '[]');
+        canonicalClaims.push({ ...newClaim, planetName: newClaim.planet.kepler_name || newClaim.planet.kepoi_name });
+        localStorage.setItem('planet-claims', JSON.stringify(canonicalClaims));
 
-        if (savedToSupabase) {
-            console.log('✅ Planet claimed and saved to Supabase + localStorage');
-        } else {
-            console.log('✅ Planet claimed and saved to localStorage (Supabase unavailable)');
-        }
-
-        // Create blockchain verification record
-        if (window.blockchainVerificationSystem) {
-            try {
-                const verificationData = {
-                    claimId: newClaim.id,
-                    kepid: kepid,
-                    planetName: planetData.kepler_name || planetData.kepoi_name || `Kepler-${kepid}`,
-                    claimDate: newClaim.claimedAt
-                };
-                await window.blockchainVerificationSystem.createVerification(verificationData);
-                console.log('✅ Blockchain verification record created');
-            } catch (error) {
-                console.error('Error creating blockchain verification:', error);
-                // Don't fail the claim if verification fails
-            }
-        }
-
-        // Show success notification with NFT certificate download option
+        // Present the record honestly: it is a browser-local learning marker and
+        // carries no ownership, financial, blockchain, or certificate authority.
         if (window.databaseInstance && window.databaseInstance.showSuccessNotification) {
             window.databaseInstance.showSuccessNotification(
-                `Successfully claimed exoplanet!`,
-                `Planet: ${planetData.kepler_name || planetData.kepoi_name || `Kepler-${kepid}`}\n\nDownload your NFT certificate to commemorate this claim!`,
-                'Download NFT Certificate',
-                async () => {
-                    // Generate and download NFT certificate
-                    if (window.nftCertificateGenerator) {
-                        const claimData = {
-                            userName: user.username || (user.email ? user.email.split('@')[0] : ''),
-                            userEmail: user.email,
-                            claimedAt: newClaim.claimedAt
-                        };
-                        await window.nftCertificateGenerator.downloadCertificate(planetData, claimData);
-                    } else {
-                        alert('NFT certificate generator not available. Please refresh the page and try again.');
-                    }
-                }
+                'Local teaching claim saved',
+                `Planet: ${planetData.kepler_name || planetData.kepoi_name || `Kepler-${kepid}`}\n\nThis record remains in this browser and is not legal ownership.`,
+                'View Dashboard',
+                () => { window.location.href = 'dashboard.html'; }
             );
         } else {
-            // Fallback to alert with certificate option
-            const downloadCert = confirm(`✅ Successfully claimed exoplanet!\n\nPlanet: ${planetData.kepler_name || planetData.kepoi_name}\n\nWould you like to download your NFT certificate?`);
-            if (downloadCert && window.nftCertificateGenerator) {
-                const claimData = {
-                    userName: user.username || (user.email ? user.email.split('@')[0] : ''),
-                    userEmail: user.email,
-                    claimedAt: newClaim.claimedAt
-                };
-                await window.nftCertificateGenerator.downloadCertificate(planetData, claimData);
-            }
+            alert(`Local teaching claim saved for ${planetData.kepler_name || planetData.kepoi_name || `Kepler-${kepid}`}. This is not legal ownership.`);
         }
 
         // Update the planet card to show as claimed
         updatePlanetAvailability(kepid, 'claimed');
-
-        // Update reputation system (using singleton)
-        if (window.getReputationSystem) {
-            const repSystem = window.getReputationSystem();
-            await repSystem.init();
-            await repSystem.updateActivity('planet_claimed');
-        } else if (window.ReputationSystem) {
-            const repSystem = ReputationSystem.getInstance();
-            await repSystem.init();
-            await repSystem.updateActivity('planet_claimed');
-        }
 
         // Update database instance
         if (window.databaseInstance) {
@@ -3256,32 +2946,14 @@ async function claimPlanetLocal(kepid) {
     }
 }
 
-// Check if planet is already claimed (check Supabase and localStorage)
+// Check if this profile already has a browser-local teaching claim.
 async function checkIfPlanetClaimed(kepid, user) {
-    // Check Supabase first
-    if (authManager.useSupabase && authManager.supabase) {
-        try {
-            const { data, error } = await authManager.supabase
-                .from('planet_claims')
-                .select('*')
-                .eq('kepid', kepid)
-                .eq('user_id', user.id)
-                .eq('status', 'active')
-                .limit(1);
-
-            if (!error && data && data.length > 0) {
-                console.log('✓ Found claim in Supabase');
-                return data[0];
-            }
-        } catch (error) {
-            console.error('Error checking Supabase:', error);
-        }
-    }
-
-    // Fallback to localStorage
-    const existingClaims = JSON.parse(localStorage.getItem('user_claims') || '[]');
+    const existingClaims = [
+        ...JSON.parse(localStorage.getItem('user_claims') || '[]'),
+        ...JSON.parse(localStorage.getItem('planet-claims') || '[]')
+    ];
     const existingClaim = existingClaims.find(c => {
-        if (c.kepid !== kepid) return false;
+        if (String(c.kepid) !== String(kepid)) return false;
         const matchesUserId = c.userId && user.id && c.userId === user.id;
         const matchesUsername = c.username && user.username && c.username.toLowerCase() === user.username.toLowerCase();
         const matchesEmail = c.email && user.email && c.email.toLowerCase() === user.email.toLowerCase();
@@ -3336,72 +3008,17 @@ function updatePlanetAvailability(kepid, status) {
     }
 }
 
-// Wait for both DOM and Kepler data to be ready
+// Paint the page shell first, then stream the checked-in JSONL catalogue once.
 (function () {
-    let initAttempts = 0;
-    const MAX_INIT_ATTEMPTS = 100; // 10 seconds timeout (increased from 3 seconds)
-
-    function initDatabase() {
-        // Surface basic status to the page if helper is available
-        try {
-            if (typeof window !== 'undefined' && typeof window.databaseDebug === 'function') {
-                window.databaseDebug('Checking Kepler database status ');
-            }
-        } catch (e) { }
-
-        // Check if data is loaded (check both global and window)
-        const db = (typeof KEPLER_DATABASE !== 'undefined') ? KEPLER_DATABASE : window.KEPLER_DATABASE;
-
-        if (!db) {
-            initAttempts++;
-            if (initAttempts > MAX_INIT_ATTEMPTS) {
-                console.warn('⚠️ Kepler database failed to load within timeout. Proceeding with fallback...');
-                // Initialize with fallback data so page is still usable
-                console.log('✨ Initializing Optimized Database System with fallback data...');
-                try {
-                    if (typeof window !== 'undefined' && typeof window.databaseDebug === 'function') {
-                        window.databaseDebug('Kepler database not found in time – using fallback sample planets');
-                    }
-                } catch (e) { }
-                const database = new OptimizedDatabase();
-                window.databaseInstance = database;
-                return;
-            } else {
-                // Check more frequently at first, then less frequently
-                const delay = initAttempts < 10 ? 50 : 100;
-                setTimeout(initDatabase, delay);
-                return;
-            }
-        }
-
-        console.log('✨ Initializing Optimized Database System...');
-        const database = new OptimizedDatabase();
-        // Make database instance globally available for claim functions
-        window.databaseInstance = database;
-
-        if (db && db.stats) {
-            console.log('✅ Database ready with', db.stats.total, 'planets!');
-            try {
-                if (typeof window !== 'undefined' && typeof window.databaseDebug === 'function') {
-                    window.databaseDebug('Database ready with ' + String(db.stats.total) + ' planets');
-                }
-            } catch (e) { }
-        } else {
-            console.log('⚠️ Database initialized with fallback/sample data');
-            try {
-                if (typeof window !== 'undefined' && typeof window.databaseDebug === 'function') {
-                    window.databaseDebug('Database initialized with fallback/sample data');
-                }
-            } catch (e) { }
-        }
-    }
-
-    // Attempt init on load
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initDatabase);
-    } else {
-        initDatabase();
-    }
+    const initDatabase = () => {
+        if (window.databaseInstance) return;
+        const instance = new OptimizedDatabase();
+        window.databaseInstance = instance;
+        window.optimizedDatabase = instance;
+    };
+    const schedule = () => requestAnimationFrame(() => requestAnimationFrame(initDatabase));
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', schedule, { once: true });
+    else schedule();
 })();
 
 // Start initialization when DOM is ready
@@ -3423,27 +3040,42 @@ if (!document.querySelector('#pulse-style')) {
 // Make claimPlanet explicitly global for onclick handlers
 window.claimPlanet = claimPlanet;
 
-// View planet in 3D
-function viewPlanet3D(kepid) {
+// View planet in 3D. The renderer is deliberately loaded only after a user asks
+// for it so the 9,564-row catalogue remains the sole heavy initial workload.
+async function viewPlanet3D(kepid) {
     let planet = null;
     if (window.databaseInstance && window.databaseInstance.allData) {
         planet = window.databaseInstance.allData.find((p) => { return p.kepid == kepid; });
     }
     if (!planet) {
         alert('Planet not found');
-        return;
+        return false;
     }
 
-    if (window.planet3DViewer) {
-        if (window.planet3DViewer.showPlanet) {
+    try {
+        if (typeof window.ensureDatabase3D !== 'function') {
+            throw new Error('The database 3D loader is unavailable.');
+        }
+
+        const Viewer = await window.ensureDatabase3D();
+        if (!window.planet3DViewer ||
+            (typeof window.planet3DViewer.showPlanet !== 'function' &&
+                typeof window.planet3DViewer.visualizePlanet !== 'function')) {
+            window.planet3DViewer = new Viewer();
+        }
+
+        if (typeof window.planet3DViewer.showPlanet === 'function') {
             window.planet3DViewer.showPlanet(planet);
-        } else if (window.planet3DViewer.visualizePlanet) {
+        } else if (typeof window.planet3DViewer.visualizePlanet === 'function') {
             window.planet3DViewer.visualizePlanet(planet);
         } else {
-            alert('3D viewer not fully initialized');
+            throw new Error('The database 3D viewer did not expose a render method.');
         }
-    } else {
-        alert('3D viewer not available');
+        return true;
+    } catch (error) {
+        console.error('Unable to open the database 3D viewer:', error);
+        alert('The 3D viewer could not be loaded. Please try again.');
+        return false;
     }
 }
 
@@ -3786,20 +3418,12 @@ window.closePlanetDetails = closePlanetDetails;
 
 // Expose global init function for backward compatibility
 window.initDatabase = function () {
-    console.log('🔄 Global initDatabase called - redirecting to OptimizedDatabase');
-    if (!window.optimizedDatabase) {
-        window.optimizedDatabase = new OptimizedDatabase();
-    } else {
-        window.optimizedDatabase.init();
+    if (!window.databaseInstance) {
+        const instance = new OptimizedDatabase();
+        window.databaseInstance = instance;
+        window.optimizedDatabase = instance;
     }
+    return window.databaseInstance;
 };
-
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        if (!window.optimizedDatabase) window.optimizedDatabase = new OptimizedDatabase();
-    });
-} else {
-    if (!window.optimizedDatabase) window.optimizedDatabase = new OptimizedDatabase();
-}
 
 

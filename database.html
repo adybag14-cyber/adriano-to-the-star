@@ -71,36 +71,22 @@
     <link rel="stylesheet" href="database-ita-shell.css">
     <link rel="stylesheet" href="notifications.css">
 
-    <script src="critical-debug-banner.js"></script>
     <script src="safe-loader.js" defer></script>
     <script src="loader-core-minimal.js"></script>
     <script src="notifications.js" defer></script>
     <script src="global-error-handler.js" defer></script>
 
     <script src="i18n.js" defer></script>
-    <script src="rate-limiting.js" defer></script>
-    <script src="rate-limiting-ui.js" defer></script>
-    <script src="code-splitting.js" defer></script>
-    <script src="animations.js" defer></script>
     <script src="navigation.js" defer></script>
-    <script src="universal-graphics.js" defer></script>
     <script src="cosmic-music-player.js" defer></script>
     <script src="theme-toggle.js" defer></script>
     <script src="keyboard-shortcuts.js" defer></script>
     <script src="accessibility.js" defer></script>
-    <script src="color-schemes.js" defer></script>
 
     <link rel="manifest" href="manifest.json">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <script>
-        // Global API Configuration
-        window.EXOPLANET_API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-            ? 'http://localhost:3002'
-            : 'https://api.adrianotothestar.com';
-        console.log('ðŸŒ API Base configured:', window.EXOPLANET_API_BASE);
-    </script>
     <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
     <script src="universal-simulation-hub.js"></script>
     <script src="void-warfare-engine.js"></script>
@@ -145,26 +131,11 @@
             <div class="content-container database-console">
                 <div id="database-debug-status" style="font-size:0.75rem;color:rgba(255,255,255,0.7);margin-bottom:0.5rem;"></div>
 
-                <!-- Galactic Events Ticker -->
-                <div id="galactic-events-container" style="margin-bottom: 1.5rem;"></div>
-
-                <div id="esa-api-widget" class="esa-api-widget" style="padding: 2rem; background: rgba(0,0,0,0.5); border-radius: 10px; margin: 2rem 0; color: white; min-height: 320px;">
-                    <h2 style="color: #67e8f9; margin-top: 0; display: flex; justify-content: space-between; align-items: center;">
-                        <span>ESA (European Space Agency)</span>
-                        <button id="refresh-esa-data" style="background: rgba(103, 232, 249,0.2); border: 1px solid rgba(103, 232, 249,0.5); color: #67e8f9; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer;">
-                            Refresh
-                        </button>
-                    </h2>
-                    <div id="esa-content" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
-                        <div style="text-align: center; color: rgba(255,255,255,0.5); padding: 2rem;">Loading ESA data...</div>
-                    </div>
-                </div>
-
-                <!-- Quest Log -->
-                <h3 style="color: #67e8f9; margin-top: 1.5rem; border-bottom: 1px solid rgba(103, 232, 249, 0.3); padding-bottom: 0.5rem;">
-                    ðŸ¤– AI Game Master Quests
-                </h3>
-                <div id="quest-log-container" style="min-height: 100px; max-height: 300px; overflow-y: auto; margin-top: 0.5rem;"></div>
+                <aside class="esa-api-widget" style="padding: 1.25rem; background: rgba(2,6,23,.72); border:1px solid rgba(103,232,249,.25); border-radius: 14px; margin: 1rem 0; color: white;">
+                    <h2 style="color:#67e8f9;margin-top:0;">Catalogue provenance</h2>
+                    <p>The searchable Kepler snapshot is delivered from this site for predictable performance. Research-grade updates and uncertainty fields should be checked against the authoritative archives.</p>
+                    <p><a href="https://exoplanetarchive.ipac.caltech.edu/" target="_blank" rel="noopener noreferrer">NASA Exoplanet Archive</a> · <a href="https://www.cosmos.esa.int/web/gaia" target="_blank" rel="noopener noreferrer">ESA Gaia</a></p>
+                </aside>
 
                 <div id="data-visualization" style="margin-top: 2rem;"></div>
 
@@ -173,8 +144,10 @@
                 </div>
 
                 <div id="planet-of-day-container" style="margin-top: 2rem;"></div>
-                <div id="my-universe-container" style="margin-top: 2rem;"></div>
+                <div id="my-universe-container" hidden></div>
 
+                <!-- Retired experimental feature mounts remain non-rendered for saved deep links. -->
+                <div hidden aria-hidden="true">
                 <!-- Additional Feature Containers -->
                 <div id="wishlist-container" style="margin-top: 2rem;"></div>
                 <div id="bookmarks-container" style="margin-top: 2rem;"></div>
@@ -258,6 +231,7 @@
                 <div id="direct-messaging-container" style="margin-top: 2rem;"></div>
                 <div id="social-feed-container" style="margin-top: 2rem;"></div>
                 <div id="image-gallery-container" style="margin-top: 2rem;"></div>
+                </div>
             </div>
         </section>
 
@@ -267,20 +241,20 @@
                 <h2 style="color: #67e8f9; margin-bottom: 1.5rem;">Additional Features</h2>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
                     <a href="space-dashboard.html" class="feature-card">
-                        <h3>ðŸš€ Space API Dashboard</h3>
-                        <p>Real-time space data from NASA and other sources</p>
+                        <h3>🚀 Space Data Dashboard</h3>
+                        <p>Build-cached public mission and discovery data with source status.</p>
                     </a>
                     <a href="ai-predictions.html" class="feature-card">
-                        <h3>ðŸ¤– AI Predictions</h3>
+                        <h3>🤖 AI Predictions</h3>
                         <p>Machine learning predictions for future discoveries</p>
                     </a>
                     <a href="star-maps.html" class="feature-card">
-                        <h3>ðŸŒŸ Star Maps</h3>
+                        <h3>🌟 Star Maps</h3>
                         <p>Interactive star map exploration</p>
                     </a>
                     <a href="database-analytics.html" class="feature-card">
-                        <h3>ðŸ“Š Analytics</h3>
-                        <p>Planet claim statistics and trends</p>
+                        <h3>📊 Analytics</h3>
+                        <p>Catalogue distributions and browser-local activity.</p>
                     </a>
                 </div>
             </div>
@@ -292,10 +266,12 @@
                 <h2 style="color: #67e8f9; margin-bottom: 1rem;">User Data Management</h2>
                 <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 1.5rem;">Export your data for backup or import it to restore your settings and favorites.</p>
                 <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                    <button class="cta-button" data-export-user-data>ðŸ“¥ Export User Data</button>
-                    <button class="cta-button" data-import-user-data>ðŸ“¤ Import User Data</button>
-                    <button class="cta-button" onclick="if(window.socialSharing){window.socialSharing().showShareWidget({title: 'Exoplanet Database', text: 'Check out this amazing exoplanet database!', url: window.location.href})}">ðŸ”— Share This Page</button>
+                    <button type="button" class="cta-button" data-export-user-data>📥 Export Local Data</button>
+                    <button type="button" class="cta-button" data-import-user-data>📤 Import Local Data</button>
+                    <input type="file" id="database-import-file" accept="application/json" hidden aria-label="Choose an exported local database settings file">
+                    <button type="button" class="cta-button" data-share-database>🔗 Share This Page</button>
                 </div>
+                <p id="database-tools-status" role="status" aria-live="polite"></p>
             </div>
         </section>
 
@@ -304,12 +280,12 @@
             <div class="content-container" style="background: rgba(0, 0, 0, 0.3); padding: 2rem; border-radius: 15px; border: 2px solid rgba(103, 232, 249, 0.2);">
                 <h2>About the Database</h2>
                 <div style="margin: 1.5rem 0;">
-                    <p style="margin-bottom: 1rem;"><strong>Data Source:</strong> <a href="https://api.nasa.gov/" target="_blank" rel="noopener" style="color: #67e8f9;">NASA Exoplanet Archive API</a></p>
-                    <p>The database of Kepler confirmed objects from api.nasa.gov. Furthermore, I will construct an esoteric quantum information repository and name the database ITASTARADRIANO.</p>
+                    <p style="margin-bottom: 1rem;"><strong>Data source:</strong> <a href="https://exoplanetarchive.ipac.caltech.edu/" target="_blank" rel="noopener noreferrer" style="color: #67e8f9;">NASA Exoplanet Archive</a></p>
+                    <p>The shipped release snapshot contains Kepler objects for fast same-origin search. Catalogue classifications are scientific records; browser-local favourites and teaching claims are kept separate.</p>
                 </div>
                 <div class="coming-soon-notice">
                     <h3 style="color: #67e8f9; margin-bottom: 1rem;">Cryptographic ownership systems</h3>
-                    <p>Ownership certificates and title-deed experiments are being rebuilt on the new Cloudflare-backed platform. The live world database is available now.</p>
+                    <p>Claim and certificate concepts are non-legal learning experiments stored only in this browser. No payment, title transfer, blockchain write, or account backend is active.</p>
                 </div>
             </div>
         </section>
@@ -332,112 +308,28 @@
         <!-- CTA Section -->
         <section class="cta-section" data-entrance="fadeIn">
             <h2>Ready to choose a world?</h2>
-            <a href="#database-container" class="cta-button">Explore the Live Database</a>
+            <a href="#nasa-data-container" class="cta-button">Explore the Database</a>
         </section>
     </main>
 
     <footer class="site-footer">
-        <p>&copy; 2026 ADRIANO TO THE STAR - I.T.A (Interstellar Travel Agency)</p>
+        <p>&copy; <span data-current-year></span> ADRIANO TO THE STAR - I.T.A (Interstellar Travel Agency)</p>
         <p><a href="index.html">Back to Home</a></p>
     </footer>
 
-    <!-- Libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/livekit-client/dist/livekit-client.umd.min.js"></script>
-
-    <!-- Configs -->
-    <script src="gemini-config.js"></script>
-    <script src="stripe-config.js"></script>
-
-    <!-- Core Systems -->
-    <script src="error-boundary-system.js" defer></script>
-    <script src="error-recovery-system.js" defer></script>
-    <script src="auth-supabase.js" defer></script>
-    <script src="reputation-system.js" defer></script>
-    <script src="community-ui.js" defer></script>
-    <script src="nft-certificate-generator.js" defer></script>
-    <script src="blockchain-verification-system.js" defer></script>
-    <script src="exoplanet-xr-experience.js" defer></script>
-    <script src="nasa-api-integration.js" defer></script>
-    <script src="exoplanet-api.js" defer></script>
-    <script src="interstellar-news.js" defer></script>
-    <script src="user-history.js" defer></script>
-    <script src="planet-3d-viewer.js" defer></script>
+    <!-- Same-origin catalogue runtime -->
+    <script src="auth-local.js" defer></script>
+    <script src="database-3d-loader.js" defer></script>
 
     <!-- Data & Loaders -->
-    <script src="kepler_data_parsed.js" defer></script>
     <script src="large-exoplanet-loader.js" defer></script>
 
     <!-- Main Database Systems -->
     <script src="database-optimized.js" defer></script>
-    <script src="gemini-live-helper.js" defer></script>
-    <script src="database-ai-search-suggestions-enhanced.js" defer></script>
     <script src="database-advanced-features.js" defer></script>
     <script src="database-visualization-features.js" defer></script>
     <script src="database-performance-optimizer.js" defer></script>
-
-    <!-- Planet Features -->
-    <script src="planet-ownership-transfer.js" defer></script>
-    <script src="planet-wishlist-system.js" defer></script>
-    <script src="planet-bookmark-system.js" defer></script>
-    <script src="planet-rarity-calculator.js?v=2026_V126_ULTIMATE_FIX" defer></script>
-    <script src="planet-comparison-matrix.js" defer></script>
-    <script src="planet-discovery-search-history.js" defer></script>
-    <script src="planet-discovery-feed.js" defer></script>
-    <script src="planet-discovery-statistics-widget.js" defer></script>
-    <script src="planet-social-sharing.js" defer></script>
-    <script src="planet-discovery-export.js" defer></script>
-    <script src="planet-discovery-map-visualization.js" defer></script>
-    <script src="planet-discovery-notifications.js?v=2026_V126_ULTIMATE_FIX" defer></script>
-    <script src="planet-claim-statistics.js" defer></script>
-    <script src="popular-planet-trends.js" defer></script>
-    <script src="discovery-rate-tracking.js" defer></script>
-    <script src="planet-comparison-enhancements.js" defer></script>
-    <script src="ai-planet-habitability-analysis.js" defer></script>
-    <script src="planet-discovery-tutorials.js" defer></script>
-    <script src="planet-discovery-calendar.js" defer></script>
-    <script src="planet-discovery-comparison-tool.js" defer></script>
-    <script src="planet-discovery-video-tutorials.js?v=2026_V126_ULTIMATE_FIX" defer></script>
-    <script src="planet-discovery-podcast-integration.js" defer></script>
-    <script src="planet-trivia-quiz.js" defer></script>
-    <script src="planet-discovery-voice-commands.js?v=2026_V126_ULTIMATE_FIX" defer></script>
-    <script src="planet-discovery-mobile-notifications.js" defer></script>
-    <script src="planet-discovery-ar-filters.js" defer></script>
-    <script src="planet-discovery-vr-tours.js" defer></script>
-    <script src="planet-discovery-educational-courses.js" defer></script>
-    <script src="planet-discovery-live-streaming.js" defer></script>
-    <script src="planet-discovery-community-forums.js" defer></script>
-    <script src="planet-discovery-mentorship.js" defer></script>
-    <script src="planet-discovery-research-grants.js" defer></script>
-    <script src="planet-discovery-certification.js" defer></script>
-    <script src="planet-discovery-internships.js" defer></script>
-    <script src="planet-discovery-job-board.js" defer></script>
-    <script src="planet-discovery-scholarships.js" defer></script>
-    <script src="planet-discovery-conferences.js" defer></script>
-    <script src="planet-discovery-webinars.js" defer></script>
-    <script src="planet-discovery-research-papers.js" defer></script>
-    <script src="planet-discovery-citation-manager.js" defer></script>
-    <script src="planet-discovery-collaboration.js" defer></script>
-    <script src="planet-discovery-data-visualization.js" defer></script>
-    <script src="planet-discovery-api-rate-limiting.js" defer></script>
-    <script src="planet-discovery-3d-printing.js" defer></script>
-    <script src="planet-discovery-webhooks.js" defer></script>
-    <script src="planet-discovery-sdk.js" defer></script>
-    <script src="planet-discovery-graphql.js" defer></script>
-    <script src="planet-discovery-realtime-sync.js" defer></script>
-    <script src="planet-discovery-backup-restore.js" defer></script>
-    <script src="planet-discovery-ai-chat.js" defer></script>
-    <script src="planet-discovery-news-aggregator-enhanced.js" defer></script>
-    <script src="planet-discovery-event-calendar.js" defer></script>
-    <script src="planet-discovery-user-profiles.js" defer></script>
-    <script src="planet-discovery-direct-messaging.js" defer></script>
-    <script src="planet-discovery-social-feed.js" defer></script>
-    <script src="planet-discovery-image-gallery.js" defer></script>
-
-    <script src="blockchain-foundation.js" defer></script>
-    <script src="core-web-vitals-monitoring.js" defer></script>
+    <script src="database-local-tools.js" defer></script>
 
     <style>
         .feature-card {
@@ -472,6 +364,11 @@
         .cta-button:hover {
             background: rgba(103, 232, 249, 0.3);
             border-color: #67e8f9;
+        }
+
+        /* Keep the on-demand viewer and its close control above the fixed I.T.A header. */
+        body.database-page #planet-3d-modal {
+            z-index: 20000 !important;
         }
     </style>
     <script src="database-experience.js" defer></script>

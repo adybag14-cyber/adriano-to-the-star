@@ -79,7 +79,6 @@ export default defineConfig({
         manualChunks(id) {
           const normalized = id.replaceAll('\\', '/');
           if (normalized.includes('/node_modules/three/')) return 'three-core';
-          if (normalized.includes('/node_modules/@supabase/')) return 'supabase';
           return undefined;
         },
         chunkFileNames: 'assets/[name]-[hash].js',
@@ -111,6 +110,6 @@ export default defineConfig({
     open: true
   },
   optimizeDeps: {
-    include: ['three', '@supabase/supabase-js']
+    include: ['three', 'react', 'react-dom']
   }
 });

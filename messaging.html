@@ -77,7 +77,7 @@
     <script src="cosmic-music-player.js" defer></script>
     <script src="theme-toggle.js" defer></script>
     <script src="accessibility.js" defer></script>
-    <script src="supabase-config.js"></script>
+    <script src="auth-local.js" defer></script>
     <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
     <script src="universal-simulation-hub.js"></script>
     <script src="void-warfare-engine.js"></script>
@@ -97,15 +97,18 @@
     <main>
         <section class="page-hero" data-entrance="fadeIn">
             <h1 class="page-title" data-scroll-animate>💬 DIRECT MESSAGES</h1>
-            <p class="page-subtitle">Private conversations with other members</p>
+            <p class="page-subtitle">Private message drafts stored only in this browser</p>
         </section>
 
         <section class="content-section" data-entrance="slideUp">
             <div class="content-container">
+                <aside class="messaging-boundary" aria-label="Messaging availability">
+                    <strong>Device-local preview:</strong> Supabase messaging is retired. Threads created here do not reach another person and remain on this device until you delete browser data.
+                </aside>
                 <!-- Not Logged In View -->
                 <div id="not-logged-in" class="login-prompt">
                     <h2>Login Required</h2>
-                    <p>Please log in to send and receive direct messages.</p>
+                    <p>Create or open a browser-local profile to organize private message drafts.</p>
                     <button class="cta-button" onclick="showModal('login-modal')">Login</button>
                 </div>
 
@@ -115,7 +118,7 @@
                         <div class="users-sidebar">
                             <div class="sidebar-header">
                                 <h3>Conversations</h3>
-                                <button id="new-message-btn" class="new-message-btn" title="New Message">+ New</button>
+                                <button id="new-message-btn" class="new-message-btn" type="button" aria-label="Create a local message thread">+ New</button>
                             </div>
                             <div id="conversations-list" class="conversations-list"></div>
                         </div>
@@ -133,12 +136,12 @@
                                         <span id="chat-user-avatar">👤</span>
                                         <span id="chat-user-name">User</span>
                                     </div>
-                                    <button id="close-conversation-btn" class="close-btn">×</button>
+                                    <button id="close-conversation-btn" class="close-btn" type="button" aria-label="Close conversation">×</button>
                                 </div>
-                                <div id="messages-container" class="messages-container"></div>
+                                <div id="messages-container" class="messages-container" role="log" aria-live="polite" aria-label="Local message drafts"></div>
                                 <div class="message-input-container">
                                     <textarea id="message-input" class="message-input" placeholder="Type a message..." rows="1"></textarea>
-                                    <button id="send-message-btn" class="send-btn">Send</button>
+                                    <button id="send-message-btn" class="send-btn" type="button">Save draft</button>
                                 </div>
                             </div>
                         </div>
@@ -231,7 +234,7 @@
         }
     </script>
     <footer class="site-footer">
-        <p>&copy; 2025 ADRIANO TO THE STAR - I.T.A (Interstellar Travel Agency)</p>
+        <p>&copy; <span data-current-year></span> ADRIANO TO THE STAR - I.T.A (Interstellar Travel Agency)</p>
         <p><a href="index.html">Back to Home</a></p>
     </footer>
     <script src="pwa-loader.js"></script>

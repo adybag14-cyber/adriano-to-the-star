@@ -231,8 +231,15 @@ def main() -> int:
         "planet-generator.js",
         "pioneer-raytracing.js",
         "local-system-view.js",
+        "scripts/check-current-tree-secrets.mjs",
         "scripts/pioneer-playwright-workload.mjs",
         "scripts/pioneer-advanced-rendering-smoke.mjs",
+        "tests/e2e/smoke-ci.spec.js",
+        "tests/e2e/site-overhaul.spec.js",
+        "tests/e2e/local-platform-remediation.spec.js",
+        "tests/e2e/privacy-tracker.spec.js",
+        "tests/e2e/pioneer-star-maps-advanced.spec.js",
+        "tests/e2e/accessibility-all-pages.spec.js",
         "assets/models/ships/viper.glb",
         "assets/models/defense/missile_battery.glb",
     }
@@ -280,8 +287,11 @@ def main() -> int:
         "excludedPaths": sorted(EXCLUDED_PATHS),
         "largestExcluded": sorted(excluded, key=lambda item: item["size"], reverse=True)[:50],
     }
-    (output / ".gitlab-source-sha").write_text(source_sha + "\n", encoding="ascii")
-    (output / ".github-ci-snapshot.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    # These files are committed to the filtered GitHub mirror. Write bytes so
+    # Windows does not translate LF to CRLF and make `git diff --check` reject
+    # the generated authority metadata as trailing whitespace.
+    (output / ".gitlab-source-sha").write_bytes((source_sha + "\n").encode("ascii"))
+    (output / ".github-ci-snapshot.json").write_bytes((json.dumps(manifest, indent=2) + "\n").encode("utf-8"))
 
     print(json.dumps({
         "sourceSha": source_sha,

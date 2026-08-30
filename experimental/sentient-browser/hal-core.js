@@ -5,10 +5,11 @@
  * FINAL_DEPLOY_CONFIRM_V20
  */
 
-// We assume webllm is imported globally via the module script in HTML
-// or we import it here if we were using a bundler. But since we use ESM in browser...
-
-import * as webllm from "https://esm.run/@mlc-ai/web-llm";
+let webLLMRuntimePromise = null;
+const loadWebLLMRuntime = () => {
+    if (!webLLMRuntimePromise) webLLMRuntimePromise = import('https://esm.run/@mlc-ai/web-llm');
+    return webLLMRuntimePromise;
+};
 
 class HALComputer {
     constructor() {
@@ -76,56 +77,10 @@ class HALComputer {
         this.init();
     }
 
-    async prewarmWasmCache() {
-        // [SELF-REPAIR] Manually fetch WASM from R2 and inject into cache
-        // We inject into BOTH keys (Local and Remote) to cover all bases given WebLLM's confusion.
-        const wasmRemoteUrl = "https://starisdons-swf-worker.adybag14.workers.dev/t5_gemma2-q4f16_1/t5_gemma2-q4f16_1-webgpu.wasm";
-        const wasmLocalKey = new URL("t5_gemma2-q4f16_1-webgpu.wasm", window.location.href).href;
-
-        try {
-            this.log("System: Pre-warming WASM Cache...");
-            const cacheName = "webllm/wasm";
-            const cache = await caches.open(cacheName);
-
-            // Fetch fresh (bypass R2 edge)
-            this.log(`System: Fetching fresh WASM from R2...`);
-            const response = await fetch(wasmRemoteUrl + "?t=" + Date.now());
-            if (!response.ok) throw new Error(`R2 Fetch Failed: ${response.status}`);
-
-            const blob = await response.blob();
-
-            // 1. Inject as Remote URL (This should be what it uses now that we matched config)
-            const remoteResponse = new Response(blob, {
-                status: 200, statusText: "OK", headers: { "Content-Type": "application/wasm" }
-            });
-            await cache.put(wasmRemoteUrl, remoteResponse.clone());
-
-            // 2. Inject as Local Key (fallback)
-            const localResponse = new Response(blob, {
-                status: 200, statusText: "OK", headers: { "Content-Type": "application/wasm" }
-            });
-            await cache.put(wasmLocalKey, localResponse);
-
-            this.log("System: WASM injected into cache (Dual-Key).");
-        } catch (e) {
-            console.error("Cache Injection Failed:", e);
-            this.log("Warning: WASM Cache Injection Failed. " + e.message);
-        }
-    }
-
     setupCerebrasToggle() {
-        try {
-            const saved = localStorage.getItem('hal_use_cerebras');
-            this.useCerebras = saved === 'true';
-        } catch (e) {
-            this.useCerebras = false;
-        }
-
-        try {
-            this.useWebLLM = localStorage.getItem('hal_use_webllm') === 'true';
-        } catch (_e) {
-            this.useWebLLM = false;
-        }
+        // Provider activation is intentionally per-session and always requires a fresh click.
+        this.useCerebras = false;
+        this.useWebLLM = false;
 
         const webllmToggle = document.getElementById('webllm-toggle');
         if (webllmToggle) {
@@ -285,6 +240,7 @@ class HALComputer {
                 throw new Error("WebGPU not supported on this browser.");
             }
 
+            const webllm = await loadWebLLMRuntime();
             try {
                 const modelRecord = this.customModelRecord[this.modelId];
                 if (!modelRecord) throw new Error(`Model record not found for: ${this.modelId}`);
@@ -350,28 +306,7 @@ class HALComputer {
 
             let errorMsg = e.message;
             if (e.message.includes('Cache') || e.name === 'QuotaExceededError') {
-                errorMsg = "Browser Cache Corrupted or Full.";
-
-                // Auto-recovery: Attempt to clear WebLLM cache
-                try {
-                    this.log("⚠️ DETECTED CACHE CORRUPTION. ATTEMPTING SELF-REPAIR...");
-                    if (window.caches) {
-                        const keys = await window.caches.keys();
-                        for (const key of keys) {
-                            if (key.includes('webllm') || key.includes('adriano-star')) {
-                                console.log(`Deleting cache: ${key}`);
-                                await window.caches.delete(key);
-                            }
-                        }
-                        this.log("✅ CACHE CLEARED. PLEASE RELOAD THE PAGE.");
-                        errorMsg += " System Cache Cleared. RELOAD REQUIRED.";
-
-                        // Force reload after 3 seconds
-                        setTimeout(() => window.location.reload(), 3000);
-                    }
-                } catch (cleanupErr) {
-                    console.error("Failed to clear cache:", cleanupErr);
-                }
+                errorMsg = 'Browser model storage is unavailable or full. No cache was removed automatically.';
             }
 
             this.log("WebLLM unavailable: " + errorMsg);
@@ -730,21 +665,27 @@ class HALComputer {
         if (!this.ui.chat) return;
 
         const entry = document.createElement('div');
-        entry.className = `chat-entry ${role}`;
+        entry.className = `message chat-entry ${role}`;
         entry.style.margin = '10px 0';
         entry.style.padding = '8px 12px';
         entry.style.borderRadius = '4px';
+
+        const label = document.createElement('span');
+        label.style.opacity = '0.68';
+        label.style.fontSize = '0.8em';
+        label.textContent = role === 'user' ? 'USER: ' : role === 'hal' ? 'HAL: ' : 'SYSTEM: ';
+        const content = document.createTextNode(String(text ?? ''));
 
         if (role === 'user') {
             entry.style.background = 'rgba(255, 255, 255, 0.1)';
             entry.style.textAlign = 'right';
             entry.style.color = '#fff';
-            entry.innerHTML = `<span style="opacity:0.6; font-size: 0.8em;">USER:</span> ${text}`;
+            entry.append(label, content);
         } else if (role === 'hal') {
             entry.style.background = 'rgba(255, 50, 50, 0.1)';
             entry.style.borderLeft = '2px solid #ff3333';
             entry.style.color = '#ffaaaa';
-            entry.innerHTML = `<span style="opacity:0.6; font-size: 0.8em;">HAL:</span> ${text}`;
+            entry.append(label, content);
         } else {
             // System
             entry.style.color = '#ffff00';

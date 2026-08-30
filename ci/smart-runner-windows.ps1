@@ -44,7 +44,7 @@ function Invoke-ProductionHealthCheck {
         @{ Path = "/i18n.js?deploy=$CacheKey"; Contains = "ita-language-switcher" },
         @{ Path = "/i18n.js?deploy=$CacheKey"; Contains = "assetVersion" },
         @{ Path = "/site-experience.css?deploy=$CacheKey"; Contains = "ita-site-refresh" },
-        @{ Path = "/auth-supabase.js?deploy=$CacheKey"; Contains = "cloudflare-d1" },
+        @{ Path = "/auth-local.js?deploy=$CacheKey"; Contains = "isLocalPlatform" },
         @{ Path = "/theme-styles.css?deploy=$CacheKey"; Contains = ".theme-toggle-btn" },
         @{ Path = "/code-splitting.js?deploy=$CacheKey"; Contains = "cosmic-music-player.js?v=" },
         @{ Path = "/database.html?deploy=$CacheKey"; Contains = "theme-styles.css?v=" },
@@ -53,6 +53,8 @@ function Invoke-ProductionHealthCheck {
         @{ Path = "/projects.html?deploy=$CacheKey"; Contains = "2026 FLIGHT LAB" },
         @{ Path = "/projects.js?deploy=$CacheKey"; Contains = "checkCapabilities" },
         @{ Path = "/education.html?deploy=$CacheKey"; Contains = "ita-breadcrumb" },
+        @{ Path = "/privacy.html?deploy=$CacheKey"; Contains = "Privacy" },
+        @{ Path = "/tracker.html?deploy=$CacheKey"; Contains = "vendor/tracker/react-18.3.1.production.min.js?v=" },
         @{ Path = "/sitemap.xml?deploy=$CacheKey"; Contains = "galaxy-object-trading.html" }
     )
 
@@ -176,8 +178,10 @@ try {
             Invoke-CheckedCommand powershell -ExecutionPolicy Bypass -File build-pages.ps1
         }
         "security" {
+            Invoke-CheckedCommand node scripts/check-current-tree-secrets.mjs --self-test
+            Invoke-CheckedCommand node scripts/check-current-tree-secrets.mjs --root $env:CI_PROJECT_DIR
             if (Test-Path "package.json") {
-                Invoke-CheckedCommand npm audit --audit-level=moderate
+                Invoke-CheckedCommand npm audit --audit-level=low
             }
         }
         default {

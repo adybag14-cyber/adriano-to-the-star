@@ -120,7 +120,11 @@
     min-width: 200px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(10px);
-    display: none;
+    display: block;
+}
+
+.theme-selector-menu[hidden] {
+    display: none !important;
 }
 
 .theme-selector-header h3 {
@@ -260,4 +264,3 @@ svg {
         font-size: 1.3rem;
     }
 }
-
