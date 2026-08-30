@@ -68,7 +68,9 @@ function Invoke-ProductionHealthCheck {
         @{ Path = "/book-online.css?v=$ReleaseMarker"; Contains = ".mission-plan-form" },
         @{ Path = "/star-maps.html?deploy=$CacheKey"; Contains = "interactive-star-maps.js?v=$ReleaseMarker" },
         @{ Path = "/interactive-star-maps.js?v=$ReleaseMarker"; Contains = "updateCanvasAccessibilityLabel" },
-        @{ Path = "/manifest.json?v=$ReleaseMarker"; Contains = '"icons"' },
+        @{ Path = "/manifest.json?v=$ReleaseMarker"; Contains = "icon-192x192.png?v=$ReleaseMarker" },
+        @{ Path = "/images/icon-192x192.png?v=$ReleaseMarker"; Contains = $null },
+        @{ Path = "/images/icon-512x512.png?v=$ReleaseMarker"; Contains = $null },
         @{ Path = "/sitemap.xml?deploy=$CacheKey"; Contains = "galaxy-object-trading.html" }
     )
 

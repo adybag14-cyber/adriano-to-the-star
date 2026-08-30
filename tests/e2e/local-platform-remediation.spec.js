@@ -180,15 +180,22 @@ test.describe('browser-local platform remediation', () => {
   });
 
   test('PWA manifest assets are truthful and service worker has no legacy CDN proxy', async ({ page, request }) => {
-    const manifest = await (await request.get('/manifest.json')).json();
+    await page.goto('/offline.html', { waitUntil: 'domcontentloaded' });
+    const manifestHref = await page.locator('link[rel="manifest"]').getAttribute('href');
+    expect(manifestHref).toMatch(/manifest\.json\?v=/);
+    const manifestUrl = new URL(manifestHref, page.url());
+    const manifestResponse = await request.get(manifestUrl.toString());
+    expect(manifestResponse.ok()).toBe(true);
+    const manifest = await manifestResponse.json();
     expect(manifest.screenshots).toBeUndefined();
     expect(manifest.icons.map(icon => icon.sizes)).toEqual(['192x192', '512x512']);
-    await page.goto('/offline.html', { waitUntil: 'domcontentloaded' });
-    const dimensions = await page.evaluate(async () => Promise.all(['images/icon-192x192.png', 'images/icon-512x512.png'].map(src => new Promise(resolve => {
+    expect(manifest.icons.every(icon => new URL(icon.src, manifestUrl).searchParams.has('v'))).toBe(true);
+    const iconSources = manifest.icons.map(icon => new URL(icon.src, manifestUrl).toString());
+    const dimensions = await page.evaluate(async sources => Promise.all(sources.map(src => new Promise(resolve => {
       const image = new Image(); image.onload = () => resolve(`${image.naturalWidth}x${image.naturalHeight}`); image.src = src;
-    }))));
+    }))), iconSources);
     expect(dimensions).toEqual(['192x192', '512x512']);
-    const worker = await (await request.get('/sw.js')).text();
+    const worker = await (await request.get(`/sw.js${manifestUrl.search}`)).text();
     expect(worker).not.toMatch(/leaningtech|cjrtnc|\/lt\/|\/lts\//i);
     expect(worker).toContain("url.origin !== self.location.origin");
   });

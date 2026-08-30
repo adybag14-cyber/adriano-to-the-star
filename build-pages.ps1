@@ -279,6 +279,36 @@ if (-not $AssetVersion) {
 }
 
 $Utf8WithoutBom = [System.Text.UTF8Encoding]::new($false)
+
+# A versioned manifest link is insufficient when the icon and shortcut URLs
+# inside the manifest remain bare: an intermediary can continue serving an old
+# icon payload under a restored filename. Stamp those nested URLs with the same
+# immutable release marker used by HTML, JavaScript, and data references.
+$ManifestPath = Join-Path "public" "manifest.json"
+if (Test-Path -LiteralPath $ManifestPath) {
+    $Manifest = Get-Content -LiteralPath $ManifestPath -Raw | ConvertFrom-Json
+    $VersionManifestUrl = {
+        param([string]$Url)
+        if (-not $Url -or $Url -match '^(?:https?:|//|data:)') { return $Url }
+        $PathOnly = $Url -replace '\?.*$', ''
+        return "${PathOnly}?v=$AssetVersion"
+    }
+    foreach ($Icon in @($Manifest.icons)) {
+        $Icon.src = & $VersionManifestUrl $Icon.src
+    }
+    foreach ($Shortcut in @($Manifest.shortcuts)) {
+        $Shortcut.url = & $VersionManifestUrl $Shortcut.url
+        foreach ($Icon in @($Shortcut.icons)) {
+            $Icon.src = & $VersionManifestUrl $Icon.src
+        }
+    }
+    [System.IO.File]::WriteAllText(
+        $ManifestPath,
+        (($Manifest | ConvertTo-Json -Depth 20) + [Environment]::NewLine),
+        $Utf8WithoutBom
+    )
+}
+
 $LocalAssetAttributePattern = '(?i)(?<prefix>\b(?:href|src)\s*=\s*(?<quote>["'']))(?<path>(?!https?:|//|data:|#|mailto:)[^"''?#]+?\.(?:css|js|json))(?<query>\?[^"'']*)?\k<quote>'
 $LocalScriptTagPattern = '(?i)<script(?![^>]*\bdata-cfasync\s*=)(?=[^>]*\bsrc\s*=\s*["''](?!https?:|//|data:)[^"'']+\.js(?:\?[^"'']*)?["''])'
 $VersionedHtmlReferenceCount = 0
