@@ -10,3 +10,7 @@
 .home-menu-trigger{min-height:38px;display:inline-flex;align-items:center;justify-content:center;padding:0 14px;border:1px solid rgba(140,247,255,.26);border-radius:999px;background:rgba(140,247,255,.055);color:#dffcff;cursor:pointer;font:600 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;transition:transform .22s ease,border-color .22s ease,background .22s ease,color .22s ease}
 .home-menu-trigger:hover,.home-menu-trigger:focus-visible{transform:translateY(-1px);border-color:rgba(140,247,255,.55);background:rgba(140,247,255,.11);color:#fff}
 .mobile-menu nav .home-menu-trigger{width:100%;justify-content:flex-start;margin-top:4px;padding:13px 14px;border-radius:10px}
+
+/* Keep flight telemetry legible over every phase of the animated hero image. */
+.telemetry{background:rgba(5,7,13,.94)}
+.telemetry small{color:#c5c8d8}

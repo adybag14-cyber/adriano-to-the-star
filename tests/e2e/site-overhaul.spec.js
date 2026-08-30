@@ -78,6 +78,14 @@ test.describe('production site overhaul', () => {
     expect(requests.some(url => /\/translations\/es\.json\?v=/.test(url)), 'versioned Spanish translation request').toBeTruthy();
   });
 
+  test('landing telemetry stays legible and decorative hero art stays out of the accessibility tree', async ({ page }) => {
+    await page.goto('/index.html', { waitUntil: 'domcontentloaded' });
+    await expect(page.locator('.planet-system')).toHaveAttribute('aria-hidden', 'true');
+    await expect(page.locator('.planet img')).toHaveAttribute('alt', '');
+    await expect(page.locator('.telemetry small').first()).toHaveCSS('color', 'rgb(197, 200, 216)');
+    await expect(page.locator('.telemetry').first()).toHaveCSS('background-color', 'rgba(5, 7, 13, 0.94)');
+  });
+
   test('landing theme menu supports keyboard-ready selection and persistence', async ({ page }) => {
     await page.goto('/index.html', { waitUntil: 'domcontentloaded' });
     const toggle = page.locator('#theme-toggle-btn');
