@@ -61,25 +61,35 @@ function Invoke-ProductionHealthCheck {
         @{ Path = "/education.html?deploy=$CacheKey"; Contains = "ita-breadcrumb" },
         @{ Path = "/privacy.html?deploy=$CacheKey"; Contains = "Privacy" },
         @{ Path = "/tracker.html?deploy=$CacheKey"; Contains = "vendor/tracker/react-18.3.1.production.min.js?v=" },
-        # Exercise the exact immutable URLs emitted into the release. A random
-        # deployment query can succeed while a previously cached 404 remains
-        # attached to the real commit-stamped asset URL.
+        @{ Path = "/about.html?deploy=$CacheKey"; Contains = "ABOUT THE PROJECT"; Excludes = @("ABOUT ME", "My Story", "Britain.", "MI6", "Metropolitan Police") },
+        # Immutable URLs are first checked through an attempt-specific probe.
+        # Only after the probe sees the new origin marker are the canonical
+        # commit-stamped URLs requested, preventing a stale origin response from
+        # being cached under a fresh immutable URL during Pages propagation.
         @{ Path = "/book-online.html?deploy=$CacheKey"; Contains = "book-online.css?v=$ReleaseMarker" },
-        @{ Path = "/book-online.css?v=$ReleaseMarker"; Contains = ".mission-plan-form" },
+        @{ Path = "/book-online.css?v=$ReleaseMarker"; Contains = ".mission-plan-form"; Immutable = $true },
         @{ Path = "/star-maps.html?deploy=$CacheKey"; Contains = "interactive-star-maps.js?v=$ReleaseMarker" },
-        @{ Path = "/interactive-star-maps.js?v=$ReleaseMarker"; Contains = "updateCanvasAccessibilityLabel" },
-        @{ Path = "/manifest.json?v=$ReleaseMarker"; Contains = "icon-192x192.png?v=$ReleaseMarker" },
-        @{ Path = "/images/icon-192x192.png?v=$ReleaseMarker"; Contains = $null },
-        @{ Path = "/images/icon-512x512.png?v=$ReleaseMarker"; Contains = $null },
+        @{ Path = "/interactive-star-maps.js?v=$ReleaseMarker"; Contains = "updateCanvasAccessibilityLabel"; Immutable = $true },
+        @{ Path = "/manifest.json?v=$ReleaseMarker"; Contains = "icon-192x192.png?v=$ReleaseMarker"; Immutable = $true },
+        @{ Path = "/images/icon-192x192.png?v=$ReleaseMarker"; Contains = $null; Immutable = $true },
+        @{ Path = "/images/icon-512x512.png?v=$ReleaseMarker"; Contains = $null; Immutable = $true },
         @{ Path = "/sitemap.xml?deploy=$CacheKey"; Contains = "galaxy-object-trading.html" }
     )
 
-    $MaximumAttempts = 12
+    $MaximumAttempts = 18
     $DelaySeconds = 10
     for ($Attempt = 1; $Attempt -le $MaximumAttempts; $Attempt++) {
         try {
             foreach ($Check in $Checks) {
-                $Url = "$BaseUrl$($Check.Path)"
+                $ProbePath = $Check.Path
+                if ($ProbePath.Contains("deploy=$CacheKey")) {
+                    $ProbePath = $ProbePath.Replace("deploy=$CacheKey", "deploy=$CacheKey-$Attempt")
+                }
+                else {
+                    $Separator = if ($ProbePath.Contains("?")) { "&" } else { "?" }
+                    $ProbePath = "${ProbePath}${Separator}deployProbe=$CacheKey-$Attempt"
+                }
+                $Url = "$BaseUrl$ProbePath"
                 $Response = Invoke-WebRequest -Uri $Url -UseBasicParsing -TimeoutSec 30 -Headers @{
                     "Cache-Control" = "no-cache"
                     "Pragma" = "no-cache"
@@ -91,9 +101,16 @@ function Invoke-ProductionHealthCheck {
                 if ($Check.Contains -and -not $Response.Content.Contains($Check.Contains)) {
                     throw "$Url did not contain the expected production marker."
                 }
+                if ($Check.Excludes) {
+                    foreach ($ForbiddenText in $Check.Excludes) {
+                        if ($Response.Content.IndexOf($ForbiddenText, [StringComparison]::OrdinalIgnoreCase) -ge 0) {
+                            throw "$Url still contained retired About-page content: $ForbiddenText"
+                        }
+                    }
+                }
             }
 
-            $HomeResponse = Invoke-WebRequest -Uri "$BaseUrl/?deploy=$CacheKey" -UseBasicParsing -TimeoutSec 30 -Headers @{
+            $HomeResponse = Invoke-WebRequest -Uri "$BaseUrl/?deploy=$CacheKey-$Attempt" -UseBasicParsing -TimeoutSec 30 -Headers @{
                 "Cache-Control" = "no-cache"
                 "Pragma" = "no-cache"
             }
@@ -108,7 +125,21 @@ function Invoke-ProductionHealthCheck {
                 }
             }
 
-            Write-Host "Production website checks passed: homepage, exact commit-stamped assets, PWA manifest, database, projects, breadcrumbs, sitemap, Rocket Loader exclusions, and stale-content gate verified."
+            foreach ($Check in @($Checks | Where-Object { $_.Immutable })) {
+                $Url = "$BaseUrl$($Check.Path)"
+                $Response = Invoke-WebRequest -Uri $Url -UseBasicParsing -TimeoutSec 30 -Headers @{
+                    "Cache-Control" = "no-cache"
+                    "Pragma" = "no-cache"
+                }
+                if ($Response.StatusCode -ne 200) {
+                    throw "$Url returned HTTP $($Response.StatusCode)"
+                }
+                if ($Check.Contains -and -not $Response.Content.Contains($Check.Contains)) {
+                    throw "$Url did not contain the expected immutable production marker."
+                }
+            }
+
+            Write-Host "Production website checks passed: homepage, privacy-safe About page, exact commit-stamped assets, PWA manifest, database, projects, breadcrumbs, sitemap, Rocket Loader exclusions, and stale-content gate verified."
             return
         }
         catch {
