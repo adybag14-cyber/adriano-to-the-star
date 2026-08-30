@@ -33,6 +33,7 @@ test.describe('Advanced Star Maps', () => {
 
     await page.locator('#star-map').press('v');
     await expect(page.locator('#stellar-map-projection')).toHaveValue('xz');
+    await expect(page.locator('#star-map')).toHaveAttribute('aria-label', /XZ projection/);
     await page.locator('#star-map').press('n');
     await expect(container).toHaveAttribute('data-star-map-selected', 'proxima');
     await expect(page.locator('#stellar-map-parallax')).toContainText('mas');

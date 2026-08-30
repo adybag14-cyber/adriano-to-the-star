@@ -502,6 +502,7 @@ class InteractiveStarMaps {
         const select = this.container?.querySelector('#stellar-map-projection');
         if (select) select.value = mode;
         this.camera = { x: 0, y: 0, zoom: this.camera.zoom };
+        this.updateCanvasAccessibilityLabel();
         this.announce(`${mode.toUpperCase()} projection selected.`);
         this.scheduleRender();
     }
@@ -826,11 +827,16 @@ class InteractiveStarMaps {
             : `Solar reference: d = 0 pc · L = 1 L☉ · simple HZ ≈ ${hzInner?.toFixed(2)}–${hzOuter?.toFixed(2)} AU.`);
         const education = this.container.querySelector('#stellar-map-education');
         education.href = `education.html?target=${encodeURIComponent(star.name)}`;
-        this.canvas.setAttribute('aria-label', `${star.name} selected in ${this.projectionMode.toUpperCase()} projection, ${star.distance.toLocaleString()} light-years away. Use N and P to change target or Enter to center.`);
+        this.updateCanvasAccessibilityLabel();
         this.renderObjectList();
         this.announce(`${star.name} selected. ${star.spectral}, ${star.distance.toLocaleString()} light-years, ${star.planets} known worlds.`);
         if (center) this.centerSelected();
         this.scheduleRender();
+    }
+
+    updateCanvasAccessibilityLabel() {
+        if (!this.canvas || !this.selected) return;
+        this.canvas.setAttribute('aria-label', `${this.selected.name} selected in ${this.projectionMode.toUpperCase()} projection, ${this.selected.distance.toLocaleString()} light-years away. Use N and P to change target or Enter to center.`);
     }
 
     centerSelected() {
