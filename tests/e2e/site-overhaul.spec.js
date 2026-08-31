@@ -59,7 +59,7 @@ test.describe('production site overhaul', () => {
     await expect(page.getByRole('link', { name: 'Privacy notice', exact: true })).toHaveAttribute('href', 'privacy.html');
   });
 
-  test('all 46 public pages load, expose metadata and breadcrumbs, and scroll without layout overflow', async ({ page }) => {
+  test('all 47 public pages load, expose one shared flight field, metadata and breadcrumbs, and scroll without layout overflow', async ({ page }) => {
     test.setTimeout(10 * 60 * 1000);
     for (const entry of SITE_PAGES) {
       const response = await page.goto(`/${entry.path}`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
@@ -68,6 +68,26 @@ test.describe('production site overhaul', () => {
       await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', canonicalUrl(entry));
       await expect(page.locator('meta[name="description"]')).toHaveCount(1);
       await expect(page.locator('.ita-breadcrumb')).toHaveCount(1);
+      await expect(page.locator('link[data-ita-universe-shell][href*="ita-universe-shell.css?v="]')).toHaveCount(1);
+      await expect(page.locator('script[data-ita-universe-shell][src*="ita-universe-shell.js?v="]')).toHaveCount(1);
+      await page.waitForFunction(() => window.__itaUniverseShellLoaded === true);
+      const flightField = page.locator('[data-ita-flight-field]');
+      await expect(flightField, `${entry.path} shared flight canvas`).toHaveCount(1);
+      await expect(flightField).toHaveAttribute('data-render-mode', 'forward-flight');
+      await expect(flightField).toHaveAttribute('data-motion', 'forward-z');
+      const flightMetrics = await flightField.evaluate(node => ({
+        position: getComputedStyle(node).position,
+        pointerEvents: getComputedStyle(node).pointerEvents,
+        width: node.width,
+        height: node.height,
+        stars: Number(node.dataset.starCount)
+      }));
+      expect(flightMetrics.position, `${entry.path} flight canvas position`).toBe('fixed');
+      expect(flightMetrics.pointerEvents, `${entry.path} flight canvas input isolation`).toBe('none');
+      expect(flightMetrics.width, `${entry.path} flight canvas width`).toBeGreaterThan(0);
+      expect(flightMetrics.height, `${entry.path} flight canvas height`).toBeGreaterThan(0);
+      expect(flightMetrics.stars, `${entry.path} flight star count`).toBeGreaterThanOrEqual(72);
+      expect(flightMetrics.stars, `${entry.path} flight star count`).toBeLessThanOrEqual(196);
       await page.evaluate(() => scrollTo(0, Math.floor(document.documentElement.scrollHeight / 2)));
       await page.waitForTimeout(25);
       await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight));
@@ -167,37 +187,66 @@ test.describe('production site overhaul', () => {
     await expect(page.locator('.passage-world')).toBeVisible();
     expect(sandyImageRequests).toEqual([]);
 
-    await expect(page.locator('#ita-cosmic-field')).toHaveCount(0);
-    await expect(page.locator('.ita-universe-fx')).toHaveCount(0);
-    await expect(page.locator('#stellar-field')).toHaveAttribute('data-render-mode', 'slow-deep-space');
-    await expect(page.locator('#stellar-field')).toHaveCSS('display', 'block');
+    await expect(page.locator('#stellar-field')).toHaveCount(0);
+    await expect(page.locator('#db-stellar-field')).toHaveCount(0);
+    await expect(page.locator('.ita-universe-fx')).toHaveCount(1);
+    await expect(page.locator('#ita-cosmic-field')).toHaveAttribute('data-render-mode', 'forward-flight');
+    await expect(page.locator('#ita-cosmic-field')).toHaveAttribute('data-motion', 'forward-z');
+    await expect(page.locator('#ita-cosmic-field')).toHaveCSS('display', 'block');
+    const firstFrame = await page.locator('#ita-cosmic-field').evaluate(node => node.toDataURL());
+    await page.waitForTimeout(350);
+    expect(await page.locator('#ita-cosmic-field').evaluate(node => node.toDataURL())).not.toBe(firstFrame);
     const canvas = await page.evaluate(() => {
-      const node = document.getElementById('stellar-field');
+      const node = document.getElementById('ita-cosmic-field');
       const pixels = node.getContext('2d').getImageData(0, 0, node.width, node.height).data;
       let paintedSamples = 0;
-      for (let index = 3; index < pixels.length; index += 256) {
+      for (let index = 3; index < pixels.length; index += 64) {
         if (pixels[index] > 0) paintedSamples += 1;
       }
-      return { paintedSamples, width: node.width, height: node.height };
+      return { paintedSamples, width: node.width, height: node.height, starCount: Number(node.dataset.starCount) };
     });
     expect(canvas.width).toBeGreaterThan(0);
     expect(canvas.height).toBeGreaterThan(0);
-    expect(canvas.paintedSamples).toBeGreaterThan(100);
+    expect(canvas.paintedSamples).toBeGreaterThan(20);
+    expect(canvas.starCount).toBeGreaterThanOrEqual(72);
   });
 
-  test('reduced motion keeps a static deep-space identity without animation loops', async ({ page }) => {
+  test('reduced motion keeps the forward-flight identity as one painted static frame', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/index.html', { waitUntil: 'domcontentloaded' });
     await page.waitForFunction(() => window.__itaUniverseShellLoaded === true);
-    const canvas = page.locator('#stellar-field');
-    await expect(canvas).toHaveAttribute('data-render-mode', 'static-deep-space');
+    const canvas = page.locator('#ita-cosmic-field');
+    await expect(canvas).toHaveAttribute('data-render-mode', 'static-starfield');
+    await expect(canvas).toHaveAttribute('data-motion', 'forward-z');
     await expect(canvas).toHaveCSS('display', 'block');
-    await expect(page.locator('.atmosphere-a')).toHaveCSS('animation-name', 'none');
+    await expect(page.locator('#stellar-field')).toHaveCount(0);
     await expect(page.locator('.passage-nebula')).toHaveCSS('animation-name', 'none');
     const firstFrame = await canvas.evaluate(node => node.toDataURL());
     await page.waitForTimeout(250);
     expect(await canvas.evaluate(node => node.toDataURL())).toBe(firstFrame);
-    await expect(page.locator('#ita-cosmic-field')).toHaveCount(0);
+    await expect(page.locator('[data-ita-flight-field]')).toHaveCount(1);
+  });
+
+  test('a live reduced-motion preference change pauses and resumes the shared renderer', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    await page.goto('/privacy.html', { waitUntil: 'domcontentloaded' });
+    const canvas = page.locator('#ita-cosmic-field');
+    await expect(canvas).toHaveAttribute('data-render-mode', 'forward-flight');
+    const movingFrame = await canvas.evaluate(node => node.toDataURL());
+    await page.waitForTimeout(300);
+    expect(await canvas.evaluate(node => node.toDataURL())).not.toBe(movingFrame);
+
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await expect(canvas).toHaveAttribute('data-render-mode', 'static-starfield');
+    const staticFrame = await canvas.evaluate(node => node.toDataURL());
+    await page.waitForTimeout(300);
+    expect(await canvas.evaluate(node => node.toDataURL())).toBe(staticFrame);
+
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    await expect(canvas).toHaveAttribute('data-render-mode', 'forward-flight');
+    const resumedFrame = await canvas.evaluate(node => node.toDataURL());
+    await page.waitForTimeout(300);
+    expect(await canvas.evaluate(node => node.toDataURL())).not.toBe(resumedFrame);
   });
 
   test('landing theme menu supports keyboard-ready selection and persistence', async ({ page }) => {
@@ -207,18 +256,92 @@ test.describe('production site overhaul', () => {
     await expect(toggle).toHaveAttribute('aria-haspopup', 'menu');
     await toggle.click();
     await expect(page.locator('#theme-selector-menu')).toBeVisible();
+    expect(await page.locator('#theme-toggle-container').innerText()).not.toMatch(/[\p{Extended_Pictographic}\p{Emoji_Presentation}]/u);
+    await expect(page.locator('.theme-option .theme-icon')).toHaveCount(2);
+    for (const icon of await page.locator('.theme-option .theme-icon').all()) await expect(icon).toHaveAttribute('aria-hidden', 'true');
+    const cosmicVisual = await page.evaluate(() => ({
+      background: getComputedStyle(document.body).backgroundColor,
+      accent: getComputedStyle(document.documentElement).getPropertyValue('--ita-cyan').trim(),
+      fieldOpacity: getComputedStyle(document.getElementById('ita-cosmic-field')).opacity
+    }));
     await page.locator('.theme-option[data-theme="dark"]').click();
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
     await expect(toggle).toHaveAttribute('aria-label', /Current theme: Deep contrast/);
+    await expect.poll(() => page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe('rgb(0, 0, 0)');
+    const contrastVisual = await page.evaluate(() => ({
+      background: getComputedStyle(document.body).backgroundColor,
+      accent: getComputedStyle(document.documentElement).getPropertyValue('--ita-cyan').trim(),
+      fieldOpacity: getComputedStyle(document.getElementById('ita-cosmic-field')).opacity
+    }));
+    expect(contrastVisual).not.toEqual(cosmicVisual);
+    expect(contrastVisual.accent).not.toBe(cosmicVisual.accent);
+    expect(Number(contrastVisual.fieldOpacity)).toBeGreaterThan(Number(cosmicVisual.fieldOpacity));
     await page.reload({ waitUntil: 'domcontentloaded' });
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+    await expect.poll(() => page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe('rgb(0, 0, 0)');
     await page.locator('#theme-toggle-btn').click();
     await page.locator('.theme-option[data-theme="cosmic"]').click();
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'cosmic');
+    await expect.poll(() => page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe('rgb(1, 2, 8)');
     for (const route of ['/education.html', '/projects.html', '/stellar-ai.html']) {
       await page.goto(route, { waitUntil: 'domcontentloaded' });
       await expect(page.locator('#theme-toggle-btn'), `${route} theme control`).toBeVisible();
       await expect(page.locator('html')).toHaveAttribute('data-theme', 'cosmic');
+    }
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/database.html', { waitUntil: 'domcontentloaded' });
+    await expect(page.locator('#theme-toggle-btn')).toBeVisible();
+    const mobileThemeBox = await page.locator('#theme-toggle-btn').boundingBox();
+    expect(mobileThemeBox?.width).toBeGreaterThanOrEqual(44);
+    expect(mobileThemeBox?.width).toBeLessThanOrEqual(52);
+    expect(mobileThemeBox?.height).toBeGreaterThanOrEqual(44);
+    expect(mobileThemeBox?.height).toBeLessThanOrEqual(52);
+    await expect(page.locator('#theme-toggle-btn')).toHaveCSS('border-radius', '50%');
+    await page.locator('#theme-toggle-btn').click();
+    await page.locator('.theme-option[data-theme="dark"]').click();
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+    await expect.poll(() => page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe('rgb(0, 0, 0)');
+    const mobileControlsOverlap = await page.evaluate(() => {
+      const theme = document.getElementById('theme-toggle-btn').getBoundingClientRect();
+      const player = document.getElementById('cosmic-music-player').getBoundingClientRect();
+      return theme.left < player.right && theme.right > player.left && theme.top < player.bottom && theme.bottom > player.top;
+    });
+    expect(mobileControlsOverlap).toBe(false);
+    await page.locator('#minimize-player').click();
+    await expect(page.locator('#player-content')).toBeVisible();
+    await expect(page.locator('#minimize-player')).not.toHaveClass(/is-minimized/);
+    const mobilePlayerGeometry = await page.evaluate(() => {
+      const box = id => {
+        const rect = document.getElementById(id).getBoundingClientRect();
+        return { width: rect.width, height: rect.height };
+      };
+      const theme = document.getElementById('theme-toggle-btn').getBoundingClientRect();
+      const player = document.getElementById('cosmic-music-player').getBoundingClientRect();
+      return {
+        minimize: box('minimize-player'), previous: box('prev-track'), play: box('play-pause'), next: box('next-track'), loop: box('loop-toggle'),
+        overlapsTheme: theme.left < player.right && theme.right > player.left && theme.top < player.bottom && theme.bottom > player.top
+      };
+    });
+    expect(mobilePlayerGeometry.minimize.width).toBe(38);
+    expect(mobilePlayerGeometry.minimize.height).toBe(38);
+    expect(mobilePlayerGeometry.previous.width).toBe(40);
+    expect(mobilePlayerGeometry.previous.height).toBe(40);
+    expect(mobilePlayerGeometry.play.width).toBe(48);
+    expect(mobilePlayerGeometry.play.height).toBe(48);
+    expect(mobilePlayerGeometry.next.width).toBe(40);
+    expect(mobilePlayerGeometry.next.height).toBe(40);
+    expect(mobilePlayerGeometry.loop.width).toBe(18);
+    expect(mobilePlayerGeometry.loop.height).toBe(18);
+    expect(mobilePlayerGeometry.overlapsTheme).toBe(false);
+  });
+
+  test('phase-one primary headings are free of decorative emoji', async ({ page }) => {
+    for (const route of [
+      '/ai-metrics-dashboard.html', '/ai-predictions.html', '/blog.html', '/book-online.html', '/dashboard.html',
+      '/database-analytics.html', '/file-storage.html', '/messaging.html', '/secure-chat.html', '/stellar-ai.html'
+    ]) {
+      await page.goto(route, { waitUntil: 'domcontentloaded' });
+      expect(await page.locator('h1').first().innerText(), route).not.toMatch(/[\p{Extended_Pictographic}\p{Emoji_Presentation}]/u);
     }
   });
 
@@ -290,6 +413,10 @@ test.describe('production site overhaul', () => {
     await expect(page.locator('#bonsai-local-panel')).toBeVisible();
     await expect(page.locator('#cosmic-music-player')).toBeVisible();
     await expect(page.locator('#theme-toggle-btn')).toBeVisible();
+    expect(await page.locator('.ita-player-brand').innerText()).not.toMatch(/[\p{Extended_Pictographic}\p{Emoji_Presentation}]/u);
+    expect(await page.locator('.ita-player-volume-row').innerText()).not.toMatch(/[\p{Extended_Pictographic}\p{Emoji_Presentation}]/u);
+    expect(await page.locator('#download-track').innerText()).not.toMatch(/[\p{Extended_Pictographic}\p{Emoji_Presentation}]/u);
+    await expect(page.locator('.ita-player-icon')).not.toHaveCount(0);
     expect(modelRequests).toEqual([]);
     const boxes = await page.evaluate(() => {
       const ids = ['model-selector', 'metrics-btn', 'clear-chat-btn', 'export-chat-btn', 'message-input', 'send-btn'];

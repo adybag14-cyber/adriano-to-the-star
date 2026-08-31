@@ -52,6 +52,10 @@ jobs:
           node --check scripts/audit-production-pages.mjs
           node --check scripts/check-current-tree-secrets.mjs
           node --check projects.js
+          node --check ita-universe-shell.js
+          node --check navigation.js
+          node --check theme-toggle.js
+          node --check cosmic-music-player.js
           node --check scripts/pioneer-playwright-workload.mjs
           node --check scripts/pioneer-advanced-rendering-smoke.mjs
           node --check tests/e2e/smoke-functional.spec.js

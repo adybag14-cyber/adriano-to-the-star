@@ -29,7 +29,7 @@ The generated snapshot must pass the same Pages build and browser workloads befo
 - The full repository ESLint gate and a zero-known-vulnerability `npm audit --audit-level=low` gate.
 - The 39-test Jest regression suite with coverage.
 - The exact `build-pages.ps1` artifact used by GitLab Pages.
-- The 37-test production-artifact Playwright suite: critical endpoint and control smoke; all-route desktop/mobile metadata, breadcrumb and overflow coverage; Spanish/English round trips; landing theme selection and persistence; local platform flows; privacy and tracker behavior; Pioneer and Star Maps upgrades; and WCAG 2.2 AA Axe audits of every non-redirect production page at desktop and mobile viewports.
+- The 43-test production-artifact Playwright suite: critical endpoint and control smoke; all-route desktop/mobile metadata, breadcrumb, single-flight-renderer and overflow coverage; Spanish/English round trips; visual theme selection and persistence; live reduced-motion changes; local platform flows; privacy and tracker behavior; Pioneer and Star Maps upgrades; and WCAG 2.2 AA Axe audits of every non-redirect production page at desktop and mobile viewports.
 - The full current 370-assertion Pioneer Playwright workload, including combat, navigation, economy, rendering and first-party request gates.
 - The advanced graphics/local-system browser smoke, including WebGL2 ray tracing and progressive path tracing.
 - The five-request generated Pioneer startup bundle shape, including the shared site runtime.

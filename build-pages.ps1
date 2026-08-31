@@ -413,6 +413,8 @@ $RequiredFiles = @(
     "site-experience.css",
     "experimental-lab.css",
     "ita-music-player.css",
+    "ita-universe-shell.css",
+    "ita-universe-shell.js",
     "i18n.js",
     "i18n-styles.css",
     "auth-local.js",

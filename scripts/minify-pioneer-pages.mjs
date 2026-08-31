@@ -27,6 +27,7 @@ while ((match = scriptTagPattern.exec(html)) !== null) {
     const attributes = `${match[1]} ${match[4]}`;
     const parsed = parseLocalSource(match[3]);
     if (!parsed) continue;
+    if (parsed.cleanSource === 'ita-universe-shell.js') continue;
     if (/\.pioneer\.min\.js$/i.test(parsed.cleanSource)) continue;
 
     const absolutePath = path.resolve(publicRoot, parsed.cleanSource);

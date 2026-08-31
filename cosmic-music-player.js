@@ -49,6 +49,13 @@
     .replaceAll('>', '&gt;')
     .replaceAll('"', '&quot;')
     .replaceAll("'", '&#039;');
+  const ICONS = {
+    previous: '<svg class="ita-player-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 5v14M18 6l-9 6 9 6z"/></svg>',
+    playPause: '<svg class="ita-player-icon ita-icon-play" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="ita-icon-fill" d="M8 5l11 7-11 7z"/></svg><svg class="ita-player-icon ita-icon-pause" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="ita-icon-fill" d="M7 5h4v14H7zM14 5h4v14h-4z"/></svg>',
+    next: '<svg class="ita-player-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M18 5v14M6 6l9 6-9 6z"/></svg>',
+    volume: '<svg class="ita-player-icon ita-player-icon--volume" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 10v4h4l5 4V6l-5 4H5zM17 9c1.6 1.6 1.6 4.4 0 6M19 6.5c3 3 3 8 0 11"/></svg>',
+    download: '<svg class="ita-player-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 4v11M8 11l4 4 4-4M5 19h14"/></svg>'
+  };
 
   class CosmicMusicPlayer {
     constructor() {
@@ -141,7 +148,7 @@
       player.style.width = this.isMinimized ? '180px' : '320px';
       player.innerHTML = `
         <div class="ita-player-header">
-          <div class="ita-player-brand"><span aria-hidden="true">🎵</span><span class="ita-player-title">Cosmic Playlist</span></div>
+          <div class="ita-player-brand"><span class="ita-player-signal" aria-hidden="true"><i></i><i></i><i></i></span><span class="ita-player-title">Cosmic Playlist</span></div>
           <button id="minimize-player" type="button" aria-controls="player-content"></button>
         </div>
         <div id="player-content">
@@ -154,18 +161,18 @@
             <span id="duration">0:00</span>
           </div>
           <div class="ita-player-transport">
-            <button id="prev-track" type="button" aria-label="Previous track">⏮</button>
-            <button id="play-pause" type="button" aria-label="Play">▶</button>
-            <button id="next-track" type="button" aria-label="Next track">⏭</button>
+            <button id="prev-track" type="button" aria-label="Previous track">${ICONS.previous}</button>
+            <button id="play-pause" type="button" aria-label="Play">${ICONS.playPause}</button>
+            <button id="next-track" type="button" aria-label="Next track">${ICONS.next}</button>
           </div>
           <div class="ita-player-volume-row">
-            <span aria-hidden="true">🔊</span>
+            ${ICONS.volume}
             <label class="sr-only" for="volume-control">Playlist volume</label>
             <input id="volume-control" type="range" min="0" max="100" value="${Math.round(this.audio.volume * 100)}" aria-label="Playlist volume">
             <span id="volume-display">${Math.round(this.audio.volume * 100)}%</span>
           </div>
           <label class="ita-player-loop"><input type="checkbox" id="loop-toggle" ${this.loop ? 'checked' : ''}> Loop playlist</label>
-          <button id="download-track" type="button" aria-label="Download current track">⬇️ <span>Download track</span></button>
+          <button id="download-track" type="button" aria-label="Download current track">${ICONS.download}<span>Download track</span></button>
           <div id="playlist-container" role="group" aria-label="Cosmic Playlist tracks"></div>
         </div>`;
       // Apply the initial compact state before insertion so a mobile visitor
@@ -178,7 +185,7 @@
         initialContent.style.display = this.isMinimized ? 'none' : 'block';
       }
       if (initialToggle) {
-        initialToggle.textContent = this.isMinimized ? '+' : '−';
+        initialToggle.classList.toggle('is-minimized', this.isMinimized);
         initialToggle.setAttribute('aria-expanded', String(!this.isMinimized));
         initialToggle.setAttribute('aria-label', this.isMinimized ? 'Expand Cosmic Playlist' : 'Collapse Cosmic Playlist');
       }
@@ -360,7 +367,7 @@
       if (!content || !button || !player) return;
       content.hidden = this.isMinimized;
       content.style.display = this.isMinimized ? 'none' : 'block';
-      button.textContent = this.isMinimized ? '+' : '−';
+      button.classList.toggle('is-minimized', this.isMinimized);
       button.setAttribute('aria-expanded', String(!this.isMinimized));
       button.setAttribute('aria-label', this.isMinimized ? 'Expand Cosmic Playlist' : 'Collapse Cosmic Playlist');
       player.style.width = this.isMinimized ? '180px' : '320px';
@@ -388,7 +395,7 @@
       const button = this.$('play-pause');
       if (!button) return;
       const playing = !this.audio.paused && !this.audio.ended;
-      button.textContent = playing ? '⏸' : '▶';
+      button.classList.toggle('is-playing', playing);
       button.setAttribute('aria-label', playing ? 'Pause' : 'Play');
       button.setAttribute('aria-pressed', String(playing));
     }

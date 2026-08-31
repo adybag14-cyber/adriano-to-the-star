@@ -45,11 +45,15 @@ function Invoke-ProductionHealthCheck {
     $Checks = @(
         @{ Path = "/?deploy=$CacheKey"; Contains = 'data-release="2026-07-ita-experience"' },
         @{ Path = "/?deploy=$CacheKey"; Contains = "landing.css?v=$ReleaseMarker" },
+        @{ Path = "/?deploy=$CacheKey"; Contains = "ita-universe-shell.js?v=$ReleaseMarker" },
         @{ Path = "/?deploy=$CacheKey"; Contains = "passage-cosmos" },
         @{ Path = "/landing.css?deploy=$CacheKey"; Contains = "--landing-cta-ink" },
         @{ Path = "/landing.css?v=$ReleaseMarker"; Contains = "--landing-cta-ink" },
-        @{ Path = "/landing-experience.js?deploy=$CacheKey"; Contains = "static-deep-space" },
-        @{ Path = "/landing-experience.js?v=$ReleaseMarker"; Contains = "static-deep-space" },
+        @{ Path = "/ita-universe-shell.js?deploy=$CacheKey"; Contains = "forward-flight" },
+        @{ Path = "/ita-universe-shell.js?v=$ReleaseMarker"; Contains = "forward-z" },
+        @{ Path = "/ita-universe-shell.css?v=$ReleaseMarker"; Contains = "contain: strict" },
+        @{ Path = "/cosmic-music-player.js?v=$ReleaseMarker"; Contains = "ita-icon-play" },
+        @{ Path = "/theme-toggle.js?v=$ReleaseMarker"; Contains = "theme-toggle-glyph" },
         @{ Path = "/ita-music-player.css?deploy=$CacheKey"; Contains = "MISSION AUDIO" },
         @{ Path = "/i18n.js?deploy=$CacheKey"; Contains = "ita-language-switcher" },
         @{ Path = "/i18n.js?deploy=$CacheKey"; Contains = "assetVersion" },
@@ -129,7 +133,7 @@ function Invoke-ProductionHealthCheck {
                 }
             }
 
-            Write-Host "Production website checks passed: homepage, landing contrast/deep-space markers, privacy-safe About page, commit-stamped asset probes, PWA manifest, database, projects, breadcrumbs, sitemap, Rocket Loader exclusions, and stale-content gate verified."
+            Write-Host "Production website checks passed: homepage, forward-flight background, emoji-free shared control markers, landing contrast, privacy-safe About page, commit-stamped asset probes, PWA manifest, database, projects, breadcrumbs, sitemap, Rocket Loader exclusions, and stale-content gate verified."
             return
         }
         catch {

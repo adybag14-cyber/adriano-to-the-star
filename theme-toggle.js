@@ -20,13 +20,11 @@ class ThemeToggle {
         this.themes = {
             cosmic: {
                 name: 'Cosmic',
-                icon: '✨',
                 class: 'theme-cosmic',
                 description: 'Deep space theme with cyan, blue, and violet'
             },
             dark: {
                 name: 'Deep contrast',
-                icon: '🌙',
                 class: 'theme-dark',
                 description: 'Higher-contrast version of the deep-space theme'
             }
@@ -106,12 +104,13 @@ class ThemeToggle {
 
         selector.querySelectorAll('.theme-option').forEach(option => {
             const theme = option.dataset.theme;
+            option.setAttribute('aria-checked', String(theme === this.currentTheme));
             if (theme === this.currentTheme) {
                 option.classList.add('active');
                 if (!option.querySelector('.checkmark')) {
                     const checkmark = document.createElement('span');
                     checkmark.className = 'checkmark';
-                    checkmark.textContent = '✓';
+                    checkmark.setAttribute('aria-hidden', 'true');
                     option.appendChild(checkmark);
                 }
             } else {
@@ -194,9 +193,9 @@ class ThemeToggle {
                             role="menuitemradio"
                             aria-checked="${this.currentTheme === key ? 'true' : 'false'}"
                             title="${theme.description}">
-                        <span class="theme-icon">${theme.icon}</span>
+                        <span class="theme-icon theme-icon--${key}" aria-hidden="true"></span>
                         <span class="theme-name">${theme.name}</span>
-                        ${this.currentTheme === key ? '<span class="checkmark">✓</span>' : ''}
+                        ${this.currentTheme === key ? '<span class="checkmark" aria-hidden="true"></span>' : ''}
                     </button>
                 `).join('')}
             </div>
@@ -265,7 +264,12 @@ class ThemeToggle {
         const theme = this.themes[this.currentTheme];
         const nextThemeInfo = this.themes[nextTheme];
 
-        btn.innerHTML = theme.icon;
+        btn.replaceChildren();
+        const glyph = document.createElement('span');
+        glyph.className = `theme-toggle-glyph theme-toggle-glyph--${this.currentTheme}`;
+        glyph.setAttribute('aria-hidden', 'true');
+        btn.appendChild(glyph);
+        btn.dataset.theme = this.currentTheme;
         btn.setAttribute('title', `Switch to ${nextThemeInfo.name.toLowerCase()} theme`);
         btn.setAttribute('aria-label', `Current theme: ${theme.name}. Click to switch to ${nextThemeInfo.name}`);
     }
@@ -293,6 +297,7 @@ class ThemeToggle {
         if (this.themes[theme]) {
             this.applyTheme(theme);
             this.updateToggleButton();
+            this.updateThemeSelector();
         }
     }
 }

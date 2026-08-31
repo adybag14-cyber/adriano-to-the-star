@@ -1,11 +1,22 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { SITE_PAGES, canonicalUrl } from './site-pages.mjs';
+import { FLIGHT_EXEMPT_PAGES, SITE_PAGES, canonicalUrl } from './site-pages.mjs';
 
 const publicRoot = path.resolve(process.argv[2] || 'public');
 const failures = [];
 const fail = message => failures.push(message);
 const count = (text, pattern) => (text.match(pattern) || []).length;
+
+async function listHtmlFiles(directory, prefix = '') {
+  const entries = await fs.readdir(directory, { withFileTypes: true });
+  const files = [];
+  for (const entry of entries) {
+    const relative = prefix ? `${prefix}/${entry.name}` : entry.name;
+    if (entry.isDirectory()) files.push(...await listHtmlFiles(path.join(directory, entry.name), relative));
+    else if (entry.isFile() && entry.name.toLowerCase().endsWith('.html')) files.push(relative);
+  }
+  return files;
+}
 
 for (const page of SITE_PAGES) {
   const file = path.join(publicRoot, ...page.path.split('/'));
@@ -13,6 +24,7 @@ for (const page of SITE_PAGES) {
   try { html = await fs.readFile(file, 'utf8'); }
   catch { fail(`${page.path}: missing from production artifact`); continue; }
   const prefix = page.path.includes('/') ? '../' : '';
+  const assetPrefix = prefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const expectedCanonical = canonicalUrl(page).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const checks = [
     [count(html, /<body\b/gi) === 1, 'must have one body'],
@@ -29,16 +41,48 @@ for (const page of SITE_PAGES) {
     [!html.includes('/html/head/title'), 'malformed speakable XPath remains crawlable'],
     [html.includes(`href="${prefix}site-experience.css?`), 'shared experience stylesheet is missing or unversioned'],
     [html.includes(`href="${prefix}i18n-styles.css?`), 'i18n stylesheet is missing or unversioned'],
+    [count(html, new RegExp(`<link\\b[^>]*(?:href="${assetPrefix}ita-universe-shell\\.css\\?v=[^"]+"[^>]*data-ita-universe-shell|data-ita-universe-shell[^>]*href="${assetPrefix}ita-universe-shell\\.css\\?v=[^"]+")`, 'gi')) === 1, 'must have one versioned shared flight stylesheet'],
+    [count(html, new RegExp(`<script\\b[^>]*(?:src="${assetPrefix}ita-universe-shell\\.js\\?v=[^"]+"[^>]*data-ita-universe-shell|data-ita-universe-shell[^>]*src="${assetPrefix}ita-universe-shell\\.js\\?v=[^"]+")`, 'gi')) === 1, 'must have one versioned shared flight runtime'],
     [['exoplanet-pioneer.html', 'starsector.html'].includes(page.path) || /src="(?:\.\.\/)?i18n\.js\?v=/.test(html), 'i18n runtime is missing or unversioned'],
     [!/<script\b[^>]*src="(?!https?:|\/\/|data:)[^"]+\.js/i.test(html) || html.includes('data-cfasync="false"'), 'local scripts are not protected from Rocket Loader reordering']
   ];
   for (const [valid, message] of checks) if (!valid) fail(`${page.path}: ${message}`);
+  for (const match of html.matchAll(/<h1\b[^>]*>([\s\S]*?)<\/h1>/gi)) {
+    const text = match[1].replace(/<[^>]+>/g, '');
+    if (/[\u2600-\u27BF\u{1F300}-\u{1FAFF}]/u.test(text)) fail(`${page.path}: primary h1 contains a decorative emoji`);
+  }
   const robots = html.match(/<meta\b[^>]*name="robots"[^>]*content="([^"]+)"/i)?.[1] || '';
   if (page.indexable && !robots.includes('index,follow')) fail(`${page.path}: indexable page is not index,follow`);
   if (!page.indexable && !robots.includes('noindex,follow')) fail(`${page.path}: utility/redirect page is not noindex,follow`);
   for (const match of html.matchAll(/<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)) {
     try { JSON.parse(match[1]); } catch (error) { fail(`${page.path}: invalid JSON-LD (${error.message})`); }
   }
+}
+
+const governedPages = new Set(SITE_PAGES.map(page => page.path));
+const flightExemptions = new Map(FLIGHT_EXEMPT_PAGES.map(page => [page.path, page.reason]));
+const allHtmlFiles = await listHtmlFiles(publicRoot);
+for (const relativePath of allHtmlFiles) {
+  if (governedPages.has(relativePath)) continue;
+  const html = await fs.readFile(path.join(publicRoot, ...relativePath.split('/')), 'utf8');
+  const reason = flightExemptions.get(relativePath);
+  if (!reason) {
+    fail(`${relativePath}: HTML document is not classified as a governed public route or an approved rendering exemption`);
+    continue;
+  }
+  const escapedReason = reason.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  if (count(html, new RegExp(`<meta\\b[^>]*name="ita-flight-exempt"[^>]*content="${escapedReason}"|<meta\\b[^>]*content="${escapedReason}"[^>]*name="ita-flight-exempt"`, 'gi')) !== 1) {
+    fail(`${relativePath}: approved flight exemption marker is missing or duplicated`);
+  }
+  if (count(html, /<script\b[^>]*src="[^"]*ita-universe-shell\.js(?:\?[^"']*)?"/gi) !== 0) {
+    fail(`${relativePath}: rendering-exempt document must not load the shared flight runtime`);
+  }
+  if (count(html, /<link\b[^>]*href="[^"]*ita-universe-shell\.css(?:\?[^"']*)?"/gi) !== 0) {
+    fail(`${relativePath}: rendering-exempt document must not load the shared flight stylesheet`);
+  }
+}
+for (const { path: relativePath } of FLIGHT_EXEMPT_PAGES) {
+  if (!allHtmlFiles.includes(relativePath)) fail(`${relativePath}: declared flight exemption is missing from the artifact`);
 }
 
 const sitemapText = await fs.readFile(path.join(publicRoot, 'sitemap.xml'), 'utf8');
@@ -125,4 +169,4 @@ if (failures.length) {
   failures.forEach(message => console.error(` - ${message}`));
   process.exit(1);
 }
-console.log(`Production page audit passed: ${SITE_PAGES.length} pages, ${expectedUrls.length} sitemap URLs, visible breadcrumbs, metadata, versioned i18n, and project targets.`);
+console.log(`Production page audit passed: ${SITE_PAGES.length} shared-flight pages, ${FLIGHT_EXEMPT_PAGES.length} classified renderer/redirect exemptions, ${expectedUrls.length} sitemap URLs, visible breadcrumbs, metadata, versioned i18n, and project targets.`);

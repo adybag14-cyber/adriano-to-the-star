@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
-import { SITE_ORIGIN, SITE_PAGES, canonicalUrl } from './site-pages.mjs';
+import { FLIGHT_EXEMPT_PAGES, SITE_ORIGIN, SITE_PAGES, canonicalUrl } from './site-pages.mjs';
 
 const publicRoot = path.resolve(process.argv[2] || 'public');
 const legacyMegaEnginePattern = /\s*(?:<!--\s*MASTER MEGA-ENGINE ARCHITECTURE\s*-->)?\s*<script\b[^>]*src=["']\/?(?:universal-simulation-hub|void-warfare-engine|planetary-environment-engine|galactic-governance-engine|mining-resource-engine|xeno-intelligence-engine|quantum-propulsion-engine|intelligence-shadow-engine|fleet-command-mega-engine|deep-space-industry-engine|procedural-content-engine|galactic-commerce-engine|metaphysics-apotheosis-engine)\.js(?:\?[^"']*)?["'][^>]*><\/script>/gi;
@@ -61,7 +61,7 @@ function headMetadata(page) {
   const url = canonicalUrl(page);
   const prefix = page.path.includes('/') ? '../' : '';
   const robots = page.indexable ? 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1' : 'noindex,follow';
-  return [
+  const metadata = [
     '<meta name="ita-production-metadata" content="2026-08-30">',
     `<meta name="description" content="${escapeHtml(page.description)}">`,
     `<meta name="robots" content="${robots}">`,
@@ -85,8 +85,16 @@ function headMetadata(page) {
     '<meta name="twitter:image:alt" content="Adriano To The Star deep-space research interface">',
     `<link rel="stylesheet" href="${prefix}site-experience.css">`,
     `<link rel="stylesheet" href="${prefix}i18n-styles.css">`,
-    `<link rel="stylesheet" href="${prefix}ita-music-player.css">`
-  ].join('\n    ');
+    `<link rel="stylesheet" href="${prefix}ita-music-player.css">`,
+    `<link rel="stylesheet" href="${prefix}ita-universe-shell.css" data-ita-universe-shell>`
+  ];
+  // Pioneer consolidates its own ordered startup graph. Keep the shared visual
+  // shell independent and load it after that graph instead of bundling it into
+  // the simulation's systems payload.
+  if (page.path !== 'exoplanet-pioneer.html') {
+    metadata.push(`<script src="${prefix}ita-universe-shell.js" defer data-ita-universe-shell></script>`);
+  }
+  return metadata.join('\n    ');
 }
 
 function breadcrumbFor(page, floating = false) {
@@ -156,7 +164,8 @@ async function transformPage(page) {
   html = removeHeadTag(html, /\s*<meta\b[^>]*name=["']twitter:(?:card|title|description|image)["'][^>]*>/gi);
   html = removeHeadTag(html, /\s*<meta\b[^>]*name=["'](?:theme-color|color-scheme)["'][^>]*>/gi);
   html = removeHeadTag(html, /\s*<link\b[^>]*rel=["']canonical["'][^>]*>/gi);
-  html = removeHeadTag(html, /\s*<link\b[^>]*href=["'](?:\.\.\/)?(?:site-experience|i18n-styles|ita-music-player)\.css(?:\?[^"']*)?["'][^>]*>/gi);
+  html = removeHeadTag(html, /\s*<link\b[^>]*href=["'](?:\.\.\/)?(?:site-experience|i18n-styles|ita-music-player|ita-universe-shell)\.css(?:\?[^"']*)?["'][^>]*>/gi);
+  html = removeHeadTag(html, /\s*<script\b[^>]*src=["'](?:\.\.\/)?ita-universe-shell\.js(?:\?[^"']*)?["'][^>]*><\/script>/gi);
   html = removeHeadTag(html, /\s*<meta\b[^>]*name=["']ita-production-metadata["'][^>]*>/gi);
   html = html.replace(/<\/head>/i, `    ${headMetadata(page)}\n</head>`);
   html = refreshBodyClass(html, page);
@@ -182,6 +191,9 @@ async function transformPage(page) {
     const prefix = page.path.includes('/') ? '../' : '';
     html = html.replace(/<\/body>/i, `  <script src="${prefix}site-runtime.js" defer></script>\n</body>`);
   }
+  if (page.path === 'exoplanet-pioneer.html' && !/(?:src=["']ita-universe-shell\.js(?:\?|["']))/i.test(html)) {
+    html = html.replace(/<\/body>/i, '  <script src="ita-universe-shell.js" defer data-ita-universe-shell></script>\n</body>');
+  }
   await fs.writeFile(file, html, 'utf8');
 }
 
@@ -189,6 +201,7 @@ await Promise.all(SITE_PAGES.map(transformPage));
 
 const experimentalPages = [
   ['experimental/webgpu-galaxy/galaxy-sim.html', 'Browser-local WebGPU compute; no application backend.'],
+  ['experimental/webgpu-galaxy/nebula-sim.html', 'Browser-local WebGPU nebula renderer; no application backend.'],
   ['experimental/procedural-planets/index.html', 'Browser-local WebGL scene with versioned external Three.js modules.'],
   ['experimental/fluid-nebula/index.html', 'Browser-local Canvas 2D particle simulation; no application backend.'],
   ['experimental/sentient-browser/hal-interface.html', 'WebGPU or network-assisted AI experiment; remote inference is operated separately from this website release.'],
@@ -216,6 +229,14 @@ await Promise.all(experimentalPages.map(async ([relativePath, disclosure]) => {
   await fs.writeFile(file, html, 'utf8');
 }));
 
+await Promise.all(FLIGHT_EXEMPT_PAGES.map(async ({ path: relativePath, reason }) => {
+  const file = path.join(publicRoot, ...relativePath.split('/'));
+  let html = await fs.readFile(file, 'utf8');
+  html = removeHeadTag(html, /\s*<meta\b[^>]*name=["']ita-flight-exempt["'][^>]*>/gi);
+  html = html.replace(/<\/head>/i, `  <meta name="ita-flight-exempt" content="${escapeHtml(reason)}">\n</head>`);
+  await fs.writeFile(file, html, 'utf8');
+}));
+
 const lastmod = releaseDate();
 const sitemapPages = SITE_PAGES.filter(page => page.indexable);
 function gitLastModified(page) {
@@ -234,4 +255,4 @@ const sitemapIndex = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmln
 await fs.writeFile(path.join(publicRoot, 'sitemap.xml'), sitemap, 'utf8');
 await fs.writeFile(path.join(publicRoot, 'sitemap_index.xml'), sitemapIndex, 'utf8');
 
-console.log(`Prepared ${SITE_PAGES.length} public pages, ${experimentalPages.length} bounded project labs, and ${sitemapPages.length} indexable sitemap URLs for ${lastmod}.`);
+console.log(`Prepared ${SITE_PAGES.length} public pages, ${experimentalPages.length} bounded project labs, ${FLIGHT_EXEMPT_PAGES.length} explicit flight-rendering exemptions, and ${sitemapPages.length} indexable sitemap URLs for ${lastmod}.`);

@@ -1,5 +1,28 @@
 export const SITE_ORIGIN = 'https://adrianotothestar.com';
 
+// Standalone renderers and zero-duration redirects intentionally do not run the
+// shared flight animation. Each owns its full viewport or immediately hands off;
+// a second background RAF would add work without becoming visible.
+export const FLIGHT_EXEMPT_PAGES = [
+  ['analysis/plots/hiv_southern_africa_choropleth.html', 'generated-data-visualization'],
+  ['experimental/connected-cosmos/cosmic-radio.html', 'self-contained-browser-lab'],
+  ['experimental/connected-cosmos/p2p-network.html', 'self-contained-browser-lab'],
+  ['experimental/fluid-nebula/index.html', 'self-contained-browser-lab'],
+  ['experimental/holographic-xr/ar-star-chart.html', 'self-contained-browser-lab'],
+  ['experimental/holographic-xr/surface-explorer.html', 'self-contained-browser-lab'],
+  ['experimental/native-integration/captains-log.html', 'self-contained-browser-lab'],
+  ['experimental/native-integration/telemetry.html', 'self-contained-browser-lab'],
+  ['experimental/procedural-planets/index.html', 'self-contained-browser-lab'],
+  ['experimental/sentient-browser/hal-interface.html', 'self-contained-browser-lab'],
+  ['experimental/webgpu-galaxy/galaxy-sim.html', 'self-contained-browser-lab'],
+  ['experimental/webgpu-galaxy/nebula-sim.html', 'self-contained-browser-lab'],
+  ['service-page/database.html', 'legacy-redirect'],
+  ['service-page/events.html', 'legacy-redirect'],
+  ['service-page/gta-6-videos.html', 'legacy-redirect'],
+  ['service-page/offline.html', 'legacy-redirect'],
+  ['service-page/projects.html', 'legacy-redirect']
+].map(([path, reason]) => ({ path, reason }));
+
 export const SITE_PAGES = [
   ['index.html', 'Interstellar Travel Agency | Explore Worlds Beyond Earth', 'Explore exoplanets, future routes, interactive star maps, space technology, and research from the Adriano To The Star interstellar travel concept.'],
   ['about.html', 'About the Project | Adriano To The Star', 'A short introduction to the Adriano To The Star space education and browser-experiment project.', { breadcrumbI18n: 'pages.aboutExperience.title' }],

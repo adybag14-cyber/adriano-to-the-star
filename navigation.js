@@ -325,7 +325,6 @@
     return window.navigationMenuInstance;
   }
 
-  ensureSharedAssets();
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initNavigation, { once: true });
   else initNavigation();
 

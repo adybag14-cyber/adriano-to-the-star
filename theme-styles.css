@@ -28,6 +28,57 @@
     box-shadow: 0 8px 20px rgba(103, 232, 249, 0.4);
 }
 
+.theme-toggle-glyph,
+.theme-icon {
+    position: relative;
+    display: inline-block;
+    flex: 0 0 auto;
+    width: 20px;
+    height: 20px;
+    border: 1px solid rgba(207, 249, 255, 0.76);
+    border-radius: 50%;
+    color: #8cf7ff;
+    box-shadow: inset 0 0 12px rgba(103, 232, 249, 0.12), 0 0 10px rgba(103, 232, 249, 0.12);
+}
+
+.theme-toggle-glyph::before,
+.theme-toggle-glyph::after,
+.theme-icon::before,
+.theme-icon::after {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+}
+
+.theme-toggle-glyph--cosmic,
+.theme-icon--cosmic {
+    background:
+        radial-gradient(circle at 66% 29%, #eefcff 0 1px, transparent 1.5px),
+        radial-gradient(circle at 31% 65%, #c7b9ff 0 1px, transparent 1.5px),
+        radial-gradient(circle at 48% 43%, rgba(103, 232, 249, .44), transparent 47%),
+        #070b19;
+}
+
+.theme-toggle-glyph--cosmic::before,
+.theme-icon--cosmic::before {
+    inset: 4px -4px;
+    border: 1px solid rgba(140, 247, 255, .58);
+    border-radius: 50%;
+    transform: rotate(-28deg);
+}
+
+.theme-toggle-glyph--dark,
+.theme-icon--dark {
+    background: linear-gradient(90deg, #02030a 0 48%, #dffcff 49% 52%, #11172a 53% 100%);
+}
+
+.theme-toggle-glyph--dark::before,
+.theme-icon--dark::before {
+    inset: 4px;
+    border: 1px solid rgba(169, 139, 255, .62);
+    border-radius: 50%;
+}
+
 .theme-toggle-btn:active {
     transform: scale(0.95);
 }
@@ -169,23 +220,24 @@
     border-color: #67e8f9;
 }
 
-.theme-icon {
-    font-size: 1.25rem;
-}
-
 .theme-name {
     flex: 1;
     font-weight: 500;
 }
 
 .checkmark {
-    color: #67e8f9;
-    font-weight: bold;
-    font-size: 1.1rem;
+    width: 8px;
+    height: 13px;
+    margin: 0 4px 2px 2px;
+    border-right: 2px solid #8cf7ff;
+    border-bottom: 2px solid #8cf7ff;
+    transform: rotate(42deg);
+    filter: drop-shadow(0 0 5px rgba(103, 232, 249, .58));
 }
 
 /* Additional Theme Styles */
-[data-theme="cosmic"] {
+html[data-theme="cosmic"],
+html:not([data-theme]) {
     --bg-primary: #0a0a1a;
     --bg-secondary: #1a1a2e;
     --bg-tertiary: #16213e;
@@ -196,6 +248,13 @@
     --accent-hover: #7c3aed;
     --border-color: #2d2d4e;
     --shadow-color: rgba(139, 92, 246, 0.3);
+    --ita-cyan: #72f7ff;
+    --ita-violet: #a979ff;
+    --ita-flight-void: #010208;
+    --ita-flight-mid: #030510;
+    --ita-flight-glow: rgba(24, 32, 62, .14);
+    --ita-flight-edge: rgba(1, 2, 8, .46);
+    --ita-flight-opacity: .94;
 }
 
 [data-theme="solar"] {
@@ -210,35 +269,26 @@
     --border-color: #4d3300;
     --shadow-color: rgba(255, 140, 0, 0.3);
 }
-    color: #ffffff;
-}
 
-/* Dark Theme (default - already styled, but ensure consistency) */
-[data-theme="dark"] {
-    --bg-primary: #0a0a14;
-    --bg-secondary: rgba(8, 10, 25, 0.85);
-    --bg-tertiary: rgba(18, 22, 40, 0.95);
+/* A darker, higher-contrast flight deck that preserves the space identity. */
+html[data-theme="dark"] {
+    --bg-primary: #000000;
+    --bg-secondary: rgba(3, 5, 12, 0.96);
+    --bg-tertiary: rgba(8, 12, 24, 0.98);
     --text-primary: #ffffff;
-    --text-secondary: rgba(255, 255, 255, 0.8);
-    --text-muted: rgba(255, 255, 255, 0.6);
-    --accent-color: #67e8f9;
-    --accent-hover: #a78bfa;
-    --border-color: rgba(103, 232, 249, 0.3);
-    --shadow-color: rgba(0, 0, 0, 0.45);
-}
-
-/* Ensure dark theme is default if no theme set */
-body:not([data-theme]) {
-    --bg-primary: #0a0a14;
-    --bg-secondary: rgba(8, 10, 25, 0.85);
-    --bg-tertiary: rgba(18, 22, 40, 0.95);
-    --text-primary: #ffffff;
-    --text-secondary: rgba(255, 255, 255, 0.8);
-    --text-muted: rgba(255, 255, 255, 0.6);
-    --accent-color: #67e8f9;
-    --accent-hover: #a78bfa;
-    --border-color: rgba(103, 232, 249, 0.3);
-    --shadow-color: rgba(0, 0, 0, 0.45);
+    --text-secondary: rgba(255, 255, 255, 0.9);
+    --text-muted: rgba(255, 255, 255, 0.72);
+    --accent-color: #b9fbff;
+    --accent-hover: #e5fdff;
+    --border-color: rgba(185, 251, 255, 0.46);
+    --shadow-color: rgba(0, 0, 0, 0.68);
+    --ita-cyan: #b9fbff;
+    --ita-violet: #d3c4ff;
+    --ita-flight-void: #000000;
+    --ita-flight-mid: #010107;
+    --ita-flight-glow: rgba(76, 91, 126, .08);
+    --ita-flight-edge: rgba(0, 0, 0, .68);
+    --ita-flight-opacity: 1;
 }
 
 /* Smooth transitions for theme changes */

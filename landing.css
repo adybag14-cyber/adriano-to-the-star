@@ -37,11 +37,10 @@ body[data-release]{
     linear-gradient(180deg,#02030a 0%,#050611 48%,#02030a 100%);
 }
 body[data-release].ita-universe-enabled{
-  background-color:#02030a;
+  background-color:var(--ita-flight-void,#010208);
   background-image:
-    radial-gradient(ellipse at 76% 16%,rgba(105,82,204,.075),transparent 34rem),
-    radial-gradient(ellipse at 12% 70%,rgba(55,169,184,.035),transparent 28rem),
-    linear-gradient(180deg,#02030a 0%,#050611 48%,#02030a 100%);
+    radial-gradient(ellipse at 50% 47%,var(--ita-flight-glow,rgba(24,32,62,.12)),transparent 48%),
+    linear-gradient(180deg,var(--ita-flight-void,#010208) 0%,var(--ita-flight-mid,#030510) 55%,var(--ita-flight-void,#010208) 100%);
   background-attachment:fixed;
 }
 .stellar-field{z-index:-2;opacity:.56;mix-blend-mode:screen}

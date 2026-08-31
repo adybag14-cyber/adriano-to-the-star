@@ -3,24 +3,24 @@
   if (window.__itaUniverseShellLoaded) return;
   window.__itaUniverseShellLoaded = true;
 
-  const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  const reducedMotionQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+  const forcedColoursQuery = window.matchMedia?.('(forced-colors: active)');
+  const printQuery = window.matchMedia?.('print');
+  let reducedMotion = Boolean(reducedMotionQuery?.matches);
   const coarsePointer = window.matchMedia?.('(pointer: coarse)').matches;
 
   function addAtmosphere() {
     document.body?.classList.add('ita-universe-enabled');
-    // The landing experience owns a deliberately composed deep-space canvas.
-    // Do not layer the generic grid/star field over that scene or run a second
-    // animation loop behind it.
-    if (document.getElementById('stellar-field')) return;
     if (!document.querySelector('.ita-universe-fx')) {
       const fx = document.createElement('div');
       fx.className = 'ita-universe-fx';
       fx.setAttribute('aria-hidden', 'true');
       document.body.appendChild(fx);
     }
-    if (!reducedMotion && !document.getElementById('ita-cosmic-field')) {
+    if (!document.getElementById('ita-cosmic-field')) {
       const canvas = document.createElement('canvas');
       canvas.id = 'ita-cosmic-field';
+      canvas.dataset.itaFlightField = '';
       canvas.setAttribute('aria-hidden', 'true');
       document.body.appendChild(canvas);
       runStarField(canvas);
@@ -37,77 +37,153 @@
     let raf = 0;
     let last = 0;
     let hidden = document.hidden;
+    let suspended = false;
+    let presentationSuppressed = Boolean(forcedColoursQuery?.matches || printQuery?.matches);
     let pointerX = .5;
-    let pointerY = .35;
+    let pointerY = .5;
+    let random = () => .5;
+    const frameInterval = coarsePointer ? 40 : 1000 / 30;
 
-    const countForViewport = () => Math.max(34, Math.min(110, Math.floor((innerWidth * innerHeight) / 15000)));
-    const makeStar = () => ({
-      x: Math.random(), y: Math.random(), z: .2 + Math.random() * .8,
-      r: .35 + Math.random() * 1.25,
-      a: .18 + Math.random() * .62,
-      drift: .000004 + Math.random() * .000018,
-      phase: Math.random() * Math.PI * 2
-    });
+    const seededRandom = seed => {
+      let state = seed >>> 0;
+      return () => {
+        state += 0x6D2B79F5;
+        let value = state;
+        value = Math.imul(value ^ value >>> 15, value | 1);
+        value ^= value + Math.imul(value ^ value >>> 7, value | 61);
+        return ((value ^ value >>> 14) >>> 0) / 4294967296;
+      };
+    };
+    const countForViewport = () => Math.max(72, Math.min(196, Math.floor((innerWidth * innerHeight) / 7600)));
+    const resetStar = (star = {}, initial = false) => {
+      const angle = random() * Math.PI * 2;
+      const radius = .025 + Math.pow(random(), 1.55) * .78;
+      star.x = Math.cos(angle) * radius;
+      star.y = Math.sin(angle) * radius;
+      star.z = initial ? .075 + random() * 1.18 : 1.08 + random() * .22;
+      star.previousZ = star.z + .016;
+      star.speed = .88 + random() * .72;
+      star.size = .38 + random() * .78;
+      star.alpha = .52 + random() * .46;
+      const tone = random();
+      star.colour = tone > .92 ? '244,221,178' : tone > .76 ? '175,221,255' : tone > .62 ? '220,205,255' : '232,240,255';
+      return star;
+    };
     const resize = () => {
       width = innerWidth;
       height = innerHeight;
-      dpr = Math.min(devicePixelRatio || 1, 1.75);
+      dpr = Math.min(devicePixelRatio || 1, width <= 760 ? 1.25 : 1.5);
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
       context.setTransform(dpr, 0, 0, dpr, 0, 0);
+      random = seededRandom((0x1A2B3C4D ^ Math.round(width / 64) << 13 ^ Math.round(height / 48)) >>> 0);
       const target = countForViewport();
-      while (stars.length < target) stars.push(makeStar());
-      if (stars.length > target) stars.length = target;
+      stars = Array.from({ length: target }, () => resetStar({}, true));
+      canvas.dataset.starCount = String(target);
+      drawFrame(0, 0, false);
     };
-    const draw = time => {
-      raf = requestAnimationFrame(draw);
-      if (hidden || time - last < 28) return;
-      const dt = Math.min(42, Math.max(1, time - last || 16));
-      last = time;
+    const drawFrame = (time, dt, advance) => {
       context.clearRect(0, 0, width, height);
-      const px = (pointerX - .5) * 18;
-      const py = (pointerY - .5) * 12;
+      context.save();
+      context.globalCompositeOperation = 'lighter';
+      context.lineCap = 'round';
+      const centreX = width * .5 + (pointerX - .5) * 8;
+      const centreY = height * .47 + (pointerY - .5) * 6;
+      const projection = Math.min(width, height) * .9;
       for (const star of stars) {
-        star.y += star.drift * dt * (1.15 - star.z * .35);
-        if (star.y > 1.03) { star.y = -.02; star.x = Math.random(); }
-        const twinkle = .72 + Math.sin(time * .0012 + star.phase) * .28;
-        const x = star.x * width + px * star.z;
-        const y = star.y * height + py * star.z;
+        star.previousZ = star.z;
+        if (advance) star.z -= dt * .00008 * star.speed;
+        if (star.z <= .045) {
+          resetStar(star, false);
+          continue;
+        }
+        const x = centreX + (star.x / star.z) * projection;
+        const y = centreY + (star.y / star.z) * projection;
+        const trailZ = star.z + (star.previousZ - star.z) * 3.2;
+        const previousX = centreX + (star.x / trailZ) * projection;
+        const previousY = centreY + (star.y / trailZ) * projection;
+        if (x < -90 || x > width + 90 || y < -90 || y > height + 90) {
+          resetStar(star, false);
+          continue;
+        }
+        const depth = Math.max(0, Math.min(1, 1 - star.z / 1.28));
+        const alpha = star.alpha * (.24 + depth * .76);
+        if (advance && depth > .08) {
+          context.beginPath();
+          context.moveTo(previousX, previousY);
+          context.lineTo(x, y);
+          context.strokeStyle = `rgba(${star.colour},${alpha})`;
+          context.lineWidth = .45 + depth * 2.1;
+          context.stroke();
+        }
         context.beginPath();
-        context.arc(x, y, star.r * (.65 + star.z * .55), 0, Math.PI * 2);
-        context.fillStyle = `rgba(${star.z > .72 ? '169,244,255' : '218,232,255'},${star.a * twinkle})`;
+        context.arc(x, y, star.size * (.45 + depth * 1.15), 0, Math.PI * 2);
+        context.fillStyle = `rgba(${star.colour},${Math.min(1, alpha + .12)})`;
         context.fill();
       }
-      // Sparse route beacons: a quiet moving line, not a distracting meteor shower.
-      const cycle = (time % 11500) / 11500;
-      if (cycle < .22) {
-        const p = cycle / .22;
-        const x = width * (.08 + p * .46);
-        const y = height * (.18 + p * .16);
-        const gradient = context.createLinearGradient(x - 90, y - 34, x, y);
-        gradient.addColorStop(0, 'rgba(111,234,255,0)');
-        gradient.addColorStop(1, `rgba(111,234,255,${Math.sin(p * Math.PI) * .34})`);
-        context.strokeStyle = gradient;
-        context.lineWidth = 1;
-        context.beginPath();
-        context.moveTo(x - 90, y - 34);
-        context.lineTo(x, y);
-        context.stroke();
-      }
+      context.restore();
     };
+    const draw = time => {
+      raf = 0;
+      if (hidden || suspended) return;
+      const dt = Math.min(64, Math.max(1, time - last || frameInterval));
+      if (time - last >= frameInterval) {
+        last = time;
+        drawFrame(time, dt, true);
+      }
+      raf = requestAnimationFrame(draw);
+    };
+    const start = () => {
+      if (reducedMotion || presentationSuppressed || hidden || suspended || raf) return;
+      last = performance.now();
+      raf = requestAnimationFrame(draw);
+    };
+    const stop = () => {
+      if (raf) cancelAnimationFrame(raf);
+      raf = 0;
+    };
+    canvas.dataset.renderMode = reducedMotion ? 'static-starfield' : 'forward-flight';
+    canvas.dataset.motion = 'forward-z';
     resize();
     addEventListener('resize', resize, { passive: true });
     if (!coarsePointer) addEventListener('pointermove', e => {
       pointerX = e.clientX / Math.max(1, width);
       pointerY = e.clientY / Math.max(1, height);
-      document.documentElement.style.setProperty('--ita-mx', `${Math.round(pointerX * 100)}%`);
-      document.documentElement.style.setProperty('--ita-my', `${Math.round(pointerY * 100)}%`);
     }, { passive: true });
-    document.addEventListener('visibilitychange', () => { hidden = document.hidden; if (!hidden) last = performance.now(); });
-    raf = requestAnimationFrame(draw);
-    window.addEventListener('pagehide', () => cancelAnimationFrame(raf), { once: true });
+    document.addEventListener('visibilitychange', () => {
+      hidden = document.hidden;
+      if (hidden) stop();
+      else start();
+    });
+    window.addEventListener('pagehide', () => { suspended = true; stop(); });
+    window.addEventListener('pageshow', () => { suspended = false; hidden = document.hidden; start(); });
+    const listen = (query, handler) => {
+      if (query?.addEventListener) query.addEventListener('change', handler);
+      else query?.addListener?.(handler);
+    };
+    listen(reducedMotionQuery, event => {
+      reducedMotion = event.matches;
+      canvas.dataset.renderMode = reducedMotion ? 'static-starfield' : 'forward-flight';
+      if (reducedMotion) {
+        stop();
+        drawFrame(performance.now(), 0, false);
+      } else {
+        start();
+      }
+    });
+    const syncPresentationMode = () => {
+      presentationSuppressed = Boolean(forcedColoursQuery?.matches || printQuery?.matches);
+      canvas.dataset.presentation = presentationSuppressed ? 'suppressed' : 'screen';
+      if (presentationSuppressed) stop();
+      else if (reducedMotion) drawFrame(performance.now(), 0, false);
+      else start();
+    };
+    listen(forcedColoursQuery, syncPresentationMode);
+    listen(printQuery, syncPresentationMode);
+    syncPresentationMode();
+    start();
   }
 
   function addRevealMotion() {

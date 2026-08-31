@@ -23,61 +23,51 @@
 }
 
 #ita-cosmic-field {
-  z-index: -3;
-  opacity: .74;
+  z-index: -2;
+  opacity: var(--ita-flight-opacity, .94);
+  mix-blend-mode: screen;
+  contain: strict;
 }
 
 .ita-universe-fx {
-  z-index: -2;
+  z-index: -1;
   overflow: hidden;
   background:
-    radial-gradient(900px 620px at var(--ita-mx) var(--ita-my), rgba(67, 199, 255, .095), transparent 66%),
-    radial-gradient(760px 560px at 83% 12%, rgba(147, 82, 255, .075), transparent 70%),
-    linear-gradient(180deg, rgba(2, 5, 14, .08), rgba(2, 4, 12, .34));
+    radial-gradient(ellipse at 50% 47%, transparent 0 38%, rgba(2, 3, 11, .06) 60%, var(--ita-flight-edge, rgba(1, 2, 8, .46)) 100%),
+    linear-gradient(180deg, rgba(1, 2, 8, .04), rgba(1, 2, 8, .22));
 }
 
 .ita-universe-fx::before {
-  content: "";
-  inset: 55% -18% -45%;
-  width: 136%;
-  height: 100%;
-  transform: perspective(700px) rotateX(64deg) translateY(7%);
-  transform-origin: 50% 0;
-  background-image:
-    linear-gradient(rgba(114, 247, 255, .10) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(114, 247, 255, .10) 1px, transparent 1px);
-  background-size: 54px 54px;
-  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,.72), transparent 72%);
-  mask-image: linear-gradient(to bottom, rgba(0,0,0,.72), transparent 72%);
-  animation: ita-grid-drift 13s linear infinite;
+  content: none;
 }
 
 .ita-universe-fx::after {
-  content: "";
-  left: auto;
-  right: -18vmax;
-  top: -23vmax;
-  width: 62vmax;
-  height: 62vmax;
-  border: 1px solid rgba(114, 247, 255, .11);
-  border-radius: 50%;
-  box-shadow:
-    0 0 0 7vmax rgba(126, 89, 255, .025),
-    0 0 0 14vmax rgba(82, 219, 255, .018),
-    inset 0 0 90px rgba(114, 247, 255, .025);
-  animation: ita-orbit-turn 42s linear infinite;
+  content: none;
 }
-
-@keyframes ita-grid-drift { to { background-position: 0 54px, 54px 0; } }
-@keyframes ita-orbit-turn { to { transform: rotate(360deg); } }
 
 /* Give older flat pages a consistent atmospheric floor without overriding their design systems. */
 body.ita-universe-enabled {
-  background-color: var(--ita-ink);
+  position: relative;
+  isolation: isolate;
+  background-color: var(--ita-flight-void, #010208);
   background-image:
-    radial-gradient(circle at 18% 10%, rgba(36, 137, 216, .07), transparent 34%),
-    radial-gradient(circle at 88% 26%, rgba(117, 64, 196, .06), transparent 30%);
+    radial-gradient(ellipse at 50% 47%, var(--ita-flight-glow, rgba(24, 32, 62, .14)), transparent 48%),
+    linear-gradient(180deg, var(--ita-flight-void, #010208), var(--ita-flight-mid, #030510) 55%, var(--ita-flight-void, #010208));
   background-attachment: fixed;
+}
+
+body.ita-universe-enabled.ita-site-standard::before,
+body.ita-universe-enabled .projects-atmosphere,
+body.ita-universe-enabled .db-stellar-field,
+body.ita-universe-enabled .db-atmosphere,
+body.ita-universe-enabled > .stellar-field,
+body.ita-universe-enabled > .atmosphere {
+  display: none !important;
+}
+
+@media (forced-colors: active), print {
+  #ita-cosmic-field,
+  .ita-universe-fx { display: none !important; }
 }
 
 body.ita-universe-enabled main,
