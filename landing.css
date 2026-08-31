@@ -19,3 +19,171 @@
 .planet-texture,.planet-glow{position:absolute;inset:0;border-radius:inherit}
 .planet-texture{background:url("images/bg-large.jpg") center/cover no-repeat;filter:saturate(.72) contrast(1.1) brightness(.72);transform:scale(1.28)}
 .planet-glow{background:radial-gradient(circle at 68% 35%,transparent 0 14%,rgba(10,10,19,.24) 43%,#03040a 84%)}
+
+/* Quiet deep-space composition: one deterministic field, no generic shell FX. */
+:root{
+  --landing-cta-ink:#eafcff;
+  --landing-cta-start:#12313c;
+  --landing-cta-end:#25264d;
+  --landing-cta-hover-start:#194650;
+  --landing-cta-hover-end:#302f5c;
+}
+body[data-release]{
+  position:relative;
+  isolation:isolate;
+  background:
+    radial-gradient(ellipse at 76% 16%,rgba(105,82,204,.075),transparent 34rem),
+    radial-gradient(ellipse at 12% 70%,rgba(55,169,184,.035),transparent 28rem),
+    linear-gradient(180deg,#02030a 0%,#050611 48%,#02030a 100%);
+}
+body[data-release].ita-universe-enabled{
+  background-color:#02030a;
+  background-image:
+    radial-gradient(ellipse at 76% 16%,rgba(105,82,204,.075),transparent 34rem),
+    radial-gradient(ellipse at 12% 70%,rgba(55,169,184,.035),transparent 28rem),
+    linear-gradient(180deg,#02030a 0%,#050611 48%,#02030a 100%);
+  background-attachment:fixed;
+}
+.stellar-field{z-index:-2;opacity:.56;mix-blend-mode:screen}
+.atmosphere{z-index:-1;opacity:1;filter:none;border-radius:50%;will-change:transform}
+.atmosphere-a{
+  width:min(980px,90vw);
+  height:min(210px,20vw);
+  right:-18vw;
+  top:17vh;
+  background:radial-gradient(ellipse,rgba(105,82,204,.09),rgba(53,47,113,.025) 44%,transparent 72%);
+  transform:rotate(-12deg);
+  animation:cosmicHazeA 52s ease-in-out infinite alternate;
+}
+.atmosphere-b{
+  width:min(760px,68vw);
+  height:min(150px,16vw);
+  left:-22vw;
+  top:68vh;
+  background:radial-gradient(ellipse,rgba(74,190,204,.055),rgba(29,73,92,.018) 48%,transparent 74%);
+  transform:rotate(14deg);
+  animation:cosmicHazeB 58s ease-in-out infinite alternate;
+}
+@keyframes cosmicHazeA{to{transform:translate3d(-14px,7px,0) rotate(-11deg) scale(1.025)}}
+@keyframes cosmicHazeB{to{transform:translate3d(12px,-6px,0) rotate(13deg) scale(1.02)}}
+
+/* The shared site layer recolours links cyan; primary landing CTAs retain a
+   high-contrast mission-console treatment in every interaction state. */
+body[data-release].ita-site-refresh a.button.button-primary,
+body[data-release].ita-site-refresh a.button.button-primary:visited,
+body[data-release].ita-site-refresh a.button.button-primary:hover,
+body[data-release].ita-site-refresh a.button.button-primary:focus-visible{
+  color:var(--landing-cta-ink)!important;
+}
+body[data-release] .button.button-primary{
+  border-color:rgba(140,247,255,.62);
+  background:linear-gradient(135deg,var(--landing-cta-start),var(--landing-cta-end));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 14px 44px rgba(60,210,225,.14);
+  transition:color 180ms ease,background 180ms ease,border-color 180ms ease,box-shadow 180ms ease,transform 180ms ease;
+}
+body[data-release] .button.button-primary:hover{
+  border-color:rgba(140,247,255,.86);
+  background:linear-gradient(135deg,var(--landing-cta-hover-start),var(--landing-cta-hover-end));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 16px 48px rgba(60,210,225,.2);
+}
+
+/* Replace the terrestrial resort photograph with a decorative, code-native
+   exoplanet horizon. The old selector is fail-safe hidden if reintroduced. */
+.passage-image{display:none!important;background:none!important}
+.passage-section{
+  isolation:isolate;
+  background:
+    radial-gradient(ellipse at 76% 42%,rgba(106,82,201,.18),transparent 36%),
+    linear-gradient(116deg,rgba(2,3,10,.97) 0 28%,rgba(5,7,17,.58) 52%,rgba(2,3,9,.92) 100%);
+}
+.passage-cosmos{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.passage-cosmos::before{
+  content:"";
+  position:absolute;
+  inset:-10%;
+  opacity:.88;
+  background:
+    radial-gradient(circle at 7% 18%,rgba(247,250,255,.8) 0 .7px,transparent 1.5px),
+    radial-gradient(circle at 16% 73%,rgba(187,227,255,.58) 0 .6px,transparent 1.4px),
+    radial-gradient(circle at 29% 31%,rgba(225,218,255,.68) 0 .8px,transparent 1.6px),
+    radial-gradient(circle at 41% 82%,rgba(255,231,194,.5) 0 .7px,transparent 1.5px),
+    radial-gradient(circle at 56% 18%,rgba(215,231,255,.7) 0 .8px,transparent 1.6px),
+    radial-gradient(circle at 67% 63%,rgba(196,229,255,.6) 0 .65px,transparent 1.45px),
+    radial-gradient(circle at 76% 14%,rgba(255,246,220,.7) 0 .9px,transparent 1.8px),
+    radial-gradient(circle at 84% 45%,rgba(224,217,255,.6) 0 .7px,transparent 1.5px),
+    radial-gradient(circle at 92% 74%,rgba(205,235,255,.64) 0 .75px,transparent 1.55px),
+    linear-gradient(118deg,transparent 29%,rgba(97,75,158,.065) 44%,rgba(68,153,172,.04) 53%,transparent 69%);
+}
+.passage-nebula{
+  position:absolute;
+  width:118%;
+  height:34%;
+  left:-9%;
+  top:24%;
+  border-radius:50%;
+  background:radial-gradient(ellipse,rgba(109,78,183,.16),rgba(56,118,151,.055) 48%,transparent 72%);
+  filter:blur(22px);
+  transform:rotate(-13deg);
+  animation:passageNebulaDrift 46s ease-in-out infinite alternate;
+}
+.passage-world{
+  position:absolute;
+  right:-14%;
+  bottom:-31%;
+  width:min(760px,66vw);
+  aspect-ratio:1;
+  border:1px solid rgba(153,221,255,.12);
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 34% 27%,rgba(205,239,252,.25),transparent 19%),
+    repeating-linear-gradient(164deg,rgba(183,218,238,.075) 0 8%,rgba(47,58,94,.055) 8% 16%),
+    radial-gradient(circle at 38% 34%,#465575 0%,#222b4d 35%,#0c1024 59%,#02030a 74%);
+  box-shadow:-20px -18px 82px rgba(105,220,255,.2),-58px -24px 140px rgba(114,82,210,.12),inset 38px -14px 82px rgba(0,0,0,.68);
+  animation:passageWorldDrift 38s ease-in-out infinite alternate;
+}
+.passage-world::after{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  border-radius:inherit;
+  background:radial-gradient(circle at 34% 27%,transparent 0 44%,rgba(2,3,10,.2) 58%,#010207 78%);
+  box-shadow:inset 12px 10px 24px rgba(146,226,255,.055);
+}
+.passage-star{
+  position:absolute;
+  right:24%;
+  top:17%;
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  background:#f1dfb6;
+  box-shadow:0 0 12px rgba(241,223,182,.78),0 0 38px rgba(143,191,255,.28);
+  animation:passageStarDrift 34s ease-in-out infinite alternate;
+}
+.passage-vignette{
+  z-index:1;
+  background:
+    linear-gradient(90deg,rgba(2,3,9,.97),rgba(2,3,9,.22) 58%,rgba(2,3,9,.56)),
+    linear-gradient(0deg,#020309,transparent 58%);
+}
+@keyframes passageNebulaDrift{to{transform:translate3d(10px,-5px,0) rotate(-12.5deg) scale(1.015)}}
+@keyframes passageWorldDrift{to{transform:translate3d(-8px,-7px,0) scale(1.008)}}
+@keyframes passageStarDrift{to{transform:translate3d(-5px,3px,0);opacity:.78}}
+
+.final-panel{
+  background:
+    radial-gradient(ellipse at 50% 118%,rgba(93,76,190,.18),transparent 45%),
+    linear-gradient(160deg,rgba(9,11,24,.96),rgba(2,3,9,.985));
+  box-shadow:inset 0 0 90px rgba(73,67,143,.045),0 40px 110px rgba(0,0,0,.28);
+}
+.final-orbit{border-color:rgba(140,247,255,.1)}
+
+@media(max-width:760px){
+  .passage-world{right:-210px;bottom:-120px;width:470px;opacity:.82}
+  .passage-nebula{width:145%;left:-24%;top:28%}
+  .passage-star{right:18%;top:12%}
+}
+@media(prefers-reduced-motion:reduce){
+  .stellar-field{display:block;opacity:.5}
+  .atmosphere,.passage-nebula,.passage-world,.passage-star{animation:none!important}
+}

@@ -8,6 +8,10 @@
 
   function addAtmosphere() {
     document.body?.classList.add('ita-universe-enabled');
+    // The landing experience owns a deliberately composed deep-space canvas.
+    // Do not layer the generic grid/star field over that scene or run a second
+    // animation loop behind it.
+    if (document.getElementById('stellar-field')) return;
     if (!document.querySelector('.ita-universe-fx')) {
       const fx = document.createElement('div');
       fx.className = 'ita-universe-fx';

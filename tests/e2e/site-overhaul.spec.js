@@ -15,6 +15,17 @@ const PROJECT_TARGETS = [
 ];
 const BASE_ORIGIN = new URL(process.env.BASE_URL || 'https://adrianotothestar.com').origin;
 
+const luminance = hex => {
+  const channels = hex.replace('#', '').match(/.{2}/g).map(value => Number.parseInt(value, 16) / 255);
+  const linear = channels.map(value => value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4);
+  return linear[0] * 0.2126 + linear[1] * 0.7152 + linear[2] * 0.0722;
+};
+const contrastRatio = (foreground, background) => {
+  const a = luminance(foreground);
+  const b = luminance(background);
+  return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+};
+
 test.describe('production site overhaul', () => {
   test('about page stays concise and publishes no personal biography or plan', async ({ page }) => {
     const response = await page.goto('/about.html', { waitUntil: 'domcontentloaded' });
@@ -118,6 +129,75 @@ test.describe('production site overhaul', () => {
     await expect(page.locator('.telemetry small').first()).toHaveCSS('color', 'rgb(197, 200, 216)');
     await expect(page.locator('.telemetry').first()).toHaveCSS('background-color', 'rgba(5, 7, 13, 0.94)');
     await expect(page.locator('.stage-caption span').last()).toHaveCSS('color', 'rgb(197, 200, 216)');
+  });
+
+  test('landing CTAs retain contrast and the passenger scene is code-native deep space', async ({ page }) => {
+    const sandyImageRequests = [];
+    page.on('request', request => {
+      if (/\/images\/image_2\.jpg(?:\?|$)/i.test(request.url())) sandyImageRequests.push(request.url());
+    });
+    await page.goto('/index.html', { waitUntil: 'domcontentloaded' });
+    await page.waitForFunction(() => window.__itaUniverseShellLoaded === true);
+
+    const primaryButtons = page.locator('a.button.button-primary');
+    await expect(primaryButtons).toHaveCount(2);
+    for (const button of await primaryButtons.all()) {
+      await expect(button).toHaveCSS('color', 'rgb(234, 252, 255)');
+      const background = await button.evaluate(node => getComputedStyle(node).backgroundImage);
+      expect(background).toContain('rgb(18, 49, 60)');
+      expect(background).toContain('rgb(37, 38, 77)');
+      expect(background).not.toContain('rgb(255, 255, 255)');
+      await button.hover();
+      await expect(button).toHaveCSS('color', 'rgb(234, 252, 255)');
+    }
+
+    const palette = await page.evaluate(() => {
+      const style = getComputedStyle(document.documentElement);
+      return {
+        foreground: style.getPropertyValue('--landing-cta-ink').trim(),
+        start: style.getPropertyValue('--landing-cta-start').trim(),
+        end: style.getPropertyValue('--landing-cta-end').trim()
+      };
+    });
+    expect(Math.min(contrastRatio(palette.foreground, palette.start), contrastRatio(palette.foreground, palette.end))).toBeGreaterThanOrEqual(7);
+
+    await expect(page.locator('.passage-image')).toHaveCount(0);
+    await expect(page.locator('.passage-cosmos')).toHaveAttribute('aria-hidden', 'true');
+    await page.locator('.passage-section').scrollIntoViewIfNeeded();
+    await expect(page.locator('.passage-world')).toBeVisible();
+    expect(sandyImageRequests).toEqual([]);
+
+    await expect(page.locator('#ita-cosmic-field')).toHaveCount(0);
+    await expect(page.locator('.ita-universe-fx')).toHaveCount(0);
+    await expect(page.locator('#stellar-field')).toHaveAttribute('data-render-mode', 'slow-deep-space');
+    await expect(page.locator('#stellar-field')).toHaveCSS('display', 'block');
+    const canvas = await page.evaluate(() => {
+      const node = document.getElementById('stellar-field');
+      const pixels = node.getContext('2d').getImageData(0, 0, node.width, node.height).data;
+      let paintedSamples = 0;
+      for (let index = 3; index < pixels.length; index += 256) {
+        if (pixels[index] > 0) paintedSamples += 1;
+      }
+      return { paintedSamples, width: node.width, height: node.height };
+    });
+    expect(canvas.width).toBeGreaterThan(0);
+    expect(canvas.height).toBeGreaterThan(0);
+    expect(canvas.paintedSamples).toBeGreaterThan(100);
+  });
+
+  test('reduced motion keeps a static deep-space identity without animation loops', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto('/index.html', { waitUntil: 'domcontentloaded' });
+    await page.waitForFunction(() => window.__itaUniverseShellLoaded === true);
+    const canvas = page.locator('#stellar-field');
+    await expect(canvas).toHaveAttribute('data-render-mode', 'static-deep-space');
+    await expect(canvas).toHaveCSS('display', 'block');
+    await expect(page.locator('.atmosphere-a')).toHaveCSS('animation-name', 'none');
+    await expect(page.locator('.passage-nebula')).toHaveCSS('animation-name', 'none');
+    const firstFrame = await canvas.evaluate(node => node.toDataURL());
+    await page.waitForTimeout(250);
+    expect(await canvas.evaluate(node => node.toDataURL())).toBe(firstFrame);
+    await expect(page.locator('#ita-cosmic-field')).toHaveCount(0);
   });
 
   test('landing theme menu supports keyboard-ready selection and persistence', async ({ page }) => {

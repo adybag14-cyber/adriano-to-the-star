@@ -103,6 +103,9 @@ if (!aboutPage.includes('data-i18n="common.home"')) fail('about.html: generated 
 for (const key of aboutTranslationKeys) {
   if (!aboutPage.includes(`data-i18n="pages.aboutExperience.${key}"`)) fail(`about.html: pages.aboutExperience.${key} binding is missing`);
 }
+const landingPage = await fs.readFile(path.join(publicRoot, 'index.html'), 'utf8');
+if (/passage-image|images\/image_2\.jpg/i.test(landingPage)) fail('index.html: terrestrial passenger-experience image remains in production markup');
+if (!/<div class="passage-cosmos" aria-hidden="true">/i.test(landingPage)) fail('index.html: code-native deep-space passenger scene is missing');
 
 const spaceFeedsText = await fs.readFile(path.join(publicRoot, 'data', 'space-feeds.json'), 'utf8');
 try {
