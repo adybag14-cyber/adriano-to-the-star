@@ -94,6 +94,14 @@ test.describe('NASA-backed Planetary OS appearance models', () => {
     await expect(page.locator('#atmosphere-catalog-panel')).toBeVisible();
     await expect(page.locator('#atmosphere-catalog-list .atmosphere-model-card').first()).toBeVisible({ timeout: 30_000 });
     await expect(page.locator('#atmosphere-catalog-summary')).toContainText(/systems.*planets/i);
+    const registryLayout = await page.evaluate(() => {
+      const panel = document.getElementById('atmosphere-catalog-panel').getBoundingClientRect();
+      const player = document.getElementById('cosmic-music-player')?.getBoundingClientRect();
+      return {
+        separatedFromPlayerRail: player ? panel.right <= player.left + 1 : true
+      };
+    });
+    expect(registryLayout.separatedFromPlayerRail).toBe(true);
     const totals = await page.evaluate(() => ({
       systems: window.__exoplanetAtmosphereCatalog?.systems?.length || 0,
       planets: window.__exoplanetAtmosphereCatalog?.systems?.reduce((sum, system) => sum + (system.planets?.length || 0), 0) || 0
