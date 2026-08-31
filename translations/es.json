@@ -25,6 +25,20 @@
     "next": "Siguiente",
     "previous": "Anterior"
   },
+  "pages": {
+    "aboutExperience": {
+      "kicker": "PERFIL DEL PROYECTO",
+      "title": "SOBRE EL PROYECTO",
+      "subtitle": "Un proyecto de educación y experimentación espacial basado en el navegador.",
+      "heading": "Explora, aprende, experimenta.",
+      "body1": "Adriano To The Star reúne datos astronómicos públicos, mapas interactivos, simulaciones educativas y tecnología web.",
+      "body2": "Las funciones son experimentales. Las páginas pertinentes identifican sus fuentes, limitaciones y límites de privacidad.",
+      "databaseCta": "Explora la base de datos",
+      "trackerCta": "Abre el rastreador estelar",
+      "privacyCta": "Lee el aviso de privacidad",
+      "privacyLabel": "Aviso de privacidad"
+    }
+  },
   "home": {
     "title": "Adriano To The Star",
     "subtitle": "Agencia de Viajes Interestelar",

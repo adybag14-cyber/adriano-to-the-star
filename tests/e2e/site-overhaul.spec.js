@@ -29,6 +29,23 @@ test.describe('production site overhaul', () => {
     await expect(page.getByRole('link', { name: 'Explore the database' })).toHaveAttribute('href', 'database.html');
     await expect(page.getByRole('link', { name: 'Open the stellar tracker' })).toHaveAttribute('href', 'tracker.html');
     await expect(page.getByRole('link', { name: 'Read the privacy notice' })).toHaveAttribute('href', 'privacy.html');
+    await page.waitForFunction(() => window.i18n?.().ready);
+    const breadcrumbHome = page.locator('.ita-breadcrumb a').first();
+    const breadcrumbCurrent = page.locator('.ita-breadcrumb [aria-current="page"]');
+    await page.evaluate(() => window.i18n().setLanguage('es'));
+    await expect(breadcrumbHome).toHaveText('Inicio');
+    await expect(breadcrumbCurrent).toHaveText('SOBRE EL PROYECTO');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('SOBRE EL PROYECTO');
+    await expect(page.locator('[data-i18n="pages.aboutExperience.body1"]')).toContainText('datos astronómicos públicos');
+    await expect(page.getByRole('link', { name: 'Lee el aviso de privacidad' })).toHaveAttribute('href', 'privacy.html');
+    await expect(page.getByRole('link', { name: 'Aviso de privacidad', exact: true })).toHaveAttribute('href', 'privacy.html');
+    await page.evaluate(() => window.i18n().setLanguage('en'));
+    await expect(breadcrumbHome).toHaveText('Home');
+    await expect(breadcrumbCurrent).toHaveText('ABOUT THE PROJECT');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('ABOUT THE PROJECT');
+    await expect(page.locator('[data-i18n="pages.aboutExperience.body1"]')).toContainText('public astronomy data');
+    await expect(page.getByRole('link', { name: 'Read the privacy notice' })).toHaveAttribute('href', 'privacy.html');
+    await expect(page.getByRole('link', { name: 'Privacy notice', exact: true })).toHaveAttribute('href', 'privacy.html');
   });
 
   test('all 46 public pages load, expose metadata and breadcrumbs, and scroll without layout overflow', async ({ page }) => {

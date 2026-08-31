@@ -91,6 +91,18 @@ const i18n = await fs.readFile(path.join(publicRoot, 'i18n.js'), 'utf8');
 if (!i18n.includes("sourceUrl?.searchParams.get('v')")) fail('i18n.js: translation requests do not inherit the release version');
 const english = JSON.parse(await fs.readFile(path.join(publicRoot, 'translations', 'en.json'), 'utf8'));
 if (!english.hero?.line1 || !english.hero?.line2 || !english.nav?.projects) fail('translations/en.json: current landing translation keys are missing');
+const spanish = JSON.parse(await fs.readFile(path.join(publicRoot, 'translations', 'es.json'), 'utf8'));
+const aboutTranslationKeys = ['kicker', 'title', 'subtitle', 'heading', 'body1', 'body2', 'databaseCta', 'trackerCta', 'privacyCta', 'privacyLabel'];
+if (english.common?.home !== 'Home') fail('translations/en.json: common.home must restore the English breadcrumb label');
+for (const key of aboutTranslationKeys) {
+  if (!english.pages?.aboutExperience?.[key]) fail(`translations/en.json: pages.aboutExperience.${key} is missing`);
+  if (!spanish.pages?.aboutExperience?.[key]) fail(`translations/es.json: pages.aboutExperience.${key} is missing`);
+}
+const aboutPage = await fs.readFile(path.join(publicRoot, 'about.html'), 'utf8');
+if (!aboutPage.includes('data-i18n="common.home"')) fail('about.html: generated Home breadcrumb is not explicitly translatable');
+for (const key of aboutTranslationKeys) {
+  if (!aboutPage.includes(`data-i18n="pages.aboutExperience.${key}"`)) fail(`about.html: pages.aboutExperience.${key} binding is missing`);
+}
 
 const spaceFeedsText = await fs.readFile(path.join(publicRoot, 'data', 'space-feeds.json'), 'utf8');
 try {

@@ -92,11 +92,12 @@ function headMetadata(page) {
 function breadcrumbFor(page, floating = false) {
   const depth = page.path.split('/').length - 1;
   const homeHref = depth ? '../' : '/';
-  const crumbs = [{ name: 'Home', href: homeHref, url: `${SITE_ORIGIN}/` }];
+  const crumbs = [{ name: 'Home', href: homeHref, url: `${SITE_ORIGIN}/`, i18n: 'common.home' }];
   if (page.parent) crumbs.push({ name: page.parent[0], href: depth ? `../${page.parent[1]}` : page.parent[1], url: `${SITE_ORIGIN}/${page.parent[1]}` });
-  crumbs.push({ name: page.title.split('|')[0].trim(), href: null, url: canonicalUrl(page) });
+  crumbs.push({ name: page.title.split('|')[0].trim(), href: null, url: canonicalUrl(page), i18n: page.breadcrumbI18n });
   const visible = crumbs.map((crumb, index) => {
-    const content = crumb.href ? `<a href="${crumb.href}">${escapeHtml(crumb.name)}</a>` : `<span aria-current="page">${escapeHtml(crumb.name)}</span>`;
+    const i18n = crumb.i18n ? ` data-i18n="${escapeHtml(crumb.i18n)}"` : '';
+    const content = crumb.href ? `<a href="${crumb.href}"${i18n}>${escapeHtml(crumb.name)}</a>` : `<span aria-current="page"${i18n}>${escapeHtml(crumb.name)}</span>`;
     return `<li>${content}${index < crumbs.length - 1 ? '<span aria-hidden="true">/</span>' : ''}</li>`;
   }).join('');
   const structured = {
