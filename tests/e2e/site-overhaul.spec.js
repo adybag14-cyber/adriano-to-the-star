@@ -149,6 +149,8 @@ test.describe('production site overhaul', () => {
     await expect(page.locator('.telemetry small').first()).toHaveCSS('color', 'rgb(197, 200, 216)');
     await expect(page.locator('.telemetry').first()).toHaveCSS('background-color', 'rgba(5, 7, 13, 0.94)');
     await expect(page.locator('.stage-caption span').last()).toHaveCSS('color', 'rgb(197, 200, 216)');
+    await expect(page.locator('.desktop-nav [data-atlas-trigger]')).toHaveAttribute('aria-label', /^Menu: open systems atlas$/i);
+    await expect(page.locator('.scroll-cue')).toHaveAttribute('aria-label', /Scroll to traverse/i);
   });
 
   test('landing CTAs retain contrast and the passenger scene is code-native deep space', async ({ page }) => {

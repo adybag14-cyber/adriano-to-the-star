@@ -123,7 +123,7 @@
         existing.type = 'button';
         existing.dataset.atlasTrigger = '1';
         existing.dataset.label = 'Systems';
-        existing.setAttribute('aria-label', 'Open systems atlas');
+        existing.setAttribute('aria-label', 'Systems: open systems atlas');
         existing.setAttribute('aria-haspopup', 'dialog');
         existing.setAttribute('aria-expanded', 'false');
       }
@@ -157,7 +157,7 @@
           button.className = 'ita-atlas-trigger ita-atlas-trigger--floating';
           button.dataset.atlasTrigger = '1';
           button.dataset.label = 'Systems';
-          button.setAttribute('aria-label', 'Open systems atlas');
+          button.setAttribute('aria-label', 'Systems: open systems atlas');
           button.setAttribute('aria-haspopup', 'dialog');
           button.setAttribute('aria-expanded', 'false');
           document.body.appendChild(button);
@@ -305,7 +305,10 @@
       const label = i18n?.t?.('atlas.trigger') || 'Systems';
       this.triggers.forEach(trigger => {
         trigger.dataset.label = label;
-        if (trigger.id === 'menu-toggle') trigger.setAttribute('aria-label', i18n?.t?.('atlas.openAria') || 'Open systems atlas');
+        if (trigger.id === 'menu-toggle') {
+          const openLabel = i18n?.t?.('atlas.openAria') || 'Open systems atlas';
+          trigger.setAttribute('aria-label', `${label}: ${openLabel.toLowerCase()}`);
+        }
       });
     }
 
