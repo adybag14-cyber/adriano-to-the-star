@@ -393,7 +393,7 @@ test.describe('production site overhaul', () => {
     await page.locator('#stellar-map-search').fill('TRAPPIST-1');
     await expect(page.locator('#stellar-map-name')).toHaveText('TRAPPIST-1');
     await expect(page.locator('#star-map-container')).toHaveAttribute('data-star-map-selected', 'trappist-1');
-    await expect(page.locator('#stellar-map-education')).toHaveAttribute('href', /education\.html\?target=TRAPPIST-1/i);
+    await expect(page.locator('#stellar-map-education')).toHaveAttribute('href', /education\.html\?target=TRAPPIST-1%20e/i);
     const before = await page.locator('#stellar-map-coordinates').textContent();
     await page.locator('#stellar-map-zoom-in').click();
     await expect(page.locator('#stellar-map-coordinates')).not.toHaveText(before || '');

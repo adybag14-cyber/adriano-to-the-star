@@ -38,24 +38,27 @@ class InteractiveStarMaps {
     }
 
     createCatalog() {
+        // Confirmed-world counts and Planetary OS targets are synchronized with
+        // the NASA Exoplanet Archive snapshot used by this release. Host stars
+        // never become procedural planets; each route names a specific world.
         const catalogue = [
-            { id: 'sol', name: 'Sol', x: 0, y: 0, z: 0, distance: 0, type: 'home', spectral: 'G2V', constellation: 'Local system', magnitude: -26.74, planets: 8, description: 'Our home star and the origin point for every route shown on this map.' },
-            { id: 'proxima', name: 'Proxima Centauri', x: -3.1, y: 2.8, z: -0.2, distance: 4.24, type: 'exoplanet', spectral: 'M5.5Ve', constellation: 'Centaurus', magnitude: 11.13, planets: 3, description: 'The nearest known star to the Sun and host of the temperate candidate Proxima Centauri b.' },
-            { id: 'alpha-centauri', name: 'Alpha Centauri A/B', x: -3.5, y: 2.55, z: -0.1, distance: 4.37, type: 'nearby', spectral: 'G2V + K1V', constellation: 'Centaurus', magnitude: -0.27, planets: 'Candidate', description: 'A bright binary pair gravitationally bound to Proxima Centauri.' },
-            { id: 'barnard', name: "Barnard's Star", x: -1.8, y: 5.7, z: 0.3, distance: 5.96, type: 'exoplanet', spectral: 'M4V', constellation: 'Ophiuchus', magnitude: 9.51, planets: 1, description: 'A high proper-motion red dwarf with a confirmed sub-Earth-mass planet candidate.' },
+            { id: 'sol', name: 'Sol', x: 0, y: 0, z: 0, distance: 0, type: 'home', spectral: 'G2V', constellation: 'Local system', magnitude: -26.74, planets: 8, educationTarget: 'Earth', description: 'Our home star and the origin point for every route shown on this map.' },
+            { id: 'proxima', name: 'Proxima Centauri', x: -3.1, y: 2.8, z: -0.2, distance: 4.24, type: 'exoplanet', spectral: 'M5.5Ve', constellation: 'Centaurus', magnitude: 11.13, planets: 2, educationTarget: 'Proxima Cen b', description: 'The nearest known star to the Sun and host of two confirmed planets in the current NASA Exoplanet Archive.' },
+            { id: 'alpha-centauri', name: 'Alpha Centauri A/B', x: -3.5, y: 2.55, z: -0.1, distance: 4.37, type: 'nearby', spectral: 'G2V + K1V', constellation: 'Centaurus', magnitude: -0.27, planets: 0, description: 'A bright binary pair gravitationally bound to Proxima Centauri; no confirmed planet is currently mapped here.' },
+            { id: 'barnard', name: "Barnard's Star", x: -1.8, y: 5.7, z: 0.3, distance: 5.96, type: 'exoplanet', spectral: 'M4V', constellation: 'Ophiuchus', magnitude: 9.51, planets: 4, educationTarget: 'Barnard b', description: 'A high proper-motion red dwarf with four confirmed short-period, sub-Earth minimum-mass planets.' },
             { id: 'sirius', name: 'Sirius', x: 7.4, y: -4.3, z: -0.8, distance: 8.6, type: 'nearby', spectral: 'A1V + DA2', constellation: 'Canis Major', magnitude: -1.46, planets: 0, description: 'The brightest star in Earth’s night sky and a nearby binary system.' },
-            { id: 'epsilon-eridani', name: 'Epsilon Eridani', x: 8.9, y: 5.2, z: 0.4, distance: 10.5, type: 'exoplanet', spectral: 'K2V', constellation: 'Eridanus', magnitude: 3.73, planets: 1, description: 'A young nearby star with a debris disk and a long-period giant planet.' },
+            { id: 'epsilon-eridani', name: 'Epsilon Eridani', x: 8.9, y: 5.2, z: 0.4, distance: 10.5, type: 'exoplanet', spectral: 'K2V', constellation: 'Eridanus', magnitude: 3.73, planets: 1, educationTarget: 'eps Eri b', description: 'A young nearby star with a debris disk and a long-period giant planet.' },
             { id: 'procyon', name: 'Procyon', x: 10.1, y: -5.6, z: 0.8, distance: 11.46, type: 'nearby', spectral: 'F5IV-V + DQZ', constellation: 'Canis Minor', magnitude: 0.34, planets: 0, description: 'A nearby binary whose primary is among the brightest stars in the sky.' },
-            { id: 'tau-ceti', name: 'Tau Ceti', x: 7.9, y: 9.1, z: -1.2, distance: 11.9, type: 'exoplanet', spectral: 'G8.5V', constellation: 'Cetus', magnitude: 3.5, planets: 4, description: 'A quiet Sun-like star with a compact candidate planetary system.' },
+            { id: 'tau-ceti', name: 'Tau Ceti', x: 7.9, y: 9.1, z: -1.2, distance: 11.9, type: 'exoplanet', spectral: 'G8.5V', constellation: 'Cetus', magnitude: 3.5, planets: 3, educationTarget: 'tau Cet f', description: 'A quiet Sun-like star with three controversial planetary entries in the current archive.' },
             { id: 'vega', name: 'Vega', x: -20.4, y: 15.4, z: 3.2, distance: 25.0, type: 'anchor', spectral: 'A0V', constellation: 'Lyra', magnitude: 0.03, planets: 0, description: 'A rapidly rotating blue-white star used as a historic photometric reference.' },
-            { id: 'fomalhaut', name: 'Fomalhaut', x: 17.1, y: 19.2, z: -2.1, distance: 25.1, type: 'anchor', spectral: 'A3V', constellation: 'Piscis Austrinus', magnitude: 1.16, planets: 'Debris disk', description: 'A bright young star surrounded by a sculpted circumstellar debris disk.' },
-            { id: 'trappist-1', name: 'TRAPPIST-1', x: -22.6, y: -31.6, z: 1.8, distance: 40.7, type: 'exoplanet', spectral: 'M8V', constellation: 'Aquarius', magnitude: 18.8, planets: 7, description: 'An ultracool dwarf with seven Earth-sized planets, several near the temperate zone.' },
+            { id: 'fomalhaut', name: 'Fomalhaut', x: 17.1, y: 19.2, z: -2.1, distance: 25.1, type: 'anchor', spectral: 'A3V', constellation: 'Piscis Austrinus', magnitude: 1.16, planets: 0, description: 'A bright young star surrounded by a sculpted circumstellar debris disk.' },
+            { id: 'trappist-1', name: 'TRAPPIST-1', x: -22.6, y: -31.6, z: 1.8, distance: 40.7, type: 'exoplanet', spectral: 'M8V', constellation: 'Aquarius', magnitude: 18.8, planets: 7, educationTarget: 'TRAPPIST-1 e', description: 'An ultracool dwarf with seven Earth-sized planets, several near the temperate zone.' },
             { id: 'polaris', name: 'Polaris', x: -84, y: 314, z: 77, distance: 447, type: 'anchor', spectral: 'F7Ib', constellation: 'Ursa Minor', magnitude: 1.98, planets: 0, description: 'The current northern pole star and a classical Cepheid variable in a multiple system.' },
             { id: 'betelgeuse', name: 'Betelgeuse', x: 386, y: -333, z: -89, distance: 548, type: 'giant', spectral: 'M1–M2 Ia–ab', constellation: 'Orion', magnitude: 0.42, planets: 0, description: 'A pulsating red supergiant near the end of its stellar evolution.' },
             { id: 'rigel', name: 'Rigel', x: 663, y: -493, z: -110, distance: 860, type: 'giant', spectral: 'B8Ia', constellation: 'Orion', magnitude: 0.13, planets: 0, description: 'A luminous blue supergiant marking Orion’s foot.' },
-            { id: 'kepler-186', name: 'Kepler-186', x: -411, y: 364, z: 183, distance: 580, type: 'kepler', spectral: 'M1V', constellation: 'Cygnus', magnitude: 14.6, planets: 5, description: 'Host of Kepler-186f, the first Earth-sized planet discovered in another star’s habitable zone.' },
-            { id: 'kepler-452', name: 'Kepler-452', x: -1040, y: 982, z: 214, distance: 1400, type: 'kepler', spectral: 'G2V', constellation: 'Cygnus', magnitude: 13.4, planets: 1, description: 'A Sun-like star with the candidate super-Earth Kepler-452b.' },
-            { id: 'toi-700', name: 'TOI-700', x: 69, y: -76, z: 14, distance: 101.4, type: 'exoplanet', spectral: 'M2V', constellation: 'Dorado', magnitude: 13.2, planets: 4, description: 'A nearby red dwarf with multiple small planets, including temperate-zone worlds.' }
+            { id: 'kepler-186', name: 'Kepler-186', x: -411, y: 364, z: 183, distance: 580, type: 'kepler', spectral: 'M1V', constellation: 'Cygnus', magnitude: 14.6, planets: 5, educationTarget: 'Kepler-186 f', description: 'Host of Kepler-186 f, the first Earth-sized planet discovered in another star’s habitable zone.' },
+            { id: 'kepler-452', name: 'Kepler-452', x: -1040, y: 982, z: 214, distance: 1400, type: 'kepler', spectral: 'G2V', constellation: 'Cygnus', magnitude: 13.4, planets: 1, educationTarget: 'Kepler-452 b', description: 'A Sun-like star with the controversial super-Earth entry Kepler-452 b.' },
+            { id: 'toi-700', name: 'TOI-700', x: 69, y: -76, z: 14, distance: 101.4, type: 'exoplanet', spectral: 'M2V', constellation: 'Dorado', magnitude: 13.2, planets: 4, educationTarget: 'TOI-700 d', description: 'A nearby red dwarf with four confirmed small planets, including temperate-zone worlds.' }
         ];
 
         const physics = {
@@ -337,7 +340,7 @@ class InteractiveStarMaps {
                         </div>
                         <div class="stellar-map-detail-actions">
                             <button id="stellar-map-center" class="stellar-map-button" type="button">Center target</button>
-                            <a id="stellar-map-education" href="education.html">Open in Planetary OS</a>
+                            <a id="stellar-map-education" href="education.html?target=Earth">Open Earth in Planetary OS</a>
                         </div>
                     </aside>
                 </div>
@@ -826,7 +829,21 @@ class InteractiveStarMaps {
             ? `d = ${parsecs.toFixed(2)} pc · m−M = ${distanceModulus.toFixed(2)} mag · simple HZ ≈ ${hzInner?.toFixed(2)}–${hzOuter?.toFixed(2)} AU · ${star.discovery || 'catalogued object'} · ${star.source || 'literature compilation'}`
             : `Solar reference: d = 0 pc · L = 1 L☉ · simple HZ ≈ ${hzInner?.toFixed(2)}–${hzOuter?.toFixed(2)} AU.`);
         const education = this.container.querySelector('#stellar-map-education');
-        education.href = `education.html?target=${encodeURIComponent(star.name)}`;
+        if (star.educationTarget) {
+            education.href = `education.html?target=${encodeURIComponent(star.educationTarget)}`;
+            education.removeAttribute('aria-disabled');
+            education.removeAttribute('tabindex');
+            education.style.opacity = '';
+            education.style.pointerEvents = '';
+            education.textContent = `Open ${star.educationTarget} in Planetary OS`;
+        } else {
+            education.removeAttribute('href');
+            education.setAttribute('aria-disabled', 'true');
+            education.setAttribute('tabindex', '-1');
+            education.style.opacity = '0.48';
+            education.style.pointerEvents = 'none';
+            education.textContent = 'No confirmed planet available';
+        }
         this.updateCanvasAccessibilityLabel();
         this.renderObjectList();
         this.announce(`${star.name} selected. ${star.spectral}, ${star.distance.toLocaleString()} light-years, ${star.planets} known worlds.`);

@@ -181,6 +181,50 @@ elseif (-not (Test-Path -LiteralPath $TrackerFeedSnapshot)) {
     throw "Tracker updater and fallback snapshot are both missing."
 }
 
+# Refresh the NASA PS/PSCompPars and atmospheric-spectra metadata snapshot.
+# The updater writes only after validating record counts, provenance, Barnard's
+# four confirmed planets, and the no-inferred-species contract. If NASA TAP is
+# unavailable, retain the checked-in snapshot that was copied above.
+$AtmosphereUpdater = "scripts\update-exoplanet-atmospheres.mjs"
+$AtmosphereSnapshot = "public\data\exoplanet-atmospheres.json"
+if (Test-Path -LiteralPath $AtmosphereUpdater) {
+    try {
+        & node $AtmosphereUpdater "--output=$AtmosphereSnapshot"
+        if ($LASTEXITCODE -ne 0) { throw "exoplanet atmosphere updater exited with code $LASTEXITCODE" }
+    }
+    catch {
+        Write-Warning "Exoplanet atmosphere refresh failed; retaining the checked-in snapshot. $($_.Exception.Message)"
+        if (-not (Test-Path -LiteralPath $AtmosphereSnapshot)) {
+            throw "Exoplanet atmosphere refresh failed and no fallback snapshot exists in the Pages artifact."
+        }
+    }
+}
+elseif (-not (Test-Path -LiteralPath $AtmosphereSnapshot)) {
+    throw "Exoplanet atmosphere updater and fallback snapshot are both missing."
+}
+
+# Project the full normalized research snapshot into a sub-1 MiB browser index.
+# The full data remains published for audit/download, while Education and the
+# visible registry avoid parsing multi-megabyte spectra/reference metadata.
+$AppearanceIndexBuilder = "scripts\build-exoplanet-appearance-index.mjs"
+$AppearanceIndexSnapshot = "public\data\exoplanet-appearance-index.json"
+$AppearanceCoreSnapshot = "public\data\exoplanet-appearance-core.json"
+if (Test-Path -LiteralPath $AppearanceIndexBuilder) {
+    try {
+        & node $AppearanceIndexBuilder "--input=$AtmosphereSnapshot" "--output=$AppearanceIndexSnapshot" "--core-output=$AppearanceCoreSnapshot"
+        if ($LASTEXITCODE -ne 0) { throw "appearance-index builder exited with code $LASTEXITCODE" }
+    }
+    catch {
+        Write-Warning "Appearance-index refresh failed; retaining the checked-in compact snapshot. $($_.Exception.Message)"
+        if (-not (Test-Path -LiteralPath $AppearanceIndexSnapshot) -or -not (Test-Path -LiteralPath $AppearanceCoreSnapshot)) {
+            throw "Appearance-index refresh failed and a fallback compact/core snapshot is missing from the Pages artifact."
+        }
+    }
+}
+elseif (-not (Test-Path -LiteralPath $AppearanceIndexSnapshot) -or -not (Test-Path -LiteralPath $AppearanceCoreSnapshot)) {
+    throw "Appearance-index builder and a fallback compact/core snapshot are missing."
+}
+
 # Never publish nested developer fixtures from otherwise production-facing directories.
 if (Test-Path -LiteralPath "public\forms\test") {
     Remove-Item -LiteralPath "public\forms\test" -Recurse -Force
@@ -436,6 +480,8 @@ $RequiredFiles = @(
     "education.html",
     "education-bootstrap.js",
     "education-viewer.js",
+    "planetary-appearance-model.js",
+    "atmosphere-catalog.js",
     "privacy.html",
     "tracker.html",
     "tracker-app.js",
@@ -450,6 +496,9 @@ $RequiredFiles = @(
     "vendor\bitgpu\LICENSE.txt",
     "vendor\bitgpu\THIRD_PARTY_LICENSES.md",
     "data\tracker\stellar-neighborhood.json",
+    "data\exoplanet-atmospheres.json",
+    "data\exoplanet-appearance-index.json",
+    "data\exoplanet-appearance-core.json",
     "images\earth_texture_map.png",
     "images\textures\mercury.jpg",
     "images\textures\venus.jpg",

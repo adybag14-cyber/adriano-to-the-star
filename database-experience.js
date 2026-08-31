@@ -32,14 +32,18 @@
     const claims = document.getElementById('claim-statistics-dashboard');
     const databaseConsole = contentSection?.querySelector('.content-container.database-console');
     const catalogue = document.getElementById('nasa-data-container');
+    const atmosphereRegistry = document.getElementById('atmosphere-catalog-panel');
 
     if (main && contentSection && trends && (trends.compareDocumentPosition(contentSection) & Node.DOCUMENT_POSITION_FOLLOWING)) {
       main.insertBefore(contentSection, trends);
     }
-    if (databaseConsole && catalogue && databaseConsole.firstElementChild !== catalogue) {
-      databaseConsole.insertBefore(catalogue, databaseConsole.firstElementChild);
+    if (databaseConsole && atmosphereRegistry && databaseConsole.firstElementChild !== atmosphereRegistry) {
+      databaseConsole.insertBefore(atmosphereRegistry, databaseConsole.firstElementChild);
     }
-    return Boolean(contentSection && trends && claims && databaseConsole && catalogue);
+    if (databaseConsole && catalogue && atmosphereRegistry?.nextElementSibling !== catalogue) {
+      databaseConsole.insertBefore(catalogue, atmosphereRegistry.nextElementSibling);
+    }
+    return Boolean(contentSection && trends && claims && databaseConsole && catalogue && atmosphereRegistry);
   }
 
   let flowAttempts = 0;

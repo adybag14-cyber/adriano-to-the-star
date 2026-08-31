@@ -44,7 +44,7 @@ test.describe('Advanced Star Maps', () => {
     await page.locator('#stellar-map-search').fill('TRAPPIST-1');
     await expect(page.locator('#stellar-map-name')).toHaveText('TRAPPIST-1');
     await expect(page.locator('#stellar-map-temperature')).toContainText('2,566');
-    await expect(page.locator('#stellar-map-education')).toHaveAttribute('href', /education\.html\?target=TRAPPIST-1/i);
+    await expect(page.locator('#stellar-map-education')).toHaveAttribute('href', /education\.html\?target=TRAPPIST-1%20e/i);
     await expect(page.locator('.stellar-map-source-links a')).toHaveCount(4);
 
     expect(failures).toEqual([]);

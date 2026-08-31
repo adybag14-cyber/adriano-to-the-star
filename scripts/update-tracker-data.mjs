@@ -81,6 +81,7 @@ function normaliseText(value) {
 }
 
 function finite(value, digits = null) {
+  if (value === null || value === undefined || value === '') return null;
   const number = Number(value);
   if (!Number.isFinite(number)) return null;
   return digits == null ? number : Number(number.toFixed(digits));

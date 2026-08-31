@@ -64,7 +64,7 @@
     <link rel="stylesheet" href="fonts/fonts.css">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="theme-styles.css">
-    <link rel="icon" type="image/x-icon" href="images/ita_logo.png">
+    <link rel="icon" type="image/webp" href="images/ita_logo_64.webp">
 
     <script data-cfasync="false" src="education-bootstrap.js" defer></script>
     <script data-cfasync="false" src="navigation.js" async></script>
@@ -191,9 +191,11 @@
         /* HUD Data Overlay */
         #data-overlay {
             position: absolute;
-            bottom: 40px;
+            bottom: 118px;
             right: 40px;
-            width: 300px;
+            width: min(360px, calc(100vw - 80px));
+            max-height: calc(100dvh - 158px);
+            overflow: auto;
             background: rgba(16, 16, 20, 0.6);
             border: 1px solid rgba(103, 232, 249, 0.3);
             border-left: 4px solid #67e8f9;
@@ -202,7 +204,7 @@
             padding: 25px;
             color: #fff;
             z-index: 5;
-            pointer-events: none;
+            pointer-events: auto;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
             transition: opacity 0.3s;
         }
@@ -277,6 +279,50 @@
             transform: translateX(5px);
         }
 
+        .planet-btn[aria-pressed="true"] {
+            background: rgba(103, 232, 249, 0.18);
+            border-color: rgba(103, 232, 249, 0.72);
+            color: #fff;
+        }
+
+        .planet-marker {
+            display: inline-grid;
+            place-items: center;
+            min-width: 2.6rem;
+            margin-right: 0.7rem;
+            color: #67e8f9;
+            font: 700 0.66rem/1 'DM Mono', ui-monospace, monospace;
+            letter-spacing: 0.05em;
+        }
+
+        .education-system-worlds {
+            margin-top: 12px;
+            padding: 12px;
+            border: 1px solid rgba(103, 232, 249, 0.25);
+            border-radius: 9px;
+            background: rgba(2, 6, 23, 0.72);
+        }
+
+        .education-system-worlds label,
+        .education-system-worlds p {
+            display: block;
+            margin: 0 0 8px;
+            color: #a8bdd5;
+            font-size: 0.72rem;
+            line-height: 1.45;
+        }
+
+        #education-world-select {
+            width: 100%;
+            min-height: 42px;
+            border: 1px solid rgba(103, 232, 249, 0.45);
+            border-radius: 7px;
+            background: #07111f;
+            color: #fff;
+            padding: 8px 10px;
+            font: 600 0.78rem/1.2 'DM Mono', ui-monospace, monospace;
+        }
+
         .data-row {
             display: flex;
             justify-content: space-between;
@@ -313,6 +359,139 @@
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             padding-top: 15px;
         }
+
+        .planet-context-label {
+            margin: 5px 0 16px;
+            color: #67e8f9;
+            font: 700 0.68rem/1.4 'DM Mono', ui-monospace, monospace;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .planet-evidence-summary {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        .planet-evidence-cell {
+            min-width: 0;
+            padding: 9px;
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            border-radius: 8px;
+            background: rgba(2, 6, 23, 0.58);
+        }
+
+        .planet-evidence-cell span,
+        .planet-evidence-cell strong {
+            display: block;
+        }
+
+        .planet-evidence-cell span {
+            margin-bottom: 4px;
+            color: #8ea4be;
+            font: 600 0.58rem/1.3 'DM Mono', ui-monospace, monospace;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .planet-evidence-cell strong {
+            overflow-wrap: anywhere;
+            color: #e8f7ff;
+            font-size: 0.72rem;
+            line-height: 1.4;
+        }
+
+        .planet-model-disclosure {
+            margin-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            padding-top: 12px;
+            font-size: 0.72rem;
+            line-height: 1.55;
+        }
+
+        .planet-model-disclosure summary {
+            cursor: pointer;
+            color: #b9ecfa;
+            font-weight: 700;
+        }
+
+        .planet-model-disclosure p,
+        .planet-model-disclosure ul {
+            color: #a8bdd5;
+        }
+
+        .planet-model-disclosure ul {
+            margin: 8px 0;
+            padding-left: 18px;
+        }
+
+        .planet-source-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-top: 10px;
+        }
+
+        .planet-source-links a {
+            border: 1px solid rgba(103, 232, 249, 0.3);
+            border-radius: 999px;
+            color: #67e8f9;
+            padding: 5px 8px;
+            text-decoration: none;
+        }
+
+        .planet-source-links a:hover,
+        .planet-source-links a:focus-visible {
+            border-color: #67e8f9;
+            background: rgba(103, 232, 249, 0.1);
+        }
+
+        @media (max-width: 760px) {
+            #ui-sidebar {
+                top: 72px;
+                left: 12px;
+                width: min(310px, calc(100vw - 24px));
+                max-height: calc(100dvh - 170px);
+                padding: 18px;
+            }
+
+            #data-overlay {
+                right: 12px;
+                bottom: 168px;
+                width: min(360px, calc(100vw - 24px));
+                max-height: min(40dvh, 350px);
+                padding: 16px;
+                box-sizing: border-box;
+            }
+
+            #planet-name {
+                font-size: 1.25rem;
+            }
+
+            #planet-desc {
+                margin-top: 10px;
+                padding-top: 10px;
+            }
+        }
+
+        @media (max-height: 680px) and (min-width: 761px) {
+            #data-overlay {
+                right: 20px;
+                bottom: 110px;
+                max-height: calc(100dvh - 130px);
+                padding: 18px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            #ui-sidebar,
+            #data-overlay,
+            .planet-btn {
+                transition: none;
+            }
+        }
     </style>
 </head>
 
@@ -345,35 +524,41 @@
         </div>
 
         <div class="planet-group-title">Inner Solar System</div>
-        <button class="planet-btn" data-education-planet="Mercury">🪨 Mercury</button>
-        <button class="planet-btn" data-education-planet="Venus">🔥 Venus</button>
-        <button class="planet-btn" data-education-planet="Earth">🌍 Earth (High-Res)</button>
-        <button class="planet-btn" data-education-planet="Mars">🔴 Mars</button>
+        <button type="button" class="planet-btn" data-education-planet="Mercury" aria-pressed="false"><span class="planet-marker" aria-hidden="true">ME</span><span>Mercury</span></button>
+        <button type="button" class="planet-btn" data-education-planet="Venus" aria-pressed="false"><span class="planet-marker" aria-hidden="true">VE</span><span>Venus</span></button>
+        <button type="button" class="planet-btn" data-education-planet="Earth" aria-pressed="true"><span class="planet-marker" aria-hidden="true">EA</span><span>Earth (High-Res)</span></button>
+        <button type="button" class="planet-btn" data-education-planet="Mars" aria-pressed="false"><span class="planet-marker" aria-hidden="true">MA</span><span>Mars</span></button>
 
         <div class="planet-group-title">Outer Giants</div>
-        <button class="planet-btn" data-education-planet="Jupiter">🟠 Jupiter</button>
-        <button class="planet-btn" data-education-planet="Saturn">🪐 Saturn</button>
-        <button class="planet-btn" data-education-planet="Uranus">❄️ Uranus</button>
-        <button class="planet-btn" data-education-planet="Neptune">🔵 Neptune</button>
+        <button type="button" class="planet-btn" data-education-planet="Jupiter" aria-pressed="false"><span class="planet-marker" aria-hidden="true">JU</span><span>Jupiter</span></button>
+        <button type="button" class="planet-btn" data-education-planet="Saturn" aria-pressed="false"><span class="planet-marker" aria-hidden="true">SA</span><span>Saturn</span></button>
+        <button type="button" class="planet-btn" data-education-planet="Uranus" aria-pressed="false"><span class="planet-marker" aria-hidden="true">UR</span><span>Uranus</span></button>
+        <button type="button" class="planet-btn" data-education-planet="Neptune" aria-pressed="false"><span class="planet-marker" aria-hidden="true">NE</span><span>Neptune</span></button>
 
-        <div class="planet-group-title">Exoplanets (Kepler)</div>
-        <button class="planet-btn" data-education-planet="Kepler-186f">✨ Kepler-186f</button>
-        <button class="planet-btn" data-education-planet="Trappist-1e">🌑 Trappist-1e</button>
+        <div class="planet-group-title">Exoplanet Teaching Targets</div>
+        <button type="button" class="planet-btn" data-education-planet="Kepler-186 f" aria-pressed="false"><span class="planet-marker" aria-hidden="true">K186</span><span>Kepler-186 f</span></button>
+        <button type="button" class="planet-btn" data-education-planet="TRAPPIST-1 e" aria-pressed="false"><span class="planet-marker" aria-hidden="true">T1E</span><span>TRAPPIST-1 e</span></button>
+
+        <section id="education-system-worlds" class="education-system-worlds" aria-labelledby="education-system-worlds-title" hidden>
+            <label id="education-system-worlds-title" for="education-world-select">Worlds in <span id="education-system-name">selected system</span></label>
+            <select id="education-world-select" aria-describedby="education-selection-status"></select>
+            <p id="education-selection-status" role="status" aria-live="polite">Choose a catalogued planet to compare evidence.</p>
+        </section>
 
         <div class="planet-group-title">Active Modules</div>
-        <button class="planet-btn"
+        <button type="button" class="planet-btn"
             data-education-extra="games"
             style="color: #4ade80; border-color: rgba(74,222,128,0.3);">
-            🎮 Launch Games
+            <span class="planet-marker" aria-hidden="true">GAME</span><span>Launch Games</span>
         </button>
-        <button class="planet-btn"
+        <button type="button" class="planet-btn"
             data-education-extra="courses"
             style="color: #a78bfa; border-color: rgba(167, 139, 250, 0.3);">
-            📚 Astronomy Courses
+            <span class="planet-marker" aria-hidden="true">COURSE</span><span>Astronomy Courses</span>
         </button>
 
         <div style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
-            <a href="index.html" style="color: #aaa; text-decoration: none; font-size: 0.9rem;">← EXIT SIMULATION</a>
+            <a href="index.html" style="color: #aaa; text-decoration: none; font-size: 0.9rem;">EXIT SIMULATION</a>
         </div>
     </div>
     <script>
@@ -384,12 +569,12 @@
     </script>
 
     <!-- Data Overlay -->
-    <div id="data-overlay">
+    <aside id="data-overlay" aria-labelledby="planet-name">
         <h2 id="planet-name" style="border:none; margin:0;">EARTH</h2>
-        <div style="font-family:'Inter'; color:#67e8f9; font-size:0.8rem; margin-bottom:20px;">HABITABLE ZONE</div>
+        <div id="planet-context-label" class="planet-context-label">Observed Solar System world</div>
 
         <div class="data-row">
-            <span class="data-label">Diameter</span>
+            <span class="data-label">Size evidence</span>
             <span class="data-value" id="planet-diameter">12,742 km</span>
         </div>
         <div class="data-row">
@@ -397,7 +582,7 @@
             <span class="data-value" id="planet-distance">1 AU</span>
         </div>
         <div class="data-row">
-            <span class="data-label">Surface</span>
+            <span class="data-label">Appearance</span>
             <span class="data-value" id="planet-surface">71% Water</span>
         </div>
 
@@ -405,10 +590,26 @@
             The third planet from the Sun, rendered with NASA Blue Marble surface data, an independent cloud layer,
             atmospheric scattering, and directional sunlight.
         </p>
-        <p style="font-size:0.68rem; color:#8ea4be; margin-top:12px;">
-            Earth surface and clouds: <a href="https://science.nasa.gov/earth/earth-observatory/blue-marble-next-generation/" target="_blank" rel="noopener noreferrer" style="color:#67e8f9;">NASA Blue Marble</a>
-        </p>
-    </div>
+        <div class="planet-evidence-summary" aria-live="polite">
+            <div class="planet-evidence-cell"><span>Evidence tier</span><strong id="planet-evidence-tier">Observed reference</strong></div>
+            <div class="planet-evidence-cell"><span>Atmosphere data</span><strong id="planet-spectrum-status">Solar System observations</strong></div>
+            <div class="planet-evidence-cell"><span>Appearance confidence</span><strong id="planet-model-confidence">High for source texture</strong></div>
+            <div class="planet-evidence-cell"><span>Model version</span><strong id="planet-model-version">Native texture renderer</strong></div>
+        </div>
+
+        <details id="planet-model-disclosure" class="planet-model-disclosure">
+            <summary>Evidence, provenance and model assumptions</summary>
+            <p id="planet-model-summary">Earth uses a NASA Blue Marble surface texture. The interactive lighting and atmosphere remain a visualization.</p>
+            <ul id="planet-model-assumptions">
+                <li>Directional lighting and atmosphere are renderer effects.</li>
+            </ul>
+            <nav id="planet-source-links" class="planet-source-links" aria-label="Scientific data sources">
+                <a href="https://science.nasa.gov/earth/earth-observatory/blue-marble-next-generation/" target="_blank" rel="noopener noreferrer">NASA Blue Marble</a>
+                <a href="https://exoplanetarchive.ipac.caltech.edu/" target="_blank" rel="noopener noreferrer">NASA Exoplanet Archive</a>
+                <a href="https://exoplanetarchive.ipac.caltech.edu/docs/atmospheres/atmospheres_columns.html" target="_blank" rel="noopener noreferrer">Spectra schema</a>
+            </nav>
+        </details>
+    </aside>
     </main>
 
 </body>

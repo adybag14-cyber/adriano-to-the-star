@@ -215,6 +215,7 @@ hex_key.txt
 sys_hex.txt
 kv_list_output.txt
 # Local/generated research and rendering outputs
+/.artifacts/
 The Overall Size and Scale of the HIV Problem.pdf
 The Overall Size and Scale of the HIV Problem.txt
 planet_surface.png

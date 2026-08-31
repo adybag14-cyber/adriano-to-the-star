@@ -152,8 +152,8 @@ test('Education: all main buttons work without console errors', async ({ page })
      await clickPlanet('Saturn', 'SATURN');
      await clickPlanet('Uranus', 'URANUS');
      await clickPlanet('Neptune', 'NEPTUNE');
-     await clickPlanet('Kepler-186f', 'KEPLER-186f');
-     await clickPlanet('Trappist-1e', 'TRAPPIST-1e');
+     await clickPlanet('Kepler-186 f', 'KEPLER-186 F');
+     await clickPlanet('TRAPPIST-1 e', 'TRAPPIST-1 E');
 
      await setHdToggle(page, true);
      expect(await page.evaluate(() => window.viewer?.hdTexturesEnabled)).toBe(true);

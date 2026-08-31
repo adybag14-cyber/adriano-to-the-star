@@ -3,6 +3,8 @@
  * Provides interactive planet visualization (Earth, Mars, Solar System, Exoplanets).
  */
 
+const clampEducationValue = (value, minimum, maximum) => Math.min(maximum, Math.max(minimum, Number(value) || 0));
+
 class PlanetViewer {
     constructor() {
         this.container = document.getElementById('viewer-container');
@@ -19,6 +21,11 @@ class PlanetViewer {
         this.contextRecoveryTimer = null;
         this.loadGeneration = 0;
         this.textureLoadTimer = null;
+        this.prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true;
+        this.appearanceModel = window.__planetaryAppearanceModel
+            || (typeof window.PlanetaryAppearanceModel === 'function'
+                ? new window.PlanetaryAppearanceModel(window.__exoplanetAtmosphereCatalog)
+                : null);
 
         this.ambientLight = null;
         this.hemiLight = null;
@@ -194,11 +201,20 @@ class PlanetViewer {
         this.init();
         this.animate();
 
-        const requestedTarget = new URLSearchParams(window.location.search).get('target');
-        const initialPlanet = this.resolvePlanetName(window.__pendingEducationPlanet || requestedTarget) || 'Earth';
-        this.loadPlanet(initialPlanet);
+        const requestedTarget = window.__pendingEducationPlanet || new URLSearchParams(window.location.search).get('target');
+        const initialPlanet = this.resolvePlanetName(requestedTarget);
+        if (requestedTarget && !initialPlanet) this.showUnavailableTarget(requestedTarget);
+        else this.loadPlanet(initialPlanet || 'Earth');
 
         window.addEventListener('resize', () => this.onWindowResize(), false);
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                if (this.animationFrameId !== null) cancelAnimationFrame(this.animationFrameId);
+                this.animationFrameId = null;
+            } else if (this.active && this.animationFrameId === null && !this.renderer?.getContext?.().isContextLost?.()) {
+                this.animate();
+            }
+        });
     }
 
     init() {
@@ -320,37 +336,45 @@ class PlanetViewer {
     resolvePlanetName(name) {
         if (!name) return null;
         const requested = String(name).trim();
+        const modelTarget = this.appearanceModel?.resolveTarget?.(requested);
+        if (modelTarget?.planet?.name) return modelTarget.planet.name;
         const exact = Object.keys(this.planets).find(key => key.toLowerCase() === requested.toLowerCase());
-        return exact || requested;
+        return exact || null;
+    }
+
+    showUnavailableTarget(name) {
+        const label = String(name || 'Unknown target').trim() || 'Unknown target';
+        this.currentPlanet = null;
+        this.updateDataOverlay({
+            name: label.toUpperCase(),
+            diameter: 'No planet record',
+            distance: 'Unavailable',
+            surface: 'Not rendered',
+            desc: `${label} does not resolve to a planet in the published NASA-backed snapshot. Stars and systems are not rendered as planets.`
+        });
+        this.container?.setAttribute('aria-label', `No renderable planet record is available for ${label}.`);
+        this.container?.classList.add('education-renderer-ready');
+        document.dispatchEvent(new CustomEvent('education-planet-unavailable', { detail: { target: label } }));
     }
 
     createCatalogPlanet(name) {
-        const label = String(name || 'Catalog world').trim() || 'Catalog world';
-        let hash = 2166136261;
-        for (let i = 0; i < label.length; i++) {
-            hash ^= label.charCodeAt(i);
-            hash = Math.imul(hash, 16777619) >>> 0;
-        }
-        const hue = hash % 360;
-        const color = new THREE.Color(`hsl(${hue}, 62%, 52%)`).getHex();
-        return {
-            texture: null,
-            color,
-            size: 0.85 + ((hash >>> 8) % 45) / 100,
-            speed: 0.0007 + ((hash >>> 16) % 18) / 10000,
-            data: {
-                name: label.toUpperCase(),
-                diameter: 'Catalog estimate',
-                distance: 'Kepler catalogue',
-                surface: 'Procedural exoplanet model',
-                desc: `A procedural visual model for ${label}. Physical appearance is illustrative; use the database record for measured catalogue properties.`
-            }
-        };
+        const target = this.appearanceModel?.resolveTarget?.(name);
+        return target ? this.appearanceModel.toViewerConfig(target) : null;
     }
 
     loadPlanet(name) {
-        const resolvedName = this.resolvePlanetName(name) || 'Earth';
-        if (!this.planets[resolvedName]) this.planets[resolvedName] = this.createCatalogPlanet(resolvedName);
+        const resolvedTarget = this.resolvePlanetName(name);
+        if (name && !resolvedTarget) {
+            this.showUnavailableTarget(name);
+            return;
+        }
+        const resolvedName = resolvedTarget || 'Earth';
+        const modeledConfig = this.createCatalogPlanet(resolvedName);
+        if (modeledConfig) this.planets[resolvedName] = modeledConfig;
+        if (!this.planets[resolvedName]) {
+            this.showUnavailableTarget(name);
+            return;
+        }
         this.currentPlanet = resolvedName;
         const config = this.planets[resolvedName];
         const generation = ++this.loadGeneration;
@@ -405,13 +429,9 @@ class PlanetViewer {
         mesh.material.dispose?.();
         mesh.material = new THREE.MeshPhongMaterial({
             color: config.color || 0x888888,
-            shininess: resolvedName === 'Earth' ? 1 : 7,
+            shininess: resolvedName === 'Earth' ? 1 : (config.planetaryModel?.appearance?.roughness > 0.7 ? 3 : 10),
             specular: resolvedName === 'Earth' ? 0x080b10 : 0x151924
         });
-
-        if (resolvedName === 'Earth') this.createAtmosphere(mesh.geometry);
-
-        if (!config.texture) return;
 
         const configureTexture = (texture) => {
             texture.encoding = THREE.sRGBEncoding;
@@ -422,6 +442,56 @@ class PlanetViewer {
             texture.needsUpdate = true;
             return texture;
         };
+
+        if (config.planetaryModel && this.appearanceModel) {
+            const model = config.planetaryModel;
+            const compactTexture = window.matchMedia?.('(max-width: 760px)').matches === true;
+            const textureWidth = compactTexture ? 512 : window.innerWidth >= 1800 ? 1024 : 768;
+            const texture = this.appearanceModel.createSurfaceTexture(THREE, model, { width: textureWidth, height: textureWidth / 2 });
+            if (texture) {
+                configureTexture(texture);
+                mesh.material.map = texture;
+                if (!model.appearance.banding) {
+                    mesh.material.bumpMap = texture;
+                    mesh.material.bumpScale = 0.006;
+                }
+                mesh.material.color.setHex(0xffffff);
+                mesh.material.needsUpdate = true;
+                const image = texture.image || {};
+                mesh.userData.surfaceImage = {
+                    src: `generated://${model.planetId}/${model.modelVersion}`,
+                    width: image.width || 0,
+                    height: image.height || 0,
+                    anisotropy: texture.anisotropy,
+                    nativeTexture: false,
+                    proceduralTexture: true,
+                    modelVersion: model.modelVersion,
+                    planetId: model.planetId,
+                    evidenceClass: model.evidence.class,
+                    spatialConstraint: model.evidence.spatialConstraint,
+                    generatedFromSnapshot: model.generatedFromSnapshot
+                };
+            }
+            mesh.userData.planetaryModel = model;
+            mesh.userData.displayRadiusNormalised = true;
+            mesh.userData.physicalRadiusEarth = model.physical.radiusEarth;
+            if (model.appearance.atmosphereOpacity > 0.01) this.createAtmosphere(mesh.geometry, model);
+            const cloudTexture = this.appearanceModel.createCloudTexture(THREE, model, { width: textureWidth, height: textureWidth / 2 });
+            if (cloudTexture) this.createProceduralCloudLayer(cloudTexture, model, generation, mesh.geometry);
+            this.container?.classList.add('education-renderer-ready');
+            const detail = { name: resolvedName, config, model, system: model.system, planet: model.record };
+            document.dispatchEvent(new CustomEvent('education-planet-change', { detail }));
+            window.ExoplanetAtmosphereCatalog?.refreshEducation?.(resolvedName);
+            return;
+        }
+
+        mesh.userData.planetaryModel = null;
+        if (resolvedName === 'Earth') this.createAtmosphere(mesh.geometry);
+        document.dispatchEvent(new CustomEvent('education-planet-change', {
+            detail: { name: resolvedName, config, model: null, system: null, planet: null }
+        }));
+
+        if (!config.texture) return;
 
         const applySurface = (texture, sourceUrl) => {
             if (generation !== this.loadGeneration || this.currentPlanet !== resolvedName || this.planetMesh !== mesh) return;
@@ -471,8 +541,15 @@ class PlanetViewer {
         }, 80);
     }
 
-    createAtmosphere(geometry) {
+    createAtmosphere(geometry, model = null) {
+        const rawColour = model?.appearance?.atmosphereColour || [41, 122, 235];
+        const colour = new THREE.Color(rawColour[0] / 255, rawColour[1] / 255, rawColour[2] / 255);
+        const opacity = model ? clampEducationValue(model.appearance.atmosphereOpacity, 0.01, 0.48) : 0.26;
         const material = new THREE.ShaderMaterial({
+            uniforms: {
+                uAtmosphereColour: { value: colour },
+                uAtmosphereOpacity: { value: opacity }
+            },
             vertexShader: `
                 varying vec3 vNormal;
                 varying vec3 vViewDirection;
@@ -486,9 +563,11 @@ class PlanetViewer {
             fragmentShader: `
                 varying vec3 vNormal;
                 varying vec3 vViewDirection;
+                uniform vec3 uAtmosphereColour;
+                uniform float uAtmosphereOpacity;
                 void main() {
                     float rim = pow(1.0 - max(dot(vNormal, vViewDirection), 0.0), 2.35);
-                    gl_FragColor = vec4(0.16, 0.48, 0.92, rim * 0.26);
+                    gl_FragColor = vec4(uAtmosphereColour, rim * uAtmosphereOpacity);
                 }
             `,
             side: THREE.BackSide,
@@ -497,9 +576,39 @@ class PlanetViewer {
             depthWrite: false
         });
         this.atmosphereMesh = new THREE.Mesh(geometry.clone(), material);
-        this.atmosphereMesh.name = 'EducationEarth:Atmosphere';
-        this.atmosphereMesh.scale.setScalar(1.018);
+        this.atmosphereMesh.name = model ? `EducationPlanet:${model.planetId}:Atmosphere` : 'EducationEarth:Atmosphere';
+        this.atmosphereMesh.userData.evidenceClass = model?.evidence?.class || 'observed-map';
+        this.atmosphereMesh.userData.geometricThicknessExaggerated = Boolean(model);
+        this.atmosphereMesh.scale.setScalar(model ? 1.022 + opacity * 0.025 : 1.018);
         this.scene.add(this.atmosphereMesh);
+    }
+
+    createProceduralCloudLayer(texture, model, generation, sourceGeometry) {
+        if (generation !== this.loadGeneration || this.currentPlanet !== model.planetName) {
+            texture.dispose();
+            return;
+        }
+        texture.encoding = THREE.sRGBEncoding;
+        texture.anisotropy = Math.min(8, this.renderer.capabilities.getMaxAnisotropy());
+        texture.minFilter = THREE.LinearMipmapLinearFilter;
+        texture.magFilter = THREE.LinearFilter;
+        texture.generateMipmaps = true;
+        texture.needsUpdate = true;
+        const material = new THREE.MeshPhongMaterial({
+            map: texture,
+            color: 0xe6f1f4,
+            transparent: true,
+            opacity: clampEducationValue(model.appearance.cloudOpacity, 0.02, 0.72),
+            depthWrite: false,
+            shininess: 2
+        });
+        this.cloudMesh = new THREE.Mesh(sourceGeometry.clone(), material);
+        this.cloudMesh.name = `EducationPlanet:${model.planetId}:CloudScenario`;
+        this.cloudMesh.userData.spatialConstraint = 'none';
+        this.cloudMesh.userData.modelVersion = model.modelVersion;
+        this.cloudMesh.scale.setScalar(1.009);
+        this.cloudMesh.rotation.copy(this.planetMesh.rotation);
+        this.scene.add(this.cloudMesh);
     }
 
     loadCloudLayer(url, generation, sourceGeometry) {
@@ -569,11 +678,11 @@ class PlanetViewer {
         try {
             const config = this.planets[this.currentPlanet];
 
-            if (this.planetMesh && config) {
+            if (this.planetMesh && config && !this.prefersReducedMotion) {
                 this.planetMesh.rotation.y += config.speed;
             }
 
-            if (this.cloudMesh && config) {
+            if (this.cloudMesh && config && !this.prefersReducedMotion) {
                 this.cloudMesh.rotation.y += config.speed * 1.2; // Clouds move faster
             }
 
@@ -586,7 +695,7 @@ class PlanetViewer {
                 this.renderer.render(this.scene, this.camera);
             }
         } catch (e) {
-            console.error("❌ Education Viewer Animation Error:", e);
+            console.error('Education Viewer Animation Error:', e);
             this.active = false; // Stop loop to prevent browser freeze
             if (this.animationFrameId !== null) cancelAnimationFrame(this.animationFrameId);
             this.animationFrameId = null;

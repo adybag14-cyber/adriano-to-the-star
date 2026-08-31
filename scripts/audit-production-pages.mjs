@@ -164,6 +164,176 @@ if (!/data\/space-feeds\.json\?v=[A-Za-z0-9._-]+/.test(spaceIntegrations)) {
   fail('space-api-integrations.js: build-cached feed URL is missing its release version');
 }
 
+const atmosphereSnapshotPath = path.join(publicRoot, 'data', 'exoplanet-atmospheres.json');
+try {
+  const atmosphereSnapshotStat = await fs.stat(atmosphereSnapshotPath);
+  if (atmosphereSnapshotStat.size >= 5 * 1024 * 1024) {
+    fail(`data/exoplanet-atmospheres.json: ${atmosphereSnapshotStat.size} bytes exceeds the mirror's sub-5 MiB artifact ceiling`);
+  }
+  const atmosphereSnapshot = JSON.parse(await fs.readFile(atmosphereSnapshotPath, 'utf8'));
+  const systems = Array.isArray(atmosphereSnapshot.systems) ? atmosphereSnapshot.systems : [];
+  const planets = systems.flatMap(system => Array.isArray(system.planets) ? system.planets : []);
+  if (atmosphereSnapshot.schemaVersion !== 1) fail('data/exoplanet-atmospheres.json: schemaVersion must be 1');
+  if (systems.length < 200) fail('data/exoplanet-atmospheres.json: expected at least 200 scoped systems');
+  if (planets.length < 350) fail('data/exoplanet-atmospheres.json: expected at least 350 scoped confirmed planets');
+  if (atmosphereSnapshot.statistics?.systems !== systems.length) fail('data/exoplanet-atmospheres.json: system statistics do not match records');
+  if (atmosphereSnapshot.statistics?.planets !== planets.length) fail('data/exoplanet-atmospheres.json: planet statistics do not match records');
+  if (atmosphereSnapshot.statistics?.speciesClaims !== 0) fail('data/exoplanet-atmospheres.json: atmospheric species were inferred from metadata');
+  const sourceTables = new Set((atmosphereSnapshot.sources || []).map(source => source.table));
+  for (const table of ['ps', 'pscomppars', 'spectra']) {
+    if (!sourceTables.has(table)) fail(`data/exoplanet-atmospheres.json: source provenance is missing ${table}`);
+  }
+  if (!/default_flag=1/i.test(atmosphereSnapshot.queryProvenance?.psDefault?.adql || '')) {
+    fail('data/exoplanet-atmospheres.json: PS provenance does not select the default parameter set');
+  }
+  if (!/from pscomppars/i.test(atmosphereSnapshot.queryProvenance?.psComposite?.adql || '')) {
+    fail('data/exoplanet-atmospheres.json: PSCompPars query provenance is missing');
+  }
+  if (!/from spectra/i.test(atmosphereSnapshot.queryProvenance?.spectra?.adql || '')) {
+    fail('data/exoplanet-atmospheres.json: spectra metadata query provenance is missing');
+  }
+  if (!/No atmospheric species are parsed|No atmospheric species/i.test(atmosphereSnapshot.updatePolicy?.compositionPolicy || '')) {
+    fail('data/exoplanet-atmospheres.json: no-inferred-species policy is missing');
+  }
+
+  const planetIds = new Set();
+  for (const system of systems) {
+    if (!system.id || !system.hostname) fail('data/exoplanet-atmospheres.json: system identity is incomplete');
+    for (const planet of system.planets || []) {
+      if (!planet.id || planetIds.has(planet.id)) fail(`data/exoplanet-atmospheres.json: duplicate or missing planet id ${planet.id || '(missing)'}`);
+      planetIds.add(planet.id);
+      if (planet.spectroscopy?.species?.status !== 'not-provided-by-nasa-tap-metadata' || planet.spectroscopy?.species?.values?.length !== 0) {
+        fail(`data/exoplanet-atmospheres.json: ${planet.name} violates the no-inferred-species contract`);
+      }
+      const defaultMeasurements = planet.psDefault?.measurements || {};
+      const compositeMeasurements = planet.psComposite?.measurements || {};
+      for (const [key, measurement] of Object.entries(defaultMeasurements)) {
+        if (measurement.provenance?.table !== 'ps') fail(`data/exoplanet-atmospheres.json: ${planet.name}.${key} lost PS provenance`);
+        if (measurement.value !== null && !Number.isFinite(measurement.value)) fail(`data/exoplanet-atmospheres.json: ${planet.name}.${key} is not finite or null`);
+      }
+      for (const [key, measurement] of Object.entries(compositeMeasurements)) {
+        if (measurement.provenance?.table !== 'pscomppars') fail(`data/exoplanet-atmospheres.json: ${planet.name}.${key} lost PSCompPars provenance`);
+        if (measurement.value !== null && !Number.isFinite(measurement.value)) fail(`data/exoplanet-atmospheres.json: ${planet.name}.${key} is not finite or null`);
+        const listedCalculated = planet.psComposite?.calculatedFields?.includes(key) === true;
+        if (listedCalculated !== (measurement.provenance?.kind === 'archive-calculated')) {
+          fail(`data/exoplanet-atmospheres.json: ${planet.name}.${key} calculated provenance is inconsistent`);
+        }
+      }
+    }
+  }
+
+  const barnard = systems.find(system => system.hostname === "Barnard's star");
+  const barnardNames = (barnard?.planets || []).map(planet => planet.name).sort();
+  if (JSON.stringify(barnardNames) !== JSON.stringify(['Barnard b', 'Barnard c', 'Barnard d', 'Barnard e'])) {
+    fail('data/exoplanet-atmospheres.json: Barnard system must contain exactly b, c, d, and e');
+  }
+  for (const planet of barnard?.planets || []) {
+    const defaultRadius = planet.psDefault?.measurements?.radiusEarth;
+    const compositeRadius = planet.psComposite?.measurements?.radiusEarth;
+    const compositeMass = planet.psComposite?.measurements?.massEarth;
+    if (defaultRadius?.value !== null) fail(`data/exoplanet-atmospheres.json: ${planet.name} PS default missing radius must remain null`);
+    if (!(Number(compositeRadius?.value) > 0) || compositeRadius?.provenance?.kind !== 'archive-calculated') {
+      fail(`data/exoplanet-atmospheres.json: ${planet.name} must preserve its calculated PSCompPars radius provenance`);
+    }
+    if (!(Number(compositeMass?.value) > 0) || compositeMass?.provenance?.kind !== 'literature') {
+      fail(`data/exoplanet-atmospheres.json: ${planet.name} must preserve its literature mass or mass*sin(i)`);
+    }
+    if (planet.psComposite?.massProvenance !== 'Msini') {
+      fail(`data/exoplanet-atmospheres.json: ${planet.name} must retain its PSCompPars Msini provenance`);
+    }
+  }
+  const trappist1e = planets.find(planet => planet.name === 'TRAPPIST-1 e');
+  if (!trappist1e || !(trappist1e.spectroscopy?.counts?.transmission > 0) || !(trappist1e.spectroscopy?.spectra?.length > 0)) {
+    fail('data/exoplanet-atmospheres.json: TRAPPIST-1 e spectroscopy counts and metadata are missing');
+  }
+} catch (error) {
+  fail(`data/exoplanet-atmospheres.json: missing or invalid snapshot (${error.message})`);
+}
+
+try {
+  const appearanceIndexPath = path.join(publicRoot, 'data', 'exoplanet-appearance-index.json');
+  const appearanceIndexStat = await fs.stat(appearanceIndexPath);
+  if (appearanceIndexStat.size >= 1024 * 1024) {
+    fail(`data/exoplanet-appearance-index.json: ${appearanceIndexStat.size} bytes exceeds the 1 MiB browser budget`);
+  }
+  const appearanceIndex = JSON.parse(await fs.readFile(appearanceIndexPath, 'utf8'));
+  const systems = Array.isArray(appearanceIndex.systems) ? appearanceIndex.systems : [];
+  const planets = systems.flatMap(system => system.planets || []);
+  if (appearanceIndex.sourceArtifact !== 'data/exoplanet-atmospheres.json') {
+    fail('data/exoplanet-appearance-index.json: full-snapshot authority link is missing');
+  }
+  if (systems.length !== appearanceIndex.statistics?.systems || planets.length !== appearanceIndex.statistics?.planets) {
+    fail('data/exoplanet-appearance-index.json: runtime records do not match full-snapshot statistics');
+  }
+  if (planets.some(planet => planet.spectroscopy?.species?.values?.length)) {
+    fail('data/exoplanet-appearance-index.json: compact runtime introduced atmospheric species claims');
+  }
+  if (planets.some(planet => Array.isArray(planet.spectroscopy?.spectra))) {
+    fail('data/exoplanet-appearance-index.json: compact runtime unexpectedly embeds full spectrum metadata arrays');
+  }
+  const barnard = systems.find(system => system.hostname === "Barnard's star");
+  if (JSON.stringify((barnard?.planets || []).map(planet => planet.name).sort()) !== JSON.stringify(['Barnard b', 'Barnard c', 'Barnard d', 'Barnard e'])) {
+    fail('data/exoplanet-appearance-index.json: Barnard runtime records are incomplete');
+  }
+} catch (error) {
+  fail(`data/exoplanet-appearance-index.json: missing or invalid compact runtime (${error.message})`);
+}
+
+try {
+  const corePath = path.join(publicRoot, 'data', 'exoplanet-appearance-core.json');
+  const coreStat = await fs.stat(corePath);
+  if (coreStat.size >= 128 * 1024) fail(`data/exoplanet-appearance-core.json: ${coreStat.size} bytes exceeds the 128 KiB startup budget`);
+  const core = JSON.parse(await fs.readFile(corePath, 'utf8'));
+  const corePlanets = (core.systems || []).flatMap(system => system.planets || []);
+  if (core.systems?.length !== 8 || corePlanets.length < 20) fail('data/exoplanet-appearance-core.json: teaching-system projection is incomplete');
+  if (core.statistics?.fullCatalogSystems < 200 || core.statistics?.fullCatalogPlanets < 350) {
+    fail('data/exoplanet-appearance-core.json: full-catalog relationship is missing');
+  }
+  if (!(core.systems || []).some(system => system.hostname === "Barnard's star" && system.planets?.length === 4)) {
+    fail('data/exoplanet-appearance-core.json: Barnard four-world startup record is missing');
+  }
+} catch (error) {
+  fail(`data/exoplanet-appearance-core.json: missing or invalid startup runtime (${error.message})`);
+}
+
+try {
+  const [educationPage, educationBootstrap, educationViewer, starMaps, databasePage] = await Promise.all([
+    fs.readFile(path.join(publicRoot, 'education.html'), 'utf8'),
+    fs.readFile(path.join(publicRoot, 'education-bootstrap.js'), 'utf8'),
+    fs.readFile(path.join(publicRoot, 'education-viewer.js'), 'utf8'),
+    fs.readFile(path.join(publicRoot, 'interactive-star-maps.js'), 'utf8'),
+    fs.readFile(path.join(publicRoot, 'database.html'), 'utf8')
+  ]);
+  for (const marker of ['education-world-select', 'planet-evidence-tier', 'planet-spectrum-status', 'planet-model-disclosure']) {
+    if (!educationPage.includes(`id="${marker}"`)) fail(`education.html: ${marker} evidence control is missing`);
+  }
+  if (!/data\/exoplanet-appearance-core\.json\?v=[A-Za-z0-9._-]+/.test(educationBootstrap)
+      || !/data\/exoplanet-appearance-index\.json\?v=[A-Za-z0-9._-]+/.test(educationBootstrap)) {
+    fail('education-bootstrap.js: core/fallback appearance snapshots are missing release versions');
+  }
+  for (const asset of ['planetary-appearance-model.js', 'atmosphere-catalog.js']) {
+    if (!new RegExp(`${asset.replace('.', '\\.')}\\?v=[A-Za-z0-9._-]+`).test(educationBootstrap)) {
+      fail(`education-bootstrap.js: ${asset} is missing its release version`);
+    }
+  }
+  if (/Catalog estimate|Kepler catalogue|hsl\(\$\{hue\}/i.test(educationViewer)) {
+    fail('education-viewer.js: retired name-hashed flat exoplanet fallback remains');
+  }
+  if (!educationViewer.includes('proceduralTexture: true') || !educationViewer.includes('spatialConstraint')) {
+    fail('education-viewer.js: procedural surface provenance metadata is missing');
+  }
+  if (!starMaps.includes("educationTarget: 'Barnard b'") || !starMaps.includes("planets: 4, educationTarget: 'Barnard b'")) {
+    fail('interactive-star-maps.js: Barnard system does not route its four planets through Barnard b');
+  }
+  if (!databasePage.includes('id="atmosphere-catalog-panel"')) fail('database.html: nearby atmosphere registry is missing');
+  if (!/src="planetary-appearance-model\.js\?v=[A-Za-z0-9._-]+"/.test(databasePage)
+      || !/src="atmosphere-catalog\.js\?v=[A-Za-z0-9._-]+"/.test(databasePage)) {
+    fail('database.html: atmosphere model assets are missing or unversioned');
+  }
+} catch (error) {
+  fail(`Planetary OS integration audit failed (${error.message})`);
+}
+
 if (failures.length) {
   console.error(`Production page audit failed with ${failures.length} issue(s):`);
   failures.forEach(message => console.error(` - ${message}`));

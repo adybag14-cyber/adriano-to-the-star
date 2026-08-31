@@ -23,6 +23,8 @@
     "format": "prettier --write \"src/**/*.{js,ts,css,html}\"",
     "type-check": "tsc --noEmit",
     "data:tracker": "node scripts/update-tracker-data.mjs",
+    "data:exoplanet-atmospheres": "node scripts/update-exoplanet-atmospheres.mjs",
+    "data:exoplanet-appearance": "node scripts/build-exoplanet-appearance-index.mjs",
     "build:pages": "powershell -ExecutionPolicy Bypass -File build-pages.ps1"
   },
   "devDependencies": {

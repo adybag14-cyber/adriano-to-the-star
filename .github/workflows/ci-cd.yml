@@ -56,6 +56,13 @@ jobs:
           node --check navigation.js
           node --check theme-toggle.js
           node --check cosmic-music-player.js
+          node --check interactive-star-maps.js
+          node --check education-bootstrap.js
+          node --check education-viewer.js
+          node --check planetary-appearance-model.js
+          node --check atmosphere-catalog.js
+          node --check scripts/update-exoplanet-atmospheres.mjs
+          node --check scripts/build-exoplanet-appearance-index.mjs
           node --check scripts/pioneer-playwright-workload.mjs
           node --check scripts/pioneer-advanced-rendering-smoke.mjs
           node --check tests/e2e/smoke-functional.spec.js
@@ -64,6 +71,7 @@ jobs:
           node --check tests/e2e/local-platform-remediation.spec.js
           node --check tests/e2e/privacy-tracker.spec.js
           node --check tests/e2e/pioneer-star-maps-advanced.spec.js
+          node --check tests/e2e/education-atmosphere-models.spec.js
           node --check tests/e2e/accessibility-all-pages.spec.js
 
       - name: Repository lint gate
@@ -189,6 +197,7 @@ jobs:
             tests/e2e/local-platform-remediation.spec.js \
             tests/e2e/privacy-tracker.spec.js \
             tests/e2e/pioneer-star-maps-advanced.spec.js \
+            tests/e2e/education-atmosphere-models.spec.js \
             tests/e2e/accessibility-all-pages.spec.js \
             --workers=1 \
             --reporter=line
