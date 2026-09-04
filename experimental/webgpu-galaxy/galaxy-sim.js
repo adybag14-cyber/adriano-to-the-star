@@ -276,6 +276,16 @@ class GalaxySim {
             console.info('WebGPU unavailable; showing the compatibility boundary.', e?.message || e);
             document.getElementById('error-overlay').style.display = 'block';
             document.getElementById('error-overlay').querySelector('p').textContent = e.message;
+            document.getElementById('gpu-status').textContent = 'UNAVAILABLE';
+            for (const id of ['pause-simulation', 'star-count-slider', 'gravity-slider', 'time-slider']) {
+                const control = document.getElementById(id);
+                if (control) { control.disabled = true; control.setAttribute('aria-disabled', 'true'); }
+            }
+            const alternative = document.createElement('a');
+            alternative.href = '../fluid-nebula/index.html';
+            alternative.textContent = 'Open the compatible Canvas particle lab';
+            alternative.style.cssText = 'display:block;margin-top:1rem;color:#a5f3fc;';
+            document.getElementById('error-overlay').append(alternative);
         }
     }
 

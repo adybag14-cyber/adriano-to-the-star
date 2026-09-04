@@ -50,7 +50,7 @@
         }
 
         .input-area {
-            padding: 10px;
+            padding: 10px 150px 10px 10px;
             border-top: 1px solid #333;
             display: flex;
             gap: 10px;
@@ -91,8 +91,9 @@
             background: radial-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 90%);
         }
         button.secondary{background:rgba(8,47,73,.65)}button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #67e8f9;outline-offset:3px}.header-actions{display:flex;align-items:center;gap:.6rem}.terminal{scrollbar-color:#38bdf8 transparent}
-        .home-logo{position:fixed;right:1rem;bottom:1rem;z-index:5;width:auto}.home-logo .ita-logo{position:static;width:40px;height:40px;object-fit:contain}
-        @media(max-width:720px){.header{align-items:stretch;gap:1rem;flex-direction:column}.header-actions{display:grid;grid-template-columns:1fr 1fr}.header-actions a{grid-column:1 / -1}.input-area{padding:.7rem;flex-wrap:wrap}.input-area input{min-width:0}.terminal{padding:12px}}
+        .home-logo{position:fixed;right:1rem;bottom:5rem;z-index:5;width:auto}.home-logo .ita-logo{position:static;width:40px;height:40px;object-fit:contain}
+        .ita-lab-disclosure:not([open]) { width: max-content !important; max-width: 140px; }
+        @media(max-width:720px){.header{align-items:stretch;gap:1rem;flex-direction:column}.header-actions{display:grid;grid-template-columns:1fr 1fr}.header-actions a{grid-column:1 / -1}.input-area{padding:.7rem 150px .7rem .7rem;flex-wrap:wrap}.input-area input{min-width:0}.terminal{padding:12px}}
         @media(prefers-reduced-motion:reduce){.crt-overlay{display:none}}
     </style>
 </head>

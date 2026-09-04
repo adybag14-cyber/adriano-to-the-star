@@ -17,6 +17,19 @@ class DatabaseAdvancedFeatures {
         this.createComparisonButton();
         this.createNotificationSystem();
         this.setupEventListeners();
+        const shared = new URLSearchParams(location.search).get('comparison');
+        if (shared) {
+            let restored = false;
+            const restoreComparison = () => {
+                if (restored || !this.db.allData.length) return;
+                restored = true;
+                this.comparisonList = [...new Set(shared.split(',').map(key => this.db.findPlanet(key)).filter(Boolean).map(planet => this.db.recordKey(planet)))].slice(0, 5);
+                this.updateComparisonButton();
+                if (this.comparisonList.length) this.showComparison();
+            };
+            if (this.db.allData.length) restoreComparison();
+            else document.addEventListener('ita:database-ready', restoreComparison, { once: true });
+        }
         this.trackEvent('db_adv_features_initialized');
     }
 
@@ -30,13 +43,26 @@ class DatabaseAdvancedFeatures {
 
     // Load favourites from browser-local storage.
     loadFavorites() {
-        const favorites = JSON.parse(localStorage.getItem('planet_favorites') || '[]');
-        return favorites;
+        try {
+            const favorites = JSON.parse(localStorage.getItem('planet_favorites') || '[]');
+            return Array.isArray(favorites) ? favorites : [];
+        } catch { return []; }
+    }
+
+    normalizeFavorites() {
+        this.favorites = [...new Set(this.favorites.map(reference => {
+            const planet = this.db.findPlanet(reference);
+            return planet ? this.db.recordKey(planet) : reference;
+        }))];
+        return this.favorites;
     }
 
     // Save favourite to browser-local storage.
     toggleFavorite(kepid) {
-        const index = this.favorites.indexOf(kepid);
+        this.normalizeFavorites();
+        const planet = this.db.findPlanet(kepid);
+        const key = planet ? this.db.recordKey(planet) : kepid;
+        const index = this.favorites.indexOf(key);
 
         if (index > -1) {
             // Remove favorite
@@ -44,7 +70,7 @@ class DatabaseAdvancedFeatures {
             this.showNotification('Planet removed from favorites', 'info');
         } else {
             // Add favorite
-            this.favorites.push(kepid);
+            this.favorites.push(key);
             this.showNotification('Planet added to favorites', 'success');
         }
 
@@ -236,22 +262,25 @@ class DatabaseAdvancedFeatures {
         }
 
         // Filter to show only favorites
-        this.db.filteredData = this.db.allData.filter(p => this.favorites.includes(p.kepid));
+        const saved = new Set(this.favorites.map(key => this.db.findPlanet(key)).filter(Boolean));
+        this.db.filteredData = this.db.allData.filter(p => saved.has(p));
         this.db.currentPage = 1;
         this.db.renderPage();
         this.showNotification(`Showing ${this.favorites.length} favorite planet(s)`, 'success');
     }
 
     updateFavoriteButtons() {
-        document.querySelectorAll('.favorite-btn').forEach(btn => {
-            const kepid = parseInt(btn.dataset.kepid);
-            if (this.favorites.includes(kepid)) {
-                btn.textContent = '⭐';
-                btn.title = 'Remove from favorites';
-            } else {
-                btn.textContent = '☆';
-                btn.title = 'Add to favorites';
-            }
+        const saved = new Set(this.favorites.map(key => this.db.findPlanet(key)).filter(Boolean));
+        document.querySelectorAll('.favorite-btn,.bookmark-btn').forEach(btn => {
+            const key = btn.closest('[data-record-id]')?.dataset.recordId || btn.dataset.kepid;
+            const selected = saved.has(this.db.findPlanet(key));
+            const isBookmark = btn.classList.contains('bookmark-btn');
+            if (isBookmark) btn.dataset.i18n = selected ? 'common.saved' : 'common.save';
+            const text = isBookmark ? (window.i18n?.()?.t(btn.dataset.i18n) || (selected ? 'Saved' : 'Save')) : (selected ? '⭐' : '☆');
+            // This runs inside the card observer; only mutate changed labels.
+            if (btn.textContent !== text) btn.textContent = text;
+            btn.title = selected ? 'Remove from favorites' : 'Add to favorites';
+            btn.setAttribute('aria-pressed', String(selected));
         });
     }
 
@@ -428,9 +457,8 @@ class DatabaseAdvancedFeatures {
             return;
         }
 
-        const planets = this.comparisonList.map(kepid =>
-            this.db.allData.find(p => p.kepid === kepid)
-        ).filter(p => p);
+        const planets = this.comparisonList.map(key => this.db.findPlanet(key)).filter(Boolean);
+        document.getElementById('comparison-modal')?.remove();
 
         const modal = document.createElement('div');
         modal.id = 'comparison-modal';
@@ -550,24 +578,28 @@ class DatabaseAdvancedFeatures {
     /**
      * Share comparison via Web Share API or clipboard
      */
-    shareComparison(planets) {
+    async shareComparison(planets) {
         const planetNames = planets.map(p => p.kepler_name || p.kepoi_name || `KOI-${p.kepid}`).join(', ');
         const shareText = `Planet Comparison: ${planetNames}`;
-        const shareUrl = `${window.location.origin}${window.location.pathname}?comparison=${planets.map(p => p.kepid).join(',')}`;
+        const shareUrl = `${window.location.origin}${window.location.pathname}?comparison=${encodeURIComponent(planets.map(p => this.db.recordKey(p)).join(','))}`;
 
-        if (navigator.share) {
-            navigator.share({
-                title: 'Planet Comparison',
-                text: shareText,
-                url: shareUrl
-            }).catch(() => {
-                // Fallback to clipboard
-                navigator.clipboard.writeText(shareUrl);
-                this.showNotification('Comparison link copied to clipboard!', 'success');
-            });
-        } else {
-            navigator.clipboard.writeText(shareUrl);
+        try {
+            if (navigator.share) {
+                await navigator.share({ title: 'Planet Comparison', text: shareText, url: shareUrl });
+                return;
+            }
+            await navigator.clipboard.writeText(shareUrl);
             this.showNotification('Comparison link copied to clipboard!', 'success');
+        } catch (error) {
+            if (error.name === 'AbortError') return;
+            const input = document.createElement('input');
+            input.readOnly = true;
+            input.value = shareUrl;
+            input.setAttribute('aria-label', 'Comparison URL to copy');
+            input.style.cssText = 'display:block;width:100%;margin:1rem 0;padding:.75rem;color:#e2f8ff;background:#102030;';
+            document.getElementById('comparison-modal')?.append(input);
+            input.focus(); input.select();
+            this.showNotification('Select and copy the comparison URL shown below the table.', 'info');
         }
     }
 

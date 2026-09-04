@@ -1,4 +1,42 @@
 /* 2026 deep-space interface layer for Stellar AI. */
+.stellar-ai-page #stellar-utility-dock {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-start;
+    justify-content: flex-end;
+    width: min(1500px, calc(100% - 2rem));
+    min-height: 64px;
+    margin: 1.5rem auto 0;
+    padding: .5rem;
+    box-sizing: border-box;
+}
+.stellar-ai-page #stellar-utility-dock #cosmic-music-player,
+.stellar-ai-page #stellar-utility-dock #theme-toggle-container,
+.stellar-ai-page #stellar-utility-dock .ita-language-switcher {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    transform: none !important;
+    z-index: 2;
+}
+.stellar-ai-page #stellar-utility-dock #cosmic-music-player { max-width: 100% !important; flex-shrink: 1; order: 3; }
+.stellar-ai-page #stellar-utility-dock #theme-toggle-container { order: 2; }
+.stellar-ai-page #stellar-utility-dock .ita-language-switcher { order: 1; }
+.stellar-ai-page #stellar-utility-dock .ita-language-menu { top: auto; bottom: calc(100% + 10px); left: 0; right: auto; }
+.stellar-ai-page #stellar-chat-shell .input-wrapper { grid-template-columns: repeat(4,44px) minmax(0,1fr) 44px; }
+.stellar-ai-page #stellar-chat-shell .attach-btn,
+.stellar-ai-page #stellar-chat-shell .send-btn { width:44px; height:44px; min-width:44px; min-height:44px; }
+@media(max-width:640px) {
+    .stellar-ai-page #stellar-chat-shell .input-wrapper { grid-template-columns:repeat(4,44px) minmax(0,1fr) 44px; gap:.4rem; }
+    .stellar-ai-page #stellar-chat-shell .message-input { grid-column:1 / 6; grid-row:2; min-height:48px; }
+    .stellar-ai-page #stellar-chat-shell .send-btn { grid-column:6; grid-row:2; }
+    .stellar-ai-page #stellar-chat-shell .attach-btn { grid-row:1; }
+    .stellar-ai-page #stellar-utility-dock { width:calc(100% - 1rem); margin-top:1rem; padding:.5rem 0; }
+}
+
 .stellar-ai-page {
     --stellar-cyan: #67e8f9;
     --stellar-cyan-strong: #22d3ee;

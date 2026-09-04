@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Volumetric Nebula Simulation (10M Particles) | Adriano to the Stars</title>
+    <title>Nebula Particle Study | Adriano To The Star</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap"
         rel="stylesheet">
@@ -117,6 +117,16 @@
             background: rgba(186, 148, 79, 0.3);
             border-color: #ba944f;
         }
+        .stats-panel { border-color: #62ddec; box-shadow: 0 0 30px #35b4d522; }
+        .stat-value, .controls-panel h4 { color: #91eeff !important; }
+        .controls-panel { border-color: #62ddec; }
+        #pause-nebula { min-height: 44px; background:#122939; color:#e1faff; border:1px solid #65c3d4; border-radius:8px; padding:8px 14px; }
+        @media (max-width: 650px) {
+            .ui-overlay { padding:12px; overflow:auto; gap:16px; }
+            .top-bar { gap:12px; flex-direction:column; }
+            .stats-panel { min-width:0; width:100%; padding:12px; }
+            .controls-panel { padding:16px; }
+        }
     </style>
     <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
     <script src="/universal-simulation-hub.js"></script>
@@ -135,21 +145,20 @@
 </head>
 
 <body>
-    <div id="canvas-container">
-        <canvas id="nebula-canvas"></canvas>
-    </div>
+    <main id="canvas-container" aria-label="Interactive nebula particle study">
+        <canvas id="nebula-canvas" aria-label="Nebula particle animation"></canvas>
+    </main>
 
     <div class="ui-overlay">
         <div class="top-bar">
             <a href="../../projects.html" class="back-btn">← BACK</a>
             <div class="stats-panel">
                 <div style="margin-bottom: 1rem; border-bottom: 1px solid rgba(186, 148, 79, 0.3); padding-bottom: 0.5rem;">
-                    <span class="roadmap-badge">ITEM #1</span>
-                    <h3 style="display: inline; margin: 0; font-size: 1rem; font-family: 'Orbitron';">Omniverse Engine</h3>
+                    <h1 style="display: inline; margin: 0; font-size: 1rem; font-family: 'Orbitron';">Nebula Particle Study</h1>
                 </div>
-                <div class="stat-row"><span>Particles</span> <span class="stat-value">10,000,000</span></div>
-                <div class="stat-row"><span>Solver</span> <span class="stat-value">Navier-Stokes (Compute)</span></div>
-                <div class="stat-row"><span>GPU Load</span> <span class="stat-value" id="gpu-load">0%</span></div>
+                <div class="stat-row"><span>Particles</span> <span class="stat-value" id="particle-count">Initializing</span></div>
+                <div class="stat-row"><span>Model</span> <span class="stat-value">Vortex advection</span></div>
+                <div class="stat-row"><span>Renderer</span> <span class="stat-value" id="gpu-load">Checking support</span></div>
                 <div class="stat-row"><span>Frame Time</span> <span class="stat-value" id="frame-time">0ms</span></div>
             </div>
         </div>
@@ -158,17 +167,16 @@
             <h4 style="margin: 0 0 1.5rem 0; font-family: 'Orbitron'; color: #ba944f; letter-spacing: 2px;">NEBULA FLUID DYNAMICS</h4>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
                 <div>
-                    <label style="font-size: 0.8rem; opacity: 0.7;">Viscosity</label>
+                    <label for="viscosity" style="font-size: 0.8rem; opacity: 0.9;">Viscosity</label>
                     <input type="range" id="viscosity" min="0" max="1" step="0.01" value="0.1" style="width: 100%;">
                 </div>
                 <div>
-                    <label style="font-size: 0.8rem; opacity: 0.7;">Vorticity</label>
+                    <label for="vorticity" style="font-size: 0.8rem; opacity: 0.9;">Vorticity</label>
                     <input type="range" id="vorticity" min="0" max="5" step="0.1" value="2.0" style="width: 100%;">
                 </div>
             </div>
-            <div style="text-align: center; margin-top: 1.5rem; font-size: 0.75rem; opacity: 0.5;">
-                WebGPU | 10M Particles | Real-time Fluid Simulation
-            </div>
+            <p id="nebula-status" role="status">Starting the particle study…</p>
+            <button id="pause-nebula" type="button" aria-pressed="false">Pause simulation</button>
         </div>
     </div>
 

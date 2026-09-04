@@ -98,6 +98,15 @@
         </section>
     </main>
 
+    <style>
+      #logged-in-view .stats-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 1rem; margin: 1.5rem 0; }
+      #logged-in-view .stat-card, .dashboard-claims-grid article { padding: 1rem; border: 1px solid #34566c; border-radius: .8rem; background: #0a192a; }
+      #logged-in-view .stat-value { font-size: 2rem; font-weight: 700; color: #8fefff; }
+      .dashboard-local-controls > div { display: flex; flex-wrap: wrap; gap: .6rem; margin: 1rem 0; }
+      .dashboard-local-controls button { min-height: 44px; padding: .55rem 1rem; border: 1px solid #357789; border-radius: .7rem; background: #102333; color: #e0f6ff; cursor: pointer; }
+      .dashboard-local-controls button:focus-visible { outline: 3px solid #67e8f9; outline-offset: 3px; }
+      .dashboard-claims-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(220px,100%),1fr)); gap: 1rem; }
+    </style>
     <script src="auth-local.js" defer></script>
     <script src="dashboard-local.js" defer></script>
     <footer class="site-footer">

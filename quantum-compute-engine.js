@@ -12,6 +12,7 @@ class QuantumComputeEngine {
         this.qubits = 4; // Start with 4 simulated qubits
         this.activeTasks = [];
         this.entanglementLevel = 0;
+        this.lastResult = '';
     }
 
     update(dt) {
@@ -38,13 +39,14 @@ class QuantumComputeEngine {
     stabilize(amount) {
         this.coherence += amount;
         if (this.coherence > 100) this.coherence = 100;
-        this.game.createFloatingText(`+${amount}% Coherence`, this.game.mouse.x, this.game.mouse.y, '#a855f7');
+        this.game.notify?.(`Simulated qubit stabilized: ${this.coherence.toFixed(0)}% coherence.`, 'info');
     }
 
     runTask(type) {
+        if(!['Optimization','Encryption','Entanglement'].includes(type))return false;
         if (this.coherence < 30) {
             this.game.notify("Coherence too low to initiate Quantum Task!", "error");
-            return;
+            return false;
         }
 
         const task = {
@@ -56,6 +58,8 @@ class QuantumComputeEngine {
 
         this.activeTasks.push(task);
         this.game.notify(`Initiating Quantum Task: ${type}...`, "info");
+        this.lastResult='';
+        return true;
     }
 
     completeTask(task, index) {
@@ -66,24 +70,27 @@ class QuantumComputeEngine {
 
         if (roll <= successChance) {
             this.applyTaskReward(task.type);
+            this.lastResult=`${task.type} complete: ${task.type==='Optimization'?'+500 energy, +200 minerals':task.type==='Encryption'?'+500 data':'entanglement increased'}.`;
             this.game.notify(`Quantum Task '${task.type}' SUCCESS! State Collapsed favorably.`, "success");
         } else {
+            this.lastResult=`${task.type} failed due to decoherence. Stabilize the qubit and retry.`;
             this.game.notify(`Quantum Task '${task.type}' FAILED! Decoherence Error.`, "error");
             // Penalty? Sim decay?
             this.coherence -= 10;
         }
 
         this.activeTasks.splice(index, 1);
+        this.game.updateResourceUI?.();
     }
 
     applyTaskReward(type) {
         switch (type) {
             case 'Optimization':
                 this.game.resources.energy += 500;
-                this.game.resources.metal += 200;
+                this.game.resources.minerals = (Number(this.game.resources.minerals)||0) + 200;
                 break;
             case 'Encryption':
-                this.game.techTree.generateRP(500); // Massive RP boost
+                this.game.resources.data = (Number(this.game.resources.data)||0) + 500;
                 break;
             case 'Entanglement':
                 this.entanglementLevel++;

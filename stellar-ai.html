@@ -186,7 +186,7 @@
                     <p>Load Bonsai for private WebGPU inference or use the clearly labelled offline demo.</p>
                     <div class="welcome-features">
                         <div class="feature"><span>💬</span><span>Natural Conversations</span></div>
-                        <div class="feature"><span>🖼️</span><span>Image Analysis</span></div>
+                        <div class="feature"><span aria-hidden="true">↗</span><span>Local Text Attachments</span></div>
                         <div class="feature"><span>📚</span><span>Knowledge Base</span></div>
                         <div class="feature"><span>💾</span><span>Save History</span></div>
                     </div>
@@ -202,7 +202,7 @@
             <div class="input-container">
                 <div class="attachments-preview" id="attachments-preview"></div>
                 <div class="input-wrapper">
-                    <button type="button" id="attach-btn" class="attach-btn" title="Attach Image" aria-label="Attach an image or document">📎</button>
+                    <button type="button" id="attach-btn" class="attach-btn" title="Attach text, Markdown, CSV or JSON" aria-label="Attach local text files">📎</button>
                     <button type="button" id="voice-input-btn" class="attach-btn" title="Voice Input" aria-label="Start voice input">🎤</button>
                     <button type="button" id="voice-output-btn" class="attach-btn" title="Toggle Voice Output" aria-label="Toggle spoken responses" aria-pressed="false">🔊</button>
                     <button type="button" id="livekit-voice-btn" class="attach-btn livekit-voice-btn" title="LiveKit is not configured in this deployment" aria-label="LiveKit voice unavailable" disabled>🎙️</button>
@@ -217,6 +217,8 @@
             </div>
         </div>
     </div>
+
+    <section id="stellar-utility-dock" aria-label="Chat display and flight audio controls"></section>
 
     <!-- CLI Download Section -->
     <section class="content-section" data-entrance="slideUp">

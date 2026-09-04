@@ -61,7 +61,7 @@ class DatabaseVisualizationFeatures {
         }
 
         const planets = window.databaseAdvancedFeatures.comparisonList.map(kepid =>
-            this.db.allData.find(p => p.kepid === kepid)
+            this.db.findPlanet(kepid)
         ).filter(p => p && p.radius);
 
         if (planets.length === 0) {
@@ -173,7 +173,7 @@ class DatabaseVisualizationFeatures {
 
         // Get the last selected planet
         const kepid = window.databaseAdvancedFeatures.comparisonList[window.databaseAdvancedFeatures.comparisonList.length - 1];
-        const planet = this.db.allData.find(p => p.kepid === kepid);
+        const planet = this.db.findPlanet(kepid);
 
         if (!planet) {
             alert('Planet data not found');

@@ -100,7 +100,8 @@
     <script data-cfasync="false" src="faction-system.js?v=2026_V126_ULTIMATE_FIX" defer></script>
     <script data-cfasync="false" src="economy-system.js?v=2026_V126_ULTIMATE_FIX" defer></script>
     <script data-cfasync="false" src="physics-context.js?v=2026_V126_ULTIMATE_FIX" defer></script>
-    <script data-cfasync="false" src="universe-manager.js?v=2026_V126_ULTIMATE_FIX" defer></script>
+    <script data-cfasync="false" src="pioneer-universe-streaming.js?v=2026_V129_ENGINE" defer></script>
+    <script data-cfasync="false" src="universe-manager.js?v=2026_V129_ENGINE" defer></script>
     <script data-cfasync="false" src="multiverse-generators.js?v=2026_V126_ULTIMATE_FIX" defer></script>
     <!-- Unused legacy quantum-entanglement definition removed from startup. -->
     <script data-cfasync="false" src="temporal-engine.js?v=2026_V126_ULTIMATE_FIX" defer></script>
@@ -700,7 +701,7 @@
     <!-- Megaprojects Dashboard -->
     <div id="megastructure-dashboard" class="hidden">
         <div class="mega-header">
-            <h2>Generic Megaprojects Interface</h2>
+            <h2>Stellar engineering</h2>
             <button id="close-megastructures" class="close-btn">×</button>
         </div>
         <div class="mega-content">
@@ -709,24 +710,23 @@
                 <h3>Dyson Swarm</h3>
                 <div class="mega-stat">Energy Output: <span id="swarm-energy">0</span> MW</div>
                 <div class="mega-stat">Satellites: <span id="swarm-count">0</span></div>
-                <button id="btn-launch-satellite" class="mega-action-btn">Launch Satellite (100 Metal)</button>
+                <button id="btn-launch-satellite" class="mega-action-btn">Launch satellite · 500 credits</button>
             </div>
             <!-- Matrioshka Brain -->
             <div class="mega-section">
                 <h3>Matrioshka Brain</h3>
                 <div class="mega-stat">Compute Power: <span id="brain-compute">0</span> PFlops</div>
                 <div class="mega-stat">Reality Level: <span id="brain-stage">0</span></div>
-                <button id="btn-upgrade-brain" class="mega-action-btn">Upgrade Neural Link (500 Silicon)</button>
+                <button id="btn-upgrade-brain" class="mega-action-btn">Upgrade compute shell · 100,000 credits</button>
             </div>
             <!-- Stellar Engine -->
             <div class="mega-section">
                 <h3>Stellar Engine</h3>
                 <div class="mega-stat">Status: <span id="engine-status">Not Built</span></div>
                 <div class="mega-stat">Thrust: <span id="engine-thrust">0</span> AU/y</div>
-                <button id="btn-build-engine" class="mega-action-btn">Construct Shkadov Thruster (1000
-                    Antimatter)</button>
-                <button id="btn-move-system" class="mega-action-btn" style="margin-top: 5px; display: none;">Initiate
-                    System Transit</button>
+                <p>Stellar-engine construction and system transit are not available in this build.</p>
+                <button id="btn-build-engine" class="mega-action-btn" disabled>Stellar engine unavailable</button>
+                <button id="btn-move-system" class="mega-action-btn" style="display:none" disabled>System transit unavailable</button>
             </div>
         </div>
     </div>
@@ -745,8 +745,7 @@
             style="background: rgba(236, 201, 75, 0.05); border: 1px solid rgba(236, 201, 75, 0.3);">
             <h4>Timeline Control</h4>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <button id="btn-chrono-rewind" class="ep-btn" style="border-color: #ecc94b; color: #ecc94b;">⏪ Rewind
-                    (10s)</button>
+                <button id="btn-chrono-rewind" class="ep-btn" style="border-color: #ecc94b; color: #ecc94b;">Restore 10 snapshots</button>
                 <button id="btn-chrono-entropy" class="ep-btn" style="border-color: #ecc94b; color: #ecc94b;">⏩ Entropy
                     (5x)</button>
             </div>
@@ -754,6 +753,14 @@
                 style="width: 100%; margin-top: 10px; border-color: #ecc94b; color: #ecc94b; background: rgba(236, 201, 75, 0.1);">↩
                 Jump to Past (New Timeline)</button>
         </div>
+
+        <div class="ep-dashboard-card" style="margin-top:15px;">
+            <h4>Active timeline</h4>
+            <p>Snapshots restore resources and the simulation clock. Buildings and colonists are not rewound.</p>
+            <div id="chrono-timeline-id">PRIME_TIMELINE</div>
+            <div id="chrono-history-depth">History depth: 0 snapshots</div>
+        </div>
+    </div>
 
         <!-- Sim Dashboard -->
         <div id="sim-dashboard"
@@ -767,10 +774,10 @@
 
             <div class="ep-dashboard-card" style="margin-bottom: 10px; border: 1px solid #004400;">
                 <h4>Mind Upload (Digital Twin)</h4>
-                <div style="font-size: 0.8em; color: #00aa00; margin-bottom: 5px;">Status: Standby. Efficiency: 50%
+                <div style="font-size: 0.8em; color: #a9c6d5; margin-bottom: 5px;">Colony autopilot is not implemented in this build. The cellular simulation below is available.
                 </div>
-                <button id="btn-toggle-twin" class="ep-btn"
-                    style="width: 100%; border-color: #00ff00; color: #00ff00;">Activate Digital Twin</button>
+                <button id="btn-toggle-twin" class="ep-btn" disabled
+                    style="width: 100%; border-color: #00ff00; color: #00ff00;">Autopilot unavailable</button>
             </div>
 
             <div class="ep-dashboard-card" style="margin-bottom: 10px; border: 1px solid #004400;">
@@ -804,14 +811,15 @@
             <div class="ep-dashboard-card" style="margin-bottom: 15px; border: 1px solid #581c87; text-align:center;">
                 <div id="qubit-view-container"
                     style="width: 100%; height: 250px; background: #000; border: 1px dashed #a855f7;"></div>
-                <div style="font-size:0.8em; margin-top:5px; color:#ddd;">Click to Stabilize Qubit State</div>
+                <div style="font-size:0.8em; margin-top:5px; color:#ddd;">Click the sphere or press Enter while focused to stabilize this simulated qubit.</div>
+                <p id="quantum-task-status" role="status">No active tasks.</p>
             </div>
 
             <div style="display:flex; gap:10px; justify-content:space-between;">
                 <button class="ep-btn btn-quantum-task" data-task="Optimization"
-                    style="border-color:#a855f7; color:#fff; flex:1;">Optimization (+RES)</button>
+                    style="border-color:#a855f7; color:#fff; flex:1;">Optimization (+500 energy, +200 minerals)</button>
                 <button class="ep-btn btn-quantum-task" data-task="Encryption"
-                    style="border-color:#a855f7; color:#fff; flex:1;">Encryption (+RP)</button>
+                    style="border-color:#a855f7; color:#fff; flex:1;">Encryption (+500 data)</button>
             </div>
         </div>
 
@@ -837,12 +845,10 @@
             <div class="ep-dashboard-card" style="border: 1px solid #881337; text-align:center;">
                 <h4 style="color:#f43f5e;">Million Year Jump</h4>
                 <p style="font-size:0.75em; color:#ccc; margin-bottom:10px;">
-                    Archive current progress into genetic memory.<br>
-                    <strong style="color:#f43f5e;">Resets Universe.</strong> Gains permanent buffs.
+                    The genome preview encodes current progress. Prestige resets and inherited bonuses are not implemented in this build.
                 </p>
-                <button id="btn-time-jump" class="ep-btn"
-                    style="width:100%; border-color:#f43f5e; color:#f43f5e; background: rgba(244,63,94,0.1);">INITIATE
-                    JUMP</button>
+                <button id="btn-time-jump" class="ep-btn" disabled
+                    style="width:100%; border-color:#f43f5e; color:#f43f5e; background: rgba(244,63,94,0.1);">Prestige reset unavailable</button>
             </div>
         </div>
 
@@ -863,29 +869,28 @@
                     <div style="color:#38bdf8;"><strong>Ship AI:</strong> Neural Link established. Awaiting input.</div>
                 </div>
                 <div style="display:flex; gap:5px;">
-                    <input type="text" id="neural-chat-input" placeholder="Query Ship AI..."
+                    <input type="text" id="neural-chat-input" placeholder="Query Ship AI..." aria-label="Message the local ship assistant" maxlength="2000"
                         style="flex:1; background: #000; border: 1px solid #38bdf8; color: #fff; padding: 5px;">
-                    <button id="btn-neural-send"
-                        style="background:#0369a1; color:#fff; border:none; cursor:pointer;">></button>
+                    <button id="btn-neural-send" aria-label="Send message"
+                        style="background:#0369a1; color:#fff; border:none; cursor:pointer;">Send</button>
                 </div>
             </div>
 
             <div class="ep-dashboard-card" style="border: 1px solid #0369a1;">
                 <h4>Galactic Oversoul</h4>
                 <div style="font-size:0.8em; color:#ccc;">
-                    Federated Learning System Active.<br>
+                    Local simulated ship assistant.<br>
                     Dominant Trait: <span id="oversoul-trait" style="color:#38bdf8;">BALANCED</span>
                 </div>
             </div>
         </div>
 
-        <div class="ep-dashboard-card"
-            style="margin-top: 15px; background: rgba(236, 201, 75, 0.05); border: 1px solid rgba(236, 201, 75, 0.3);">
-            <h4>Active Timeline</h4>
-            <div id="chrono-timeline-id" style="font-size: 0.9em; color: #fff;">PRIME_TIMELINE</div>
-            <div id="chrono-history-depth" style="font-size: 0.8em; color: #aaa; margin-top: 5px;">History Depth: 0
-                snapshots</div>
-        </div>
+    <div id="neural-calibration-dashboard" style="display:none">
+        <h3>Control calibration <button data-science-close aria-label="Close control calibration">Close</button></h3>
+        <p>This is a local input-feedback simulation. It does not read brain activity or connect to neural hardware.</p>
+        <progress id="neural-calibration-progress" max="100" value="0" aria-label="Calibration progress" style="width:100%"></progress>
+        <p id="neural-calibration-status" role="status">Ready to calibrate.</p>
+        <button id="neural-calibrate-again" class="ep-btn">Calibrate again</button>
     </div>
     <div id="multiverse-dashboard" class="hidden" style="border: 2px solid #a855f7; background: rgba(10, 0, 20, 0.95);">
         <div class="mega-header" style="background: rgba(168, 85, 247, 0.1); border-color: #a855f7;">
@@ -1016,6 +1021,8 @@
     <script data-cfasync="false" src="planet-generator.js?v=2026_V127_PIONEER_POLISH" defer></script>
     <script data-cfasync="false" src="archaeology-manager.js?v=2026_V126_ULTIMATE_FIX" defer></script>
     <script data-cfasync="false" src="terraforming-manager.js?v=2026_V126_ULTIMATE_FIX" defer></script>
+    <script data-cfasync="false" src="pioneer-cinematic-renderer.js?v=2026_V129_ENGINE" defer></script>
+    <script data-cfasync="false" src="pioneer-runtime.js?v=2026_V129_ENGINE" defer></script>
     <!-- Space combat is loaded on demand when fighters are launched. -->
     <script data-cfasync="false" src="exoplanet-pioneer.js?v=2026_V127_PIONEER_POLISH" defer></script>
     <script>
@@ -1066,7 +1073,7 @@
                     script.async = true;
                     script.dataset.cfasync = 'false';
                     script.onload = () => resolve(script);
-                    script.onerror = () => reject(new Error(`Failed to load optional Pioneer tool: ${filename}`));
+                    script.onerror = () => { script.remove(); reject(new Error(`Failed to load optional Pioneer tool: ${filename}`)); };
                     document.head.appendChild(script);
                 }).catch((err) => {
                     pioneerOptionalToolLoads.delete(filename);
@@ -1118,6 +1125,69 @@
             window.setPioneerDataOverlayOpen = setDataOverlayOpen;
             setDataOverlayOpen(false);
             toggleBtn?.addEventListener('click', () => setDataOverlayOpen(overlay?.classList.contains('hidden')));
+
+            const scienceTitles = {
+                'megastructure-dashboard':'Stellar engineering', 'multiverse-dashboard':'Multiverse scenarios',
+                'chrono-dashboard':'Timeline snapshots', 'sim-dashboard':'Simulation layer',
+                'quantum-dashboard':'Quantum lab', 'dna-dashboard':'Genome archive',
+                'neural-dashboard':'Local ship communications', 'neural-calibration-dashboard':'Control calibration',
+                'mesh-dashboard':'Local mesh simulation'
+            };
+            const scienceScrim = document.createElement('div');
+            scienceScrim.id = 'ep-science-scrim'; scienceScrim.hidden = true; document.body.appendChild(scienceScrim);
+            let activeSciencePanel = null, scienceReturnFocus = null, scienceCloseAction = null;
+            const closeSciencePanel = (restoreFocus = true) => {
+                if (!activeSciencePanel) return;
+                const panel = activeSciencePanel;
+                activeSciencePanel = null;
+                panel.hidden = true; panel.style.display = 'none'; panel.classList.add('hidden');
+                panel.removeAttribute('data-science-open');
+                const intervalKey = ({'megastructure-dashboard':'megaInterval','multiverse-dashboard':'multiInterval','chrono-dashboard':'chronoInterval','quantum-dashboard':'quantumInterval','mesh-dashboard':'meshInterval'})[panel.id];
+                if (intervalKey && window[intervalKey]) { clearInterval(window[intervalKey]);window[intervalKey]=null; }
+                if (panel.id === 'sim-dashboard' && window.game?.recursion) window.game.recursion.isRunning = false;
+                if (panel.id === 'quantum-dashboard' && window.game?.qubitMinigame) window.game.qubitMinigame.isRunning = false;
+                if (panel.id === 'neural-calibration-dashboard') window.game?.neural?.cancelCalibration?.();
+                scienceScrim.hidden = true;
+                const closeAction = scienceCloseAction; scienceCloseAction = null;
+                closeAction?.();
+                if (restoreFocus && scienceReturnFocus?.isConnected) scienceReturnFocus.focus();
+            };
+            const adoptSciencePanel = panel => {
+                if (panel.dataset.scienceAdopted) return;
+                panel.dataset.scienceAdopted = 'true';
+                panel.classList.add('ep-science-panel'); panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','true');
+                panel.setAttribute('aria-label',scienceTitles[panel.id] || '3D planet viewer');
+                panel.tabIndex = -1;
+                panel.querySelectorAll('.close-btn,h3 > button[data-science-close],h3 > button[onclick],#close-3d-btn').forEach(button => {
+                    button.setAttribute('aria-label',`Close ${scienceTitles[panel.id] || '3D planet viewer'}`);
+                    button.dataset.scienceClose = 'true';
+                    button.addEventListener('click',event=>{event.preventDefault();event.stopImmediatePropagation();closeSciencePanel();},true);
+                });
+                panel.addEventListener('keydown',event=>{
+                    if(event.key==='Escape'){event.preventDefault();closeSciencePanel();}
+                    else if(event.key==='Tab'){
+                        const controls=Array.from(panel.querySelectorAll('button:not([disabled]),input:not([disabled]),select,[tabindex="0"],a[href]')).filter(node=>node.getClientRects().length);
+                        const first=controls[0],last=controls[controls.length-1];
+                        if(event.shiftKey&&(document.activeElement===first||document.activeElement===panel)){event.preventDefault();last?.focus();}
+                        else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first?.focus();}
+                    }
+                    event.stopPropagation();
+                });
+            };
+            Object.keys(scienceTitles).forEach(id=>{
+                const panel=document.getElementById(id);if(!panel)return;
+                document.body.appendChild(panel);adoptSciencePanel(panel);panel.hidden=true;panel.style.display='none';
+            });
+            const showSciencePanel = (panel, trigger, closeAction = null) => {
+                if (!panel) return false;
+                closeSciencePanel(false);adoptSciencePanel(panel);
+                activeSciencePanel=panel;scienceReturnFocus=trigger || document.activeElement;scienceCloseAction=closeAction;
+                panel.classList.remove('hidden');panel.hidden=false;panel.style.display=panel.id==='planet-3d-modal'?'flex':'block';
+                panel.dataset.scienceOpen='true';scienceScrim.hidden=false;panel.scrollTop=0;
+                panel.querySelector('[data-science-close]')?.focus();
+                return true;
+            };
+            scienceScrim.addEventListener('click',()=>closeSciencePanel());
 
             const renderPioneerClimateModel = () => {
                 const card = document.getElementById('ep-climate-model-card');
@@ -1257,9 +1327,18 @@
                         if (typeof window.__planetViewer.visualizePlanet === 'function') {
                             window.__planetViewer.visualizePlanet(planetData);
                         }
+                        const panel=document.getElementById('planet-3d-modal');
+                        // This surface is an inspection viewer. Legacy optional game-module
+                        // buttons have no handlers here; Pioneer gameplay stays in its command deck.
+                        ['surface-view-btn','orbital-view-btn','governance-btn','market-btn','combat-btn','invasion-btn','diplomacy-btn','build-btn','ascension-btn','council-btn','cardboard-btn','vr-mode-btn','ar-mode-btn'].forEach(id=>{
+                            const button=panel.querySelector(`#${id}`);if(button){button.hidden=true;button.style.display='none';}
+                        });
+                        showSciencePanel(panel,document.getElementById('ep-open-planet-viewer'),()=>{window.__planetViewer.close();panel.remove();});
+                        window.__planetViewer.resizeHandler?.();
                     }
                 } catch (err) {
                     console.warn('Planet viewer launch failed:', err);
+                    notify('The 3D viewer could not open. Please try again.', 'warning');
                 }
             });
 
@@ -1293,7 +1372,6 @@
             const closeMegaBtn = document.getElementById('close-megastructures');
             const btnLaunchSat = document.getElementById('btn-launch-satellite');
             const btnUpgradeBrain = document.getElementById('btn-upgrade-brain');
-            const btnBuildEngine = document.getElementById('btn-build-engine');
             const btnMoveSystem = document.getElementById('btn-move-system');
 
             const updateMegaUI = () => {
@@ -1303,18 +1381,22 @@
                 document.getElementById('swarm-energy').innerText = ms.energyOutput.toFixed(1);
                 document.getElementById('swarm-count').innerText = ms.swarmSatellites;
 
-                document.getElementById('brain-compute').innerText = ms.computePower.toFixed(1);
-                document.getElementById('brain-stage').innerText = ms.brainStage;
+                document.getElementById('brain-compute').innerText = Number(ms.computationOutput || 0).toFixed(1);
+                document.getElementById('brain-stage').innerText = ms.matrioshkaStage;
 
-                const engineStatus = ms.engineBuilt ? "Operational" : "Not Built";
+                const engineStatus = 'Prototype unavailable';
                 document.getElementById('engine-status').innerText = engineStatus;
-                document.getElementById('engine-thrust').innerText = ms.engineThrust;
+                document.getElementById('engine-thrust').innerText = '—';
 
-                btnMoveSystem.style.display = ms.engineBuilt ? 'block' : 'none';
+                btnMoveSystem.style.display = 'none';
+                const cost=100000*(ms.matrioshkaStage+1);
+                btnUpgradeBrain.textContent=ms.matrioshkaStage>=3?'Compute shells complete':`Upgrade compute shell · ${cost.toLocaleString()} credits`;
+                btnUpgradeBrain.disabled=ms.swarmSatellites<1000||ms.matrioshkaStage>=3;
+                btnUpgradeBrain.title=ms.swarmSatellites<1000?'Requires 1,000 deployed satellites':'';
             };
 
             openMegaBtn?.addEventListener('click', () => {
-                megaDashboard.classList.remove('hidden');
+                showSciencePanel(megaDashboard,openMegaBtn);
                 updateMegaUI();
                 // Start auto-refresh while open
                 if (!window.megaInterval) {
@@ -1332,40 +1414,22 @@
 
             btnLaunchSat?.addEventListener('click', () => {
                 if (window.game && window.game.megastructureSystem) {
-                    const result = window.game.megastructureSystem.launchSatellite(window.game);
-                    if (result.success) {
-                        notify("Satellite Launched!", "success");
+                    const result = window.game.megastructureSystem.launchSatellites(1);
+                    if (result) {
                         updateMegaUI();
                         // Trigger visual update immediately
                         if (window.game.updateDysonSwarmVisuals) {
                             window.game.updateDysonSwarmVisuals(window.game.megastructureSystem.swarmSatellites);
                         }
-                    } else {
-                        notify(result.message, "error");
                     }
                 }
             });
 
             btnUpgradeBrain?.addEventListener('click', () => {
                 if (window.game && window.game.megastructureSystem) {
-                    const result = window.game.megastructureSystem.upgradeBrain(window.game);
-                    if (result.success) {
-                        notify("Matrioshka Brain Upgraded!", "success");
+                    const result = window.game.megastructureSystem.upgradeBrain();
+                    if (result) {
                         updateMegaUI();
-                    } else {
-                        notify(result.message, "error");
-                    }
-                }
-            });
-
-            btnBuildEngine?.addEventListener('click', () => {
-                if (window.game && window.game.megastructureSystem) {
-                    const result = window.game.megastructureSystem.buildEngine(window.game);
-                    if (result.success) {
-                        notify("Stellar Engine Constructed!", "success");
-                        updateMegaUI();
-                    } else {
-                        notify(result.message, "error");
                     }
                 }
             });
@@ -1394,7 +1458,7 @@
 
             if (openMultiBtn && multiDashboard) {
                 openMultiBtn.addEventListener('click', () => {
-                    multiDashboard.classList.remove('hidden');
+                    showSciencePanel(multiDashboard,openMultiBtn);
                     updateMultiverseUI();
                     if (!window.multiInterval) {
                         window.multiInterval = setInterval(updateMultiverseUI, 500);
@@ -1438,12 +1502,15 @@
                 if (historyDepthEl) historyDepthEl.textContent = `History Depth: ${window.game.temporal.history.length} snapshots`;
                 if (entropyBtn) {
                     entropyBtn.style.background = window.game.temporal.isFastForwarding ? 'rgba(236, 201, 75, 0.4)' : 'transparent';
+                    entropyBtn.setAttribute('aria-pressed',String(window.game.temporal.isFastForwarding));
                 }
+                document.getElementById('btn-chrono-rewind').disabled=window.game.temporal.history.length<10;
+                document.getElementById('btn-chrono-jump').disabled=window.game.temporal.history.length<60;
             }
 
             if (openChronoBtn && chronoDashboard) {
                 openChronoBtn.addEventListener('click', () => {
-                    chronoDashboard.style.display = 'block';
+                    showSciencePanel(chronoDashboard,openChronoBtn);
                     updateChronoUI();
                     if (!window.chronoInterval) {
                         window.chronoInterval = setInterval(updateChronoUI, 500);
@@ -1480,17 +1547,24 @@
             }
 
             // --- NEURAL UI ---
-            document.getElementById('ep-open-neural')?.addEventListener('click', async () => {
+            let calibrationBusy=false;
+            const runCalibration=async()=>{
                 if (!window.game || !window.game.neural) return;
-
-                notify("Initiating Neural Link Calibration...", "info");
-                const success = await window.game.neural.calibrate();
-                if (success) {
-                    notify("Neural Link: SYNCHRONIZED. Haptic Systems Online.", "success");
-                    // Trigger test haptic
-                    window.game.neural.triggerHaptic(200);
-                }
-            });
+                showSciencePanel(document.getElementById('neural-calibration-dashboard'),document.getElementById('ep-open-neural'));
+                if(calibrationBusy)return;
+                calibrationBusy=true;
+                const button=document.getElementById('neural-calibrate-again'),status=document.getElementById('neural-calibration-status'),progress=document.getElementById('neural-calibration-progress');
+                button.disabled=true;progress.value=0;status.textContent='Calibrating simulated input feedback…';
+                const refresh=setInterval(()=>{progress.value=window.game.neural.calibrationLevel;},80);
+                try {
+                    const success=await window.game.neural.calibrate();
+                    progress.value=window.game.neural.calibrationLevel;
+                    status.textContent=success?`Calibration complete. ${navigator.vibrate?'Browser haptic feedback is available.':'This browser does not provide vibration feedback.'}`:'Calibration cancelled. Calibrate again when ready.';
+                } catch {status.textContent='Calibration failed. You can retry.';}
+                finally {clearInterval(refresh);calibrationBusy=false;button.disabled=false;}
+            };
+            document.getElementById('ep-open-neural')?.addEventListener('click',runCalibration);
+            document.getElementById('neural-calibrate-again')?.addEventListener('click',runCalibration);
 
             // --- SIM DASHBOARD ---
             const simDashboard = document.getElementById('sim-dashboard');
@@ -1498,20 +1572,13 @@
 
             if (openSimBtn && simDashboard) {
                 openSimBtn.addEventListener('click', () => {
-                    simDashboard.style.display = 'block';
+                    showSciencePanel(simDashboard,openSimBtn);
                     if (window.game && window.game.recursion && !window.game.recursion.isRunning) {
                         window.game.recursion.init('recursive-container');
                     }
                 });
 
 
-                document.getElementById('btn-toggle-twin')?.addEventListener('click', (e) => {
-                    if (window.game && window.game.twin) {
-                        const active = window.game.twin.toggle();
-                        e.target.innerText = active ? "Stop Autopilot" : "Activate Digital Twin";
-                        e.target.style.borderColor = active ? '#0f0' : '#555';
-                    }
-                });
             }
 
             // --- QUANTUM DASHBOARD ---
@@ -1520,12 +1587,10 @@
 
             if (openQuantumBtn && quantumDashboard) {
                 openQuantumBtn.addEventListener('click', async () => {
-                    quantumDashboard.style.display = 'block';
+                    showSciencePanel(quantumDashboard,openQuantumBtn);
                     try {
-                        await Promise.all([
-                            loadPioneerToolScript('qubit-minigame.js'),
-                            loadPioneerToolScript('quantum-renderer.js')
-                        ]);
+                        await loadPioneerToolScript('qubit-minigame.js');
+                        if(activeSciencePanel!==quantumDashboard)return;
 
                         if (window.game && !window.game.qubitMinigame && typeof window.QubitMinigame === 'function') {
                             window.game.qubitMinigame = new window.QubitMinigame(window.game);
@@ -1534,14 +1599,14 @@
                             window.game.qubitMinigame.init('qubit-view-container');
                         }
 
-                        if (window.game && !window.game.quantumRenderer && typeof window.QuantumRenderer === 'function') {
-                            window.game.quantumRenderer = new window.QuantumRenderer(window.game);
-                        }
-                        if (window.game?.quantumRenderer && !window.game.quantumRenderer.initAttempted) {
-                            void window.game.quantumRenderer.init('quantum-layer');
-                        }
+                        const updateQuantum=()=>{
+                            const q=window.game.quantum,status=document.getElementById('quantum-task-status');
+                            status.textContent=`Coherence ${q.coherence.toFixed(0)}%. `+(q.activeTasks.length?q.activeTasks.map(task=>`${task.type}: ${Math.min(100,task.progress/task.duration*100).toFixed(0)}%`).join(' · ')+(window.game.isPaused?' · Simulation paused.':''):(q.lastResult||'No active tasks.'));
+                        };
+                        updateQuantum();window.quantumInterval=setInterval(updateQuantum,250);
                     } catch (err) {
                         console.warn('Quantum dashboard tools failed to load:', err);
+                        document.getElementById('quantum-task-status').textContent='The qubit view could not load. Close and reopen this panel to retry.';
                     }
                 });
 
@@ -1561,7 +1626,7 @@
 
             if (openDnaBtn && dnaDashboard) {
                 openDnaBtn.addEventListener('click', () => {
-                    dnaDashboard.style.display = 'block';
+                    showSciencePanel(dnaDashboard,openDnaBtn);
                     // Update genome string
                     if (window.game && window.game.capsule) {
                         const state = window.game.capsule.encodeCurrentState();
@@ -1571,11 +1636,6 @@
                     }
                 });
 
-                document.getElementById('btn-time-jump')?.addEventListener('click', () => {
-                    if (window.game && window.game.capsule) {
-                        window.game.capsule.triggerTimeJump();
-                    }
-                });
             }
 
             // --- NEURAL FABRIC DASHBOARD ---
@@ -1587,34 +1647,23 @@
 
             if (openNeuralBtn && neuralDashboard) {
                 openNeuralBtn.addEventListener('click', () => {
-                    neuralDashboard.style.display = 'block';
+                    showSciencePanel(neuralDashboard,openNeuralBtn);
                     // Update Oversoul Trait display
                     if (window.game && window.game.oversoul) {
-                        const trait = window.game.oversoul.getDominantTrait();
+                        const trait = window.game.oversoul.getIntentSummary?.().status || 'Local simulation';
                         const traitEl = document.getElementById('oversoul-trait');
                         if (traitEl) traitEl.innerText = trait;
                     }
                 });
 
                 const sendMessage = async () => {
-                    if (!chatInput.value.trim() || !window.game || !window.game.shipAI) return;
-
-                    const userMsg = chatInput.value;
-                    // Append user msg
-                    chatOutput.innerHTML += `<div style="color:#aaf; margin:5px 0;"><strong>You:</strong> ${userMsg}</div>`;
-                    chatInput.value = "";
-                    chatOutput.scrollTop = chatOutput.scrollHeight;
-
-                    // Get AI response
-                    chatOutput.innerHTML += `<div style="color:#777; font-style:italic;">AI is thinking...</div>`;
-                    chatOutput.scrollTop = chatOutput.scrollHeight;
-
-                    const response = await window.game.shipAI.chat(userMsg);
-
-                    // Remove "thinking" and add response
-                    chatOutput.lastChild.remove();
-                    chatOutput.innerHTML += `<div style="color:#38bdf8; margin:5px 0;"><strong>Ship AI:</strong> ${response}</div>`;
-                    chatOutput.scrollTop = chatOutput.scrollHeight;
+                    if (sendBtn.disabled || !chatInput.value.trim() || !window.game || !window.game.shipAI) return;
+                    const userMsg=chatInput.value.trim();chatInput.value='';sendBtn.disabled=true;
+                    const user=document.createElement('p');user.textContent=`You: ${userMsg}`;chatOutput.appendChild(user);
+                    const reply=document.createElement('p');reply.textContent='Local assistant is preparing a response…';chatOutput.appendChild(reply);chatOutput.scrollTop=chatOutput.scrollHeight;
+                    try {reply.textContent=`Ship AI: ${await window.game.shipAI.chat(userMsg)}`;}
+                    catch {reply.textContent='The local assistant could not respond. Please try again.';}
+                    finally {sendBtn.disabled=false;chatOutput.scrollTop=chatOutput.scrollHeight;chatInput.focus();}
                 };
 
                 sendBtn.addEventListener('click', sendMessage);
@@ -1629,7 +1678,7 @@
 
             if (openMeshBtn && meshDashboard) {
                 openMeshBtn.addEventListener('click', () => {
-                    meshDashboard.style.display = 'block';
+                    showSciencePanel(meshDashboard,openMeshBtn);
                     updateMeshUI();
                     if (!window.meshInterval) window.meshInterval = setInterval(updateMeshUI, 1000);
                 });

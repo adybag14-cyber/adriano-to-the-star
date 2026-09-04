@@ -142,6 +142,9 @@
                             <h2 id="atmosphere-catalog-title">Measured inputs, explicit unknowns</h2>
                             <p id="atmosphere-catalog-summary">Loading the same-origin NASA Exoplanet Archive snapshot…</p>
                         </div>
+                        <label for="atmosphere-catalog-search">Find a planet or host
+                            <input id="atmosphere-catalog-search" type="search" placeholder="Planet or host name" autocomplete="off">
+                        </label>
                         <label for="atmosphere-catalog-filter">
                             Evidence filter
                             <select id="atmosphere-catalog-filter">
@@ -161,6 +164,11 @@
                     </nav>
                     <p id="atmosphere-catalog-status" class="atmosphere-catalog-status" role="status" aria-live="polite">Loading atmosphere catalogue…</p>
                     <div id="atmosphere-catalog-list" class="atmosphere-catalog-list"></div>
+                    <nav class="atmosphere-catalog-pager" aria-label="Atmosphere catalogue pages">
+                        <button id="atmosphere-catalog-previous" type="button" disabled>Previous worlds</button>
+                        <span id="atmosphere-catalog-page" role="status" aria-live="polite">Page 1</span>
+                        <button id="atmosphere-catalog-next" type="button" disabled>Next worlds</button>
+                    </nav>
                     <noscript><p class="atmosphere-catalog-status">JavaScript is required to inspect the local atmosphere-model snapshot.</p></noscript>
                 </section>
 
@@ -417,7 +425,8 @@
             font-weight: 700;
         }
 
-        #atmosphere-catalog-filter {
+        #atmosphere-catalog-filter,
+        #atmosphere-catalog-search {
             display: block;
             width: 100%;
             min-height: 44px;
@@ -443,6 +452,11 @@
             font-size: 0.78rem;
         }
 
+        .atmosphere-catalog-pager { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; padding-top: 1rem; }
+        .atmosphere-catalog-pager button { min-height: 44px; border: 1px solid #3b8090; border-radius: .7rem; background: #10252f; color: #e5faff; padding: .6rem 1rem; cursor: pointer; }
+        .atmosphere-catalog-pager button:disabled { opacity: .5; cursor: default; }
+        .atmosphere-catalog-header label { min-width: 0; }
+        #atmosphere-catalog-search { max-width: 100%; }
         .atmosphere-catalog-sources {
             display: flex;
             flex-wrap: wrap;

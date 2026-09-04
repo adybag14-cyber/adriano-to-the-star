@@ -1,5 +1,10 @@
 /* Badges & Reputation Styles */
 
+.badges-header-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1rem; }
+.badges-header-actions button { min-height: 44px; padding: .55rem 1rem; border: 1px solid #357789; border-radius: .7rem; background: #102333; color: #e0f6ff; cursor: pointer; }
+.badges-header-actions button[aria-pressed="true"] { background: #174456; border-color: #77e9fc; }
+.badges-header-actions button:focus-visible { outline: 3px solid #67e8f9; outline-offset: 3px; }
+
 .reputation-card {
     background: linear-gradient(135deg, rgba(8, 10, 25, 0.85), rgba(18, 22, 40, 0.95));
     border: 2px solid rgba(103, 232, 249, 0.3);
@@ -457,4 +462,3 @@
         box-shadow: 0 0 40px rgba(103, 232, 249, 0.6);
     }
 }
-

@@ -46,7 +46,7 @@ class TimeCapsuleManager {
     }
 
     encodeCurrentState() {
-        const score = Math.floor(this.game.resources.energy + this.game.resources.minerals + (this.game.resources.knowledge * 10));
+        const score = Math.floor((Number(this.game.resources.energy)||0) + (Number(this.game.resources.minerals)||0) + (Number(this.game.resources.data)||0)*10);
         const tech = Object.keys(this.game.technologies || {}).length;
 
         return {

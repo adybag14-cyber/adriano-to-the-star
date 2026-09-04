@@ -334,6 +334,10 @@ class KeyboardShortcuts {
     }
     
     closeModals() {
+        // Native dialogs live in the browser's top layer and must be closed
+        // with close(), otherwise the global Escape shortcut traps the page.
+        const nativeDialog = [...document.querySelectorAll('dialog[open]')].at(-1);
+        if (nativeDialog) { nativeDialog.close(); return; }
         // Close any open modals
         const modals = document.querySelectorAll('.modal, .dialog, [role="dialog"]');
         modals.forEach(modal => {

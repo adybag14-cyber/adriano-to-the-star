@@ -9,7 +9,8 @@ class DreamState {
         this.game = game;
         this.isActive = false;
         this.idleTimer = 0;
-        this.idleThreshold = 30000; // 30 seconds to trigger dream state
+        this.idleThreshold = 300000; // Watching a scene should never interrupt play.
+        this.lastInputTime = Date.now();
         this.dreamShards = 0;
 
         // Visuals
@@ -21,24 +22,19 @@ class DreamState {
     init() {
         this.createOverlay();
         // Reset timer on interaction
-        ['click', 'mousemove', 'keydown'].forEach(evt => {
-            document.addEventListener(evt, () => this.resetIdleTimer());
+        this.onInput = () => this.resetIdleTimer();
+        ['pointerdown', 'pointermove', 'keydown', 'wheel'].forEach(evt => {
+            document.addEventListener(evt, this.onInput, { passive: true });
         });
     }
 
     createOverlay() {
         const div = document.createElement('div');
         div.id = 'dream-overlay';
-        div.style.cssText = `
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); z-index: 2000; display: none;
-            justify-content: center; align-items: center; flex-direction: column;
-            pointer-events: none; /* Allow click through to wake up? or capture? */
-        `;
+        div.setAttribute('aria-live', 'off');
         div.innerHTML = `
-            <h1 style="color: #a855f7; font-family: 'Orbitron'; text-shadow: 0 0 20px #a855f7;">DREAM STATE BUSY</h1>
-            <p style="color: #e9d5ff;">Harvesting Dream Shards...</p>
-            <div id="dream-counter" style="color: #fff; font-size: 2em;">0</div>
+            <strong>OBSERVATION MODE</strong>
+            <span>Your colony continues while you watch. Move the pointer or use a key to dismiss.</span>
         `;
         document.body.appendChild(div);
 
@@ -52,19 +48,19 @@ class DreamState {
     update(dt) {
         // Check for idle
         if (!this.isActive) {
-            if (Date.now() - this.game.neural.lastInputTime > this.idleThreshold) {
+            if (Date.now() - this.lastInputTime > this.idleThreshold) {
                 this.enterDream();
             }
         } else {
             // In Dream State
-            this.dreamShards += dt * 0.5; // 0.5 shards per second
-            if (this.counterEl) this.counterEl.innerText = Math.floor(this.dreamShards);
+            this.idleTimer += Math.max(0, Number(dt) || 0);
 
             // If input detected, we wake up (handled by event listeners calling resetIdleTimer)
         }
     }
 
     resetIdleTimer() {
+        this.lastInputTime = Date.now();
         if (this.isActive) {
             this.wakeUp();
         }
@@ -75,21 +71,20 @@ class DreamState {
 
     enterDream() {
         this.isActive = true;
-        this.container.style.display = 'flex';
-        this.game.notify("Entering Dream State...", "info");
+        this.container.style.display = 'block';
     }
 
     wakeUp() {
         this.isActive = false;
         this.container.style.display = 'none';
 
-        if (this.dreamShards > 1) {
-            const gained = Math.floor(this.dreamShards);
-            this.game.notify(`Woke up! Gained ${gained} Dream Shards.`, "success");
-            // Add to game resources (abstract)
-            // this.game.resources.dreamShards = (this.game.resources.dreamShards || 0) + gained;
-        }
+        this.idleTimer = 0;
         this.dreamShards = 0;
+    }
+
+    dispose() {
+        ['pointerdown', 'pointermove', 'keydown', 'wheel'].forEach(evt => document.removeEventListener(evt, this.onInput));
+        this.container?.remove();
     }
 }
 

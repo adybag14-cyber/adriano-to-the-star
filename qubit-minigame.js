@@ -24,6 +24,10 @@ class QubitMinigame {
     init(containerId) {
         const container = document.getElementById(containerId);
         if (!container) return;
+        if(this.renderer&&this.container===container){
+            this.isRunning=true;this.camera.aspect=container.clientWidth/container.clientHeight;this.camera.updateProjectionMatrix();
+            this.renderer.setSize(container.clientWidth,container.clientHeight);this.renderer.render(this.scene,this.camera);return;
+        }
 
         // Cleanup old if exists
         container.innerHTML = '';
@@ -60,8 +64,13 @@ class QubitMinigame {
 
         // Interaction
         this.renderer.domElement.addEventListener('click', () => this.measureQubit());
+        this.renderer.domElement.tabIndex=0;
+        this.renderer.domElement.setAttribute('role','button');
+        this.renderer.domElement.setAttribute('aria-label','Stabilize simulated qubit state');
+        this.renderer.domElement.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();event.stopPropagation();this.measureQubit();}});
 
         this.isRunning = true;
+        this.renderer.render(this.scene,this.camera);
     }
 
     measureQubit() {
@@ -77,6 +86,7 @@ class QubitMinigame {
 
         this.game.quantum.stabilize(25); // Adds coherence
         this.game.audio.playClick(); // Reuse click sound
+        this.renderer.render(this.scene,this.camera);
     }
 
     update(dt) {

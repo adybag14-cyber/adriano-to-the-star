@@ -7,7 +7,7 @@
       return Array.isArray(value) ? value : [];
     } catch { return []; }
   };
-  const keys = ['planet-claims', 'favorites', 'saved-planets', 'planet-trends', 'ita_newsletter_preferences_v2'];
+  const keys = ['planet-claims', 'user_claims', 'planet_favorites', 'favorites', 'saved-planets', 'planet-trends', 'ita_newsletter_preferences_v2'];
 
   class LocalDashboard {
     init() {
@@ -20,7 +20,7 @@
       return {
         user: window.authManager?.getCurrentUser?.() || null,
         claims,
-        favourites: [...readArray('favorites'), ...readArray('saved-planets')],
+        favourites: [...readArray('planet_favorites'), ...readArray('favorites'), ...readArray('saved-planets')],
         interactions: readArray('planet-trends'),
         language: document.documentElement.lang || 'en',
         generatedAt: new Date().toISOString()

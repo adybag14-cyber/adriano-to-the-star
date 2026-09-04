@@ -12,6 +12,7 @@
     let catalog = null;
     let appearanceModel = null;
     let currentEducationPlanet = null;
+    let databasePage = 1;
 
     const versionedUrl = relativePath => {
         const url = new URL(relativePath, baseUrl);
@@ -402,11 +403,26 @@
         const list = document.getElementById('atmosphere-catalog-list');
         const filter = document.getElementById('atmosphere-catalog-filter');
         if (!panel || !list || !catalog) return;
-        const entries = flattenPlanets(catalog)
+        const search = normalize(document.getElementById('atmosphere-catalog-search')?.value);
+        const matches = flattenPlanets(catalog)
             .filter(entry => databaseFilterMatch(entry, filter?.value || 'all'))
-            .sort((left, right) => (Number(left.system.distancePc) || Infinity) - (Number(right.system.distancePc) || Infinity))
-            .slice(0, MAX_DATABASE_CARDS);
+            .filter(({ system, planet }) => !search || [planet.name, planet.id, system.hostname].some(value => normalize(value).includes(search)))
+            .sort((left, right) => (left.system.distancePc ?? Infinity) - (right.system.distancePc ?? Infinity));
+        const pages = Math.max(1, Math.ceil(matches.length / MAX_DATABASE_CARDS));
+        databasePage = Math.min(databasePage, pages);
+        const start = (databasePage - 1) * MAX_DATABASE_CARDS;
+        const entries = matches.slice(start, start + MAX_DATABASE_CARDS);
         list.replaceChildren(...entries.map(createDatabaseCard));
+        if (!entries.length) {
+            const empty = document.createElement('p');
+            empty.textContent = 'No worlds match this name and evidence filter. Clear the search or choose All planets.';
+            list.append(empty);
+        }
+        setText('atmosphere-catalog-page', `Page ${databasePage} of ${pages}`);
+        const previous = document.getElementById('atmosphere-catalog-previous');
+        const next = document.getElementById('atmosphere-catalog-next');
+        if (previous) previous.disabled = databasePage === 1;
+        if (next) next.disabled = databasePage === pages;
 
         const total = catalog.statistics?.planets ?? flattenPlanets(catalog).length;
         const spectraTotal = catalog.statistics?.planetsWithSpectraMetadata ?? flattenPlanets(catalog).filter(entry => countSpectra(entry.planet) > 0).length;
@@ -414,10 +430,18 @@
         const generated = catalog.generatedAt ? new Date(catalog.generatedAt).toLocaleString() : 'unknown build time';
         setText('atmosphere-catalog-status', catalog.loadError
             ? `Catalogue unavailable: ${catalog.loadError}`
-            : `Same-origin NASA Exoplanet Archive snapshot generated ${generated}. Showing ${entries.length} matching worlds.`);
+            : `NASA Exoplanet Archive snapshot generated ${generated}. Showing ${matches.length ? start + 1 : 0}–${start + entries.length} of ${matches.length} matching worlds.`);
         if (filter && !filter.dataset.atmosphereBound) {
             filter.dataset.atmosphereBound = 'true';
-            filter.addEventListener('change', refreshDatabase);
+            filter.addEventListener('change', () => { databasePage = 1; refreshDatabase(); });
+            document.getElementById('atmosphere-catalog-search')?.addEventListener('input', () => { databasePage = 1; refreshDatabase(); });
+            for (const [button, direction] of [[previous, -1], [next, 1]]) {
+                button?.addEventListener('click', () => {
+                    databasePage += direction;
+                    refreshDatabase();
+                    list.scrollTop = 0;
+                });
+            }
         }
     };
 

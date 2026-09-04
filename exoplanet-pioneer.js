@@ -1,3 +1,4 @@
+/* global PioneerRuntime, PioneerCinematicRenderer */
 /**
  * Exoplanet Pioneer - Main Game Logic
  * Version: 2026_V30_DEFINITIVE
@@ -555,6 +556,7 @@ class ExoplanetPioneer {
         this.camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 1000);
         // Frame the whole colony world instead of starting almost inside the atmosphere.
         this.camera.position.set(0, 58, 150);
+        this.fitCameraForViewport(w, h, true);
 
         this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
@@ -582,7 +584,7 @@ class ExoplanetPioneer {
             this.controls.enableDamping = true;
             this.controls.dampingFactor = 0.05;
             this.controls.minDistance = 72; // Close zoom is available, but the default view frames the whole world.
-            this.controls.maxDistance = 280;
+            this.controls.maxDistance = Math.max(280, (this._cameraFittedDistance || 0) * 1.8);
             this.controls.enablePan = false; // Disable panning to keep planet centered
             this.controls.enableRotate = true; // Explicitly enable rotation
             this.controls.rotateSpeed = 0.5;
@@ -724,6 +726,7 @@ class ExoplanetPioneer {
         if (typeof PioneerRayTracingRenderer === 'function') this.rayTracingRenderer = new PioneerRayTracingRenderer(this);
 
         this.tryAutoLoadGame();
+        if (typeof PioneerCinematicRenderer === 'function') this.cinematicRenderer = new PioneerCinematicRenderer(this);
         this.applyGraphicsSettings({ rebuildPlanet: false, notify: false });
 
         this.renderer.domElement.addEventListener('pointerdown', (e) => {
@@ -735,22 +738,11 @@ class ExoplanetPioneer {
         this.renderer.domElement.addEventListener('pointermove', (e) => this.onPointerMove(e));
 
         // Window Resize Handling
-        window.addEventListener('resize', () => {
-            const width = this.container.clientWidth;
-            const height = this.container.clientHeight || 600;
+        this.onWindowResize = () => this.resize();
+        window.addEventListener('resize', this.onWindowResize);
 
-            this.camera.aspect = width / height;
-            this.camera.updateProjectionMatrix();
-
-            this.renderer.setSize(width, height);
-            if (this.composer) {
-                this.composer.setSize(width, height);
-            }
-            this.rayTracingRenderer?.resize?.(true);
-        });
-
-        const ro = new ResizeObserver(() => this.resize());
-        ro.observe(this.container);
+        this.resizeObserver = new ResizeObserver(() => this.resize());
+        this.resizeObserver.observe(this.container);
 
         // Audio
         this.audio = new SoundEngine();
@@ -780,8 +772,8 @@ class ExoplanetPioneer {
             if (e.code === 'Escape') {
                 e.preventDefault();
 
-                if (this.isPaused) {
-                    this.togglePause(false);
+                if (this.isCinematic) {
+                    this.toggleCinematicMode();
                     return;
                 }
 
@@ -816,6 +808,10 @@ class ExoplanetPioneer {
                     }
                 }
 
+                if (this.isPaused) {
+                    this.togglePause(false);
+                    return;
+                }
                 this.togglePause();
                 return;
             }
@@ -843,16 +839,14 @@ class ExoplanetPioneer {
 
             if (e.code === 'KeyG' && !this.isCombatActive) {
                 e.preventDefault();
-                if (!this.isPaused) {
-                    if (this.universe?.openGalaxyMap) this.universe.openGalaxyMap();
-                    else this.toggleGalaxyView();
-                }
+                if (this.universe?.openGalaxyMap) this.universe.openGalaxyMap();
+                else this.toggleGalaxyView();
                 return;
             }
 
             if (e.code === 'KeyC' && !this.isCombatActive) {
                 e.preventDefault();
-                if (!this.isPaused) this.toggleCinematicMode();
+                this.toggleCinematicMode();
                 return;
             }
         };
@@ -1005,7 +999,8 @@ class ExoplanetPioneer {
         const currentId = this.currentSystemId !== undefined && this.currentSystemId !== null
             ? String(this.currentSystemId)
             : '';
-        if (type === 'planet' && catalogId && currentId === catalogId) {
+        const sameCatalogWorld = currentId === catalogId || (catalogId === 'kepler_186f' && currentId === 'star_0,0_0');
+        if (type === 'planet' && catalogId && sameCatalogWorld) {
             return { ...this.planetData, provenance: 'catalog-constrained' };
         }
         return { worldType: type, seed, provenance: 'procedural-inference' };
@@ -1252,10 +1247,14 @@ class ExoplanetPioneer {
             vertexShader: `
                 varying vec3 vWorldNormal;
                 varying vec3 vWorldPosition;
+                varying vec3 vPlanetCenter;
+                varying float vPlanetScale;
                 void main() {
                     vec4 worldPos = modelMatrix * vec4(position, 1.0);
                     vWorldPosition = worldPos.xyz;
                     vWorldNormal = normalize(mat3(modelMatrix) * normal);
+                    vPlanetCenter = (modelMatrix * vec4(0.0,0.0,0.0,1.0)).xyz;
+                    vPlanetScale = length(modelMatrix[0].xyz);
                     gl_Position = projectionMatrix * viewMatrix * worldPos;
                 }
             `,
@@ -1268,21 +1267,33 @@ class ExoplanetPioneer {
                 uniform float density;
                 varying vec3 vWorldNormal;
                 varying vec3 vWorldPosition;
+                varying vec3 vPlanetCenter;
+                varying float vPlanetScale;
 
                 void main() {
                     vec3 N = normalize(vWorldNormal);
                     vec3 V = normalize(cameraPosition - vWorldPosition);
                     vec3 L = normalize(sunDirection);
-                    float mu = clamp(dot(N, V), 0.0, 1.0);
-                    float rim = pow(1.0 - mu, 3.2);
-                    float sunMu = dot(N, L);
+                    // This shell renders back faces. Their signed N.V is negative, so clamping
+                    // it to zero made the whole shell a solid cyan band. Integrate a reduced
+                    // exponential atmospheric column by the ray's closest approach instead.
+                    float mu = abs(dot(N, V));
+                    vec3 relativePosition = (vWorldPosition-vPlanetCenter)/max(0.001,vPlanetScale);
+                    vec3 closestApproach = relativePosition - V * dot(relativePosition, V);
+                    float impactParameter = length(closestApproach);
+                    float altitude = max(0.0, impactParameter - 50.0);
+                    float opticalColumn = exp(-altitude / 0.78);
+                    float silhouetteFade = smoothstep(0.0, 0.075, mu);
+                    vec3 tangentNormal = normalize(closestApproach + vec3(0.00001));
+                    float sunMu = dot(tangentNormal, L);
                     float day = smoothstep(-0.24, 0.18, sunMu);
                     float horizonSun = exp(-pow((sunMu + 0.02) / 0.18, 2.0));
-                    float forwardScatter = pow(max(dot(V, L), 0.0), 7.0) * 0.12;
+                    float forwardScatter = pow(max(dot(-V, L), 0.0), 7.0) * 0.12;
                     vec3 scatter = mix(colorDay, colorSunset, horizonSun * 0.86);
                     scatter = mix(scatter, colorHaze, hazeStrength * (0.46 + horizonSun * 0.54));
                     scatter += vec3(0.38, 0.58, 0.92) * forwardScatter * (1.0 - hazeStrength * 0.55);
-                    float alpha = rim * mix(0.14, 0.82, day) * density;
+                    float rayleighPhase = 0.75 * (1.0 + pow(dot(V, L), 2.0));
+                    float alpha = opticalColumn * silhouetteFade * mix(0.065, 0.88, day) * density * rayleighPhase;
                     gl_FragColor = vec4(scatter, alpha);
                 }
             `,
@@ -1469,7 +1480,7 @@ class ExoplanetPioneer {
                                 <div class="ep-ops-label">EXPLORE</div>
                                 <button class="ep-sys-btn" id="ep-btn-xeno" title="Xenodex"><span>👽</span><span>Xenodex</span></button>
                                 <button class="ep-sys-btn" id="ep-btn-fleet" title="Fleet"><span>🚀</span><span>Fleet</span></button>
-                                <button class="ep-sys-btn" id="ep-btn-system" title="Explore the local Kepler-186 planetary system"><span>&#9678;</span><span>System</span></button>
+                                <button class="ep-sys-btn" id="ep-btn-system" title="Explore the current planetary system"><span>&#9678;</span><span>System</span></button>
                                 <button class="ep-sys-btn" id="ep-btn-skills" title="Pilot Skills"><span>🧠</span><span>Skills</span></button>
                                 <button class="ep-sys-btn" id="ep-btn-orbit" title="Orbital Operations"><span>🛰️</span><span class="ep-orbit-label">Orbit</span></button>
                                 <button class="ep-sys-btn" id="ep-btn-moon" title="Lunar Operations"><span>🌙</span><span class="ep-moon-label">Moon</span></button>
@@ -2328,8 +2339,10 @@ class ExoplanetPioneer {
         document.querySelectorAll('.ep-modal-overlay').forEach(el => el.style.display = 'none');
 
         if (toggleBtn) {
-            toggleBtn.textContent = this.isCinematic ? '❌' : '🎥';
+            toggleBtn.textContent = this.isCinematic ? 'Exit view' : 'View';
             toggleBtn.title = this.isCinematic ? 'Exit Cinematic Mode' : 'Cinematic Mode';
+            toggleBtn.setAttribute('aria-label', toggleBtn.title);
+            toggleBtn.setAttribute('aria-pressed', String(this.isCinematic));
         }
 
         this.notify(this.isCinematic ? 'Cinematic Mode Active' : 'Cinematic Mode Disabled', 'info');
@@ -2516,6 +2529,8 @@ class ExoplanetPioneer {
         }
 
         if (rebuildPlanet && this.planetMesh) this.rebuildPlanetForGraphicsChange();
+        this.cinematicRenderer?.setQuality?.(this.graphicsSettings.meshDetail);
+        this.combatScene?.cinematicEnvironment?.setQuality?.(this.graphicsSettings.meshDetail);
         this.applyShadowQuality();
         this.syncGraphicsSettingsUI();
         this.saveSettings();
@@ -2991,6 +3006,7 @@ class ExoplanetPioneer {
             if (this.controls) this.controls.enabled = false;
             this.openPauseMenu();
         } else {
+            if (this.timeScale === 0) this.setTimeSpeed(this._lastRunningSpeedIndex || 1, { silent: true });
             this.closePauseMenu();
             if (this.controls && this._prePauseControlsEnabled !== null) {
                 this.controls.enabled = this._prePauseControlsEnabled;
@@ -3009,7 +3025,7 @@ class ExoplanetPioneer {
 
         this.autosaveTimer = setInterval(() => {
             if (this.isPaused) return;
-            this.saveGame({ silent: true });
+            if (!this.saveGame({ silent: true })) return;
 
             const now = Date.now();
             if (!this.lastAutosaveNotifyAt || (now - this.lastAutosaveNotifyAt) > 300000) {
@@ -7777,10 +7793,18 @@ class ExoplanetPioneer {
             archaeologyState: this.archaeology?.serialize?.() || null,
             fleetState: this.fleetManager?.serialize?.() || null,
             economyState: this.economyManager?.exportState?.() || null,
-            localSystemState: this.localSystemExplorer?.serialize?.() || null
+            localSystemState: this.localSystemExplorer?.serialize?.() || null,
+            megastructureState: this.megastructureSystem?.serialize?.() || null,
+            reviewedArchivePlanets: this.reviewedArchivePlanets || []
         };
-        localStorage.setItem('ep_save_v2', JSON.stringify(data));
-        if (!options.silent) this.notify("Game Saved (Local)!", "success");
+        try {
+            localStorage.setItem('ep_save_v2', JSON.stringify(data));
+            if (!options.silent) this.notify("Game Saved (Local)!", "success");
+            return true;
+        } catch {
+            this.notify('Save could not be written: browser storage is full or unavailable. Keep this tab open and free storage before trying again.', 'danger');
+            return false;
+        }
     }
 
     tryAutoLoadGame() {
@@ -7807,6 +7831,7 @@ class ExoplanetPioneer {
     }
 
     loadGameData(data, options = {}) {
+        this.reviewedArchivePlanets = Array.isArray(data.reviewedArchivePlanets) ? data.reviewedArchivePlanets.filter(id => typeof id === 'string').slice(0, 10000) : [];
         const resourceDefaults = { ...this.resources };
         this.resources = { ...resourceDefaults, ...(data.resources || {}) };
         if (!Number.isFinite(this.resources.credits)) this.resources.credits = resourceDefaults.credits || 1000;
@@ -7920,6 +7945,7 @@ class ExoplanetPioneer {
         const baseId = String(this.currentSystemId);
         const stateId = this.isOnMoon ? `${baseId}_moon` : baseId;
         this.loadSystemState(stateId);
+        if (data.megastructureState) this.megastructureSystem?.restore?.(data.megastructureState);
         // Reconcile saved autonomous trade routes only after structures are restored;
         // local orbital routes depend on an operational Launch Site.
         this.economyManager?.syncTradeRoutesFromGalaxy?.();
@@ -8058,9 +8084,31 @@ class ExoplanetPioneer {
             }
         }
     }
+    fitCameraForViewport(width, height, initial = false) {
+        if (!this.camera || !width || !height) return;
+        const verticalHalfFov = this.camera.fov * Math.PI / 360;
+        const horizontalHalfFov = Math.atan(Math.tan(verticalHalfFov) * width / height);
+        // Keep the full limb inside a portrait viewport without destroying a player's zoom on every resize.
+        const fittedDistance = 54 / Math.sin(Math.min(verticalHalfFov, horizontalHalfFov)) * 1.12;
+        const previousFit = this._cameraFittedDistance || fittedDistance;
+        if (initial || Math.abs(width / height - (this._cameraAspect || width / height)) > 0.1) {
+            const distance = initial ? Math.max(161, fittedDistance) : this.camera.position.length() * fittedDistance / previousFit;
+            this.camera.position.setLength(Math.max(72, Math.min(700, distance)));
+        }
+        this._cameraFittedDistance = fittedDistance;
+        this._cameraAspect = width / height;
+        if (this.controls) this.controls.maxDistance = Math.max(280, fittedDistance * 1.8);
+    }
+
     resize() {
-        const w = this.container.clientWidth; const h = this.container.clientHeight || 600;
-        this.camera.aspect = w / h; this.camera.updateProjectionMatrix(); this.renderer.setSize(w, h);
+        if (!this.camera || !this.renderer) return;
+        const w = Math.max(1, this.container.clientWidth); const h = Math.max(1, this.container.clientHeight || 600);
+        this.fitCameraForViewport(w, h);
+        this.camera.aspect = w / h;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(w, h);
+        this.composer?.setSize?.(w, h);
+        this.rayTracingRenderer?.resize?.(true);
     }
 
     openTechTree() {
@@ -8207,15 +8255,15 @@ class ExoplanetPioneer {
                     </div>
                 </div>
                 <div class="ep-panel" style="padding:15px; background:rgba(15,23,42,0.8); border:1px solid #334155;">
-                    <h3 style="margin-top:0; color:#a855f7; border-bottom:1px solid #334155; padding-bottom:10px;">🔬 Citizen Science (Item 906)</h3>
+                    <h3 style="margin-top:0; color:#a855f7; border-bottom:1px solid #334155; padding-bottom:10px;">Archive review training</h3>
                     <div style="background:#0f172a; padding:15px; border-radius:8px; border:1px solid #a855f7;">
                         <div style="font-size:0.85rem; color:#cbd5e1; line-height:1.4; margin-bottom:15px;">
-                            Help scientists on Earth by analyzing real stellar data. Connect your colony's arrays to the Interstellar Research Network.
+                            Review measurements from the site's NASA Exoplanet Archive snapshot. This is an educational in-game exercise; no observations or submissions are sent to NASA.
                         </div>
                         <div id="ep-cs-data-display" style="background:#020617; padding:10px; border-radius:4px; font-family:monospace; color:#4ade80; font-size:0.75rem; min-height:80px; margin-bottom:15px; border:1px solid #1e293b;">
-                            [WAITING FOR NASA DATA FEED...]
+                            Select Analyze to review the next catalog record. Missing measurements remain unknown.
                         </div>
-                        <button class="ep-sys-btn" style="width:100%; border-color:#a855f7; color:#a855f7;" onclick="game.performCitizenScience()">ANALYZE DATA PACKET</button>
+                        <button class="ep-sys-btn" id="ep-archive-analyze" style="width:100%; border-color:#a855f7; color:#a855f7;" onclick="game.performCitizenScience()">ANALYZE CATALOG RECORD</button>
                     </div>
                 </div>
             </div>
@@ -8224,19 +8272,87 @@ class ExoplanetPioneer {
         container.innerHTML = html;
     }
 
-    performCitizenScience() {
+    async performCitizenScience() {
         const display = document.getElementById('ep-cs-data-display');
-        if (!display) return;
+        const button = document.getElementById('ep-archive-analyze');
+        if (!display || this._archiveReviewBusy) return false;
+        this._archiveReviewBusy = true;
+        if (button) button.disabled = true;
+        display.textContent = 'Loading the local catalog snapshot…';
+        try {
+            if (!this._archiveReviewCatalog) {
+                const response = await fetch('data/exoplanet-appearance-core.json', { signal: AbortSignal.timeout(15000) });
+                if (!response.ok) throw new Error(`Catalog response ${response.status}`);
+                const payload = await response.json();
+                const planets = (payload.systems || []).flatMap(system => system.planets || []);
+                if (!planets.length) throw new Error('No catalog records are available');
+                this._archiveReviewCatalog = { planets, generatedAt: payload.generatedAt };
+            }
+            this.reviewedArchivePlanets ||= [];
+            const record = this._archiveReviewCatalog.planets.find(planet => !this.reviewedArchivePlanets.includes(planet.id));
+            if (!record) { display.textContent = 'All records in this snapshot have been reviewed. Your research progress is saved with the colony.'; return true; }
+            const measurements = record.psDefault?.measurements || {};
+            const lines = Object.entries(measurements).filter(([, entry]) => Number.isFinite(entry?.value)).map(([name, entry]) => `${name}: ${entry.display || entry.value} ${entry.unit || ''}`);
+            display.textContent = `${record.name}\nDiscovery method: ${record.discovery?.method || 'Unknown'}\nSnapshot: ${this._archiveReviewCatalog.generatedAt || 'Date unavailable'}\n${lines.join('\n')}\nAtmospheric species are not inferred from stellar spectra.`;
+            display.style.whiteSpace = 'pre-wrap';
+            const link = document.createElement('a');
+            link.href = `https://exoplanetarchive.ipac.caltech.edu/overview/${encodeURIComponent(record.name)}`;
+            link.target = '_blank'; link.rel = 'noopener noreferrer'; link.textContent = 'Open authoritative NASA record';
+            display.appendChild(document.createElement('br')); display.appendChild(link);
+            this.reviewedArchivePlanets.push(record.id);
+            this.resources.data_analyzed = Number(this.resources.data_analyzed || 0) + 10;
+            this.resources.data += 5;
+            this.updateResourceUI();
+            this.notify('Catalog review complete. +5 in-game Research Data.', 'success');
+            return true;
+        } catch (error) {
+            display.textContent = `Catalog review unavailable: ${error.message}. No resources were changed. Try again when the catalog can be loaded.`;
+            return false;
+        } finally {
+            this._archiveReviewBusy = false;
+            if (button) button.disabled = false;
+        }
+    }
 
-        // Simulate fetching NASA Data (Roadmap Item 906)
-        display.innerHTML = "CONNECTING TO TESS PUBLIC ARCHIVE...<br>FETCHING LIGHT CURVE: TIC 278825952<br>RUNNING PERIODOGRAM ANALYSIS...<br><span style='color:#fbbf24'>MATCH FOUND! Transit detected in Sector 4.</span>";
-
-        if (!this.resources.data_analyzed) this.resources.data_analyzed = 0;
-        this.resources.data_analyzed += 10;
-        this.resources.data += 5;
-        this.notify("Citizen Science contribution successful! +5 Research Data", "success");
-        this.updateResourceUI();
-        this.renderMissionsUI();
+    openRecruitment() {
+        let modal = document.getElementById('ep-recruit-modal');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'ep-recruit-modal';
+            modal.className = 'ep-modal-overlay';
+            modal.setAttribute('role', 'dialog');
+            modal.setAttribute('aria-modal', 'true');
+            modal.setAttribute('aria-label', 'Colony recruitment');
+            modal.innerHTML = '<div class="ep-modal" style="width:620px;max-width:94vw"><div class="ep-modal-header"><h2>Colony recruitment</h2><button class="ep-sys-btn" data-recruit-close>Close</button></div><div class="ep-modal-body" id="ep-recruit-content"></div></div>';
+            modal.querySelector('[data-recruit-close]').onclick = () => { modal.style.display = 'none'; };
+            document.body.appendChild(modal);
+        }
+        const jobs = [{ id: 'engineer', title: 'Engineer', cost: 150, desc: 'Maintains power and industrial systems.' }, { id: 'botanist', title: 'Botanist', cost: 120, desc: 'Supports food and life-support production.' }, { id: 'researcher', title: 'Researcher', cost: 180, desc: 'Contributes to the colony research program.' }];
+        const housing = this.getPopulationCap() - this.colonists.length;
+        const content = modal.querySelector('#ep-recruit-content');
+        content.innerHTML = `<p>${Math.max(0, housing)} available habitat berths. ${housing > 0 ? 'Recruitment fees cover transport and training.' : 'Build and complete a Habitat Dome before recruiting.'}</p>`;
+        jobs.forEach(job => {
+            const card = document.createElement('section');
+            card.style.cssText = 'padding:14px;margin-block:10px;border:1px solid #334155;border-radius:10px;background:#0b1729';
+            card.innerHTML = `<h3>${job.title}</h3><p>${job.desc}</p><button class="ep-sys-btn" data-recruit="${job.id}">Recruit ${job.title.toLowerCase()} · ${job.cost} credits</button>`;
+            const button = card.querySelector('button');
+            button.disabled = housing <= 0 || Number(this.resources.credits) < job.cost;
+            button.onclick = () => {
+                if (this.colonists.length >= this.getPopulationCap() || Number(this.resources.credits) < job.cost) { this.openRecruitment(); return; }
+                const count = this.colonists.length;
+                this.addColonist();
+                if (this.colonists.length !== count + 1) return;
+                this.resources.credits -= job.cost;
+                const recruit = this.colonists[this.colonists.length - 1];
+                recruit.job = job.id;
+                this.npcSystem?.registerNPC?.(recruit);
+                this.updateResourceUI();
+                this.recordColonyEvent(`${recruit.name} joined the colony as ${job.title.toLowerCase()}.`, 0.5);
+                this.openRecruitment();
+            };
+            content.appendChild(card);
+        });
+        modal.style.display = 'flex';
     }
 
     openRoster() {
@@ -8604,7 +8720,7 @@ class ExoplanetPioneer {
 
             // Roadmap Item 108: NPC Epiphanies
             // Researcher NPCs have a chance to unlock a random available tech
-            if (c.job === 'researcher' && Math.random() < 0.001 * this.timeScale) {
+            if (c.job === 'researcher' && Math.random() < 0.001) {
                 const availableTechs = Object.keys(this.technologies).filter(k => {
                     const t = this.technologies[k];
                     return !t.unlocked && (!t.req || this.technologies[t.req].unlocked);
@@ -8718,7 +8834,8 @@ class ExoplanetPioneer {
     }
 
     startTick() {
-        setInterval(() => {
+        // The runtime owns this one-second colony tick, including visibility and pause.
+        this.colonyTick = () => {
             this.advancePilotSkillTraining(null);
             this.updateAgentMissions();
             if (this.isPaused) return;
@@ -9040,7 +9157,7 @@ class ExoplanetPioneer {
             this.evaluateSimulationSafety();
             this.rebuildColonyInfrastructure();
             this.updateResourceUI();
-        }, 1000);
+        };
     }
 
     executeEspionage() {
@@ -9186,6 +9303,14 @@ class ExoplanetPioneer {
     setTimeSpeed(index, options = {}) {
         if (index < 0 || index >= this.timeSpeeds.length) return;
         const requestedSpeed = this.timeSpeeds[index];
+        // A user's Resume/1x command ends progressive Photo mode; moving simulation
+        // and a converging still-frame renderer cannot be active at the same time.
+        if (requestedSpeed > 0 && this.graphicsSettings?.renderMode === 'pathtraced') {
+            this.graphicsSettings.renderMode = 'standard';
+            this._pathTraceAutoPaused = false;
+            this._pathTracePreviousSpeedIndex = null;
+            this.applyGraphicsSettings({ rebuildPlanet: false, notify: false });
+        }
         const bypassSafety = options?.bypassSafety === true;
         if (!bypassSafety && requestedSpeed >= 5) {
             const runway = this.getSimulationRunway(requestedSpeed);
@@ -9203,6 +9328,7 @@ class ExoplanetPioneer {
         }
         this._timeSafetyPending = null;
         this.timeSpeedIndex = index;
+        if (requestedSpeed > 0) this._lastRunningSpeedIndex = index;
         this.timeScale = requestedSpeed;
         this.isPaused = (this.timeScale === 0);
 
@@ -9226,10 +9352,12 @@ class ExoplanetPioneer {
     }
 
     animate() {
-        requestAnimationFrame(() => this.animate());
+        if (!this.runtime) this.runtime = new PioneerRuntime(this);
+        this.runtime.start();
+    }
 
-        // Delta calculation with Time Dilation (Item 17)
-        const frameDelta = this.clock ? this.clock.getDelta() : 0.016;
+    stepSimulation(frameDelta) {
+        if (this.isPaused || this.timeScale === 0) return;
         let dt = frameDelta * this.timeScale;
 
         // Physics Context scaling (Item 319) & Visual Time Dilation (Item 16)
@@ -9238,16 +9366,6 @@ class ExoplanetPioneer {
             if (ctx) {
                 dt *= ctx.timeScale;
 
-                // Roadmap Item 16: Time Dilation Visual Effects
-                if (ctx.timeScale < 0.5) {
-                    // Slow time visual - blue shift / chromatic aberration
-                    if (this.bloomPass) this.bloomPass.strength = 0.8;
-                    if (this.renderer) this.renderer.toneMappingExposure = 0.7;
-                } else if (ctx.timeScale > 1.5) {
-                    // Fast time visual - red shift / high exposure
-                    if (this.bloomPass) this.bloomPass.strength = 1.2;
-                    if (this.renderer) this.renderer.toneMappingExposure = 1.1;
-                }
             }
         }
 
@@ -9255,24 +9373,10 @@ class ExoplanetPioneer {
         if (this.alienSignals) this.alienSignals.update(dt);
 
         // Tactical AI (Item 137)
-        if (this.militarySystem) this.militarySystem.updateTactics();
+        if (this.militarySystem) this.militarySystem.updateTactics(dt);
 
         // Legal System (Item 146)
         if (this.legalSystem) this.legalSystem.update(dt);
-
-        // Language Drift (Item 140)
-        if (this.npcSystem) this.npcSystem.updateDialect();
-
-        // Roadmap Item 304: Black Hole Specific Visuals
-        const currentStar = (this.universe && this.universe.galacticMap.stars.find(s => s.id === this.currentSystemId));
-        if (currentStar && currentStar.type === 'Black Hole') {
-            if (this.lensPass) {
-                this.lensPass.uniforms.strength.value = 0.1; // Permanent intense lensing
-            }
-            if (this.scene) {
-                this.scene.fog.density = 0.005; // Thicker dark fog
-            }
-        }
 
         // Temporal manipulation (Item 313)
         if (this.temporal) {
@@ -9280,44 +9384,34 @@ class ExoplanetPioneer {
             if (this.temporal.isRewinding) return;
             if (this.temporal.isFastForwarding) {
                 dt *= 5.0;
-                if (this.planetMesh) this.planetMesh.rotation.y += 0.05;
             }
         }
 
-        if (this.timeScale === 0) {
-            // Path Traced Photo deliberately pauses simulation while continuing progressive rendering.
-            // Ray-traced lighting also remains interactive if the player pauses manually.
-            if (this.rayTracingRenderer?.isActive?.()) {
-                if (this.controls?.enabled) this.controls.update();
-                this.rayTracingRenderer.render();
-                if (this.composer) this.composer.render();
-                else this.renderer?.render(this.scene, this.camera);
-            }
-            return;
-        }
-
-        // Frame Counter for slow ticks
+        // Slow systems advance by simulation time, independent of monitor refresh rate.
         if (!this.frameCount) this.frameCount = 0;
         this.frameCount++;
-
-        if (this.frameCount % 60 === 0) {
+        this._slowSimulationTime = (this._slowSimulationTime || 0) + dt;
+        if (this._slowSimulationTime >= 1) {
+            this._slowSimulationTime %= 1;
             this.applyColonistEffects();
             this.handleSocialInteractions();
             this.updateStockMarket(); // Item 206
             if (this.factionManager) this.factionManager.updateAI();
+            if (this.npcSystem) this.npcSystem.updateDialect();
         }
 
-        if (this.frameCount % 120 === 0) {
+        this._integritySimulationTime = (this._integritySimulationTime || 0) + dt;
+        if (this._integritySimulationTime >= 2) {
+            this._integritySimulationTime %= 2;
             this.verifyBuildingIntegrity(); // Roadmap Item 530 - Visual fix
         }
 
         // Neural & Dream Updates
-        if (this.dream) this.dream.update(dt * 1000);
+        if (this.dream) this.dream.update(dt);
 
         // Combat Mode Render
         if (this.isCombatActive && this.combatScene) {
             if (!this.isPaused) this.combatScene.update(dt);
-            this.combatScene.render();
             return;
         }
 
@@ -9343,9 +9437,26 @@ class ExoplanetPioneer {
         if (this.megastructureSystem) this.megastructureSystem.update(dt);
 
         // ASSET PRODUCTION UPDATES (Phase 2)
-        if (this.vfxManager) this.vfxManager.update(this.clock?.getElapsedTime() || 0, dt);
+        if (this.vfxManager) this.vfxManager.update(this.runtime?.elapsed || 0, dt);
         if (this.audioManager) this.audioManager.update(dt);
-        if (this.optimizationManager) this.optimizationManager.update(this.clock?.getElapsedTime() || 0);
+        if (this.optimizationManager) this.optimizationManager.update(this.runtime?.elapsed || 0);
+
+        this.timeOfDay += dt * 0.625;
+        if (this.timeOfDay >= 24) {
+            this.timeOfDay %= 24;
+            this.day++;
+            if (this.market) this.market.updatePrices();
+            if (this.economyManager) this.economyManager.dailyUpdate();
+            this.notify('New Day: Cycle Updated', 'info');
+        }
+    }
+
+    renderFrame(frameDelta) {
+        if (this.clock) this.clock.elapsedTime = this.runtime?.elapsed || 0;
+        if (this.isCombatActive && this.combatScene) {
+            this.combatScene.render();
+            return;
+        }
 
         if (this.isGalaxyViewActive && this.galaxyView) {
             this.galaxyView.update();
@@ -9356,7 +9467,7 @@ class ExoplanetPioneer {
 
         // Frame-rate-independent environmental motion. Path Traced Photo freezes the view so
         // progressive samples converge instead of invalidating on every animation frame.
-        const visualDt = Math.max(0, Math.min(0.08, dt || 0));
+        const visualDt = this.isPaused ? 0 : Math.max(0, Math.min(0.08, frameDelta * this.timeScale || 0));
         const freezePhotoFrame = !!this.rayTracingRenderer?.isPathTracing?.();
         if (!freezePhotoFrame && this.planetMesh) this.planetMesh.rotation.y += 0.008 * visualDt;
         if (!freezePhotoFrame && this.atmosphereMesh) this.atmosphereMesh.rotation.y += 0.003 * visualDt;
@@ -9376,18 +9487,7 @@ class ExoplanetPioneer {
             });
         });
 
-        // Keep the solar cycle tied to elapsed simulation time rather than display refresh rate.
-        const cycleDt = Math.max(0, Math.min(0.5, dt || 0));
-        this.timeOfDay += cycleDt * 0.625; // ~0.01 h/frame at 60 Hz, but stable at other refresh rates.
         if (this.vfxManager) this.vfxManager.updateDayNightCycle(this.timeOfDay / 24, this.sunLight);
-
-        if (this.timeOfDay >= 24) {
-            this.timeOfDay = 0;
-            this.day++;
-            if (this.market) this.market.updatePrices();
-            if (this.economyManager) this.economyManager.dailyUpdate(); // Item 203
-            this.notify("New Day: Cycle Updated", "info");
-        }
 
         if (this.planetMesh && this.planetMesh.userData.uniforms && this.planetMesh.userData.uniforms.time) {
             this.planetMesh.userData.uniforms.time.value += visualDt;
@@ -9433,6 +9533,7 @@ class ExoplanetPioneer {
 
         // Render the traced planet/background first, then composite Three.js structures, clouds,
         // atmosphere and interaction visuals over the transparent primary canvas.
+        this.cinematicRenderer?.update?.(frameDelta);
         this.rayTracingRenderer?.render?.();
         if (this.composer) {
             this.composer.render();
@@ -10000,6 +10101,7 @@ class ExoplanetPioneer {
         }
 
         this.saveCurrentSystemState();
+        this.universe?.prepareSystemArrival?.(star);
         this.currentSystemId = star.id;
         this.currentSystemName = star.name || star.label || String(star.id).replace(/[_-]+/g, ' ');
         this.isOnMoon = false;
@@ -10039,6 +10141,7 @@ class ExoplanetPioneer {
         this.createBuildMenu();
         this.updateLocationUI();
         this.updateResourceUI();
+        this.universe?.onSystemArrival?.(star);
         this.notify(`Arrived in ${this.currentSystemName}. Establish a foothold or continue exploration.`, 'success');
         return true;
     }
@@ -11330,7 +11433,8 @@ class ExoplanetPioneer {
 
         // Key bind to toggle toolbar (T)
         window.addEventListener('keydown', (e) => {
-            if ((e.key === 't' || e.key === 'T') && !this.isPaused) {
+            const typing = e.target?.matches?.('input, textarea, select, [contenteditable="true"]');
+            if ((e.key === 't' || e.key === 'T') && !this.isPaused && !this.isCombatActive && !typing && !e.ctrlKey && !e.metaKey && !e.altKey) {
                 const vts = window.voxelTerrainSystem;
                 if (vts) {
                     const isVis = vts.toolbar && vts.toolbar.style.display !== 'none';

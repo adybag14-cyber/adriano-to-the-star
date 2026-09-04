@@ -46,6 +46,12 @@ jobs:
           node --check planet-generator.js
           node --check local-system-view.js
           node --check pioneer-raytracing.js
+          node --check pioneer-runtime.js
+          node --check pioneer-cinematic-renderer.js
+          node --check pioneer-universe-streaming.js
+          node --check universe-manager.js
+          node --check space-combat.js
+          node --check experimental/webgpu-galaxy/nebula-sim.js
           node --check scripts/minify-pioneer-pages.mjs
           node --check scripts/site-pages.mjs
           node --check scripts/prepare-production-pages.mjs
@@ -73,6 +79,15 @@ jobs:
           node --check tests/e2e/pioneer-star-maps-advanced.spec.js
           node --check tests/e2e/education-atmosphere-models.spec.js
           node --check tests/e2e/accessibility-all-pages.spec.js
+          node --check tests/e2e/site-action-contracts.spec.js
+          node --check tests/e2e/site-shared-actions.spec.js
+          node --check tests/e2e/pioneer-runtime-v2.spec.js
+          node --check tests/e2e/pioneer-universe-streaming.spec.js
+          node --check tests/e2e/pioneer-cinematic-combat.spec.js
+          node --check tests/e2e/site-repair-review.spec.js
+          node --check tests/e2e/bonsai-loader.spec.js
+          node --check tests/e2e/games-archive-contracts.spec.js
+          node --check tests/e2e/pioneer-science-deck.spec.js
 
       - name: Repository lint gate
         run: npm run lint -- --quiet
@@ -199,6 +214,15 @@ jobs:
             tests/e2e/pioneer-star-maps-advanced.spec.js \
             tests/e2e/education-atmosphere-models.spec.js \
             tests/e2e/accessibility-all-pages.spec.js \
+            tests/e2e/site-action-contracts.spec.js \
+            tests/e2e/site-shared-actions.spec.js \
+            tests/e2e/pioneer-runtime-v2.spec.js \
+            tests/e2e/pioneer-universe-streaming.spec.js \
+            tests/e2e/pioneer-cinematic-combat.spec.js \
+            tests/e2e/site-repair-review.spec.js \
+            tests/e2e/bonsai-loader.spec.js \
+            tests/e2e/games-archive-contracts.spec.js \
+            tests/e2e/pioneer-science-deck.spec.js \
             --workers=1 \
             --reporter=line
 

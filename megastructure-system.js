@@ -64,10 +64,14 @@ window.MegastructureSystem = class MegastructureSystem {
         this.energyOutput *= Math.max(0.5, efficiency);
 
         // Rare chance of satellite decay/loss (Roadmap Item 662)
-        if (this.swarmSatellites > 0 && Math.random() < 0.0001 * (this.swarmSatellites / 100)) {
+        if (deltaTime > 0 && this.swarmSatellites > 0 && Math.random() < 0.0001 * (this.swarmSatellites / 100) * deltaTime) {
             const lost = Math.ceil(this.swarmSatellites * 0.01);
             this.swarmSatellites -= lost;
             this.game.notify(`📡 Swarm Alert: ${lost} satellites lost to micro-meteoroid impacts.`, "warning");
+        }
+        if (this.game.dysonSwarmMesh && this.game.suns?.[0]?.mesh) {
+            this.game.dysonSwarmMesh.position.copy(this.game.suns[0].mesh.position);
+            this.game.dysonSwarmMesh.count = Math.min(this.swarmSatellites, this.maxSwarmSatellites);
         }
 
         // Roadmap Item 602: Ringworld Construction Effects
@@ -94,43 +98,45 @@ window.MegastructureSystem = class MegastructureSystem {
     }
 
     launchSatellites(count) {
+        count = Math.max(0, Math.min(this.maxSwarmSatellites-this.swarmSatellites, Math.floor(Number(count)||0)));
+        if (!count) { this.game.notify('The swarm is at capacity.', 'info');return false; }
         const totalCostCredits = count * this.SATELLITE_COST.credits;
-
-        // Check affordability (Assuming game.economySystem exists or we use basic credits)
-        const currentCredits = this.game.credits || 0;
+        const currentCredits = Number(this.game.resources?.credits)||0;
 
         if (currentCredits >= totalCostCredits) {
-            this.game.credits -= totalCostCredits;
+            const previous=this.serialize();
+            this.game.resources.credits -= totalCostCredits;
             this.swarmSatellites += count;
-            this.game.notifications.show(`Launched ${count} Dyson Satellites!`, 'success');
-
-            // Visual update hook
-            if (this.game.updateDysonSwarmVisuals) {
-                this.game.updateDysonSwarmVisuals(this.swarmSatellites);
-            }
-
-            this.saveState();
+            if (!this.saveState()) { this.game.resources.credits=currentCredits;this.restore(previous);return false; }
+            this.restore(this.serialize());
+            this.game.notify(`Deployed ${count} Dyson satellite${count===1?'':'s'}.`, 'success');
             return true;
         } else {
-            this.game.notifications.show(`Insufficient Credits! Need ${totalCostCredits}`, 'error');
+            this.game.notify(`Satellite deployment requires ${totalCostCredits} credits.`, 'warning');
             return false;
         }
     }
 
     upgradeBrain() {
         if (this.swarmSatellites < 1000) {
-            this.game.notifications.show("Need 1,000 Satellites to begin Matrioshka construction.", 'warning');
-            return;
+            this.game.notify('Deploy 1,000 satellites before constructing a compute shell.', 'warning');
+            return false;
         }
+        if(this.matrioshkaStage>=3){this.game.notify('All three compute shells are complete.','info');return false;}
 
         const cost = 100000 * (this.matrioshkaStage + 1);
-        if (this.game.credits >= cost) {
-            this.game.credits -= cost;
+        const credits=Number(this.game.resources?.credits)||0;
+        if (credits >= cost) {
+            const previous=this.serialize();
+            this.game.resources.credits -= cost;
             this.matrioshkaStage++;
-            this.game.notifications.show(`Matrioshka Brain Upgraded to Stage ${this.matrioshkaStage}`, 'success');
-            this.saveState();
+            if(!this.saveState()){this.game.resources.credits=credits;this.restore(previous);return false;}
+            this.restore(this.serialize());
+            this.game.notify(`Compute shell stage ${this.matrioshkaStage} constructed.`, 'success');
+            return true;
         } else {
-            this.game.notifications.show(`Need ${cost} Credits for upgrade.`, 'error');
+            this.game.notify(`Compute shell construction requires ${cost.toLocaleString()} credits.`, 'warning');
+            return false;
         }
     }
 
@@ -178,33 +184,37 @@ window.MegastructureSystem = class MegastructureSystem {
         }
     }
 
-    saveState() {
-        const state = {
+    serialize() {
+        return {
             swarmSatellites: this.swarmSatellites,
             matrioshkaStage: this.matrioshkaStage,
-            stellarEngineBuilt: this.stellarEngineBuilt
+            stellarEngineBuilt: this.stellarEngineBuilt,
+            ringworldStage: this.ringworldStage
         };
-        localStorage.setItem('megastructure_state', JSON.stringify(state));
+    }
 
-        // Also save to cloud if available
-        if (this.game.saveSystem) {
-            // this.game.saveSystem.save(); // Implicitly handled by game save usually
-        }
+    restore(state) {
+        if(!state||typeof state!=='object')return false;
+        this.swarmSatellites=Math.max(0,Math.min(this.maxSwarmSatellites,Math.floor(Number(state.swarmSatellites)||0)));
+        this.matrioshkaStage=Math.max(0,Math.min(3,Math.floor(Number(state.matrioshkaStage)||0)));
+        this.stellarEngineBuilt=state.stellarEngineBuilt===true;
+        this.ringworldStage=Math.max(0,Math.min(3,Math.floor(Number(state.ringworldStage)||0)));
+        this.update(0);
+        this.game.updateDysonSwarmVisuals?.(this.swarmSatellites);
+        if(this.game.dysonSwarmMesh&&this.game.suns?.[0]?.mesh)this.game.dysonSwarmMesh.position.copy(this.game.suns[0].mesh.position);
+        this.game.updateResourceUI?.();
+        return true;
+    }
+
+    saveState() {
+        // The main save atomically includes resource debits and megastructure state.
+        if(typeof this.game.saveGame==='function')return this.game.saveGame({silent:true})===true;
+        try {localStorage.setItem('megastructure_state',JSON.stringify(this.serialize()));return true;}
+        catch {this.game.notify('Engineering progress could not be saved.','warning');return false;}
     }
 
     loadState() {
-        const saved = localStorage.getItem('megastructure_state');
-        if (saved) {
-            const state = JSON.parse(saved);
-            this.swarmSatellites = state.swarmSatellites || 0;
-            this.matrioshkaStage = state.matrioshkaStage || 0;
-            this.stellarEngineBuilt = state.stellarEngineBuilt || false;
-
-            // Restore visuals
-            if (this.game.updateDysonSwarmVisuals) {
-                // Defer slightly to ensure scene is ready
-                setTimeout(() => this.game.updateDysonSwarmVisuals(this.swarmSatellites), 1000);
-            }
-        }
+        try {const saved=localStorage.getItem('megastructure_state');if(saved)this.restore(JSON.parse(saved));}
+        catch {this.game.notify('Legacy engineering state could not be read. The main colony save remains available.','warning');}
     }
 }

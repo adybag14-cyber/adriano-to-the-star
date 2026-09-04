@@ -5,11 +5,19 @@ Set-Location -LiteralPath $PSScriptRoot
 
 Write-Host "Starting GitLab Pages build..."
 
-if (Test-Path "public") {
-    Write-Host "Cleaning existing public directory..."
-    Remove-Item "public" -Recurse -Force
+$PagesOutput = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot "public"))
+if ((Split-Path -Parent $PagesOutput) -ne [System.IO.Path]::GetFullPath($PSScriptRoot)) {
+    throw "Refusing to clean an output path outside this repository."
 }
-New-Item -ItemType Directory -Path "public" -Force | Out-Null
+if (Test-Path -LiteralPath $PagesOutput) {
+    $OutputItem = Get-Item -LiteralPath $PagesOutput -Force
+    if ($OutputItem.Attributes -band [System.IO.FileAttributes]::ReparsePoint) {
+        throw "Refusing to recursively clean a linked Pages output directory."
+    }
+    Write-Host "Cleaning existing public directory..."
+    Remove-Item -LiteralPath $PagesOutput -Recurse -Force
+}
+New-Item -ItemType Directory -Path $PagesOutput -Force | Out-Null
 
 function Copy-DirectorySafely {
     param(
@@ -96,6 +104,7 @@ $CoreAssets = @(
     "70cf5dbdf5fa4e0f9e4f847c624468fe.txt",
     "sw.js",
     "games-manifest.json",
+    "games-archive-index.json",
     "stellar-ai-cli.zip"
 )
 foreach ($file in $CoreAssets) {
@@ -388,8 +397,9 @@ foreach ($HtmlFile in Get-ChildItem "public" -Recurse -File -Filter "*.html") {
 }
 
 # Runtime loaders, workers, dynamic imports, and data feeds may contain local asset
-# paths inside JavaScript strings rather than HTML attributes. Version those generated
-# references too. JSON is included so returning visitors cannot receive a stale feed
+# paths inside JavaScript strings rather than HTML attributes. Version only strings
+# resolving to an actual published asset, never export filenames or explanatory text.
+# JSON is included so returning visitors cannot receive a stale feed
 # from an intermediary/browser cache after the JavaScript itself has been upgraded.
 $LocalAssetStringPattern = '(?i)(?<quote>["''])(?<path>(?!https?:|//|data:|#|mailto:)[^"''?#\r\n]+?\.(?:css|js|json))(?<query>\?[^"'']*)?\k<quote>'
 $VersionedJavaScriptReferenceCount = 0
@@ -401,6 +411,21 @@ foreach ($JavaScriptFile in Get-ChildItem "public" -Recurse -File -Filter "*.js"
         $LocalAssetStringPattern,
         {
             param($Match)
+            $Reference = $Match.Groups['path'].Value
+            $BeforeReference = $JavaScriptContent.Substring([Math]::Max(0, $Match.Index - 90), [Math]::Min(90, $Match.Index))
+            if ($BeforeReference -match '(?i)\b(?:download|filename|fileName)\s*[:=]\s*$') { return $Match.Value }
+            $PublishedReference = $false
+            foreach ($BaseDirectory in @($JavaScriptFile.DirectoryName, $PagesOutput)) {
+                try {
+                    $RelativeReference = $Reference -replace '^/', ''
+                    $Candidate = [System.IO.Path]::GetFullPath((Join-Path $BaseDirectory $RelativeReference))
+                    if ($Candidate.StartsWith($PagesOutput + [System.IO.Path]::DirectorySeparatorChar, [System.StringComparison]::OrdinalIgnoreCase) -and (Test-Path -LiteralPath $Candidate -PathType Leaf)) {
+                        $PublishedReference = $true
+                        break
+                    }
+                } catch { }
+            }
+            if (-not $PublishedReference) { return $Match.Value }
             $script:VersionedJavaScriptReferenceCount++
             return "$($Match.Groups['quote'].Value)$($Match.Groups['path'].Value)?v=$AssetVersion$($Match.Groups['quote'].Value)"
         }
@@ -463,6 +488,9 @@ $RequiredFiles = @(
     "i18n-styles.css",
     "auth-local.js",
     "pioneer-local-service.js",
+    "pioneer-runtime.js",
+    "pioneer-cinematic-renderer.js",
+    "pioneer-universe-streaming.js",
     "site-runtime.js",
     "large-exoplanet-loader.js",
     "database-3d-loader.js",
@@ -509,6 +537,7 @@ $RequiredFiles = @(
     "images\textures\neptune.jpg",
     "data\space-feeds.json",
     "games-manifest.json",
+    "games-archive-index.json",
     "stellar-ai-cli.zip",
     "assets\models\ships\viper.glb",
     "assets\models\defense\missile_battery.glb",

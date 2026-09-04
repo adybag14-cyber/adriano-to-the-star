@@ -69,6 +69,7 @@ class Planet3DViewer {
 
     init() {
         if (this.isOpen) return;
+        this.returnFocusElement = document.activeElement;
 
         // Create modal container
         this.createModal();
@@ -91,6 +92,10 @@ class Planet3DViewer {
     createModal() {
         const modal = document.createElement('div');
         modal.id = 'planet-3d-modal';
+        modal.setAttribute('role','dialog');
+        modal.setAttribute('aria-modal','true');
+        modal.setAttribute('aria-label','3D planet viewer');
+        modal.tabIndex=-1;
         modal.style.cssText = `
             position: fixed;
             top: 0;
@@ -179,6 +184,7 @@ class Planet3DViewer {
 
         const closeBtn = document.getElementById('close-3d-btn');
         if (closeBtn) {
+            closeBtn.setAttribute('aria-label','Close 3D planet viewer');
             closeBtn.addEventListener(EVENTS.CLICK, () => this.close());
             closeBtn.addEventListener('mouseenter', () => { closeBtn.style.transform = 'scale(1.1)'; });
             closeBtn.addEventListener('mouseleave', () => { closeBtn.style.transform = 'scale(1)'; });
@@ -289,6 +295,53 @@ class Planet3DViewer {
                 window.galacticCouncilSystem.showUI();
             });
         }
+        const optionalControls = [
+            ['surface-view-btn','Surface view','planetSurfaceViz','visualizePlanet'],
+            ['orbital-view-btn','Orbital view','orbitalMechanics','addPlanet'],
+            ['governance-btn','Governance','colonyGovernanceSystem','showGovernanceUI'],
+            ['market-btn','Market','economySystem','showMarketUI'],
+            ['combat-btn','Tactical combat','tacticalCombatSystem','startBattle'],
+            ['invasion-btn','Invasion','groundWarfareSystem','startInvasion'],
+            ['diplomacy-btn','Diplomacy','diplomacySystem','showDiplomacyUI'],
+            ['build-btn','Megastructures','megastructuresSystem','showUI'],
+            ['ascension-btn','Ascension','ascensionSystem','showUI'],
+            ['council-btn','Galactic council','galacticCouncilSystem','showUI']
+        ];
+        const unavailable=[];
+        optionalControls.forEach(([id,label,module,method])=>{
+            const button=modal.querySelector(`#${id}`);
+            if(!button)return;
+            const available=typeof window[module]?.[method]==='function';
+            button.disabled=!available;
+            button.textContent=available?label:`${label} unavailable`;
+            if(!available){button.title='This optional module is not available in this view.';unavailable.push(label);}
+        });
+        if(unavailable.length){
+            const status=document.createElement('p');status.id='planet-viewer-capabilities';status.setAttribute('role','status');
+            status.textContent='Optional modules marked unavailable are not loaded in this view. Planet rotation, zoom and reset remain available.';
+            status.style.cssText='margin:0;padding:8px 16px;background:#07131f;color:#c3dce7;font:12px/1.5 system-ui;';
+            modal.appendChild(status);
+        }
+        if(cardboardBtn){cardboardBtn.textContent='Fullscreen';cardboardBtn.setAttribute('aria-pressed','false');cardboardBtn.title='Open the single planet view fullscreen. Press Escape to exit.';cardboardBtn.disabled=!document.fullscreenEnabled;}
+        modal.addEventListener('keydown',event=>{
+            if(modal.dataset.scienceAdopted)return;
+            if(event.key==='Escape'&&document.fullscreenElement){event.preventDefault();event.stopPropagation();document.exitFullscreen?.().catch(()=>{});return;}
+            if(event.key==='Escape'){event.preventDefault();this.close();}
+            if(event.key==='Tab'){
+                const buttons=Array.from(modal.querySelectorAll('button:not([disabled]),input:not([disabled]),select,[tabindex="0"],a[href]')).filter(node=>node.getClientRects().length);
+                const first=buttons[0],last=buttons[buttons.length-1];
+                if(event.shiftKey&&(document.activeElement===first||document.activeElement===modal)){event.preventDefault();last?.focus();}
+                else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first?.focus();}
+            }
+            event.stopPropagation();
+        });
+        this.fullscreenChangeHandler=()=>{
+            const container=document.getElementById('canvas-container');
+            document.getElementById('cardboard-btn')?.setAttribute('aria-pressed',String(!!container&&document.fullscreenElement===container));
+            this.onWindowResize();
+        };
+        document.addEventListener('fullscreenchange',this.fullscreenChangeHandler);
+        closeBtn?.focus();
     }
 
     showXRBanner(message, type = 'info') {
@@ -408,7 +461,7 @@ class Planet3DViewer {
         const vrBtn = document.getElementById('vr-mode-btn');
         const arBtn = document.getElementById('ar-mode-btn');
         if (vrBtn) {
-            const supported = this.vrSupported;
+            const supported = this.vrSupported && typeof window.webXR === 'function';
             vrBtn.style.display = supported ? 'inline-flex' : 'inline-flex';
             vrBtn.disabled = !supported;
             vrBtn.style.opacity = supported ? '1' : '0.35';
@@ -416,12 +469,11 @@ class Planet3DViewer {
             vrBtn.textContent = supported ? '🥽 Enter VR' : '🥽 VR Unsupported';
         }
         if (arBtn) {
-            const supported = this.arSupported;
             arBtn.style.display = 'inline-flex';
-            arBtn.disabled = !supported;
-            arBtn.style.opacity = supported ? '1' : '0.35';
-            arBtn.title = supported ? 'Enter AR' : 'AR not supported on this device/browser';
-            arBtn.textContent = supported ? '📱 Enter AR' : '📵 AR Unsupported';
+            arBtn.disabled = true;
+            arBtn.style.opacity = '0.35';
+            arBtn.title = 'AR hit testing and placement are not implemented in this build.';
+            arBtn.textContent = 'AR unavailable';
         }
     }
 
@@ -1230,44 +1282,20 @@ class Planet3DViewer {
         setTimeout(() => this.scene.remove(line), 100);
     }
 
-    toggleCardboardMode() {
+    async toggleCardboardMode() {
         const container = document.getElementById('canvas-container');
         if (!container) return;
 
         const isFullscreen = document.fullscreenElement === container;
-        if (!isFullscreen) {
-            if (container.requestFullscreen) container.requestFullscreen();
-            container.style.filter = 'grayscale(0) contrast(1.05)';
-        } else {
-            if (document.exitFullscreen) document.exitFullscreen();
-            container.style.filter = 'none';
-        }
-
-        // Orientation hint overlay
-        let hint = document.getElementById('cardboard-orientation-hint');
-        if (!hint) {
-            hint = document.createElement('div');
-            hint.id = 'cardboard-orientation-hint';
-            hint.style.cssText = `
-                position: fixed;
-                bottom: 24px;
-                left: 50%;
-                transform: translateX(-50%);
-                background: rgba(0,0,0,0.75);
-                border: 1px solid rgba(255,255,255,0.2);
-                border-radius: 10px;
-                padding: 0.6rem 1rem;
-                color: #e5e7eb;
-                font-family: ${FONTS.RALEWAY};
-                font-size: 0.9rem;
-                z-index: 10005;
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-            `;
-            hint.innerHTML = `🥽 Cardboard Mode — rotate your device to landscape; press Cardboard again to exit.`;
-            document.body.appendChild(hint);
-            setTimeout(() => hint.remove(), 6000);
+        try {
+            if(!isFullscreen) {
+                if(!container.requestFullscreen)throw new Error('Fullscreen unavailable');
+                await container.requestFullscreen();
+            } else if(document.exitFullscreen) await document.exitFullscreen();
+            document.getElementById('cardboard-btn')?.setAttribute('aria-pressed',String(document.fullscreenElement===container));
+            this.onWindowResize();
+        } catch {
+            this.showXRBanner('Fullscreen is unavailable or was declined. The planet viewer remains usable.','warning');
         }
     }
 
@@ -1298,12 +1326,13 @@ class Planet3DViewer {
     close() {
         this.isOpen = false;
         if (this.animationId) cancelAnimationFrame(this.animationId);
+        if(this.fullscreenChangeHandler){document.removeEventListener('fullscreenchange',this.fullscreenChangeHandler);this.fullscreenChangeHandler=null;}
 
         const modal = document.getElementById('planet-3d-modal');
         if (modal) {
-            modal.style.opacity = '0';
-            setTimeout(() => modal.remove(), 300);
+            modal.remove();
         }
+        this.returnFocusElement?.focus?.();
 
         // Remove resize event listener
         if (this.resizeHandler) {

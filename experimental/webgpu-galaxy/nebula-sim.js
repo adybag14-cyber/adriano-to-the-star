@@ -1,10 +1,9 @@
 /**
- * WebGPU 10-Million Particle Navier-Stokes Simulation
- * Roadmap Item #1 Implementation
+ * Bounded WebGPU particle-advection study with a Canvas 2D fallback.
  */
 
 const CONFIG = {
-    particleCount: 10000000,
+    particleCount: 262144,
     gridSize: [128, 128], // Fluid grid resolution
     workgroupSize: 64,
 };
@@ -49,9 +48,13 @@ fn noise(p: vec2<f32>) -> f32 {
 @compute @workgroup_size(${CONFIG.workgroupSize})
 fn main(@builtin(global_invocation_id) id : vec3<u32>) {
     let idx = id.x;
-    if (idx >= ${CONFIG.particleCount}u) { return; }
+    if (idx >= arrayLength(&inputParticles)) { return; }
 
     var p = inputParticles[idx];
+    if (params.dt <= 0.0) {
+        outputParticles[idx] = p;
+        return;
+    }
     
     // --- Fluid Solver Logic ---
     // Instead of a grid, we use a curl-noise approximation of Navier-Stokes 
@@ -98,7 +101,7 @@ struct Particle {
 
 @vertex
 fn vs_main(@builtin(vertex_index) vIdx : u32, @builtin(instance_index) iIdx : u32) -> VertexOutput {
-    let p = particles[iIdx];
+    let p = particles[vIdx];
     
     // Tiny point rendering
     let aspect = 1.0; // Handled by sizing
@@ -123,21 +126,35 @@ class NebulaSim {
         this.context = null;
         this.particleCount = CONFIG.particleCount;
         this.step = 0;
-        this.init();
+        this.previousFrame = 0;
+        this.elapsed = 0;
+        this.paused = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        this.viscosity = document.getElementById('viscosity');
+        this.vorticity = document.getElementById('vorticity');
+        this.pauseButton = document.getElementById('pause-nebula');
+        this.pauseButton?.addEventListener('click', () => {
+            this.paused = !this.paused;
+            this.pauseButton.textContent = this.paused ? 'Resume simulation' : 'Pause simulation';
+            this.pauseButton.setAttribute('aria-pressed', String(this.paused));
+        });
+        if (this.pauseButton) {
+            this.pauseButton.textContent = this.paused ? 'Resume simulation' : 'Pause simulation';
+            this.pauseButton.setAttribute('aria-pressed', String(this.paused));
+        }
+        addEventListener('resize', () => this.resize());
+        this.resize();
+        this.init().catch(error => this.startFallback(error.message));
     }
 
     async init() {
+        if (!navigator.gpu) throw new Error('WebGPU is unavailable');
         const adapter = await navigator.gpu.requestAdapter();
-        
-        // Request higher limits for 10M particles
-        const requiredLimits = {
-            maxStorageBufferBindingSize: 512 * 1024 * 1024, // 512MB
-            maxBufferSize: 512 * 1024 * 1024
-        };
-
-        this.device = await adapter.requestDevice({
-            requiredLimits: requiredLimits
-        });
+        if (!adapter) throw new Error('No WebGPU adapter is available');
+        this.device = await adapter.requestDevice();
+        this.particleCount = Math.min(CONFIG.particleCount,
+            Math.floor(this.device.limits.maxStorageBufferBindingSize / 32),
+            this.device.limits.maxComputeWorkgroupsPerDimension * CONFIG.workgroupSize);
+        this.device.lost.then(() => this.startFallback('The WebGPU device was lost'));
 
         this.context = this.canvas.getContext('webgpu');
         this.context.configure({
@@ -146,9 +163,78 @@ class NebulaSim {
             alphaMode: 'premultiplied'
         });
 
+        this.device.pushErrorScope('validation');
         this.createBuffers();
         this.createPipelines();
+        const error = await this.device.popErrorScope();
+        if (error) throw new Error(error.message);
+        this.mode = 'webgpu';
+        this.updateStatus();
         this.render();
+    }
+
+    resize() {
+        const scale = Math.min(devicePixelRatio || 1, 1.5);
+        this.canvas.width = Math.max(1, Math.floor(innerWidth * scale));
+        this.canvas.height = Math.max(1, Math.floor(innerHeight * scale));
+    }
+
+    updateStatus(message = '') {
+        this.canvas.dataset.renderer = this.mode;
+        document.getElementById('particle-count').textContent = this.particleCount.toLocaleString();
+        document.getElementById('gpu-load').textContent = this.mode === 'webgpu' ? 'WebGPU' : 'Canvas 2D';
+        document.getElementById('nebula-status').textContent = message || 'Particle-advection study. Viscosity changes velocity smoothing; vorticity changes the swirling force.';
+    }
+
+    startFallback(reason) {
+        if (this.mode === 'canvas2d') return;
+        cancelAnimationFrame(this.frame);
+        // A canvas context type cannot be changed after WebGPU initialization.
+        const replacement = this.canvas.cloneNode();
+        this.canvas.replaceWith(replacement);
+        this.canvas = replacement;
+        this.resize();
+        this.context = this.canvas.getContext('2d');
+        this.mode = 'canvas2d';
+        this.particleCount = innerWidth < 600 ? 900 : 1800;
+        this.particles = Array.from({ length: this.particleCount }, (_, i) => {
+            const angle = i * 2.399963;
+            const radius = Math.sqrt((i + 0.5) / this.particleCount) * 1.6;
+            return { x: Math.cos(angle) * radius, y: Math.sin(angle) * radius, vx: 0, vy: 0, hue: 185 + (i % 85) };
+        });
+        this.updateStatus(`${reason}. The interactive Canvas 2D particle study is active.`);
+        this.renderFallback();
+    }
+
+    renderFallback() {
+        const now = performance.now();
+        const dt = Math.min(.04, (now - (this.previousFrame || now - 16)) / 1000);
+        this.previousFrame = now;
+        if (!document.hidden) {
+            const ctx = this.context;
+            const w = this.canvas.width, h = this.canvas.height;
+            ctx.fillStyle = '#030711'; ctx.fillRect(0, 0, w, h);
+            const viscosity = Number(this.viscosity.value);
+            const vorticity = Number(this.vorticity.value);
+            if (!this.paused) this.elapsed += dt;
+            for (const p of this.particles) {
+                if (!this.paused) {
+                    const distance = Math.hypot(p.x, p.y) + .5;
+                    const smoothing = 1 - Math.exp(-(1 + viscosity * 20) * dt);
+                    p.vx += ((-p.y / distance * vorticity + Math.sin(p.y * 3 + this.elapsed * .2) * .25) - p.vx) * smoothing;
+                    p.vy += ((p.x / distance * vorticity + Math.cos(p.x * 3 + this.elapsed * .2) * .25) - p.vy) * smoothing;
+                    p.x += p.vx * dt; p.y += p.vy * dt;
+                    if (Math.abs(p.x) > 2 || Math.abs(p.y) > 2) { p.x *= .6; p.y *= .6; }
+                }
+                const x = w / 2 + p.x * Math.min(w, h) * .26;
+                const y = h / 2 + p.y * Math.min(w, h) * .26;
+                ctx.fillStyle = `hsla(${p.hue},80%,70%,.55)`;
+                ctx.beginPath(); ctx.arc(x, y, 1.2, 0, Math.PI * 2); ctx.fill();
+            }
+            document.getElementById('frame-time').textContent = `${(performance.now() - now).toFixed(2)} ms CPU`;
+            this.canvas.dataset.simulationTime = this.elapsed.toFixed(3);
+        }
+        this.frame = requestAnimationFrame(() => this.renderFallback());
     }
 
     createBuffers() {
@@ -234,10 +320,14 @@ class NebulaSim {
     }
 
     render() {
+        if (this.mode !== 'webgpu') return;
         const now = performance.now();
-        const frameTime = 0.016;
+        const frameTime = Math.min(.04, (now - (this.previousFrame || now - 16)) / 1000);
+        this.previousFrame = now;
+        if (document.hidden) { this.frame = requestAnimationFrame(() => this.render()); return; }
+        if (!this.paused) this.elapsed += frameTime;
         
-        const uniformData = new Float32Array([frameTime, 0.1, 2.0, now / 1000]);
+        const uniformData = new Float32Array([this.paused ? 0 : frameTime, Number(this.viscosity.value), Number(this.vorticity.value), this.elapsed]);
         this.device.queue.writeBuffer(this.uniformBuffer, 0, uniformData);
 
         const encoder = this.device.createCommandEncoder();
@@ -265,10 +355,11 @@ class NebulaSim {
         
         this.step = (this.step + 1) % 2;
         
-        document.getElementById('frame-time').textContent = (performance.now() - now).toFixed(2) + 'ms';
+        document.getElementById('frame-time').textContent = (performance.now() - now).toFixed(2) + ' ms CPU';
+        this.canvas.dataset.simulationTime = this.elapsed.toFixed(3);
         
-        requestAnimationFrame(() => this.render());
+        this.frame = requestAnimationFrame(() => this.render());
     }
 }
 
-new NebulaSim();
+window.nebulaSimulation = new NebulaSim();

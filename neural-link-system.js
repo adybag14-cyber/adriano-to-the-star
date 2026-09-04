@@ -43,15 +43,13 @@ class NeuralLinkSystem {
      * @param {string} pattern - Preset pattern name (optional)
      */
     triggerHaptic(duration = 200, pattern = null) {
-        if (!navigator.vibrate) return;
+        if (typeof navigator.vibrate !== 'function') return false;
 
-        if (pattern === 'pulse') {
-            navigator.vibrate([100, 50, 100]);
-        } else if (pattern === 'explosion') {
-            navigator.vibrate([50, 50, 100, 50, 200]);
-        } else {
-            navigator.vibrate(duration);
-        }
+        try {
+            if (pattern === 'pulse') return navigator.vibrate([100,50,100]);
+            if (pattern === 'explosion') return navigator.vibrate([50,50,100,50,200]);
+            return navigator.vibrate(duration);
+        } catch {return false;}
     }
 
     /**
@@ -96,20 +94,30 @@ class NeuralLinkSystem {
      * Returns true if calibration succeeds
      */
     async calibrate() {
+        if(this.calibrationPromise)return this.calibrationPromise;
         this.calibrationLevel = 0;
-        return new Promise((resolve) => {
-            const interval = setInterval(() => {
-                this.calibrationLevel += 5;
-                if (this.game.updateNeuralUI) this.game.updateNeuralUI();
-
+        const start=performance.now();
+        this.calibrationPromise=new Promise((resolve) => {
+            this.calibrationResolve=resolve;
+            this.calibrationInterval = setInterval(() => {
+                this.calibrationLevel = Math.min(100,(performance.now()-start)/20);
+                if (typeof this.game.updateNeuralUI === 'function') this.game.updateNeuralUI();
                 if (this.calibrationLevel >= 100) {
-                    clearInterval(interval);
+                    clearInterval(this.calibrationInterval);this.calibrationInterval=null;
                     this.isCalibrated = true;
                     this.triggerHaptic(500, 'pulse');
+                    this.calibrationResolve=null;
                     resolve(true);
                 }
-            }, 100);
+            }, 80);
         });
+        try{return await this.calibrationPromise;}finally{this.calibrationPromise=null;}
+    }
+
+    cancelCalibration() {
+        if(!this.calibrationInterval)return;
+        clearInterval(this.calibrationInterval);this.calibrationInterval=null;
+        this.calibrationResolve?.(false);this.calibrationResolve=null;
     }
 }
 

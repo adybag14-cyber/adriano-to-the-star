@@ -52,7 +52,7 @@ function Get-TruncatedText {
     if ([string]::IsNullOrWhiteSpace($Text)) { return "" }
     $clean = ($Text -replace '\s+', ' ').Trim()
     if ($clean.Length -le $MaxLength) { return $clean }
-    return $clean.Substring(0, $MaxLength).TrimEnd() + "…"
+    return $clean.Substring(0, $MaxLength).TrimEnd() + [char]0x2026
 }
 
 $fallback = Read-Snapshot -Path $FallbackPath
@@ -142,6 +142,11 @@ try {
             title = "Launch: $launchName"
             desc = "Window: $window | Pad: $pad"
             link = [string]$launch.url
+            meta = [ordered]@{
+                windowStart = if ($launch.window_start) { ([DateTimeOffset]$launch.window_start).ToUniversalTime().ToString("o") } else { $null }
+                launchDate = if ($launch.net) { ([DateTimeOffset]$launch.net).ToUniversalTime().ToString("o") } elseif ($launch.window_start) { ([DateTimeOffset]$launch.window_start).ToUniversalTime().ToString("o") } else { $null }
+                status = if ($launch.status) { [string]$launch.status.name } else { "Unknown" }
+            }
         })
     }
     $sourceStatus.launches = "refreshed"
@@ -164,6 +169,10 @@ try {
             title = $articleTitle
             desc = Get-TruncatedText -Text ([string]$article.summary) -MaxLength 160
             link = [string]$article.url
+            meta = [ordered]@{
+                publishedAt = if ($article.published_at) { ([DateTimeOffset]$article.published_at).ToUniversalTime().ToString("o") } else { $null }
+                publisher = if ($article.news_site) { [string]$article.news_site } else { "Unknown" }
+            }
         })
     }
     $sourceStatus.news = "refreshed"
@@ -195,7 +204,7 @@ if ($outputDirectory -and -not (Test-Path -LiteralPath $outputDirectory)) {
     New-Item -ItemType Directory -Path $outputDirectory -Force | Out-Null
 }
 
-$json = $snapshot | ConvertTo-Json -Depth 8
+$json = ($snapshot | ConvertTo-Json -Depth 8) -replace '\r\n', "`n"
 $tempPath = "$OutputPath.tmp"
 [System.IO.File]::WriteAllText($tempPath, $json, $Utf8WithoutBom)
 Move-Item -LiteralPath $tempPath -Destination $OutputPath -Force

@@ -74,7 +74,7 @@
   if (hero && !hero.querySelector('.db-hero-status')) {
     const status = document.createElement('div');
     status.className = 'db-hero-status';
-    status.innerHTML = '<span class="db-status-chip"><i></i> Live catalogue</span><span class="db-status-chip">9,564+ indexed objects</span><span class="db-status-chip">D1 edge services</span>';
+    status.innerHTML = '<span class="db-status-chip"><i></i> Research snapshot</span><span class="db-status-chip">9,564 indexed objects</span><span class="db-status-chip">Browser-local tools</span>';
     hero.appendChild(status);
   }
 

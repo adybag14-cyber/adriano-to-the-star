@@ -92,7 +92,11 @@
     });
 
     document.querySelectorAll('.modal,[id$="-modal"]').forEach(modal => {
+      // An ID suffix is not a semantic role: close-game-modal is a BUTTON.
+      // Native <dialog> owns its visibility through the open attribute.
+      if (!modal.matches('div,section,aside,article,form')) return;
       if (modal.classList.contains('active') || modal.classList.contains('is-open')) return;
+      if (modal.getAttribute('aria-hidden') === 'false' || (!modal.hidden && getComputedStyle(modal).display !== 'none')) return;
       modal.hidden = true;
       modal.setAttribute('aria-hidden', 'true');
     });

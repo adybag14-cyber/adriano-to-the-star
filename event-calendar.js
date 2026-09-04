@@ -138,20 +138,20 @@ class EventCalendar {
 
             this.events = [];
 
-            // Add launches (only future ones)
+            // Keep scheduled dates from the release snapshot accessible after
+            // their date passes; a snapshot cannot verify that a launch flew.
             if (launches.status === 'fulfilled' && launches.value && launches.value.length > 0) {
-                const now = new Date();
                 launches.value.forEach(launch => {
                     const launchDate = new Date(launch.date || launch.date_local);
-                    // Only add future launches
-                    if (launchDate > now) {
+                    if (Number.isFinite(launchDate.getTime())) {
                         this.events.push({
                             id: `launch-${launch.id}`,
-                            title: launch.name || 'SpaceX Launch',
+                            title: launch.name || 'Scheduled launch',
                             date: launchDate,
                             type: 'launch',
-                            description: launch.details || '',
-                            source: 'spacex',
+                            description: `${launch.details || ''} Scheduled date from the published snapshot; consult the source for current launch status.`,
+                            source: launch.source || 'Launch schedule snapshot',
+                            link: launch.link || launch.id,
                             data: launch
                         });
                     }
@@ -161,9 +161,9 @@ class EventCalendar {
             // Add news events (use publication date)
             if (news.status === 'fulfilled' && news.value) {
                 news.value.forEach(item => {
-                    if (item.pubDate) {
+                    if (item.pubDate && Number.isFinite(Date.parse(item.pubDate))) {
                         this.events.push({
-                            id: `news-${Date.now()}-${Math.random()}`,
+                            id: `news-${item.link || item.title}`,
                             title: item.title || 'Space News',
                             date: new Date(item.pubDate),
                             type: 'news',
@@ -206,6 +206,7 @@ class EventCalendar {
                 break;
         }
         this.setupRenderedInteractions(view);
+        if (this.viewMode !== 'month') this.renderEventList();
     }
 
     setupRenderedInteractions(root) {
@@ -403,8 +404,8 @@ class EventCalendar {
             ? futureEvents
             : [...this.events].sort((a, b) => b.date - a.date).slice(0, 5);
 
-        const listContainer = document.querySelector('.event-list-sidebar');
-        if (!listContainer) {
+        document.querySelector('.event-list-sidebar')?.remove();
+        {
             const calendar = document.querySelector('.event-calendar');
             if (calendar) {
                 const sidebar = document.createElement('div');

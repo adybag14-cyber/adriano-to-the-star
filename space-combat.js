@@ -1,5 +1,132 @@
 
-console.log("SPACE COMBAT JS LOADED - VERSION 18");
+console.log("SPACE COMBAT JS LOADED - VERSION 19");
+
+// One bounded GPU particle pool covers exhaust, missile wakes and impact debris. Expiry and
+// ballistic motion happen in the vertex shader; repeated hits do not create dozens of meshes.
+class PioneerCombatEffects {
+    constructor(combat) {
+        this.combat = combat;
+        this.capacity = 2048;
+        this.cursor = 0;
+        this.time = 0;
+        this.emitClock = 0;
+        this.emitted = 0;
+        this.explosions = 0;
+        this.motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+        this.geometry = new THREE.BufferGeometry();
+        this.attributes = {};
+        for (const [name, size] of [['position', 3], ['velocity', 3], ['tint', 3], ['birth', 1], ['duration', 1], ['particleSize', 1]]) {
+            const data = new Float32Array(this.capacity * size);
+            if (name === 'birth') data.fill(-10000);
+            const attribute = new THREE.BufferAttribute(data, size);
+            attribute.setUsage(THREE.DynamicDrawUsage);
+            this.geometry.setAttribute(name, attribute);
+            this.attributes[name] = attribute;
+        }
+        this.material = new THREE.ShaderMaterial({
+            uniforms: { time: { value: 0 }, projectionScale: { value: 650 } },
+            vertexShader: `
+                attribute vec3 velocity; attribute vec3 tint; attribute float birth;
+                attribute float duration; attribute float particleSize;
+                uniform float time; uniform float projectionScale;
+                varying vec3 vTint; varying float vLife;
+                void main() {
+                    float age = max(0.0, time-birth);
+                    vLife = max(0.0, 1.0-age/max(0.001,duration));
+                    vec3 p = position + velocity * age;
+                    vec4 viewPosition = modelViewMatrix * vec4(p,1.0);
+                    gl_Position = projectionMatrix * viewPosition;
+                    gl_PointSize = clamp(particleSize * projectionScale / max(2.0,-viewPosition.z),1.0,72.0);
+                    vTint = tint;
+                    if (vLife <= 0.0) gl_Position = vec4(2.0,2.0,2.0,1.0);
+                }`,
+            fragmentShader: `
+                varying vec3 vTint; varying float vLife;
+                void main() {
+                    vec2 p = gl_PointCoord*2.0-1.0; float r=length(p);
+                    if(r>1.0||vLife<=0.0) discard;
+                    float core=exp(-r*r*10.0), glow=exp(-r*r*3.5)*0.30;
+                    gl_FragColor=vec4(mix(vTint,vec3(0.91,0.97,1.0),core*0.6), (core+glow)*vLife*vLife*0.82);
+                }`,
+            transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, depthTest: true, toneMapped: false
+        });
+        this.mesh = new THREE.Points(this.geometry, this.material);
+        this.mesh.name = 'PioneerBatchedCombatEffects';
+        this.mesh.frustumCulled = false;
+        this.mesh.raycast = () => {};
+        combat.scene.add(this.mesh);
+        this.position = new THREE.Vector3();
+        this.velocity = new THREE.Vector3();
+        this.color = new THREE.Color();
+    }
+
+    emit(position, velocity, color, size, duration) {
+        const i = this.cursor++ % this.capacity;
+        this.attributes.position.setXYZ(i, position.x, position.y, position.z);
+        this.attributes.velocity.setXYZ(i, velocity.x, velocity.y, velocity.z);
+        this.attributes.tint.setXYZ(i, color.r, color.g, color.b);
+        this.attributes.birth.setX(i, this.time);
+        this.attributes.duration.setX(i, duration);
+        this.attributes.particleSize.setX(i, size);
+        this.emitted++;
+        this.dirty = true;
+    }
+
+    explosion(position, scale, colorHex) {
+        this.explosions++;
+        this.color.setHex(colorHex);
+        const count = this.motionQuery.matches ? 16 : Math.round(32 + scale * 12);
+        for (let i = 0; i < count; i++) {
+            this.velocity.set(Math.random()-0.5,Math.random()-0.5,Math.random()-0.5).normalize().multiplyScalar((7+Math.random()*24)*scale);
+            this.emit(position,this.velocity,this.color,(0.4+Math.random()*1.3)*scale,0.32+Math.random()*0.85);
+        }
+        this.velocity.set(0,0,0);
+        this.emit(position,this.velocity,this.color,scale*9,0.24);
+    }
+
+    exhaust(ship, enemy = false) {
+        if (!ship?.mesh || ship.health <= 0) return;
+        const boosting = ship === this.combat.player && this.combat.keys.ShiftLeft && ship.energy > 0;
+        this.color.setHex(enemy ? 0xff6245 : boosting ? 0x8ab6ff : 0x39cfe8);
+        const enginePositions = enemy ? [[0,0,2.0]] : [[2,1.5,5.1],[-2,1.5,5.1],[2,-1.5,5.1],[-2,-1.5,5.1]];
+        for (const p of enginePositions) {
+            this.position.set(p[0],p[1],p[2]).applyQuaternion(ship.mesh.quaternion).add(ship.mesh.position);
+            this.velocity.set(0,0,boosting?18:8).applyQuaternion(ship.mesh.quaternion);
+            this.emit(this.position,this.velocity,this.color,boosting?1.25:0.85,boosting?0.58:0.35);
+        }
+    }
+
+    update(delta) {
+        const dt = Math.max(0,Math.min(0.08,Number(delta)||0));
+        this.time += dt;
+        this.material.uniforms.time.value = this.time;
+        this.material.uniforms.projectionScale.value = this.combat.renderer.domElement.height * 0.55;
+        this.emitClock += dt;
+        const interval = this.motionQuery.matches ? 0.12 : 1/30;
+        if (this.emitClock >= interval) {
+            this.emitClock %= interval;
+            this.combat.squadron?.forEach(ship=>this.exhaust(ship));
+            this.combat.enemies?.forEach(ship=>this.exhaust(ship,true));
+            for (const projectile of this.combat.projectileSystem?.projectiles || []) {
+                if (!projectile.active || projectile.type !== 'missile') continue;
+                this.velocity.copy(projectile.velocity).multiplyScalar(-0.08);
+                this.color.setHex(0x75cfff);
+                this.emit(projectile.mesh.position,this.velocity,this.color,0.85,0.58);
+            }
+        }
+        if(this.dirty){Object.values(this.attributes).forEach(attribute=>{attribute.needsUpdate=true;});this.dirty=false;}
+    }
+
+    reset() {
+        this.attributes.birth.array.fill(-10000);
+        this.attributes.birth.needsUpdate = true;
+        this.cursor = 0;
+        this.emitClock = 0;
+    }
+
+    getDiagnostics() { return { capacity:this.capacity,drawCalls:1,emitted:this.emitted,explosions:this.explosions,reducedMotion:this.motionQuery.matches }; }
+    dispose() { this.mesh.parent?.remove(this.mesh);this.geometry.dispose();this.material.dispose(); }
+}
 
 // --- Asset Management ---
 const SPACE_COMBAT_ASSET_VERSION = (() => {
@@ -134,6 +261,7 @@ class SpaceCombatScene {
         const sunLight = new THREE.DirectionalLight(0xffffee, 1.2);
         sunLight.position.set(100, 50, 50);
         this.scene.add(sunLight);
+        this.sunLight = sunLight;
 
         // Rim Light (Blue-ish back light)
         const rimLight = new THREE.DirectionalLight(0x4455ff, 0.8);
@@ -191,6 +319,7 @@ class SpaceCombatScene {
 
         // Systems
         this.projectileSystem = new ProjectileSystem(this);
+        this.visualEffects = new PioneerCombatEffects(this);
 
         this._targetBracketEl = document.getElementById('hud-target-bracket');
         this._targetProjectVec = new THREE.Vector3();
@@ -238,10 +367,21 @@ class SpaceCombatScene {
     }
 
     createNebula() {
+        if (typeof window.PioneerCinematicRenderer === 'function') {
+            this.cinematicEnvironment = new window.PioneerCinematicRenderer({
+                scene:this.scene,camera:this.camera,renderer:this.renderer,sunLight:this.sunLight,
+                starLayers:[this.starfield],graphicsSettings:this.game.graphicsSettings,timeScale:1
+            });
+            this.orbitalBackdrop = new THREE.Group();
+            this.orbitalBackdrop.name = 'PioneerColonyFromOrbit';
+            this.orbitalBackdrop.scale.setScalar(4.5);
+            this.orbitalOffset = new THREE.Vector3(690,-360,-1100);
+            this.refreshOrbitalBackdrop();
+            this.scene.add(this.orbitalBackdrop);
+            return;
+        }
         // Simple Gradient Background Sphere
         const geo = new THREE.SphereGeometry(1500, 32, 32);
-        // Flip normals to view from inside
-        geo.scale(-1, 1, 1);
 
         const mat = new THREE.ShaderMaterial({
             uniforms: {
@@ -267,8 +407,33 @@ class SpaceCombatScene {
             side: THREE.BackSide
         });
 
-        const nebula = new THREE.Mesh(geo, mat);
-        this.scene.add(nebula);
+        this.nebula = new THREE.Mesh(geo, mat);
+        this.scene.add(this.nebula);
+    }
+
+    refreshOrbitalBackdrop() {
+        if(!this.orbitalBackdrop)return;
+        // Geometry is borrowed from the colony world; only the copied materials belong here.
+        this.orbitalBackdrop.children.slice().forEach(child=>{child.material?.dispose();this.orbitalBackdrop.remove(child);});
+        for(const source of [this.game.planetMesh,this.game.atmosphereMesh,this.game.cloudMesh].filter(Boolean)){
+            const mesh=new THREE.Mesh(source.geometry,source.material.clone());
+            mesh.rotation.copy(source.rotation);
+            mesh.raycast=()=>{};
+            this.orbitalBackdrop.add(mesh);
+        }
+    }
+
+    disposeCombatMesh(object) {
+        // Optional asset clones share source geometry. The procedural path owns its resources.
+        if(!object||this.useHighFidelityAssets)return;
+        const geometries=new Set(),materials=new Set();
+        object.traverse(child=>{
+            if(child.geometry)geometries.add(child.geometry);
+            if(Array.isArray(child.material))child.material.forEach(material=>materials.add(material));
+            else if(child.material)materials.add(child.material);
+        });
+        geometries.forEach(geometry=>geometry.dispose());
+        materials.forEach(material=>material.dispose());
     }
 
     init() {
@@ -288,9 +453,9 @@ class SpaceCombatScene {
 
     getDefaultWavePlan() {
         return [
-            { count: 3, archetype: 'scout' },
-            { count: 4, archetype: 'fighter' },
-            { count: 1, archetype: 'ace' }
+            { count: 3, archetype: 'scout', name: 'Reconnaissance screen' },
+            { count: 4, archetype: 'fighter', name: 'Interception wing' },
+            { count: 1, archetype: 'ace', name: 'Veteran flight leader' }
         ];
     }
 
@@ -304,23 +469,24 @@ class SpaceCombatScene {
     }
 
     cleanupBattlefield() {
+        this.visualEffects?.reset();
         if (Array.isArray(this.enemies)) {
             this.enemies.forEach(e => {
-                if (e && e.mesh) this.scene.remove(e.mesh);
+                if (e && e.mesh) { this.scene.remove(e.mesh);this.disposeCombatMesh(e.mesh); }
             });
         }
         this.enemies = [];
 
         if (this.projectileSystem && Array.isArray(this.projectileSystem.projectiles)) {
             this.projectileSystem.projectiles.forEach(p => {
-                if (p && p.mesh) this.scene.remove(p.mesh);
+                if (p && p.mesh) { this.scene.remove(p.mesh);this.disposeCombatMesh(p.mesh); }
             });
             this.projectileSystem.projectiles = [];
         }
 
         if (Array.isArray(this.particles)) {
             this.particles.forEach(p => {
-                if (p && p.mesh) this.scene.remove(p.mesh);
+                if (p && p.mesh) { this.scene.remove(p.mesh);this.disposeCombatMesh(p.mesh); }
             });
         }
         this.particles = [];
@@ -364,10 +530,16 @@ class SpaceCombatScene {
         this._waveIndex++;
 
         if (this.game && this.game.notify) {
-            this.game.notify(`Wave ${waveNumber} incoming!`, 'warning');
+            this.game.notify(`Wave ${waveNumber}: ${wave.name || wave.archetype || 'Hostile squadron'} incoming.`, 'warning');
         }
 
         this.spawnWave(wave);
+        this.updateWaveHUD();
+    }
+
+    updateWaveHUD() {
+        const heading=document.querySelector('#hud-target > div:first-child');
+        if(heading)heading.textContent=`WAVE ${this._waveIndex}/${this._wavePlan?.length || 3} · ${this.enemies.length} CONTACTS`;
     }
 
     onWaveCleared() {
@@ -430,6 +602,7 @@ class SpaceCombatScene {
 
         this.resetCombatLoop();
         this.cleanupBattlefield();
+        this.refreshOrbitalBackdrop();
 
         if (!Array.isArray(this._wavePlan) || this._wavePlan.length === 0) {
             this._wavePlan = this.getDefaultWavePlan();
@@ -437,7 +610,7 @@ class SpaceCombatScene {
 
         // 1. Cleanup Old Squadron
         if (this.squadron) {
-            this.squadron.forEach(ship => this.scene.remove(ship.mesh));
+            this.squadron.forEach(ship => {this.scene.remove(ship.mesh);this.disposeCombatMesh(ship.mesh);});
         }
         this.squadron = [];
 
@@ -619,7 +792,7 @@ class SpaceCombatScene {
         window.removeEventListener('mousedown', this.onMouseDown);
         window.removeEventListener('keydown', this.onKeyDown);
         this.unbindTouchControls();
-        // Cleanup?
+        this.visualEffects?.reset();
     }
 
     update(dt) {
@@ -630,6 +803,8 @@ class SpaceCombatScene {
         if (this._launchSequence) {
             this.updateLaunchSequence(dtSafe);
             this.updateCamera(dtSafe);
+            this.updateCombatScenery(dtSafe);
+            this.visualEffects?.update(dtSafe);
             this.player?.updateHUD();
             return;
         }
@@ -680,6 +855,15 @@ class SpaceCombatScene {
         this.updateCamera(dt);
 
         this.updateTargetLock(dt);
+        this.updateCombatScenery(dtSafe);
+        this.visualEffects?.update(dtSafe);
+    }
+
+    updateCombatScenery(dt) {
+        this.cinematicEnvironment?.update(dt);
+        if(this.orbitalBackdrop)this.orbitalBackdrop.position.copy(this.camera.position).add(this.orbitalOffset);
+        if(this.nebula)this.nebula.position.copy(this.camera.position);
+        if(!this.cinematicEnvironment)this.starfield?.position.copy(this.camera.position);
     }
 
     updateLaunchSequence(dt) {
@@ -1262,7 +1446,9 @@ class SpaceCombatScene {
         }
         this.createExplosion(deadEnemy.mesh.position, 2.0); // Big boom
         this.scene.remove(deadEnemy.mesh);
+        this.disposeCombatMesh(deadEnemy.mesh);
         this.enemies.splice(index, 1);
+        this.updateWaveHUD();
 
         if (!this._combatOutcome && Array.isArray(this.enemies) && this.enemies.length === 0) {
             this.onWaveCleared();
@@ -1277,6 +1463,7 @@ class SpaceCombatScene {
         if (deadShip && deadShip.mesh) {
             this.createExplosion(deadShip.mesh.position, 1.5);
             this.scene.remove(deadShip.mesh);
+            this.disposeCombatMesh(deadShip.mesh);
         }
 
         this.squadron.splice(index, 1);
@@ -1328,38 +1515,7 @@ class SpaceCombatScene {
     }
 
     createExplosion(pos, scale = 1.0, colorHex = 0xffaa00) {
-        // PARTICLE EXPLOSION
-        const particleCount = 20;
-        const color = new THREE.Color(colorHex);
-
-        for (let i = 0; i < particleCount; i++) {
-            // Debris Chunk
-            const size = Math.random() * 0.5 * scale;
-            const geo = new THREE.BoxGeometry(size, size, size);
-            const mat = new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 1 });
-            const mesh = new THREE.Mesh(geo, mat);
-            mesh.position.copy(pos);
-
-            // Random velocity
-            const vel = new THREE.Vector3(
-                (Math.random() - 0.5) * 20,
-                (Math.random() - 0.5) * 20,
-                (Math.random() - 0.5) * 20
-            );
-
-            this.scene.add(mesh);
-            const life = 1.5 + Math.random();
-            this.particles.push({ mesh, vel, life, maxLife: life });
-
-            // Spark (Additive)
-            const sparkGeo = new THREE.PlaneGeometry(0.5, 0.5);
-            const sparkMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 1, blending: THREE.AdditiveBlending, depthWrite: false });
-            const spark = new THREE.Mesh(sparkGeo, sparkMat);
-            spark.position.copy(pos);
-            this.scene.add(spark);
-            const sparkLife = 0.5;
-            this.particles.push({ mesh: spark, vel: vel.clone().multiplyScalar(1.5), life: sparkLife, maxLife: sparkLife, billboard: true });
-        }
+        this.visualEffects.explosion(pos,scale,colorHex);
     }
 
     createShieldRipple(pos, ship = null, strength = 1) {
@@ -1437,6 +1593,9 @@ class SpaceCombatScene {
             p.life -= dtSafe;
             if (p.life <= 0) {
                 this.scene.remove(p.mesh);
+                p.mesh.geometry?.dispose();
+                if(Array.isArray(p.mesh.material))p.mesh.material.forEach(material=>material.dispose());
+                else p.mesh.material?.dispose();
                 this.particles.splice(i, 1);
             } else {
                 if (p.vel && p.vel.isVector3) {
@@ -2175,6 +2334,9 @@ class EnemyAI {
         this.shieldRegenDelay = shieldRegenDelay;
         this.shieldRegenTimer = 0;
         this.weaponDamage = weaponDamage;
+        this.fireInterval = ({scout:1.35,fighter:1.0,ace:0.72,tank:1.55})[archetype] || 1.0;
+        this.fireCooldown = this.fireInterval * 0.55;
+        this.shotsFired = 0;
 
         // Mesh (Enemy Style)
         this.mesh = new THREE.Group();
@@ -2281,6 +2443,8 @@ class EnemyAI {
 
     update(dt, player) {
         if (!player) return;
+        const safeDelta = Math.max(0,Math.min(0.1,Number(dt)||0));
+        this.fireCooldown = Math.max(0,this.fireCooldown-safeDelta);
 
         // STATE MACHINE AI
         // 0: Idle, 1: Chase, 2: Attack Run, 3: Evade
@@ -2318,17 +2482,22 @@ class EnemyAI {
             this.mesh.translateZ(-pursuitSpeed * dt); // Deliberately interceptable pursuit
         }
         else if (this.state === 'attack') {
-            // Lock on and accelerate
-            this.mesh.lookAt(player.mesh.position); // Hard lock (scary)
+            // Ships thrust and fire along -Z. Object3D.lookAt aims +Z, which previously
+            // made attack runs move and shoot away from the intended target.
+            const attackMatrix = new THREE.Matrix4().lookAt(this.mesh.position,player.mesh.position,new THREE.Vector3(0,1,0));
+            const attackQuaternion = new THREE.Quaternion().setFromRotationMatrix(attackMatrix);
+            this.mesh.quaternion.slerp(attackQuaternion,1-Math.exp(-3.2*safeDelta));
             this.mesh.translateZ(-pursuitSpeed * 1.12 * dt); // Short attack burn; player afterburner can close or escape
 
-            // Fire!
-            if (Math.random() > 0.95) {
-                // Fire logic would be here, visual only for AI right now? 
-                // We should add AI shooting:
-                const fwd = new THREE.Vector3(0, 0, -1).applyQuaternion(this.mesh.quaternion);
+            const fwd = new THREE.Vector3(0,0,-1).applyQuaternion(this.mesh.quaternion);
+            const targetDirection = player.mesh.position.clone().sub(this.mesh.position).normalize();
+            // Cadence is measured in simulation seconds and gated by the forward firing cone.
+            // Scouts provide room to learn; the veteran fires faster without outrunning a player.
+            if (this.fireCooldown <= 0 && fwd.dot(targetDirection) > 0.975) {
                 const firePos = this.mesh.position.clone().add(fwd.clone().multiplyScalar(2));
                 this.scene.projectileSystem.fire(firePos, fwd, 'enemy', 'laser', this.weaponDamage);
+                this.fireCooldown = this.fireInterval;
+                this.shotsFired++;
             }
         }
         else if (this.state === 'evade') {

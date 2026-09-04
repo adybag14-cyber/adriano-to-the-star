@@ -1,6 +1,6 @@
 {
     "schemaVersion":  1,
-    "generatedAt":  "2026-08-06T12:14:47.5747811+00:00",
+    "generatedAt":  "2026-09-04T20:50:34.4830627+00:00",
     "buildSha":  "local",
     "delivery":  "build-cached",
     "refreshedSources":  3,
@@ -14,97 +14,119 @@
                   {
                       "type":  "exoplanet",
                       "source":  "NASA Exoplanet Archive",
-                      "title":  "XO-2 S d",
-                      "desc":  "Discovered: 2024 | Host: XO-2 S | Dist: 151.4 pc",
-                      "link":  "https://exoplanetarchive.ipac.caltech.edu/",
-                      "meta":  {
-                                   "discoveryYear":  2024,
-                                   "host":  "XO-2 S",
-                                   "distancePc":  151.398
-                               }
-                  },
-                  {
-                      "type":  "exoplanet",
-                      "source":  "NASA Exoplanet Archive",
-                      "title":  "OGLE-2017-BLG-0364L b",
-                      "desc":  "Discovered: 2024 | Host: OGLE-2017-BLG-0364L | Dist: 7,860.0 pc",
-                      "link":  "https://exoplanetarchive.ipac.caltech.edu/",
-                      "meta":  {
-                                   "discoveryYear":  2024,
-                                   "host":  "OGLE-2017-BLG-0364L",
-                                   "distancePc":  7860
-                               }
-                  },
-                  {
-                      "type":  "exoplanet",
-                      "source":  "NASA Exoplanet Archive",
-                      "title":  "Kepler-1808 b",
-                      "desc":  "Discovered: 2021 | Host: Kepler-1808 | Dist: 1,022.0 pc",
+                      "title":  "Kepler-1753 b",
+                      "desc":  "Discovered: 2021 | Host: Kepler-1753 | Dist: 707.7 pc",
                       "link":  "https://exoplanetarchive.ipac.caltech.edu/",
                       "meta":  {
                                    "discoveryYear":  2021,
-                                   "host":  "Kepler-1808",
-                                   "distancePc":  1022.01
+                                   "host":  "Kepler-1753",
+                                   "distancePc":  707.688
                                }
                   },
                   {
                       "type":  "exoplanet",
                       "source":  "NASA Exoplanet Archive",
-                      "title":  "Kepler-249 d",
-                      "desc":  "Discovered: 2014 | Host: Kepler-249 | Dist: 190.4 pc",
+                      "title":  "K2-43 b",
+                      "desc":  "Discovered: 2016 | Host: K2-43 | Dist: 182.5 pc",
                       "link":  "https://exoplanetarchive.ipac.caltech.edu/",
                       "meta":  {
-                                   "discoveryYear":  2014,
-                                   "host":  "Kepler-249",
-                                   "distancePc":  190.401
+                                   "discoveryYear":  2016,
+                                   "host":  "K2-43",
+                                   "distancePc":  182.536
                                }
                   },
                   {
                       "type":  "exoplanet",
                       "source":  "NASA Exoplanet Archive",
-                      "title":  "Kepler-418 b",
-                      "desc":  "Discovered: 2014 | Host: Kepler-418 | Dist: 1,002.5 pc",
+                      "title":  "Kepler-1176 b",
+                      "desc":  "Discovered: 2016 | Host: Kepler-1176 | Dist: 864.7 pc",
                       "link":  "https://exoplanetarchive.ipac.caltech.edu/",
                       "meta":  {
-                                   "discoveryYear":  2014,
-                                   "host":  "Kepler-418",
-                                   "distancePc":  1002.53
+                                   "discoveryYear":  2016,
+                                   "host":  "Kepler-1176",
+                                   "distancePc":  864.699
+                               }
+                  },
+                  {
+                      "type":  "exoplanet",
+                      "source":  "NASA Exoplanet Archive",
+                      "title":  "HAT-P-8 b",
+                      "desc":  "Discovered: 2008 | Host: HAT-P-8 | Dist: 211.6 pc",
+                      "link":  "https://exoplanetarchive.ipac.caltech.edu/",
+                      "meta":  {
+                                   "discoveryYear":  2008,
+                                   "host":  "HAT-P-8",
+                                   "distancePc":  211.553
+                               }
+                  },
+                  {
+                      "type":  "exoplanet",
+                      "source":  "NASA Exoplanet Archive",
+                      "title":  "HD 2039 b",
+                      "desc":  "Discovered: 2002 | Host: HD 2039 | Dist: 85.7 pc",
+                      "link":  "https://exoplanetarchive.ipac.caltech.edu/",
+                      "meta":  {
+                                   "discoveryYear":  2002,
+                                   "host":  "HD 2039",
+                                   "distancePc":  85.6922
                                }
                   },
                   {
                       "type":  "launch",
                       "source":  "Launch Library 2",
-                      "title":  "Launch: Electron | The Grain Goddess Provides (iQPS Launch 7)",
-                      "desc":  "Window: 2026-08-06 09:00 UTC | Pad: Rocket Lab Launch Complex 1A",
-                      "link":  "https://ll.thespacedevs.com/2.2.0/launch/8b7e748c-6ed5-4681-a898-827b4a23b8d7/"
+                      "title":  "Launch: GSLV Mk II | GISAT-1A (EOS-05)",
+                      "desc":  "Window: 2026-09-03 21:00 UTC | Pad: Satish Dhawan Space Centre Second Launch Pad",
+                      "link":  "https://ll.thespacedevs.com/2.2.0/launch/17d0ec68-f466-4916-9dc5-16123eda6484/",
+                      "meta":  {
+                                   "windowStart":  "2026-09-03T21:00:00.0000000+00:00",
+                                   "launchDate":  "2026-09-03T21:25:00.0000000+00:00",
+                                   "status":  "Launch Successful"
+                               }
                   },
                   {
                       "type":  "launch",
                       "source":  "Launch Library 2",
-                      "title":  "Launch: Falcon 9 Block 5 | Starlink Group 17-38",
-                      "desc":  "Window: 2026-08-08 14:00 UTC | Pad: Space Launch Complex 4E",
-                      "link":  "https://ll.thespacedevs.com/2.2.0/launch/e4316d4c-9eb8-4a18-9b0d-4307c3970ef6/"
+                      "title":  "Launch: Spectrum | Onward and Upward",
+                      "desc":  "Window: 2026-09-05 20:00 UTC | Pad: Orbital Launch Pad",
+                      "link":  "https://ll.thespacedevs.com/2.2.0/launch/1b23eb18-e06e-4058-9b42-e95ca0980511/",
+                      "meta":  {
+                                   "windowStart":  "2026-09-05T20:00:00.0000000+00:00",
+                                   "launchDate":  "2026-09-05T20:00:00.0000000+00:00",
+                                   "status":  "To Be Confirmed"
+                               }
                   },
                   {
                       "type":  "news",
                       "source":  "Spaceflight News API",
-                      "title":  "A match made in cleanrooms",
-                      "desc":  "From the ESA Blogs.",
-                      "link":  "https://www.esa.int/ESA_Multimedia/Images/2026/08/A_match_made_in_cleanrooms"
+                      "title":  "Blue Origin expands test and launch sites across the Cape",
+                      "desc":  "Blue Origin is expanding its Kennedy Space Center and Cape Canaveral footprint on multiple fronts,… The post Blue Origin expands test and launch sites across th…",
+                      "link":  "https://www.nasaspaceflight.com/2026/09/blue-origin-expands-test-launch-cape/",
+                      "meta":  {
+                                   "publishedAt":  "2026-09-04T20:37:43.0000000+00:00",
+                                   "publisher":  "NASASpaceflight"
+                               }
                   },
                   {
                       "type":  "news",
                       "source":  "Spaceflight News API",
-                      "title":  "Three companies building the tech to grow crops on the moon",
-                      "desc":  "Rockets, rovers and landers have dominated the attention of the commercial space industry as the United States focuses on sending humans back to the moon, but a…",
-                      "link":  "https://spacenews.com/three-companies-building-the-tech-to-grow-crops-on-the-moon/"
+                      "title":  "NASA Ames Fire Department Aircraft Firefighting Training",
+                      "desc":  "The fire department at NASA’s Ames Research Center in California’s Silicon Valley will perform training on the Moffett Federal Airfield beginning Tuesday, Sept.…",
+                      "link":  "https://www.nasa.gov/news-release/nasa-ames-fire-department-aircraft-firefighting-training/",
+                      "meta":  {
+                                   "publishedAt":  "2026-09-04T19:51:56.0000000+00:00",
+                                   "publisher":  "NASA"
+                               }
                   },
                   {
                       "type":  "news",
                       "source":  "Spaceflight News API",
-                      "title":  "Rocket Lab launches 8th iQPS satellite",
-                      "desc":  "Rocket Lab launched a Japanese radar-imaging satellite Aug. 6, more than a month after the previous launch attempt was aborted. The post Rocket Lab launches 8th…",
-                      "link":  "https://spacenews.com/rocket-lab-launches-8th-iqps-satellite/"
+                      "title":  "NASA Hosts Virtual Artemis Webinar for Blind, Low-Vision Community",
+                      "desc":  "NASA will host a virtual webinar at 2 p.m. on Friday, Oct. 2, titled “The RS-25 Engine and the Future of Artemis Missions: An Accessible Webinar for the Blind a…",
+                      "link":  "https://www.nasa.gov/general/nasa-hosts-virtual-artemis-webinar-for-blind-low-vision-community/",
+                      "meta":  {
+                                   "publishedAt":  "2026-09-04T16:48:59.0000000+00:00",
+                                   "publisher":  "NASA"
+                               }
                   }
               ]
 }

@@ -18,7 +18,7 @@
 
     snapshot() {
       const claims = readArray('planet-claims');
-      const favourites = [...readArray('favorites'), ...readArray('saved-planets')];
+      const favourites = [...readArray('planet_favorites'), ...readArray('favorites'), ...readArray('saved-planets')];
       const interactions = readArray('planet-trends');
       const messages = readArray('ita_local_messages_v1');
       const now = Date.now();
@@ -60,7 +60,7 @@
             <article class="analytics-metric-card"><span class="analytics-metric-label">Saved worlds</span><strong>${data.favourites.length}</strong><small>Local favourites and saved planets</small></article>
             <article class="analytics-metric-card"><span class="analytics-metric-label">Planet claims</span><strong>${data.claims.length}</strong><small>${activeClaims} active in this browser</small></article>
             <article class="analytics-metric-card"><span class="analytics-metric-label">Interactions</span><strong>${data.interactions.length}</strong><small>Within the selected range</small></article>
-            <article class="analytics-metric-card"><span class="analytics-metric-label">Graphics capability</span><strong>${data.webgpu ? 'WebGPU' : 'WebGL'}</strong><small>Language ${data.language}</small></article>
+            <article class="analytics-metric-card"><span class="analytics-metric-label">Graphics API exposed</span><strong style="font-size:clamp(1rem,2vw,1.5rem);white-space:nowrap;">${data.webgpu ? 'WebGPU' : 'Not detected'}</strong><small>Adapter availability requires a device check. Language ${data.language}</small></article>
           </div>
           <div class="analytics-data-note" role="note">
             <strong>No sample numbers.</strong> Empty activity is displayed as zero. Last refreshed <time datetime="${data.generatedAt.toISOString()}">${data.generatedAt.toLocaleString()}</time>.

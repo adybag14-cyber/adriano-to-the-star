@@ -86,6 +86,7 @@ function normalizePlanetPhysicalProfile(profile = null, seed = 12345, type = 'pl
     const isIce = worldType === 'ice' || worldType === 'frozen';
     const isGas = worldType === 'gas' || worldType === 'giant';
     const isDesert = worldType === 'desert' || worldType === 'arid';
+    const isOcean = worldType === 'ocean';
 
     const inferredRadius = isMoon ? 0.27
         : isGas ? 7.0 + terrainHash(seed, 2) * 7.0
@@ -111,6 +112,7 @@ function normalizePlanetPhysicalProfile(profile = null, seed = 12345, type = 'pl
         : isIce ? 0.025 + terrainHash(seed, 4) * 0.34
             : isGas ? 0.025 + terrainHash(seed, 4) * 79.0
                 : isDesert ? 0.70 + terrainHash(seed, 4) * 3.4
+                    : isOcean ? 0.95 + terrainHash(seed, 4) * 0.35
                     : 0.28 + terrainHash(seed, 4) * 1.85;
     const insolationEarth = terrainClamp(
         terrainNumber(src.insolationEarth ?? src.insolation ?? src.pl_insol, inferredInsolation),
@@ -147,6 +149,9 @@ function normalizePlanetPhysicalProfile(profile = null, seed = 12345, type = 'pl
         : isDesert ? terrainClamp(0.025 + terrainHash(seed, 7) * 0.09, 0.02, 0.12)
             : terrainClamp((0.18 + terrainHash(seed, 7) * 0.62) * (0.34 + temperateWindow * 0.66), 0.04, 0.82);
     if (isIce) waterPotential = terrainClamp(0.32 + terrainHash(seed, 8) * 0.38, 0.28, 0.74);
+    // Ocean labels describe a fictional water-rich inventory. Supplied stellar flux and
+    // temperature still determine whether that inventory is liquid, frozen or vaporised.
+    if (isOcean) waterPotential = 0.86 + terrainHash(seed, 8) * 0.10;
 
     const atmosphereRetention = isMoon ? 0.04 : isGas ? 1.45 : terrainClamp(
         gravityEarth * Math.sqrt(288 / Math.max(80, preliminaryEquilibriumTemperatureK)) * 0.68, 0.06, 1.45
@@ -215,10 +220,14 @@ function normalizePlanetPhysicalProfile(profile = null, seed = 12345, type = 'pl
         0.05,
         0.88
     );
+    const liquidWaterPotential = isOcean ? waterPotential
+        * terrainSmoothstep(260, 283, estimatedSurfaceTemperatureK)
+        * (1 - terrainSmoothstep(350, 390, estimatedSurfaceTemperatureK)) : waterPotential;
     const climateRegime = isGas ? (estimatedSurfaceTemperatureK >= 1200 ? 'ultra-hot-giant' : 'gas-giant')
         : isLava ? 'magma-dominated'
             : isIce ? (estimatedSurfaceTemperatureK < 190 ? 'cryogenic-ice' : 'ice-world')
                 : isDesert ? (estimatedSurfaceTemperatureK >= 360 ? 'hot-arid' : 'arid')
+                    : isOcean ? (estimatedSurfaceTemperatureK < 273 ? 'frozen-ocean-scenario' : estimatedSurfaceTemperatureK > 373 ? 'steam-ocean-scenario' : 'ocean-world-scenario')
                     : estimatedSurfaceTemperatureK >= 900 ? 'magma-dominated'
                         : estimatedSurfaceTemperatureK < 190 ? 'cryogenic'
                             : estimatedSurfaceTemperatureK < 250 ? 'cold'
@@ -232,7 +241,7 @@ function normalizePlanetPhysicalProfile(profile = null, seed = 12345, type = 'pl
         catalogEquilibriumTemperatureK: hasSuppliedEquilibrium ? preliminaryEquilibriumTemperatureK : null,
         stellarTemperatureK,
         orbitalPeriodDays: Number.isFinite(orbitalPeriodDays) ? orbitalPeriodDays : null,
-        waterPotential, atmosphereRetention, weathering, craterRetention, reliefScale,
+        waterPotential, liquidWaterPotential, atmosphereRetention, weathering, craterRetention, reliefScale,
         icePotential, cloudPotential, aridity, climateContrast, climateRegime,
         tidallyLocked,
         provenance: src.provenance || (src.data_source ? 'catalog-constrained' : 'procedural-inference'),
@@ -274,7 +283,9 @@ function computePlanetTerrainHeight(x, y, z, seed, physicalProfile, type, noise)
     }
     ridge /= Math.max(1e-6, weight);
 
-    const seaLevel = 0.535 + (profile.waterPotential - 0.42) * 0.10;
+    const seaLevel = String(type).toLowerCase() === 'ocean'
+        ? 0.80 + (profile.waterPotential - 0.86) * 0.22
+        : 0.535 + (profile.waterPotential - 0.42) * 0.10;
     const terrainSignal = ridge + broad * 0.105;
     let displacement;
     if (terrainSignal > seaLevel) {
@@ -434,11 +445,13 @@ class PlanetGenerator {
                 uniform vec3 colorSnow;
                 uniform vec3 sunDirection;
                 uniform float waterPotential;
+                uniform float liquidWaterPotential;
                 uniform float icePotential;
                 uniform float surfaceTemperatureK;
                 uniform float tidallyLocked;
                 uniform float climateContrast;
                 uniform float terrainDetail;
+                uniform float time;
 
                 varying vec3 vWorldNormal;
                 varying vec3 vLocalNormal;
@@ -466,6 +479,7 @@ class PlanetGenerator {
                     float sedimentNoise = 0.5 + 0.5 * cnoise(sphere * (24.0 * detailFrequency) - vec3(seed * 0.018));
                     float basinMask = 1.0 - smoothstep(-0.18, 0.10, h);
                     float waterMask = basinMask * smoothstep(0.08, 0.30, waterPotential);
+                    float liquidMask = waterMask * smoothstep(0.08, 0.30, liquidWaterPotential);
                     float coast = smoothstep(-0.10, 0.02, h) * (1.0 - smoothstep(0.02, 0.12, h));
                     float slope = clamp(1.0 - dot(normalize(vLocalNormal), sphere), 0.0, 0.24) / 0.24;
 
@@ -495,14 +509,29 @@ class PlanetGenerator {
                     float bumpStrength = mix(0.085, 0.018, waterMask) * mix(0.72, 1.20, clamp((terrainDetail - 0.55) / 0.80, 0.0, 1.0));
                     N = normalize(N + T * bumpX * bumpStrength + B * bumpY * bumpStrength);
 
+                    // Wind-driven capillary waves and a microfacet BRDF preserve a stable,
+                    // narrow stellar glint; latitude/longitude wrap never enters the wave field.
+                    float waveA = sin(dot(sphere, vec3(41.0, 17.0, 31.0)) + time * 0.18);
+                    float waveB = sin(dot(sphere, vec3(-29.0, 43.0, 19.0)) - time * 0.14);
+                    N = normalize(N + (T * waveA + B * waveB) * liquidMask * 0.013);
                     float NdotL = max(dot(N, L), 0.0);
                     vec3 H = normalize(L + V);
                     float NdotH = max(dot(N, H), 0.0);
-                    float roughness = mix(0.74 - micro * 0.08, 0.10, waterMask);
-                    float landSpec = pow(NdotH, mix(18.0, 42.0, 1.0 - roughness)) * 0.08;
-                    float waterSpec = pow(NdotH, 118.0) * waterMask * 1.30;
-                    float fresnel = pow(1.0 - max(dot(N, V), 0.0), 5.0);
-                    vec3 specular = vec3(landSpec) + vec3(0.48, 0.72, 0.96) * (waterSpec + fresnel * waterMask * 0.28);
+                    float roughness = mix(0.74 - micro * 0.08, 0.16 + (waveA + waveB) * 0.006, liquidMask);
+                    float NdotV = max(dot(N, V), 0.001);
+                    float VdotH = max(dot(V, H), 0.0);
+                    float alpha = roughness * roughness;
+                    float alpha2 = alpha * alpha;
+                    float denominator = NdotH * NdotH * (alpha2 - 1.0) + 1.0;
+                    float distribution = alpha2 / max(0.00001, 3.14159265 * denominator * denominator);
+                    float k = (roughness + 1.0) * (roughness + 1.0) / 8.0;
+                    float visibility = (NdotV / (NdotV * (1.0 - k) + k)) * (NdotL / max(0.001, NdotL * (1.0 - k) + k));
+                    float f0 = mix(0.04, 0.0204, liquidMask);
+                    float fresnel = f0 + (1.0 - f0) * pow(1.0 - VdotH, 5.0);
+                    float microfacet = min(2.6, distribution * visibility * fresnel / max(0.001, 4.0 * NdotV * max(NdotL, 0.001)));
+                    vec3 specular = vec3(0.91, 0.95, 1.0) * microfacet * NdotL;
+                    float skyFresnel = pow(1.0 - NdotV, 5.0) * liquidMask;
+                    specular += vec3(0.04, 0.12, 0.22) * skyFresnel;
 
                     float gi = getGI(vWorldPosition, N);
                     float twilight = smoothstep(-0.15, 0.08, dot(N, L));
@@ -671,28 +700,43 @@ class PlanetGenerator {
                 varying vec3 vWorldNormal;
                 varying vec3 vWorldPosition;
                 varying vec3 vLocalPosition;
-                float hash21(vec2 p) { return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453); }
-                float noise2(vec2 p) {
-                    vec2 i=floor(p), f=fract(p); f=f*f*(3.0-2.0*f);
-                    return mix(mix(hash21(i),hash21(i+vec2(1,0)),f.x),mix(hash21(i+vec2(0,1)),hash21(i+vec2(1,1)),f.x),f.y);
+                float hash3(vec3 p) { return fract(sin(dot(p,vec3(127.1,311.7,74.7))) * 43758.5453); }
+                float noise3(vec3 p) {
+                    vec3 i=floor(p), f=fract(p); f=f*f*(3.0-2.0*f);
+                    return mix(mix(mix(hash3(i),hash3(i+vec3(1,0,0)),f.x),mix(hash3(i+vec3(0,1,0)),hash3(i+vec3(1,1,0)),f.x),f.y),
+                               mix(mix(hash3(i+vec3(0,0,1)),hash3(i+vec3(1,0,1)),f.x),mix(hash3(i+vec3(0,1,1)),hash3(i+vec3(1,1,1)),f.x),f.y),f.z);
+                }
+                float turbulence(vec3 p) {
+                    float value=0.0, amplitude=0.56;
+                    for(int i=0;i<4;i++){value+=noise3(p)*amplitude;p=p*2.03+vec3(4.7,7.1,3.2);amplitude*=0.47;}
+                    return value;
                 }
                 void main() {
                     vec3 sphere = normalize(vLocalPosition);
                     vec3 N = normalize(vWorldNormal), L = normalize(sunDirection), V = normalize(cameraPosition - vWorldPosition);
                     float lat = asin(clamp(sphere.y,-1.0,1.0));
                     float lon = atan(sphere.z, sphere.x);
-                    float jetNoise = noise2(vec2(lon * 3.0 + time * 0.012, lat * 7.0 + seed * 0.01));
-                    float bands = 0.5 + 0.5 * sin(lat * 29.0 + jetNoise * 4.2 + sin(lat * 7.0) * 1.8);
-                    float fineBands = 0.5 + 0.5 * sin(lat * 73.0 - time * 0.018 + jetNoise * 3.0);
-                    float stormNoise = noise2(vec2(lon * 4.5 - time * 0.006, lat * 10.0));
-                    float storm = smoothstep(0.78, 0.94, stormNoise) * smoothstep(0.1, 0.95, abs(cos(lat)));
-                    vec3 color = mix(color1, color2, bands);
-                    color = mix(color, color3, fineBands * 0.28 + storm * 0.38);
+                    // Differential zonal flow advects a seamless 3-D field over the sphere.
+                    float jet = sin(lat * 12.0) * 0.035 + time * 0.004 * sin(lat * 17.0);
+                    vec3 flow = vec3(cos(lon+jet)*cos(lat),sphere.y,sin(lon+jet)*cos(lat));
+                    float broad = turbulence(flow * vec3(9.0,18.0,9.0) + seed * 0.007);
+                    float curl = turbulence(flow * 31.0 + vec3(0.0,time*0.006,0.0));
+                    float bands = 0.5 + 0.5*sin(lat*32.0+(broad-0.5)*4.1+sin(lat*8.0)*0.8);
+                    float fineBands = 0.5+0.5*sin(lat*119.0+(curl-0.5)*7.0);
+                    float stormLongitude = seed * 0.017;
+                    float dx = atan(sin(lon-stormLongitude),cos(lon-stormLongitude));
+                    vec2 stormPosition = vec2(dx * 2.5, (lat + 0.31) * 6.2);
+                    float stormRadius = length(stormPosition);
+                    float stormMask = (1.0-smoothstep(0.62,1.15,stormRadius));
+                    float spiral = 0.5+0.5*sin(atan(stormPosition.y,stormPosition.x)*3.0-stormRadius*24.0+curl*3.0-time*0.025);
+                    vec3 color = mix(color1,color2,smoothstep(0.18,0.82,bands));
+                    color *= 0.83+fineBands*0.12+curl*0.23;
+                    color = mix(color,color3*(0.78+spiral*0.25),stormMask*0.86);
                     float dayMu = dot(N,L);
                     float day = smoothstep(-0.30, 0.16, dayMu);
                     float hot = clamp((surfaceTemperatureK - 700.0) / 1500.0, 0.0, 1.0);
                     float lockedNightCloud = tidallyLocked * (1.0 - day) * (0.12 + hot * 0.20);
-                    color = mix(color * (0.30 + day * 0.70), vec3(0.58,0.62,0.70), lockedNightCloud);
+                    color = mix(color * (0.12 + day * (0.30+max(dayMu,0.0)*0.66)), vec3(0.21,0.24,0.31), lockedNightCloud);
                     float rim = pow(1.0 - max(dot(N,V),0.0), 2.6);
                     color += mix(vec3(0.10,0.18,0.28), color2, 0.35) * rim * 0.34;
                     gl_FragColor = vec4(color, 1.0);
@@ -719,6 +763,7 @@ class PlanetGenerator {
             equilibriumTemperatureK: { value: resolvedProfile.equilibriumTemperatureK },
             surfaceTemperatureK: { value: resolvedProfile.estimatedSurfaceTemperatureK },
             waterPotential: { value: resolvedProfile.waterPotential },
+            liquidWaterPotential: { value: resolvedProfile.liquidWaterPotential },
             icePotential: { value: resolvedProfile.icePotential },
             atmosphereRetention: { value: resolvedProfile.atmosphereRetention },
             climateContrast: { value: resolvedProfile.climateContrast },
@@ -732,9 +777,16 @@ class PlanetGenerator {
             shaderData = this.shaders.ice;
         } else if (type === 'gas' || type === 'giant') {
             shaderData = this.shaders.gas;
-            uniforms.color1 = { value: new THREE.Color().setHSL(r, 0.6, 0.4) };
-            uniforms.color2 = { value: new THREE.Color().setHSL((r + 0.3) % 1, 0.5, 0.6) };
-            uniforms.color3 = { value: new THREE.Color().setHSL((r + 0.6) % 1, 0.4, 0.3) };
+            // Temperature-conditioned cloud scenarios avoid arbitrary neon hue assignment.
+            // These classes are artistic priors, not claims of detected gas abundances.
+            const temperature = resolvedProfile.estimatedSurfaceTemperatureK;
+            const gasPalette = temperature < 180 ? [0x496e94, 0x9db9c6, 0x456986]
+                : temperature < 750 ? [0x8d7760, 0xd4c9b0, 0xa16d50]
+                    : temperature < 1500 ? [0x74513e, 0xbe9670, 0x8d4429]
+                        : [0x613c42, 0xbb796a, 0xda9c65];
+            uniforms.color1 = { value: new THREE.Color(gasPalette[0]) };
+            uniforms.color2 = { value: new THREE.Color(gasPalette[1]) };
+            uniforms.color3 = { value: new THREE.Color(gasPalette[2]) };
         } else if (type === 'moon') {
             shaderData = this.shaders.standard;
             uniforms.colorWater = { value: new THREE.Color(0x333333) };
@@ -753,6 +805,8 @@ class PlanetGenerator {
                 : t > 360 ? new THREE.Color(0x9b6440)
                     : new THREE.Color(0x66745f).lerp(new THREE.Color(0x83725c), arid * 0.72);
             uniforms.colorWater = { value: new THREE.Color(0x075985).multiplyScalar(0.76 + wet * 0.27 + r * 0.08) };
+            if (type === 'ocean' && t < 273) uniforms.colorWater.value.setHex(0xa3bdca);
+            if (type === 'ocean' && t > 373) uniforms.colorWater.value.setHex(0x777d86);
             uniforms.colorSand = { value: new THREE.Color(t > 360 ? 0xc08355 : 0xb7a57d) };
             uniforms.colorGrass = { value: lowland.multiplyScalar(0.94 + rng(seed + 1) * 0.10) };
             uniforms.colorRock = { value: new THREE.Color(t > 520 ? 0x6f4c3b : 0x66635f) };

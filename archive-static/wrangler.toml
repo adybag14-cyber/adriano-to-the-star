@@ -1,0 +1,10 @@
+# Archive-only static asset hosting. No executable Worker, R2, paid binding, or domain route.
+name = "starisdons-archive-assets"
+account_id = "3218be7fd3453af56a94673b5678580b"
+compatibility_date = "2026-09-04"
+workers_dev = true
+
+[assets]
+directory = "../.artifacts/audit-20260904/archive/static-assets"
+html_handling = "none"
+not_found_handling = "none"

@@ -109,9 +109,10 @@ class SpaceAPIIntegrations {
                 source: item.source || 'NASA Exoplanet Archive'
             })),
             launches: launches.map(item => ({
-                id: item.link,
+                  id: item.link,
+                  link: item.link,
                 name: item.title.replace(/^Launch:\s*/i, ''),
-                date: item.desc.match(/Window:\s*([^|]+)/i)?.[1]?.trim() || null,
+                  date: item.meta?.launchDate || item.meta?.windowStart || item.meta?.date || item.desc.match(/Window:\s*([^|]+)/i)?.[1]?.trim() || null,
                 details: item.desc,
                 upcoming: true,
                 source: item.source
@@ -670,6 +671,7 @@ class SpaceAPIIntegrations {
 }
 
 // Export for use in other modules
+if (typeof window !== 'undefined') window.SpaceAPIIntegrations = SpaceAPIIntegrations;
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = SpaceAPIIntegrations;
 }

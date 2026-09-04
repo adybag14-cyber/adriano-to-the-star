@@ -29,7 +29,7 @@
       const user = window.authManager?.getCurrentUser?.() || null;
       const userId = user?.id || 'guest';
       return {
-        worlds: new Set([...readArray('planet-claims'), ...readArray('favorites'), ...readArray('saved-planets')].map(item => item.kepid || item.id || item.name)).size,
+        worlds: new Set([...readArray('planet-claims'), ...readArray('planet_favorites'), ...readArray('favorites'), ...readArray('saved-planets')].map(item => typeof item === 'string' || typeof item === 'number' ? String(item) : item.recordId || item.planet?.kepoi_name || item.kepid || item.id || item.name).filter(Boolean)).size,
         interactions: readArray('planet-trends').length,
         profile: Number(Boolean(user)),
         newsletter: Number(Boolean(localStorage.getItem('ita_newsletter_preferences_v2'))),

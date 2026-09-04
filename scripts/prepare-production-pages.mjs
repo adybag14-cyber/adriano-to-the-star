@@ -180,7 +180,8 @@ async function transformPage(page) {
     if (/<script\b/i.test(head)) return head.replace(/<script\b/i, `${breadcrumb.structured}\n<script`);
     return head.replace(/<\/head>/i, `${breadcrumb.structured}\n</head>`);
   });
-  const skip = hasMain ? '<a class="ita-skip-link" href="#main-content">Skip to main content</a>\n' : '';
+  const mainId = html.match(/<main\b[^>]*\bid=["']([^"']+)["']/i)?.[1] || 'main-content';
+  const skip = hasMain ? `<a class="ita-skip-link" href="#${mainId}">Skip to main content</a>\n` : '';
   html = html.replace(/<body\b[^>]*>/i, match => `${match}\n${skip}${breadcrumb.visible}`);
   const selfContainedRuntime = new Set(['exoplanet-pioneer.html', 'starsector.html']);
   if (!selfContainedRuntime.has(page.path) && !/(?:src=["'](?:\.\.\/)?i18n\.js(?:\?|["']))/i.test(html)) {

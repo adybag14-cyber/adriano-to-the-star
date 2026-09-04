@@ -101,6 +101,18 @@ class OptimizedDatabase {
         return n1 === n2;
     }
 
+    // KEPID identifies the host star. A KOI identifier identifies one object in
+    // that system, so card actions and links must preserve it end to end.
+    recordKey(planet) {
+        return String(planet.kepoi_name || planet.kepler_name || planet.kepid);
+    }
+
+    findPlanet(reference) {
+        const key = String(reference ?? '');
+        return this.allData.find(planet => this.recordKey(planet) === key || planet.kepler_name === key)
+            || this.allData.find(planet => String(planet.kepid) === key);
+    }
+
     /**
      * Show enhanced empty state with helpful suggestions
      * Provides contextual help based on current filters/search
@@ -226,6 +238,7 @@ class OptimizedDatabase {
             // Load data first (async)
             await this.loadData();
             this.setupDelegatedEvents();
+            document.dispatchEvent(new CustomEvent('ita:database-ready'));
             this.trackEvent('db_optimized_initialized');
 
             try {
@@ -274,11 +287,11 @@ class OptimizedDatabase {
             const btn = e.target.closest('button');
             if (!btn) return;
 
-            const kepid = btn.dataset.kepid;
+            const kepid = btn.closest('[data-record-id]')?.dataset.recordId || btn.dataset.kepid;
             if (!kepid) return;
 
             // Find planet data
-            const planet = this.allData.find(p => this.compareKepid(p.kepid, kepid));
+            const planet = this.findPlanet(kepid);
             if (!planet) return;
 
             if (btn.classList.contains('wishlist-btn')) {
@@ -651,18 +664,26 @@ class OptimizedDatabase {
             return this.allData;
         }
 
-        const resultIndexes = new Set();
+        let resultIndexes = null;
 
         for (let i = 0; i < tokens.length; i++) {
             const term = tokens[i];
-            const bucket = this.searchIndex.get(term);
-            if (bucket && bucket.size > 0) {
+            const tokenMatches = new Set();
+            // A partial name may match an indexed word prefix, but every query
+            // token must describe the same object. Unioning query tokens made
+            // "Kepler-227" match every object containing the word "Kepler".
+            for (const [indexedTerm, bucket] of this.searchIndex) {
+                if (!indexedTerm.startsWith(term)) continue;
                 bucket.forEach((idx) => {
                     if (idx >= 0 && idx < this.allData.length) {
-                        resultIndexes.add(idx);
+                        tokenMatches.add(idx);
                     }
                 });
             }
+            resultIndexes = resultIndexes === null
+                ? tokenMatches
+                : new Set([...resultIndexes].filter(index => tokenMatches.has(index)));
+            if (resultIndexes.size === 0) return [];
         }
 
         if (resultIndexes.size === 0) {
@@ -794,10 +815,10 @@ class OptimizedDatabase {
                             </div>
                         </div>
                         <div style="flex: 1; min-width: 200px; text-align: right; display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-end;">
-                            <button type="button" onclick="showPlanetDetails('${planet.kepid}')" style="padding: 0.6rem 1.1rem; border-radius: 999px; border: 1px solid rgba(186, 148, 79, 0.8); background: rgba(15, 23, 42, 0.8); color: #f9fafb; font-size: 0.85rem; font-weight: 600; cursor: pointer; margin-bottom: 0.1rem;">
+                            <button type="button" onclick="showPlanetDetails('${this.recordKey(planet)}')" style="padding: 0.6rem 1.1rem; border-radius: 999px; border: 1px solid rgba(186, 148, 79, 0.8); background: rgba(15, 23, 42, 0.8); color: #f9fafb; font-size: 0.85rem; font-weight: 600; cursor: pointer; margin-bottom: 0.1rem;">
                                 🔍 View details
                             </button>
-                            <button type="button" onclick="viewPlanet3D('${planet.kepid}')" style="padding: 0.55rem 1.05rem; border-radius: 999px; border: 1px solid rgba(129, 140, 248, 0.7); background: rgba(30, 64, 175, 0.85); color: #e0e7ff; font-size: 0.85rem; font-weight: 600; cursor: pointer;">
+                            <button type="button" onclick="viewPlanet3D('${this.recordKey(planet)}')" style="padding: 0.55rem 1.05rem; border-radius: 999px; border: 1px solid rgba(129, 140, 248, 0.7); background: rgba(30, 64, 175, 0.85); color: #e0e7ff; font-size: 0.85rem; font-weight: 600; cursor: pointer;">
                                 🪐 View in 3D
                             </button>
                         </div>
@@ -840,15 +861,16 @@ class OptimizedDatabase {
             const combined = [...legacy, ...canonical];
             const userClaims = combined.filter((claim, index, all) => {
                 const ownerMatches = claim.userId === user.id || claim.email === user.email || claim.username === user.username;
-                return ownerMatches && all.findIndex(other => String(other.kepid) === String(claim.kepid) && (other.userId || other.email) === (claim.userId || claim.email)) === index;
+                const claimKey = item => item.recordId || item.planet?.kepoi_name || String(item.kepid);
+                return ownerMatches && all.findIndex(other => claimKey(other) === claimKey(claim) && (other.userId || other.email) === (claim.userId || claim.email)) === index;
             });
 
             if (userClaims.length > 0) {
                 // Update availability for claimed planets
-                const claimedKepids = new Set(userClaims.map(c => c.kepid));
+                const claimedKepids = new Set(userClaims.map(c => this.findPlanet(c.recordId || c.planet?.kepoi_name || c.kepid)).filter(Boolean).map(p => this.recordKey(p)));
                 let updatedCount = 0;
                 this.allData.forEach(planet => {
-                    if (claimedKepids.has(planet.kepid)) {
+                    if (claimedKepids.has(this.recordKey(planet))) {
                         planet.availability = 'claimed';
                         updatedCount++;
                     }
@@ -1163,7 +1185,7 @@ class OptimizedDatabase {
                             const index = Math.floor(Math.random() * source.length);
                             const planet = source[index];
                             if (planet && typeof window.showPlanetDetails === 'function') {
-                                window.showPlanetDetails(planet.kepid || planet.kepoi_name);
+                                window.showPlanetDetails(this.recordKey(planet));
                             }
                         } catch (error) {
                             console.warn('Failed to open random planet details from quick filter:', error);
@@ -2150,16 +2172,16 @@ class OptimizedDatabase {
                 const radiusValue = Math.max(Number(planet.radius) || 1, 0.25);
                 const planetScale = Math.min(1.08, Math.max(0.88, 0.88 + Math.log2(radiusValue + 1) * 0.075)).toFixed(3);
                 const planetName = planet.kepler_name || planet.kepoi_name;
-                const formatMeasurement = (value, digits, suffix) => Number.isFinite(Number(value))
+                const formatMeasurement = (value, digits, suffix) => value != null && value !== '' && Number.isFinite(Number(value))
                     ? `${Number(value).toFixed(digits)} ${suffix}`
                     : 'Not reported';
                 const radiusText = formatMeasurement(planet.radius, 2, 'R&#8853;');
                 const massText = formatMeasurement(planet.mass, 2, 'M&#8853;');
                 const distanceText = formatMeasurement(planet.distance, 0, 'ly');
-                const discoveryText = Number.isFinite(Number(planet.disc_year)) ? String(planet.disc_year) : 'Not reported';
+                const discoveryText = planet.disc_year != null && planet.disc_year !== '' && Number.isFinite(Number(planet.disc_year)) ? String(planet.disc_year) : 'Not reported';
 
                 htmlChunk += `
-                    <article class="planet-card ita-planet-card" data-entrance="slideUp" data-kepid="${planet.kepid}" data-name="${planetName}" data-radius="${planet.radius}" data-mass="${planet.mass}" data-distance="${planet.distance}" data-planet-type="${typeClass}" data-status="${statusClass}" style="--card-index:${cardIndex};--planet-shift:${hueShift}deg;--planet-tilt:${orbitTilt}deg;--planet-scale:${planetScale}">
+                    <article class="planet-card ita-planet-card" data-entrance="slideUp" data-kepid="${planet.kepid}" data-record-id="${this.recordKey(planet)}" data-name="${planetName}" data-radius="${planet.radius}" data-mass="${planet.mass}" data-distance="${planet.distance}" data-planet-type="${typeClass}" data-status="${statusClass}" style="--card-index:${cardIndex};--planet-shift:${hueShift}deg;--planet-tilt:${orbitTilt}deg;--planet-scale:${planetScale}">
                         <div class="ita-card-visual">
                             <div class="ita-planet-visual ita-planet--${typeClass} ita-planet-v${visualVariant}" role="img" aria-label="${planetName}, ${planet.type} visual representation">
                                 <span class="ita-planet-orbit" aria-hidden="true"></span>
@@ -2189,7 +2211,7 @@ class OptimizedDatabase {
                         </div>
 
                         <div class="ita-card-actions">
-                            <a href="education.html?target=${encodeURIComponent(planetName)}" class="ita-card-primary">Open world <span aria-hidden="true">&nearr;</span></a>
+                            <button class="view-3d-btn ita-card-primary" data-kepid="${planet.kepid}" type="button">View in 3D <span aria-hidden="true">&nearr;</span></button>
                             <button class="details-btn ita-card-action" data-kepid="${planet.kepid}" type="button">Details</button>
                             <button class="habitability-btn ita-card-action" data-kepid="${planet.kepid}" type="button">Habitability</button>
                         </div>
@@ -2225,7 +2247,7 @@ class OptimizedDatabase {
                     btn.dataset.database3dBound = 'true';
                     btn.addEventListener('click', async (e) => {
                         e.stopPropagation();
-                        const kepid = e.currentTarget.dataset.kepid;
+                        const kepid = e.currentTarget.closest('[data-record-id]')?.dataset.recordId || e.currentTarget.dataset.kepid;
                         if (typeof window.viewPlanet3D === 'function') await window.viewPlanet3D(kepid);
                     });
                 });
@@ -3045,7 +3067,7 @@ window.claimPlanet = claimPlanet;
 async function viewPlanet3D(kepid) {
     let planet = null;
     if (window.databaseInstance && window.databaseInstance.allData) {
-        planet = window.databaseInstance.allData.find((p) => { return p.kepid == kepid; });
+        planet = window.databaseInstance.findPlanet(kepid);
     }
     if (!planet) {
         alert('Planet not found');
@@ -3083,7 +3105,7 @@ async function viewPlanet3D(kepid) {
 function analyzeHabitability(kepid) {
     let planet = null;
     if (window.databaseInstance && window.databaseInstance.allData) {
-        planet = window.databaseInstance.allData.find((p) => { return p.kepid == kepid; });
+        planet = window.databaseInstance.findPlanet(kepid);
     }
     if (!planet) {
         alert('Planet not found');
@@ -3202,19 +3224,13 @@ function showPlanetDetails(kepid) {
         }
 
         const targetId = kepid;
-        let planet = null;
-        if (typeof db.compareKepid === 'function') {
-            planet = db.allData.find((p) => db.compareKepid(p.kepid, targetId));
-        }
-        if (!planet) {
-            planet = db.allData.find((p) => String(p.kepid) === String(targetId));
-        }
+        const planet = db.findPlanet(targetId);
         if (!planet) {
             alert('Planet not found in database.');
             return;
         }
 
-        db.selectedPlanetKepid = String(planet.kepid || targetId);
+        db.selectedPlanetKepid = db.recordKey(planet);
         if (typeof db.updateURLFromState === 'function') {
             db.updateURLFromState();
         }
@@ -3326,10 +3342,10 @@ function showPlanetDetails(kepid) {
                         </div>
 
                         <div style="margin-top: 1.5rem; display: flex; flex-wrap: wrap; gap: 0.75rem;">
-                            <button onclick="viewPlanet3D('${planet.kepid}')" style="padding: 0.75rem 1.2rem; border-radius: 999px; border: 1px solid rgba(139, 92, 246, 0.7); background: rgba(139, 92, 246, 0.18); color: #c4b5fd; font-weight: 600; font-size: 0.9rem; cursor: pointer;">
+                            <button onclick="viewPlanet3D('${db.recordKey(planet)}')" style="padding: 0.75rem 1.2rem; border-radius: 999px; border: 1px solid rgba(139, 92, 246, 0.7); background: rgba(139, 92, 246, 0.18); color: #c4b5fd; font-weight: 600; font-size: 0.9rem; cursor: pointer;">
                                 🪐 View in 3D
                             </button>
-                            <button onclick="analyzeHabitability('${planet.kepid}')" style="padding: 0.75rem 1.2rem; border-radius: 999px; border: 1px solid rgba(56, 189, 248, 0.7); background: rgba(56, 189, 248, 0.16); color: #7dd3fc; font-weight: 600; font-size: 0.9rem; cursor: pointer;">
+                            <button onclick="analyzeHabitability('${db.recordKey(planet)}')" style="padding: 0.75rem 1.2rem; border-radius: 999px; border: 1px solid rgba(56, 189, 248, 0.7); background: rgba(56, 189, 248, 0.16); color: #7dd3fc; font-weight: 600; font-size: 0.9rem; cursor: pointer;">
                                 🌍 Habitability analysis
                             </button>
                         </div>

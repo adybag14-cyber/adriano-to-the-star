@@ -26,6 +26,21 @@
       this.renderCurrentChat();
       this.updateChatHistory();
       this.updateUserUI();
+      this.dockUtilities();
+    }
+
+    dockUtilities() {
+      const dock = document.getElementById('stellar-utility-dock');
+      if (!dock) return;
+      const mount = () => {
+        const controls = ['.ita-language-switcher', '#theme-toggle-container', '#cosmic-music-player'].map(selector => document.querySelector(selector));
+        controls.filter(Boolean).forEach(control => { if (control.parentElement !== dock) dock.append(control); });
+        return controls.every(Boolean);
+      };
+      if (mount()) return;
+      const observer = new MutationObserver(() => { if (mount()) observer.disconnect(); });
+      observer.observe(document.body, { childList: true, subtree: true });
+      addEventListener('pagehide', () => observer.disconnect(), { once: true });
     }
 
     currentChat() { return this.chats.find(chat => chat.id === this.currentChatId) || null; }

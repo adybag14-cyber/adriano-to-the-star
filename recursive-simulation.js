@@ -21,6 +21,7 @@ class RecursiveSimulation {
     init(containerId) {
         const container = document.getElementById(containerId);
         if (!container) return;
+        if(this.canvas?.parentElement===container){this.isRunning=true;this.draw();return;}
 
         // Create Canvas
         this.canvas = document.createElement('canvas');
@@ -38,6 +39,7 @@ class RecursiveSimulation {
         this.initGrid();
 
         this.isRunning = true;
+        this.draw();
     }
 
     initGrid() {

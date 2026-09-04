@@ -4,20 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cosmic Radio | WebTransport</title>
+    <title>Cosmic Radio | Browser Tab Waveform Lab</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../styles.css">
     <style>
         body {
             margin: 0;
-            background: #1a1a2e;
+            background: #020611;
             color: #fff;
             font-family: 'Orbitron', sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            overflow: hidden;
+            overflow-x: hidden;
         }
 
         .radio-container {
@@ -25,10 +25,10 @@
             width: 80%;
             height: 60vh;
             background: #000;
-            border: 2px solid #fbbf24;
+            border: 2px solid #67e8f9;
             border-radius: 20px;
             position: relative;
-            box-shadow: 0 0 30px rgba(251, 191, 36, 0.2);
+            box-shadow: 0 0 30px rgba(103, 232, 249, 0.15);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -43,7 +43,14 @@
             margin-top: 20px;
             display: flex;
             gap: 20px;
+            flex-wrap: wrap;
+            width: 80%;
+            align-items: center;
         }
+        .controls label { display: grid; gap: .4rem; flex: 1 1 180px; min-width:0; font-size:.85rem; }
+        .controls input { width:100%; accent-color:#67e8f9; }
+        #radio-pause { min-height:44px; padding:.7rem 1rem; background:#12283a; color:#e0faff; border:1px solid #64d4e2; border-radius:.7rem; }
+        @media(max-width:600px){.radio-container{width:94%;height:45vh}.controls{width:94%}.radio-container h1{font-size:1rem}.status{top:55px;left:20px;right:10px}}
 
         .knob {
             width: 60px;
@@ -100,8 +107,8 @@
 </head>
 
 <body>
-    <a href="../../index.html">
-        <img src="../../images/ita_logo.png" alt="ITA Logo" class="ita-logo">
+    <a href="../../index.html" aria-label="Return home" style="position:fixed;right:16px;top:16px;z-index:20;width:44px;height:44px;">
+        <img src="../../images/ita_logo.png" alt="" style="width:44px;height:44px;object-fit:contain;">
     </a>
 
     <a href="../../projects.html"
@@ -114,13 +121,17 @@
     </div>
 
     <div class="controls">
-        <div class="knob" id="knob-freq" title="Frequency"></div>
-        <div class="knob" id="knob-gain" title="Gain"></div>
+        <label for="knob-freq">Wave frequency <output id="frequency-value">1.0</output>
+            <input type="range" id="knob-freq" min="0.2" max="4" step="0.1" value="1" aria-label="Wave frequency">
+        </label>
+        <label for="knob-gain">Gain <output id="gain-value">1.0</output>
+            <input type="range" id="knob-gain" min="0" max="2" step="0.1" value="1" aria-label="Signal gain">
+        </label>
+        <button id="radio-pause" type="button">Pause transmission</button>
     </div>
 
     <p style="color: #888; margin-top: 20px; max-width: 600px; text-align: center;">
-        Simulating ultra-low latency WebTransport datagrams. Open multiple tabs to see the "radio waves" sync securely
-        across peer nodes.
+        A simulated waveform shared through BroadcastChannel between tabs on this site. Open a second tab to receive its signal. This does not tune a physical radio or contact internet peers.
     </p>
 
     <script type="module">
@@ -139,6 +150,17 @@
         resize();
 
         let dataPoints = new Array(100).fill(0);
+        let paused = false;
+        const frequency = document.getElementById('knob-freq');
+        const gain = document.getElementById('knob-gain');
+        frequency.addEventListener('input', () => { document.getElementById('frequency-value').textContent = Number(frequency.value).toFixed(1); });
+        gain.addEventListener('input', () => { document.getElementById('gain-value').textContent = Number(gain.value).toFixed(1); });
+        document.getElementById('radio-pause').addEventListener('click', event => {
+            paused = !paused;
+            event.currentTarget.textContent = paused ? 'Resume transmission' : 'Pause transmission';
+            event.currentTarget.setAttribute('aria-pressed', String(paused));
+            if (paused) document.getElementById('signal-strength').textContent = 'PAUSED';
+        });
 
         // Viz Loop
         function draw() {
@@ -150,11 +172,11 @@
 
             for (let i = 0; i < dataPoints.length; i++) {
                 const x = (i / dataPoints.length) * canvas.width;
-                const y = (canvas.height / 2) + dataPoints[i] * 50;
+                const y = (canvas.height / 2) + dataPoints[i] * 50 * Number(gain.value);
                 ctx.lineTo(x, y);
             }
 
-            ctx.strokeStyle = '#fbbf24';
+            ctx.strokeStyle = '#67e8f9';
             ctx.lineWidth = 2;
             ctx.stroke();
 
@@ -164,7 +186,8 @@
 
         // Listen for Radio waves
         manager.onRadioReceived = (nodeId, data) => {
-            document.getElementById('signal-strength').textContent = `RX: -${Math.floor(Math.random() * 20 + 30)}dBm`;
+            if (paused) return;
+            document.getElementById('signal-strength').textContent = `RX: simulated waveform from ${nodeId}`;
             // Blend remote data with local visual
             if (Array.isArray(data)) {
                 dataPoints = data;
@@ -173,18 +196,20 @@
 
         // Auto-broadcast noise for simulation
         setInterval(() => {
-            const freq = Math.sin(Date.now() / 200);
-            const noise = new Array(100).fill(0).map((_, i) => Math.sin(i * 0.1 + Date.now() / 100) * freq * Math.random());
+            if (paused || document.hidden) return;
+            const freq = Number(frequency.value);
+            const noise = new Array(100).fill(0).map((_, i) => Math.sin(i * 0.1 * freq + Date.now() / 100) * .8);
 
             manager.broadcastRadio(noise);
 
             // Visualize our own transmission if we are idle/broadcasting
             // (If we were receiving, we might want to show that instead, but for this demo, mixing is fine)
             if (document.getElementById('signal-strength').textContent.includes('WAITING') ||
-                document.getElementById('signal-strength').textContent.includes('BROADCASTING')) {
+                document.getElementById('signal-strength').textContent.includes('BROADCASTING') ||
+                document.getElementById('signal-strength').textContent === 'PAUSED') {
 
                 document.getElementById('signal-strength').textContent = 'TX: BROADCASTING';
-                document.getElementById('signal-strength').style.color = '#fbbf24'; // Orange for TX
+                document.getElementById('signal-strength').style.color = '#67e8f9';
                 dataPoints = noise;
             }
         }, 50); // 20Hz update

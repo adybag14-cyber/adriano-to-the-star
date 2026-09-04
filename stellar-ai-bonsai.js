@@ -39,6 +39,8 @@
     let activeModel = null;
     let loadController = null;
     let generationController = null;
+    let loadTask = null;
+    let lastFailure = null;
 
     const element = id => document.getElementById(id);
     const setStatus = (message, state = 'idle') => {
@@ -64,7 +66,7 @@
             const estimate = await navigator.storage?.estimate?.();
             const persisted = await navigator.storage?.persisted?.();
             storageOutput.textContent = entries.length
-                ? `${formatBytes(estimate?.usage || 0)} stored locally${persisted ? ' · persistent' : ''}`
+                ? `${entries.length} cached model assets · ${formatBytes(estimate?.usage || 0)} total site storage${persisted ? ' · persistent' : ''}`
                 : 'No model weights cached';
             removeButton.hidden = entries.length === 0;
         } catch {
@@ -72,33 +74,113 @@
         }
     }
 
-    async function cachedResponse(url) {
-        if (!('caches' in window)) {
-            return fetch(url, { signal: loadController?.signal, cache: 'no-store' });
-        }
-        const cache = await caches.open(CACHE_NAME);
-        const hit = await cache.match(url);
+    const cancelled = () => new window.DOMException('Model loading cancelled.', 'AbortError');
+    const assertActive = task => {
+        if (task !== loadTask || task.controller.signal.aborted) throw cancelled();
+    };
+    const assetLabel = url => {
+        const parsed = new URL(url);
+        return `${parsed.pathname.split('/').pop()} from ${parsed.hostname}`;
+    };
+    const downloadError = (error, url, attempts, task) => {
+        if (task.controller.signal.aborted) return cancelled();
+        const failure = new Error(`${assetLabel(url)}: ${error.message || 'network connection failed'}${attempts ? ` after ${attempts} attempt(s)` : ''}. Retry when the source is reachable.`);
+        failure.assetUrl = url;
+        failure.attempts = attempts;
+        return failure;
+    };
+    const waitForRetry = (ms, signal) => new Promise((resolve, reject) => {
+        if (signal.aborted) { reject(cancelled()); return; }
+        const abort = () => { clearTimeout(timer); reject(cancelled()); };
+        const timer = setTimeout(() => { signal.removeEventListener('abort', abort); resolve(); }, ms);
+        signal.addEventListener('abort', abort, { once: true });
+    });
+
+    async function cachedResponse(url, task) {
+        assertActive(task);
+        const cache = 'caches' in window ? await caches.open(CACHE_NAME) : null;
+        const hit = cache ? await cache.match(url) : null;
+        assertActive(task);
         if (hit) return hit;
-        const response = await fetch(url, { signal: loadController?.signal, cache: 'no-store' });
-        if (!response.ok) throw new Error(`Model asset request failed with HTTP ${response.status}.`);
-        cache.put(url, response.clone()).catch(() => {});
+        let response;
+        for (let attempt = 1; attempt <= 3; attempt += 1) {
+            assertActive(task);
+            const requestController = new AbortController();
+            const abortRequest = () => requestController.abort();
+            task.controller.signal.addEventListener('abort', abortRequest, { once: true });
+            // Bound waiting for headers without timing out a slow multi-GB body.
+            const timer = setTimeout(() => requestController.abort(new Error('Connection timed out')), 20_000);
+            try {
+                setStatus(`Downloading ${assetLabel(url)} · attempt ${attempt}/3. Cancel stops this request.`, 'loading');
+                response = await fetch(url, { signal: requestController.signal, cache: 'no-store', credentials: 'omit', mode: 'cors' });
+                clearTimeout(timer);
+                if (!response.ok) {
+                    const error = new Error(`HTTP ${response.status}`);
+                    error.retryable = response.status === 408 || response.status === 429 || response.status >= 500;
+                    await response.body?.cancel();
+                    throw error;
+                }
+                // Keep abortRequest bound until the complete body/cache write is
+                // consumed so Cancel also stops weights already being streamed.
+                task.requestCleanups.push(() => task.controller.signal.removeEventListener('abort', abortRequest));
+                break;
+            } catch (error) {
+                clearTimeout(timer);
+                task.controller.signal.removeEventListener('abort', abortRequest);
+                if (task.controller.signal.aborted) throw cancelled();
+                if (attempt === 3 || error.retryable === false) throw downloadError(error, url, attempt, task);
+                await waitForRetry(attempt * 600, task.controller.signal);
+            }
+        }
+        assertActive(task);
+        if (cache) {
+            const write = cache.put(url, response.clone()).catch(() => {});
+            task.cacheWrites.push(write);
+        }
         return response;
     }
 
-    const fetchJson = async url => (await cachedResponse(url)).json();
-    const fetchArrayBuffer = async url => (await cachedResponse(url)).arrayBuffer();
-    const fetchStream = async url => (await cachedResponse(url)).body;
+    function fetchersFor(task) {
+        const consume = async (url, method) => {
+            try {
+                const response = await cachedResponse(url, task);
+                const value = await response[method]();
+                assertActive(task);
+                return value;
+            } catch (error) { throw error.assetUrl || error.name === 'AbortError' ? error : downloadError(error, url, 0, task); }
+        };
+        return {
+            fetchJson: url => consume(url, 'json'),
+            fetchArrayBuffer: url => consume(url, 'arrayBuffer'),
+            fetchStream: async url => {
+                const response = await cachedResponse(url, task);
+                if (!response.body) throw downloadError(new Error('Empty response body'), url, 0, task);
+                const reader = response.body.getReader();
+                return new window.ReadableStream({
+                    async pull(controller) {
+                        try {
+                            assertActive(task);
+                            const { done, value } = await reader.read();
+                            if (done) controller.close(); else controller.enqueue(value);
+                        } catch (error) { controller.error(downloadError(error, url, 0, task)); }
+                    },
+                    cancel: reason => reader.cancel(reason)
+                });
+            }
+        };
+    }
 
     function setLoadingUi(loading) {
         const loadButton = element('bonsai-load');
         const cancelButton = element('bonsai-cancel');
         const modelSelect = element('bonsai-model');
-        if (loadButton) loadButton.disabled = loading;
+        if (loadButton) loadButton.disabled = loading || Boolean(generationController);
         if (cancelButton) cancelButton.disabled = !loading && !generationController;
-        if (modelSelect) modelSelect.disabled = loading;
+        if (modelSelect) modelSelect.disabled = loading || Boolean(generationController);
     }
 
     async function loadModel() {
+        if (loadTask || generationController) return;
         const modelSelect = element('bonsai-model');
         const progress = element('bonsai-progress');
         const key = modelSelect?.value;
@@ -123,6 +205,10 @@
         chat = null;
         activeModel = null;
         loadController = new AbortController();
+        const task = { controller: loadController, cacheWrites: [], requestCleanups: [], candidate: null };
+        loadTask = task;
+        lastFailure = null;
+        const { fetchJson, fetchArrayBuffer, fetchStream } = fetchersFor(task);
         setLoadingUi(true);
         if (progress) {
             progress.value = 0;
@@ -136,9 +222,10 @@
                 import(new URL('index.js', RUNTIME_BASE).href),
                 import(new URL('chat.js', RUNTIME_BASE).href)
             ]);
+            assertActive(task);
             setStatus(`Loading ${key}. The first run downloads and caches its weights in this browser.`, 'loading');
             try {
-                engine = await createEngine({
+                task.candidate = await createEngine({
                     manifestUrl: `${MODEL_ASSETS}/${key}/manifest.json`,
                     auxUrl: `${MODEL_ASSETS}/${key}/${model.aux}`,
                     dataUrl: model.data,
@@ -149,7 +236,7 @@
                     fetchArrayBuffer,
                     fetchStream,
                     onProgress: value => {
-                        if (progress && value.total) progress.value = value.loaded / value.total;
+                        if (loadTask === task && progress && value.total) progress.value = value.loaded / value.total;
                     }
                 });
             } catch (error) {
@@ -158,11 +245,15 @@
                 }
                 throw error;
             }
-            chat = await createChat(engine, {
+            assertActive(task);
+            const candidateChat = await createChat(task.candidate, {
                 tokenizerJsonUrl: `${model.tokenizer}/tokenizer.json`,
                 tokenizerConfigUrl: `${model.tokenizer}/tokenizer_config.json`,
                 fetchJson
             });
+            assertActive(task);
+            engine = task.candidate;
+            chat = candidateChat;
             activeModel = key;
             const capability = engine.capabilities || {};
             const adapter = capability.adapter?.vendor || 'WebGPU adapter';
@@ -173,11 +264,19 @@
                 primaryModel.dispatchEvent(new Event('change', { bubbles: true }));
             }
         } catch (error) {
+            task.controller.abort();
+            task.candidate?.dispose?.();
+            if (loadTask !== task) return;
             engine = null;
             chat = null;
             activeModel = null;
-            setStatus(error.name === 'AbortError' ? 'Model loading cancelled.' : `Local model load failed: ${error.message}`, 'error');
+            if (error.name !== 'AbortError') lastFailure = { assetUrl: error.assetUrl || null, attempts: error.attempts || 0, message: error.message, at: new Date().toISOString() };
+            setStatus(error.name === 'AbortError' ? 'Model loading cancelled.' : `Local model load failed: ${error.message}`, error.name === 'AbortError' ? 'idle' : 'error');
         } finally {
+            await Promise.allSettled(task.cacheWrites);
+            task.requestCleanups.forEach(cleanup => cleanup());
+            if (loadTask !== task) return;
+            loadTask = null;
             loadController = null;
             if (progress) progress.hidden = true;
             setLoadingUi(false);
@@ -212,19 +311,28 @@
         } finally {
             generationController = null;
             if (cancelButton) cancelButton.disabled = true;
+            setLoadingUi(false);
         }
     }
 
     async function removeDownloads() {
+        const task = loadTask;
         loadController?.abort();
         generationController?.abort();
         engine?.dispose?.();
         engine = null;
         chat = null;
         activeModel = null;
+        if (task) {
+            await Promise.allSettled(task.cacheWrites);
+            task.requestCleanups.forEach(cleanup => cleanup());
+        }
+        loadTask = null;
+        loadController = null;
         if ('caches' in window) await caches.delete(CACHE_NAME);
         setStatus('Bonsai Cache Storage entries were removed from this browser. Browser-managed HTTP cache is not used by this loader.', 'idle');
         await refreshStorage();
+        setLoadingUi(false);
     }
 
     function cancelCurrentTask() {
@@ -241,7 +349,7 @@
             supported
                 ? 'WebGPU is available. No model has been downloaded; choose a size and press Load model.'
                 : 'WebGPU is unavailable. Local Bonsai needs a current WebGPU-capable browser and GPU.',
-            supported ? 'ready' : 'error'
+            supported ? 'idle' : 'error'
         );
         refreshStorage();
     }
@@ -251,7 +359,8 @@
         isReady: () => Boolean(chat && engine && activeModel),
         activeModel: () => activeModel,
         cancel: cancelCurrentTask,
-        models: Object.keys(MODELS)
+        models: Object.keys(MODELS),
+        lastFailure: () => lastFailure
     };
 
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initialize, { once: true });

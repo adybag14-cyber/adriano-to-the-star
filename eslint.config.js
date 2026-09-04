@@ -7,6 +7,7 @@ export default [
     // Global Ignores to prevent EMFILE and binary/large file scans
     {
         ignores: [
+            ".artifacts/**",
             "**/node_modules/**",
             "node_modules/",
             "**/dist/**",

@@ -95,6 +95,13 @@ class UniverseManager {
             homeStar.linkedSystemId = String(this.game.currentSystemId || 'kepler_186f');
             this.galaxyViewState.selectedStarId = homeStar.id;
         }
+        // Keep the original home sector and save IDs; subsequent sectors use an immutable universe seed.
+        this.streaming = window.PioneerUniverseCatalog ? new window.PioneerUniverseCatalog() : null;
+        if (this.streaming) {
+            this.galacticMap.stars.forEach((star) => this.streaming.remember(star, true));
+            this.streaming.loadSector(0, 0);
+            this.syncResidentGalaxy();
+        }
     }
 
     // Roadmap Category 7: Megastructures
@@ -964,28 +971,24 @@ class UniverseManager {
     // Roadmap Item 308: Intergalactic Travel
     initiateIntergalacticJump() {
         const cost = { credits: 10000, energy: 5000, dark_matter: 10 };
-        if (this.game.resources.credits < cost.credits || this.game.resources.energy < cost.energy) {
-            this.game.notify("Insufficient resources for intergalactic jump!", "danger");
-            return;
+        if (!this.streaming || this.game.isOnMoon || Object.entries(cost).some(([key, amount]) => Number(this.game.resources[key] || 0) < amount)) {
+            this.game.notify('Deep-range expedition requires a planet departure, 10,000 credits, 5,000 energy and 10 dark matter.', 'warning');
+            return false;
         }
-
-        // Create a completely new galaxy sector very far away
-        const gx = Math.floor(Math.random() * 10000 + 10000);
-        const gy = Math.floor(Math.random() * 10000 + 10000);
-        
-        this.game.resources.credits -= cost.credits;
-        this.game.resources.energy -= cost.energy;
-        this.game.notify(`🚀 INTERGALACTIC JUMP: Leaving the home galaxy...`, "info");
-        
-        setTimeout(() => {
-            this.generateGalacticSector(gx, gy);
-            const newStar = this.galacticMap.stars.find(s => s.id.startsWith(`star_${gx},${gy}`));
-            if (newStar) {
-                this.discoverStar(newStar.id);
-                this.game.warpToSystem({ id: newStar.id, seed: newStar.seed });
-                this.game.notify(`✨ ARRIVAL: Welcome to Galaxy Cluster ${gx}:${gy}`, "success");
-            }
-        }, 3000);
+        const current = this.getCurrentStar();
+        const seed = (Number(current?.seed || 12345) + Number(this.game.day || 0) * 7919) >>> 0;
+        const gx = (seed % 4096) - 2048;
+        const gy = (Math.floor(seed / 4096) % 4096) - 2048;
+        const destination = this.resolveGalaxyStar(`star_${gx},${gy}_0`);
+        if (!destination || destination.id === current?.id) return false;
+        // The expedition drive is a separate, explicitly priced transit. executeWarp performs the actual world transition.
+        const arrived = this.game.executeWarp?.(destination, false, { distance: 0, energy: cost.energy, credits: cost.credits, reachable: true });
+        if (!arrived) return false;
+        this.game.resources.dark_matter -= cost.dark_matter;
+        this.onSystemArrival(destination);
+        this.game.updateResourceUI?.();
+        this.game.notify(`Deep-range expedition arrived at sector ${gx}, ${gy}. The chart can plot a route home.`, 'success');
+        return true;
     }
 
     generateStarName(seed) {
@@ -1309,7 +1312,10 @@ class UniverseManager {
     // --- GALACTIC CHART: exploration, infrastructure, routes and travel ---
     getCurrentStar() {
         const currentId = String(this.game?.currentSystemId ?? '');
+        const hostId = currentId.replace(/_planet_\d+$/, '');
         return this.galacticMap.stars.find((star) => String(star.id) === currentId || String(star.linkedSystemId || '') === currentId)
+            || this.galacticMap.stars.find((star) => String(star.id) === hostId)
+            || (this.streaming && window.PioneerUniverseCatalog.parseAddress(hostId) ? this.resolveGalaxyStar(hostId) : null)
             || this.galacticMap.stars.find((star) => star.home)
             || this.galacticMap.stars.find((star) => star.discovered)
             || this.galacticMap.stars[0]
@@ -1335,8 +1341,10 @@ class UniverseManager {
 
     serializeGalacticState() {
         const map = this.galacticMap;
+        map.stars.forEach((star) => this.streaming?.remember(star));
         return {
-            version: 2,
+            version: 3,
+            streaming: this.streaming?.serialize() || null,
             stars: map.stars,
             fogOfWar: map.fogOfWar,
             sectors: Array.from(map.sectors || []),
@@ -1368,6 +1376,16 @@ class UniverseManager {
         }
         if (typeof raw.fogOfWar === 'boolean') this.galacticMap.fogOfWar = raw.fogOfWar;
         this.galacticMap.sectors = new Set(Array.isArray(raw.sectors) ? raw.sectors : ['0,0']);
+        if (this.streaming) {
+            if (!this.streaming.restore(raw.streaming)) {
+                this.streaming = new window.PioneerUniverseCatalog();
+                this.galacticMap.stars.forEach((star) => this.streaming.remember(star, true));
+            }
+            this.streaming.loadSector(0, 0);
+            const currentAddress = window.PioneerUniverseCatalog.parseAddress(this.game.currentSystemId);
+            if (currentAddress) this.streaming.loadSector(currentAddress.x, currentAddress.y);
+            this.syncResidentGalaxy();
+        }
         if (!this.galacticMap.stars.length) this.generateGalacticSector(0, 0);
         let home = this.galacticMap.stars.find((star) => star.home || star.id === 'star_0,0_0');
         if (!home) home = this.galacticMap.stars[0];
@@ -1389,6 +1407,191 @@ class UniverseManager {
         return true;
     }
 
+    syncResidentGalaxy() {
+        if (!this.streaming) return;
+        const existingStars = new Map(this.galacticMap.stars.map((star) => [star.id, star]));
+        for (const stars of this.streaming.sectors.values()) {
+            for (let index = 0; index < stars.length; index += 1) {
+                // A pinned mission endpoint can be edited while its sector is evicted. Retain that live object on reload.
+                if (existingStars.has(stars[index].id)) stars[index] = existingStars.get(stars[index].id);
+            }
+        }
+        const resident = new Map(this.streaming.residentStars().map((star) => [star.id, star]));
+        // Pin the player, home and active mission/infrastructure endpoints, never every previously visited sector.
+        const pins = new Set(['star_0,0_0', String(this.game.currentSystemId).replace(/_planet_\d+$/, ''), this.galaxyViewState.selectedStarId]);
+        for (const key of ['probes', 'relays', 'satellites', 'spaceStations', 'refuelingStations', 'deepShipyards', 'megastructures']) {
+            for (const entry of this.galacticMap[key] || []) pins.add(entry.starId || entry.targetId);
+        }
+        for (const id of pins) {
+            if (!id || resident.has(id)) continue;
+            const existing = this.galacticMap.stars.find((star) => star.id === id);
+            const star = existing || this.streaming.describeStar(id);
+            if (star) resident.set(id, star);
+        }
+        // Persist outgoing mutated records before dropping their resident objects.
+        this.galacticMap.stars.forEach((star) => { if (!resident.has(star.id)) this.streaming.remember(star); });
+        this.galacticMap.stars = Array.from(resident.values());
+    }
+
+    resolveGalaxyStar(id) {
+        const existing = this.galacticMap.stars.find((star) => star.id === id);
+        if (existing) return existing;
+        const star = this.streaming?.resolve(id);
+        if (star) {
+            this.syncResidentGalaxy();
+            if (!this.galacticMap.stars.some((entry) => entry.id === star.id)) this.galacticMap.stars.push(star);
+        }
+        return star || null;
+    }
+
+    prepareSystemArrival(star) {
+        const sourceId = String(this.game.currentSystemId);
+        if (this.game.systemStates && ['star_0,0_0', 'kepler_186f'].includes(sourceId) && this.game.systemStates[sourceId]) {
+            this.game.systemStates.kepler_186f = this.game.systemStates[sourceId];
+            this.game.systemStates['star_0,0_0'] = this.game.systemStates[sourceId];
+        }
+        // Preserve the original colony when the chart's home ID aliases the legacy kepler_186f save key.
+        if (star?.home && star.linkedSystemId && this.game.systemStates?.[star.linkedSystemId]) {
+            this.game.systemStates[star.id] = this.game.systemStates[star.linkedSystemId];
+        }
+    }
+
+    onSystemArrival(star = this.getCurrentStar()) {
+        if (!star || !this.streaming) return;
+        if (star.localTransfer) {
+            this.game.localSystemExplorer?.syncSystem?.(this.resolveGalaxyStar(star.parentStarId) || this.getCurrentStar());
+            this.galaxyViewState.selectedStarId = star.parentStarId || this.getCurrentStar()?.id;
+            return;
+        }
+        star.discovered = true;
+        star.visited = true;
+        this.streaming.remember(star);
+        const address = window.PioneerUniverseCatalog.parseAddress(star.id);
+        if (!address) return;
+        for (let y = -1; y <= 1; y += 1) {
+            for (let x = -1; x <= 1; x += 1) this.generateGalacticSector(address.x + x, address.y + y);
+        }
+        this.syncResidentGalaxy();
+        if (this.streaming.route?.destinationId === star.id) this.streaming.route = null;
+        this.game.localSystemExplorer?.syncSystem?.(star);
+        this.centerGalaxyMapOnCurrent();
+        this.game.saveGame?.({ silent: true });
+    }
+
+    plotGalaxyRoute(starId = this.galaxyViewState.selectedStarId) {
+        const destination = this.resolveGalaxyStar(starId);
+        const current = this.getCurrentStar();
+        if (!destination || !this.streaming || destination.id === current?.id) return false;
+        if (!destination.discovered) {
+            this.game.notify('Probe this destination first, or choose its sector navigation beacon (system 0).', 'info');
+            return false;
+        }
+        const plan = this.streaming.planRoute(current, destination);
+        if (!plan) {
+            this.game.notify('No navigable route could be found for this drive.', 'warning');
+            return false;
+        }
+        this.streaming.route = { destinationId: destination.id, completedHops: 0 };
+        this.game.notify(`Route plotted to ${destination.name}: ${plan.hops} jumps, approximately ${Math.round(plan.distance).toLocaleString()} ly.`, 'success');
+        this.renderGalaxyMap();
+        this.game.saveGame?.({ silent: true });
+        return true;
+    }
+
+    jumpGalaxyRoute() {
+        const route = this.streaming?.route;
+        if (!route) return false;
+        const destination = this.streaming.describeStar(route.destinationId);
+        const next = this.streaming.nextWaypoint(this.getCurrentStar(), destination);
+        if (!next) return false;
+        const star = this.resolveGalaxyStar(next.id);
+        const travel = this.getTravelMetrics(star);
+        if (!star?.discovered || !travel.reachable) return false;
+        const arrived = this.game.executeWarp?.(star, false, travel);
+        if (!arrived) return false;
+        route.completedHops += 1;
+        this.onSystemArrival(star);
+        this.openGalaxyMap();
+        return true;
+    }
+
+    isLegacyRecoveryAvailable() {
+        const current = this.getCurrentStar();
+        return !!(this.streaming && current && window.PioneerUniverseCatalog.isLegacyAddress(current.id)
+            && !window.PioneerUniverseCatalog.parseAddress(current.id));
+    }
+
+    recoverLegacyWorld() {
+        if (!this.isLegacyRecoveryAvailable()) return false;
+        if (this.game.isOnMoon) {
+            this.game.notify('Return from the moon before using the migration recovery corridor.', 'info');
+            return false;
+        }
+        const home = this.resolveGalaxyStar('star_0,0_0');
+        if (!home) return false;
+        // A retained old coordinate can sit outside the new route lattice. Recovery must work without fuel.
+        // executeWarp saves the complete departing colony before activating the existing home world.
+        const arrived = this.game.executeWarp?.(home, false, { energy: 0, credits: 0, distance: 0, reachable: true });
+        if (!arrived) return false;
+        this.streaming.route = null;
+        this.onSystemArrival(home);
+        this.game.notify('Migration recovery complete. Your distant world and its colony remain in this save.', 'success');
+        return true;
+    }
+
+    searchGalaxy(query) {
+        if (!this.streaming) return [];
+        const matches = this.streaming.search(query);
+        if (!matches.length) {
+            this.game.notify('No match. Search a known name or enter sector X,Y or X,Y,system. Coordinates range from -2048 to 2047.', 'info');
+            return [];
+        }
+        const first = this.resolveGalaxyStar(matches[0].id);
+        if (first) {
+            this.galaxyViewState.selectedStarId = first.id;
+            this.galaxyViewState.panX = -first.position.x * this.galaxyViewState.zoom;
+            this.galaxyViewState.panY = -first.position.y * this.galaxyViewState.zoom;
+            this.renderGalaxyMap();
+        }
+        const results = document.getElementById('ep-galaxy-results');
+        if (results) {
+            results.replaceChildren();
+            matches.forEach((star) => {
+                const option = document.createElement('option');
+                option.value = star.id;
+                option.textContent = `${star.name} · ${star.id.replace('star_', '')}`;
+                results.appendChild(option);
+            });
+        }
+        return matches;
+    }
+
+    renderGalaxyNavigation() {
+        const status = document.getElementById('ep-galaxy-route-status');
+        const jump = document.getElementById('ep-galaxy-route-jump');
+        const cancel = document.getElementById('ep-galaxy-route-cancel');
+        const recovery = document.getElementById('ep-galaxy-legacy-recovery');
+        if (!status || !this.streaming) return;
+        const legacyRecovery = this.isLegacyRecoveryAvailable();
+        if (recovery) {
+            recovery.style.display = legacyRecovery ? '' : 'none';
+            recovery.disabled = !!this.game.isOnMoon;
+        }
+        const route = this.streaming.route;
+        let message = `${window.PioneerUniverseCatalog.capacity.toLocaleString()} procedural system addresses · ${this.streaming.sectors.size}/${this.streaming.maxResidentSectors} resident sectors`;
+        if (legacyRecovery) message = 'Legacy save coordinate: a free migration recovery corridor can return you home. The distant colony stays saved.';
+        if (route) {
+            const destination = this.streaming.describeStar(route.destinationId);
+            const next = this.streaming.nextWaypoint(this.getCurrentStar(), destination);
+            const metrics = next && this.getTravelMetrics(next);
+            const affordable = metrics && Number(this.game.resources.energy || 0) >= metrics.energy && Number(this.game.resources.credits || 0) >= metrics.credits;
+            message = `Route to ${destination?.name || route.destinationId} · ${route.completedHops} jumps completed. Next: ${next?.name || 'Arrived'}${metrics ? ` · ${metrics.energy} energy / ${metrics.credits} credits` : ''}`;
+            if (jump) { jump.disabled = !affordable || this.game.isOnMoon; jump.textContent = affordable ? 'Jump next waypoint' : 'Gather fuel / credits to continue'; }
+        } else if (jump) { jump.disabled = true; jump.textContent = 'Plot a route to begin'; }
+        if (cancel) cancel.disabled = !route;
+        status.textContent = message;
+    }
+
     getSectorCoordinatesForStar(star = this.getCurrentStar()) {
         const match = String(star?.id || '').match(/^star_(-?\d+),(-?\d+)_/);
         if (match) return { x: Number(match[1]), y: Number(match[2]) };
@@ -1399,8 +1602,13 @@ class UniverseManager {
     }
 
     surveyAdjacentSectors() {
-        if (!this.spendGameResources({ energy: 80, data: 20 }, 'Survey adjacent sectors')) return false;
         const center = this.getSectorCoordinatesForStar();
+        const hasUnknown = [-1, 0, 1].some((y) => [-1, 0, 1].some((x) => !this.galacticMap.sectors.has(`${center.x + x},${center.y + y}`)));
+        if (!hasUnknown) {
+            this.game.notify('Adjacent sectors are already charted. Enter coordinates to browse farther systems.', 'info');
+            return false;
+        }
+        if (!this.spendGameResources({ energy: 80, data: 20 }, 'Survey adjacent sectors')) return false;
         let generated = 0;
         for (let y = -1; y <= 1; y += 1) {
             for (let x = -1; x <= 1; x += 1) {
@@ -1432,6 +1640,7 @@ class UniverseManager {
     }
 
     openGalaxyMap() {
+        this._galaxyPreviousFocus = document.activeElement;
         let modal = document.getElementById('ep-galaxy-map-modal');
         if (!modal) {
             modal = document.createElement('div');
@@ -1439,15 +1648,15 @@ class UniverseManager {
             modal.className = 'ep-modal-overlay';
             modal.style.cssText = 'display:none; z-index:5000;';
             modal.innerHTML = `
-                <div class="ep-modal ep-galaxy-map-window">
+                <div class="ep-modal ep-galaxy-map-window" style="display:flex;flex-direction:column;overflow:auto;">
                     <div class="ep-modal-header">
-                        <div><span class="ep-galaxy-kicker">EXPLORATION NETWORK</span><h2>🌌 Galactic Chart</h2></div>
+                        <div><span class="ep-galaxy-kicker">EXPLORATION NETWORK</span><h2>Galactic Chart</h2></div>
                         <button class="ep-sys-btn" data-galaxy-action="close">CLOSE</button>
                     </div>
                     <div class="ep-galaxy-toolbar">
                         <button class="ep-sys-btn" data-galaxy-action="center">◎ Current</button>
-                        <button class="ep-sys-btn" data-galaxy-action="zoom-out">−</button>
-                        <button class="ep-sys-btn" data-galaxy-action="zoom-in">+</button>
+                        <button class="ep-sys-btn" data-galaxy-action="zoom-out" aria-label="Zoom out">−</button>
+                        <button class="ep-sys-btn" data-galaxy-action="zoom-in" aria-label="Zoom in">+</button>
                         <button class="ep-sys-btn" data-galaxy-action="sensor">📡 Sensor Ping · 50⚡</button>
                         <button class="ep-sys-btn" data-galaxy-action="survey">🧭 Survey Ring · 80⚡ 20📊</button>
                         <div class="ep-galaxy-speed" role="group" aria-label="Galaxy simulation speed">
@@ -1458,9 +1667,22 @@ class UniverseManager {
                         </div>
                         <span id="ep-galaxy-summary" class="ep-galaxy-summary"></span>
                     </div>
-                    <div class="ep-galaxy-map-body">
+                    <form id="ep-galaxy-navigation" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 16px;background:#07121f;border-block:1px solid #173447;">
+                        <label for="ep-galaxy-address" style="color:#b9d6e8;font-size:12px;">Find system</label>
+                        <input id="ep-galaxy-address" name="address" placeholder="Name or sector X,Y,system" maxlength="80" style="flex:1 1 180px;min-width:0;background:#030914;color:#e6f5ff;border:1px solid #386277;border-radius:6px;padding:9px;" />
+                        <button type="submit" class="ep-sys-btn">Locate</button>
+                        <select id="ep-galaxy-results" aria-label="Matching systems" style="flex:1 1 140px;min-width:0;max-width:260px;background:#030914;color:#e6f5ff;border:1px solid #386277;border-radius:6px;padding:9px;"><option value="">Choose a search result</option></select>
+                        <button type="button" class="ep-sys-btn" data-galaxy-action="home">Home</button>
+                    </form>
+                    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px 16px;background:#05101b;">
+                        <span id="ep-galaxy-route-status" role="status" style="flex:1 1 260px;font-size:12px;color:#b9d6e8;"></span>
+                        <button id="ep-galaxy-legacy-recovery" class="ep-sys-btn" data-galaxy-action="legacy-recovery" style="display:none;">Return to home · no fee</button>
+                        <button id="ep-galaxy-route-jump" class="ep-sys-btn" data-galaxy-action="route-jump" disabled>Plot a route to begin</button>
+                        <button id="ep-galaxy-route-cancel" class="ep-sys-btn" data-galaxy-action="route-cancel" disabled>Cancel route</button>
+                    </div>
+                    <div class="ep-galaxy-map-body" style="flex:1 0 380px;height:auto;">
                         <div id="ep-galaxy-canvas-container" class="ep-galaxy-stage">
-                            <canvas id="ep-galaxy-chart-canvas" aria-label="Interactive galactic chart"></canvas>
+                            <canvas id="ep-galaxy-chart-canvas" tabindex="0" aria-label="Interactive galactic chart. Arrow keys select systems. Enter opens a system. Plus and minus zoom. Home centers your location."></canvas>
                         </div>
                         <aside id="ep-star-details" class="ep-galaxy-details"></aside>
                     </div>
@@ -1472,12 +1694,17 @@ class UniverseManager {
             document.body.appendChild(modal);
         }
         modal.style.display = 'flex';
+        modal.setAttribute('role', 'dialog');
+        modal.setAttribute('aria-modal', 'true');
+        modal.setAttribute('aria-label', 'Galactic Chart');
         this.bindGalaxyMapInteractions(modal);
         modal.querySelectorAll('[data-galaxy-action="speed"]').forEach((speedButton) => {
             speedButton.classList.toggle('active', Number(speedButton.dataset.speedIndex) === Number(this.game?.timeSpeedIndex));
         });
         if (!this.galaxyViewState.selectedStarId) this.galaxyViewState.selectedStarId = this.getCurrentStar()?.id || null;
         requestAnimationFrame(() => this.renderGalaxyMap());
+        this.renderGalaxyNavigation();
+        modal.querySelector('[data-galaxy-action="close"]')?.focus();
     }
 
     bindGalaxyMapInteractions(modal) {
@@ -1485,6 +1712,41 @@ class UniverseManager {
         modal.dataset.galaxyBound = '1';
         const canvas = modal.querySelector('#ep-galaxy-chart-canvas');
         const state = this.galaxyViewState;
+        modal.querySelector('#ep-galaxy-navigation')?.addEventListener('submit', (event) => {
+            event.preventDefault();
+            this.searchGalaxy(modal.querySelector('#ep-galaxy-address').value);
+        });
+        modal.querySelector('#ep-galaxy-results')?.addEventListener('change', (event) => this.searchGalaxy(event.target.value));
+        modal.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') { modal.style.display = 'none'; this._galaxyPreviousFocus?.focus?.(); event.stopPropagation(); return; }
+            if (event.key === 'Tab') {
+                const controls = Array.from(modal.querySelectorAll('button:not([disabled]), input, select, [tabindex="0"]')).filter((element) => element.offsetParent !== null);
+                const first = controls[0];
+                const last = controls[controls.length - 1];
+                if (event.shiftKey && document.activeElement === first) { last?.focus(); event.preventDefault(); }
+                else if (!event.shiftKey && document.activeElement === last) { first?.focus(); event.preventDefault(); }
+            }
+            // Prevent flight/build shortcuts while typing in navigation controls.
+            event.stopPropagation();
+        });
+        canvas.addEventListener('keydown', (event) => {
+            if (event.key.startsWith('Arrow')) {
+                const candidates = this._galaxyScreenStars.map((entry) => entry.star);
+                const index = candidates.findIndex((star) => star.id === state.selectedStarId);
+                const direction = ['ArrowLeft', 'ArrowUp'].includes(event.key) ? -1 : 1;
+                const star = candidates[(index + direction + candidates.length) % candidates.length];
+                if (star) state.selectedStarId = star.id;
+                this.renderGalaxyMap();
+            } else if (event.key === 'Enter') {
+                const star = this.resolveGalaxyStar(state.selectedStarId);
+                if (star?.discovered) this.game.warpToSystem(star, { returnToGalaxy: true });
+                else if (star) this.launchProbe(star.id);
+            } else if (event.key === 'Home') this.centerGalaxyMapOnCurrent();
+            else if (event.key === '+' || event.key === '=') this.setGalaxyZoom(state.zoom * 1.25);
+            else if (event.key === '-') this.setGalaxyZoom(state.zoom / 1.25);
+            else return;
+            event.preventDefault();
+        });
 
         modal.addEventListener('click', (event) => {
             const button = event.target.closest('[data-galaxy-action]');
@@ -1492,12 +1754,17 @@ class UniverseManager {
             const action = button.dataset.galaxyAction;
             const starId = button.dataset.starId || state.selectedStarId;
             const star = this.galacticMap.stars.find((entry) => entry.id === starId);
-            if (action === 'close') { modal.style.display = 'none'; return; }
+            if (action === 'close') { modal.style.display = 'none'; this._galaxyPreviousFocus?.focus?.(); return; }
             if (action === 'center') { this.centerGalaxyMapOnCurrent(); return; }
             if (action === 'zoom-in') { this.setGalaxyZoom(state.zoom * 1.25); return; }
             if (action === 'zoom-out') { this.setGalaxyZoom(state.zoom / 1.25); return; }
             if (action === 'sensor') { this.performSensorPing(); return; }
             if (action === 'survey') { this.surveyAdjacentSectors(); return; }
+            if (action === 'home') { this.searchGalaxy('star_0,0_0'); return; }
+            if (action === 'route-jump') { this.jumpGalaxyRoute(); return; }
+            if (action === 'legacy-recovery') { this.recoverLegacyWorld(); return; }
+            if (action === 'route-cancel') { if (this.streaming) this.streaming.route = null; this.renderGalaxyNavigation(); this.game.saveGame?.({ silent: true }); return; }
+            if (action === 'route') { this.plotGalaxyRoute(starId); return; }
             if (action === 'speed') {
                 const index = Number(button.dataset.speedIndex);
                 if (Number.isInteger(index) && this.game?.setTimeSpeed) this.game.setTimeSpeed(index);
@@ -1643,6 +1910,7 @@ class UniverseManager {
             canvas.style.height = `${cssHeight}px`;
         }
         const ctx = canvas.getContext('2d');
+        if (!ctx) return;
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         const width = cssWidth;
         const height = cssHeight;
@@ -1752,6 +2020,7 @@ class UniverseManager {
         const summary = document.getElementById('ep-galaxy-summary');
         if (summary) summary.textContent = `${discovered}/${this.galacticMap.stars.length} systems · ${this.galacticMap.probes.length} probes · ${this.galacticMap.sectors.size} sectors`;
         this.renderGalaxyStarDetails();
+        this.renderGalaxyNavigation();
     }
 
     renderGalaxyStarDetails() {
@@ -1789,6 +2058,7 @@ class UniverseManager {
             <div class="ep-galaxy-detail-grid">
                 <span>Coordinates</span><b>${Math.round(star.position?.x || 0)}, ${Math.round(star.position?.y || 0)}</b>
                 <span>Configuration</span><b>${star.discovered ? star.discoveryStatus : 'Unknown'}</b>
+                <span>Address</span><b>${star.id.replace('star_', '')}</b>
                 <span>Hazards</span><b>${star.discovered ? hazards : 'Unscanned'}</b>
                 <span>Distance</span><b>${isCurrent ? '0' : `${travel.distance.toFixed(0)} ly`}</b>
                 <span>Warp envelope</span><b class="${travel.reachable ? 'good' : 'bad'}">${travel.reachable ? `${travel.range.toFixed(0)} ly` : 'Out of range'}</b>
@@ -1798,6 +2068,7 @@ class UniverseManager {
             <div class="ep-galaxy-actions">
                 ${!star.discovered ? `<button class="ep-sys-btn" data-galaxy-action="probe" data-star-id="${star.id}" ${probe ? 'disabled' : ''}>${probe ? 'Probe en route' : 'Launch Probe · 100Cr 50⚡'}</button>` : ''}
                 ${star.discovered && !isCurrent ? `<button class="ep-sys-btn primary" data-galaxy-action="warp" data-star-id="${star.id}" ${canWarp ? '' : 'disabled'}>Warp · ${travel.energy}⚡ ${travel.credits}Cr</button>` : ''}
+                ${this.streaming && star.discovered && !isCurrent ? `<button class="ep-sys-btn" data-galaxy-action="route" data-star-id="${star.id}" ${this.isLegacyRecoveryAvailable() ? 'disabled title="Use migration recovery to return inside chart bounds"' : ''}>Plot multi-jump route</button>` : ''}
                 ${currentActions && !claimed ? `<button class="ep-sys-btn" data-galaxy-action="claim" data-star-id="${star.id}">🚩 Claim · 100 alloys 50 circuits</button>` : ''}
                 ${currentActions && claimed && !relayExists ? `<button class="ep-sys-btn" data-galaxy-action="relay" data-star-id="${star.id}">📡 Relay</button>` : ''}
                 ${currentActions && claimed && !fuelExists ? `<button class="ep-sys-btn" data-galaxy-action="refuel" data-star-id="${star.id}">⛽ Refuel Station</button>` : ''}
@@ -1807,6 +2078,7 @@ class UniverseManager {
                 ${currentActions && wormhole ? `<button class="ep-sys-btn" data-galaxy-action="wormhole" data-wormhole-id="${wormhole.id}">〰 Transit Wormhole</button>` : ''}
                 ${star.discovered && star.namingRights ? `<button class="ep-sys-btn" data-galaxy-action="rename" data-star-id="${star.id}">✎ Rename</button>` : ''}
             </div>
+            ${this.streaming ? '<p style="font-size:11px;line-height:1.5;color:#9bb6c9;">Procedural, single-player universe. Sector beacon 0 supports long-distance routes. The active colony and fleet simulate locally; these addresses are not a shared online economy.</p>' : ''}
         `;
     }
 
@@ -1932,6 +2204,12 @@ class UniverseManager {
     // --- GALAXY GENERATION & EXPLORATION (1-400 foundational logic) ---
 
     generateGalacticSector(sx, sy) {
+        if (this.streaming) {
+            const stars = this.streaming.loadSector(sx, sy);
+            if (stars.length) this.galacticMap.sectors.add(`${sx},${sy}`);
+            this.syncResidentGalaxy();
+            return stars;
+        }
         const sectorKey = `${sx},${sy}`;
         if (this.galacticMap.sectors.has(sectorKey)) return;
 
