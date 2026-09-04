@@ -113,10 +113,15 @@ test.describe('browser-local platform remediation', () => {
     await expect(page.locator('.planet-card').first()).toContainText('Kepler-227', { timeout: 5_000 });
     await expect(page.locator('#search-count')).toContainText(/result/i);
 
-    const view3DButton = page.getByRole('button', { name: /View in 3D/i }).first();
+    // Wait for the delayed toolbar, which previously won a global .first()
+    // selector in CI and correctly required a comparison selection.
+    await expect(page.locator('#view-3d-btn')).toBeVisible();
+    await expect(page.locator('#view-3d-btn')).toBeDisabled();
+    const view3DButton = page.locator('.planet-card[data-record-id="K00752.01"]').getByRole('button', { name: /View in 3D/i });
     await expect(view3DButton).toBeVisible();
     await view3DButton.click();
     await expect(page.locator('#planet-3d-modal')).toBeVisible({ timeout: 10_000 });
+    await expect(page.locator('#planet-3d-title')).toHaveText('Kepler-227 b');
     expect(database3DRequests).toEqual(['three.min.js', 'OrbitControls-r128.js', 'planet-3d-viewer.js']);
     await page.locator('#close-3d-btn').click();
     await expect(page.locator('#planet-3d-modal')).toHaveCount(0);

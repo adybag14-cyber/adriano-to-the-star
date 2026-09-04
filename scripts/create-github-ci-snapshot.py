@@ -252,6 +252,8 @@ def main() -> int:
         "tests/e2e/bonsai-loader.spec.js",
         "tests/e2e/games-archive-contracts.spec.js",
         "tests/e2e/pioneer-science-deck.spec.js",
+        "tests/e2e/database-lazy-loader.spec.js",
+        "tests/e2e/helpers/pioneer-functional-profile.js",
         "assets/models/ships/viper.glb",
         "assets/models/defense/missile_battery.glb",
     }

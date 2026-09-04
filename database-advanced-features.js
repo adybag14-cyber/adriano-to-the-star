@@ -449,6 +449,8 @@ class DatabaseAdvancedFeatures {
         if (btn) {
             btn.textContent = `⚖️ Compare (${this.comparisonList.length})`;
         }
+        const viewer = document.getElementById('view-3d-btn');
+        if (viewer && viewer.getAttribute('aria-busy') !== 'true') viewer.disabled = this.comparisonList.length === 0;
     }
 
     showComparison() {

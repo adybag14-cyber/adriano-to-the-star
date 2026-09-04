@@ -3064,7 +3064,8 @@ window.claimPlanet = claimPlanet;
 
 // View planet in 3D. The renderer is deliberately loaded only after a user asks
 // for it so the 9,564-row catalogue remains the sole heavy initial workload.
-async function viewPlanet3D(kepid) {
+let database3DOpenRequest = 0;
+async function viewPlanet3D(kepid, returnFocusElement = document.activeElement) {
     let planet = null;
     if (window.databaseInstance && window.databaseInstance.allData) {
         planet = window.databaseInstance.findPlanet(kepid);
@@ -3074,12 +3075,48 @@ async function viewPlanet3D(kepid) {
         return false;
     }
 
+    const request = ++database3DOpenRequest;
+    const dialog = document.createElement('dialog');
+    dialog.id = 'database-3d-loading-dialog';
+    dialog.setAttribute('aria-labelledby', 'database-3d-loading-title');
+    dialog.style.cssText = 'max-width:min(520px,calc(100vw - 32px));padding:24px;border:1px solid #67e8f9;border-radius:16px;background:#071421;color:#e9faff;line-height:1.6;';
+    const heading = document.createElement('h2');
+    heading.id = 'database-3d-loading-title';
+    heading.textContent = `Opening ${planet.kepler_name || planet.kepoi_name}`;
+    const status = document.createElement('p');
+    status.id = 'database-3d-loading-status';
+    status.setAttribute('role', 'status');
+    status.textContent = 'Preparing the 3D viewer…';
+    const retry = document.createElement('button');
+    retry.type = 'button'; retry.textContent = 'Retry 3D viewer'; retry.hidden = true;
+    const close = document.createElement('button');
+    close.type = 'button'; close.textContent = 'Close';
+    let handedOff = false;
+    const dismiss = () => { handedOff = true; dialog.close(); dialog.remove(); };
+    close.addEventListener('click', () => dialog.close());
+    dialog.addEventListener('close', () => {
+        if (!handedOff && request === database3DOpenRequest) database3DOpenRequest += 1;
+        dialog.remove();
+    });
+    retry.addEventListener('click', () => { dismiss(); window.viewPlanet3D(kepid, returnFocusElement); });
+    dialog.append(heading, status, retry, close);
+    document.body.append(dialog);
+    dialog.showModal();
+    const progress = event => {
+        if (request !== database3DOpenRequest || !dialog.open || event.detail?.state !== 'loading') return;
+        const asset = String(event.detail.asset || '');
+        const name = asset.startsWith('three') ? '3D engine' : asset.startsWith('OrbitControls') ? 'orbit controls' : 'planet viewer';
+        status.textContent = `Loading ${name}…`;
+    };
+    document.addEventListener('ita:database-3d-progress', progress);
+
     try {
         if (typeof window.ensureDatabase3D !== 'function') {
             throw new Error('The database 3D loader is unavailable.');
         }
 
         const Viewer = await window.ensureDatabase3D();
+        if (request !== database3DOpenRequest || !dialog.open) return false;
         if (!window.planet3DViewer ||
             (typeof window.planet3DViewer.showPlanet !== 'function' &&
                 typeof window.planet3DViewer.visualizePlanet !== 'function')) {
@@ -3093,11 +3130,26 @@ async function viewPlanet3D(kepid) {
         } else {
             throw new Error('The database 3D viewer did not expose a render method.');
         }
+        window.planet3DViewer.returnFocusElement = returnFocusElement;
+        dismiss();
+        document.getElementById('close-3d-btn')?.focus({ preventScroll: true });
         return true;
     } catch (error) {
-        console.error('Unable to open the database 3D viewer:', error);
-        alert('The 3D viewer could not be loaded. Please try again.');
+        if (request !== database3DOpenRequest) return false;
+        document.getElementById('planet-3d-modal')?.remove();
+        if (!dialog.isConnected) {
+            handedOff = false;
+            document.body.append(dialog);
+            dialog.showModal();
+        }
+        status.dataset.state = 'error';
+        status.setAttribute('role', 'alert');
+        status.textContent = `The 3D viewer could not open: ${error.message}. You can retry or close this panel.`;
+        retry.hidden = false;
+        retry.focus();
         return false;
+    } finally {
+        document.removeEventListener('ita:database-3d-progress', progress);
     }
 }
 

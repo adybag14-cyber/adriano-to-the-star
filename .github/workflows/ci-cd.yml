@@ -88,6 +88,8 @@ jobs:
           node --check tests/e2e/bonsai-loader.spec.js
           node --check tests/e2e/games-archive-contracts.spec.js
           node --check tests/e2e/pioneer-science-deck.spec.js
+          node --check tests/e2e/database-lazy-loader.spec.js
+          node --check tests/e2e/helpers/pioneer-functional-profile.js
 
       - name: Repository lint gate
         run: npm run lint -- --quiet
@@ -190,6 +192,9 @@ jobs:
         shell: bash
         env:
           BASE_URL: http://127.0.0.1:8095
+          # Functional hit-testing uses a real, bounded software framebuffer.
+          # The independent advanced-graphics gate retains the full render profile.
+          PIONEER_FUNCTIONAL_RENDER_PROFILE: software
         run: |
           python3 -m http.server 8095 --bind 127.0.0.1 --directory public > /tmp/adriano-smoke-server.log 2>&1 &
           server_pid=$!
@@ -223,6 +228,7 @@ jobs:
             tests/e2e/bonsai-loader.spec.js \
             tests/e2e/games-archive-contracts.spec.js \
             tests/e2e/pioneer-science-deck.spec.js \
+            tests/e2e/database-lazy-loader.spec.js \
             --workers=1 \
             --reporter=line
 

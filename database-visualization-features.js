@@ -25,6 +25,7 @@ class DatabaseVisualizationFeatures {
     createSizeComparisonTool() {
         const container = document.getElementById('nasa-data-container');
         if (!container) return;
+        if (document.getElementById('size-comparison-btn')) return;
 
         const comparisonHTML = `
             <div style="margin-bottom: 1.5rem; text-align: right;">
@@ -126,14 +127,15 @@ class DatabaseVisualizationFeatures {
     createTimelineVisualization() {
         const container = document.getElementById('nasa-data-container');
         if (!container) return;
+        if (document.getElementById('timeline-btn')) return;
 
         const timelineHTML = `
             <div style="margin-bottom: 1.5rem; text-align: right;">
                 <button id="timeline-btn" style="background: rgba(186, 148, 79, 0.2); border: 2px solid rgba(186, 148, 79, 0.5); color: #ba944f; padding: 0.75rem 1.5rem; border-radius: 10px; cursor: pointer; font-weight: 600; margin-left: 0.5rem;">
                     📅 Discovery Timeline
                 </button>
-                <button id="view-3d-btn" style="background: rgba(186, 148, 79, 0.2); border: 2px solid rgba(186, 148, 79, 0.5); color: #ba944f; padding: 0.75rem 1.5rem; border-radius: 10px; cursor: pointer; font-weight: 600; margin-left: 0.5rem;">
-                    🪐 View in 3D
+                <button id="view-3d-btn" disabled title="Select a planet with its Compare button first" style="background: rgba(186, 148, 79, 0.2); border: 2px solid rgba(186, 148, 79, 0.5); color: #ba944f; padding: 0.75rem 1.5rem; border-radius: 10px; cursor: pointer; font-weight: 600; margin-left: 0.5rem;">
+                    View selected planet in 3D
                 </button>
             </div>
             `;
@@ -152,13 +154,14 @@ class DatabaseVisualizationFeatures {
 
         const view3dBtn = document.getElementById('view-3d-btn');
         if (view3dBtn) {
+            view3dBtn.disabled = !window.databaseAdvancedFeatures?.comparisonList.length;
             view3dBtn.addEventListener('click', async () => {
                 view3dBtn.disabled = true;
                 view3dBtn.setAttribute('aria-busy', 'true');
                 try {
                     await this.show3DViewer();
                 } finally {
-                    view3dBtn.disabled = false;
+                    view3dBtn.disabled = !window.databaseAdvancedFeatures?.comparisonList.length;
                     view3dBtn.removeAttribute('aria-busy');
                 }
             });
@@ -184,8 +187,7 @@ class DatabaseVisualizationFeatures {
             if (typeof window.ensureDatabase3D !== 'function' || typeof window.viewPlanet3D !== 'function') {
                 throw new Error('The database 3D runtime is unavailable.');
             }
-            await window.ensureDatabase3D();
-            return await window.viewPlanet3D(kepid);
+            return await window.viewPlanet3D(kepid, document.getElementById('view-3d-btn'));
         } catch (error) {
             console.error('Unable to open the selected planet in 3D:', error);
             alert('The 3D viewer could not be loaded. Please try again.');

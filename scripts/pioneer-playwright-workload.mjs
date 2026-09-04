@@ -683,17 +683,26 @@ try {
     await screenshot('solar-building');
     await clickTimeSpeed('10x Speed');
     await waitForConstruction('solar', 7000);
+    const beforeOneRateRevision = await page.evaluate(() => window.game.resourceRateSample?.revision || 0);
     await clickTimeSpeed('1x Speed');
-    await page.waitForTimeout(1100);
+    await page.waitForFunction(revision => {
+        const game = window.game;
+        return game.resourceRateSample?.revision > revision && game.resourceRateSample.speed === 1 && game.timeScale === 1;
+    }, beforeOneRateRevision, { timeout: ciTimeout(10000) });
     const solarRateAtOne = await page.evaluate(() => window.game.resourceRates?.energy ?? 0);
+    const beforeFastRateRevision = await page.evaluate(() => window.game.resourceRateSample.revision);
     const solarTenXRequest = await clickTimeSpeed('10x Speed');
-    await page.waitForTimeout(1100);
+    await page.waitForFunction(revision => {
+        const game = window.game;
+        return game.resourceRateSample?.revision > revision && game.resourceRateSample.speed === game.timeScale && game.timeScale > 0;
+    }, beforeFastRateRevision, { timeout: ciTimeout(10000) });
     const solarFlow = await page.evaluate(() => ({
         capacity: window.game.powerGrid?.capacity ?? 0,
         energyRate: window.game.resourceRates?.energy ?? 0,
         ratePill: document.querySelector('[data-resource="energy"] .ep-res-rate')?.textContent?.trim() || '',
         solarPowered: window.game.structures.find((s) => s.type === 'solar')?.powered,
-        timeScale: window.game.timeScale
+        timeScale: window.game.timeScale,
+        rateSample: window.game.resourceRateSample
     }));
     assert(solarFlow.capacity > 0, 'completed Solar Array contributes power', solarFlow);
     assert(solarFlow.solarPowered === true, 'completed Solar Array reports powered state', solarFlow);

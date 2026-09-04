@@ -156,7 +156,34 @@ have separate final-effect assertions.
   publisher-restricted Bloxorz edition offer verified publisher links. No edition's
   host restriction was bypassed, and no invalid original was deleted.
 
-This source report is frozen before the validation mirror is published. The final
+## Hosted-candidate repairs
+
+- The first GitHub validation run passed the Windows build/unit gates and the
+  independent advanced-graphics job, but blocked release on a stale time-speed
+  rate sample and seven browser failures. No failing candidate reached GitLab.
+- Resource-rate labels now follow the actual colony-tick sample and clear when
+  paused or switching speed. Browser assertions await that real sample instead
+  of assuming a software renderer completes a tick within a fixed wall time.
+- Database 3D actions now distinguish a selected comparison from a result card;
+  loading, cancellation, script errors, timeouts and retry are regression-tested.
+  The loading dialog hands focus to the viewer only after it stops being modal.
+- The Stellar theme button itself is positioned inside its dock, preventing the
+  expanded mobile player from covering it. GPU tests validate either live GPU
+  readback or the genuine device-loss fallback and its controls.
+- A final 1280-pixel visual check exposed a breadcrumb over the Pioneer resource
+  bar. It now occupies its own navigation space inside the More drawer; mobile
+  and desktop tests verify non-overlap, hit targets, reload and Home navigation.
+- Functional Science Deck tests use an explicitly recorded software framebuffer
+  profile on hosted runners. Production geometry, textures and rendering remain
+  unchanged, and the independent advanced-graphics gate retains its own profile.
+- GitHub's two open secret alerts point to historical commit `635b8df`: the
+  Supabase token is absent from the current documentation and the Google Cloud
+  service-account key file is absent from the current tree. Neither path exists
+  in the current filtered mirror. Historical exposure is not erased by these
+  removals; credential revocation/rotation and history remediation need a separate
+  owner decision. No credential values are included in this report.
+
+This source report is frozen before the final validation mirror is published. The final
 GitHub/GitLab run URLs and live deployment checks are recorded in the task handoff
 and local release evidence; unchecked release steps above describe the state at
 this source commit, not a claim that the source has already reached production.

@@ -127,11 +127,13 @@ test.describe('page-specific end effects', () => {
           const controls=[...document.querySelectorAll('#stellar-chat-shell .input-wrapper button:not([hidden]),#stellar-chat-shell .input-wrapper textarea')].map(element=>element.getBoundingClientRect());
           const x=send.x+send.width/2,y=send.y+send.height/2;
           return {send:{x,y}, hit:document.elementFromPoint(x,y)?.closest('button')?.id,
-            dockOverlap:['cosmic-music-player','theme-toggle-container'].some(id=>overlap(composer,box(id))),
+            dockOverlap:['cosmic-music-player','theme-toggle-btn'].some(id=>overlap(composer,box(id))),
+            utilityOverlap:overlap(box('cosmic-music-player'),box('theme-toggle-btn')),
             controlsOverlap:controls.some((a,i)=>controls.slice(i+1).some(b=>overlap(a,b))),
             overflow:document.documentElement.scrollWidth-innerWidth};
         });
         expect(geometry.dockOverlap).toBe(false);
+        expect(geometry.utilityOverlap).toBe(false);
         expect(geometry.controlsOverlap).toBe(false);
         expect(geometry.overflow).toBeLessThanOrEqual(2);
         expect(geometry.hit).toBe('send-btn');

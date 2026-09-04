@@ -1,5 +1,9 @@
 /* global game, THREE, Storage, DOMException */
 import { test, expect } from '@playwright/test';
+import { installPioneerFunctionalProfile, applyPioneerFunctionalProfile, waitForQuantumSimulationCompletion, softwareFunctionalProfile, forceSwiftShader, swiftShaderLaunchOptions } from './helpers/pioneer-functional-profile.js';
+
+if (forceSwiftShader) test.use({ launchOptions: swiftShaderLaunchOptions });
+test.beforeEach(async ({ page }) => { await installPioneerFunctionalProfile(page); });
 
 const panels = [
     ['megastructures','megastructure-dashboard'],['multiverse','multiverse-dashboard'],
@@ -10,6 +14,7 @@ const panels = [
 
 async function ready(page) {
     await page.goto('/exoplanet-pioneer.html',{waitUntil:'domcontentloaded'});
+    await applyPioneerFunctionalProfile(page);
     await page.waitForFunction(()=>window.game?.runtime?.frameCount>2);
     const skip=page.locator('#ep-tutorial-skip');if(await skip.isVisible())await skip.click();
     await page.evaluate(()=>game.setTimeSpeed(0,{silent:true}));
@@ -65,12 +70,12 @@ test('engineering purchase changes actual instances and its complete transaction
         return {purchased,credits:game.resources.credits,count:game.megastructureSystem.swarmSatellites,instances:game.dysonSwarmMesh.count,savedUnchanged:saved===localStorage.getItem('ep_save_v2')};
     });
     expect(rollback).toEqual({purchased:false,credits:1500,count:1,instances:1,savedUnchanged:true});
-    await page.reload({waitUntil:'domcontentloaded'});await page.waitForFunction(()=>window.game?.runtime?.frameCount>2);
+    await page.reload({waitUntil:'domcontentloaded'});await applyPioneerFunctionalProfile(page);await page.waitForFunction(()=>window.game?.runtime?.frameCount>2);
     expect(await page.evaluate(()=>({credits:game.resources.credits,count:game.megastructureSystem.swarmSatellites,instances:game.dysonSwarmMesh.count}))).toEqual({credits:1500,count:1,instances:1});
 });
 
 test('quantum tasks finish with real rewards, qubit works by keyboard and communication renders text safely',async({page})=>{
-    test.setTimeout(60000);const errors=[];page.on('pageerror',e=>errors.push(e.message));
+    test.setTimeout(softwareFunctionalProfile ? 120000 : 60000);const errors=[];page.on('pageerror',e=>errors.push(e.message));
     await ready(page);await open(page,'quantum','quantum-dashboard');
     await expect(page.locator('#qubit-view-container canvas')).toBeVisible();
     await page.evaluate(()=>{game.quantum.coherence=40;game.quantum.decayRate=0;});
@@ -78,7 +83,7 @@ test('quantum tasks finish with real rewards, qubit works by keyboard and commun
     expect(await page.evaluate(()=>game.quantum.coherence)).toBe(65);
     await page.evaluate(()=>{game.quantum.coherence=100;for(const k of ['energy','minerals','data']){game.resources[k]=0;game.caps[k]=10000;}game.setTimeSpeed(1,{silent:true});});
     await page.locator('[data-task="Optimization"]').click();await page.locator('[data-task="Encryption"]').click();
-    await expect.poll(()=>page.evaluate(()=>game.quantum.activeTasks.length),{timeout:10000}).toBe(0);
+    await waitForQuantumSimulationCompletion(page);
     const rewards=await page.evaluate(()=>({energy:game.resources.energy,minerals:game.resources.minerals,data:game.resources.data}));
     expect(rewards.energy).toBeGreaterThanOrEqual(500);expect(rewards.minerals).toBeGreaterThanOrEqual(200);expect(rewards.data).toBeGreaterThanOrEqual(500);
     await expect(page.locator('#quantum-task-status')).toContainText('complete');

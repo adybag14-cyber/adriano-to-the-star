@@ -24,6 +24,7 @@
 }
 .stellar-ai-page #stellar-utility-dock #cosmic-music-player { max-width: 100% !important; flex-shrink: 1; order: 3; }
 .stellar-ai-page #stellar-utility-dock #theme-toggle-container { order: 2; }
+.stellar-ai-page #stellar-utility-dock #theme-toggle-btn { position:relative !important; inset:auto !important; }
 .stellar-ai-page #stellar-utility-dock .ita-language-switcher { order: 1; }
 .stellar-ai-page #stellar-utility-dock .ita-language-menu { top: auto; bottom: calc(100% + 10px); left: 0; right: auto; }
 .stellar-ai-page #stellar-chat-shell .input-wrapper { grid-template-columns: repeat(4,44px) minmax(0,1fr) 44px; }

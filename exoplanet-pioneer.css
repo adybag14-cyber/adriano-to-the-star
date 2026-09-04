@@ -1,4 +1,26 @@
 /* Exoplanet Pioneer - Advanced Game UI */
+#ep-ops-drawer { box-sizing: border-box; }
+#ep-ui .ep-top-bar:has(#ep-ops-drawer:not([hidden])) { z-index: 3000; }
+#ep-ops-drawer > .ita-breadcrumb {
+    position: static !important;
+    inset: auto !important;
+    transform: none !important;
+    width: auto;
+    max-width: 100%;
+    margin: 0 0 12px;
+    padding: 0 0 10px;
+    border: 0;
+    border-bottom: 1px solid var(--ep-border);
+    border-radius: 0;
+    background: transparent;
+    white-space: normal;
+    overflow: visible;
+    color: var(--ep-muted);
+    font: 600 12px/1.5 system-ui, sans-serif;
+}
+#ep-ops-drawer > .ita-breadcrumb ol { display:flex; align-items:center; flex-wrap:wrap; gap:6px; list-style:none; margin:0; padding:0; }
+#ep-ops-drawer > .ita-breadcrumb li { display:inline-flex; align-items:center; gap:6px; }
+#ep-ops-drawer > .ita-breadcrumb a { display:inline-flex; align-items:center; min-height:32px; padding-inline:6px; color:#a5f3fc; pointer-events:auto; }
 :root {
     --ep-bg: #0f172a;
     --ep-panel: rgba(15, 23, 42, 0.9);

@@ -1,9 +1,14 @@
 /* global game, Storage, DOMException */
 import { test, expect } from '@playwright/test';
+import { installPioneerFunctionalProfile, applyPioneerFunctionalProfile, forceSwiftShader, swiftShaderLaunchOptions } from './helpers/pioneer-functional-profile.js';
+
+if (forceSwiftShader) test.use({ launchOptions: swiftShaderLaunchOptions });
 
 test.describe('Pioneer engine v2 player outcomes', () => {
     test.beforeEach(async ({ page }) => {
+        await installPioneerFunctionalProfile(page);
         await page.goto('/exoplanet-pioneer.html', { waitUntil: 'domcontentloaded' });
+        await applyPioneerFunctionalProfile(page);
         await page.waitForFunction(() => window.game?.runtime?.frameCount > 2, null, { timeout: 60_000 });
         const tutorial = page.locator('#ep-tutorial-skip');
         if (await tutorial.isVisible()) await tutorial.click();
@@ -51,6 +56,60 @@ test.describe('Pioneer engine v2 player outcomes', () => {
         await page.setViewportSize({ width: 1440, height: 1000 });
         await expect.poll(() => page.evaluate(() => game.runtime.frameCount)).toBeGreaterThan(portrait.frames);
         expect(errors).toEqual([]);
+    });
+
+    test('breadcrumb occupies drawer space and never covers the resource command row', async ({ page }) => {
+        for (const viewport of [{width:1280,height:720},{width:390,height:844}]) {
+            await page.setViewportSize(viewport);
+            const breadcrumb = page.locator('#ep-ops-drawer > .ita-breadcrumb');
+            await expect(breadcrumb).toHaveCount(1);
+            await expect(breadcrumb).not.toBeVisible();
+            await page.locator('#ep-btn-ops').click();
+            await expect(breadcrumb).toBeVisible();
+            await expect(breadcrumb).toHaveAttribute('aria-label', 'Breadcrumb');
+            await expect(breadcrumb.locator('[aria-current="page"]')).toContainText('Exoplanet Pioneer');
+            const boxes = await page.evaluate(() => {
+                const nav = document.querySelector('#ep-ops-drawer > .ita-breadcrumb');
+                const rect = nav.getBoundingClientRect();
+                const resource = document.getElementById('ep-res-panel').getBoundingClientRect();
+                const commands = document.querySelector('.ep-command-primary').getBoundingClientRect();
+                const intersects = other => rect.left < other.right && rect.right > other.left && rect.top < other.bottom && rect.bottom > other.top;
+                const home = nav.querySelector('a'); const hit = home.getBoundingClientRect();
+                return {overlap:intersects(resource)||intersects(commands),inside:rect.left>=0&&rect.right<=innerWidth&&rect.top>=0&&rect.bottom<=innerHeight,homeHit:home.contains(document.elementFromPoint(hit.x+hit.width/2,hit.y+hit.height/2))};
+            });
+            expect(boxes).toEqual({overlap:false,inside:true,homeHit:true});
+            await expect(breadcrumb.getByRole('link',{name:'Home',exact:true})).toHaveAttribute('href','/');
+            await page.locator('#ep-btn-ops').click();
+        }
+        await page.reload({waitUntil:'domcontentloaded'});
+        await applyPioneerFunctionalProfile(page);
+        await page.waitForFunction(() => window.game?.runtime?.frameCount > 2);
+        await expect(page.locator('#ep-ops-drawer > .ita-breadcrumb')).toHaveCount(1);
+        await page.locator('#ep-btn-ops').click();
+        await page.locator('#ep-ops-drawer .ita-breadcrumb a').click();
+        await expect(page).toHaveURL(new RegExp(`${new URL(process.env.BASE_URL || 'https://adrianotothestar.com').origin.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}/$`));
+    });
+
+    test('speed changes hide a stale resource rate until a real matching-speed sample arrives', async ({ page }) => {
+        const before = await page.evaluate(() => {
+            game.runtime.suspend();
+            game.setTimeSpeed(4, { bypassSafety: true, silent: true });
+            game.colonyTick();
+            return { revision: game.resourceRateSample.revision, foodRate: game.resourceRates.food };
+        });
+        await expect(page.locator('[data-resource="food"] .ep-res-rate')).toBeVisible();
+        await page.getByRole('button', { name: '1x speed', exact: true }).click();
+        await expect(page.locator('[data-resource="food"] .ep-res-rate')).toHaveCount(0);
+        const after = await page.evaluate(() => {
+            game.colonyTick();
+            return { revision: game.resourceRateSample.revision, speed: game.resourceRateSample.speed, foodRate: game.resourceRates.food };
+        });
+        expect(after.revision).toBeGreaterThan(before.revision);
+        expect(after.speed).toBe(1);
+        expect(after.foodRate * 10).toBeCloseTo(before.foodRate, 6);
+        await expect(page.locator('[data-resource="food"] .ep-res-rate')).toBeVisible();
+        await page.getByRole('button', { name: 'Pause', exact: true }).click();
+        await expect(page.locator('[data-resource="food"] .ep-res-rate')).toHaveCount(0);
     });
 
     test('a rejected save reports failure and leaves the previous saved colony intact', async ({ page }) => {

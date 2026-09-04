@@ -1435,6 +1435,7 @@ class ExoplanetPioneer {
     }
 
     createUI() {
+        const siteBreadcrumb = document.querySelector('nav.ita-breadcrumb');
         let ui = document.getElementById('ep-ui');
         if (ui) ui.remove();
 
@@ -1731,6 +1732,9 @@ class ExoplanetPioneer {
             </div>
         `;
 
+        // The immersive HUD owns the viewport. Reserve navigation space inside
+        // the operations drawer instead of floating it over colony resources.
+        if (siteBreadcrumb) ui.querySelector('#ep-ops-drawer').prepend(siteBreadcrumb);
         this.container.appendChild(ui);
 
         // Galaxy Container
@@ -4780,7 +4784,10 @@ class ExoplanetPioneer {
             const isFull = max > 0 && val >= max;
             const secondary = !primaryKeys.has(key);
             const rate = Number(this.resourceRates?.[key] || 0);
-            const showRate = primaryKeys.has(key) && Math.abs(rate) >= 0.05;
+            const sample = this.resourceRateSample;
+            const currentLocation = `${this.currentSystemId}:${!!this.isOnMoon}`;
+            const rateIsCurrent = !this.isPaused && sample?.speed === this.timeScale && sample?.location === currentLocation;
+            const showRate = rateIsCurrent && primaryKeys.has(key) && Math.abs(rate) >= 0.05;
             const rateText = `${rate > 0 ? '+' : ''}${Math.abs(rate) >= 10 ? rate.toFixed(0) : rate.toFixed(1)}/s`;
             const classes = ['ep-res-item'];
             if (secondary) classes.push('ep-res-secondary');
@@ -7831,6 +7838,7 @@ class ExoplanetPioneer {
     }
 
     loadGameData(data, options = {}) {
+        this.resourceRateSample = null;
         this.reviewedArchivePlanets = Array.isArray(data.reviewedArchivePlanets) ? data.reviewedArchivePlanets.filter(id => typeof id === 'string').slice(0, 10000) : [];
         const resourceDefaults = { ...this.resources };
         this.resources = { ...resourceDefaults, ...(data.resources || {}) };
@@ -9154,6 +9162,12 @@ class ExoplanetPioneer {
                 const delta = after - before;
                 this.resourceRates[key] = Number.isFinite(delta) ? delta : 0;
             });
+            this.resourceRateRevision = (this.resourceRateRevision || 0) + 1;
+            this.resourceRateSample = {
+                revision: this.resourceRateRevision,
+                speed: tickScale,
+                location: `${this.currentSystemId}:${!!this.isOnMoon}`
+            };
             this.evaluateSimulationSafety();
             this.rebuildColonyInfrastructure();
             this.updateResourceUI();
@@ -9348,6 +9362,9 @@ class ExoplanetPioneer {
             });
         }
 
+        // Do not relabel the previous 10x sample as a 1x rate while waiting for a
+        // fresh colony tick (particularly noticeable on slow renderers).
+        this.updateResourceUI();
         if (this.isPaused && options?.silent !== true) this.notify('Simulation paused.', 'info');
     }
 

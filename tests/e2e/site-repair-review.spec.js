@@ -46,7 +46,20 @@ test('shared comparison restores after a delayed catalogue and does not reopen',
   }
 });
 
-test('WebGPU pause preserves particle state while controls change', async ({ page }) => {
+const nebulaPath = '/experimental/webgpu-galaxy/nebula-sim.html';
+
+async function waitForNebulaFrames(page) {
+  await page.evaluate(() => new Promise(resolve => {
+    let frames = 0;
+    const next = () => ++frames === 4 ? resolve() : requestAnimationFrame(next);
+    requestAnimationFrame(next);
+  }));
+}
+
+async function openNebula(page) {
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.addInitScript(() => {
     if (!window.GPUDevice) return;
@@ -59,35 +72,133 @@ test('WebGPU pause preserves particle state while controls change', async ({ pag
       return createBuffer.call(this, options);
     };
   });
-  await page.goto('/experimental/webgpu-galaxy/nebula-sim.html', { waitUntil: 'domcontentloaded' });
+  await page.goto(nebulaPath, { waitUntil: 'domcontentloaded' });
+  await expect(page.locator('#nebula-canvas')).toHaveAttribute('data-renderer', /webgpu|canvas2d/);
+  return errors;
+}
+
+async function verifyNebulaFallback(page, errors, { deviceLost = false } = {}) {
   const canvas = page.locator('#nebula-canvas');
-  await expect(canvas).toHaveAttribute('data-renderer', /webgpu|canvas2d/);
-  test.skip(await canvas.getAttribute('data-renderer') !== 'webgpu', 'This browser has no WebGPU adapter; Canvas fallback is covered separately.');
-  await expect(page.getByRole('button', { name: 'Resume simulation' })).toBeVisible();
-  const readParticleState = () => page.evaluate(async () => {
-    const simulation = window.nebulaSimulation;
-    const size = 32 * 64;
-    const output = simulation.device.createBuffer({ size, usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ });
-    const encoder = simulation.device.createCommandEncoder();
-    encoder.copyBufferToBuffer(simulation.particleBuffers[simulation.step], 0, output, 0, size);
-    simulation.device.queue.submit([encoder.finish()]);
-    await output.mapAsync(window.GPUMapMode.READ);
-    const state = Array.from(new Uint32Array(output.getMappedRange()));
-    output.unmap();
-    output.destroy();
-    return state;
-  });
-  const pausedState = await readParticleState();
+  await expect(canvas).toHaveAttribute('data-renderer', 'canvas2d');
+  await expect(page.locator('#gpu-load')).toHaveText('Canvas 2D');
+  await expect(page.locator('#nebula-status')).toContainText('interactive Canvas 2D particle study is active');
+  if (deviceLost) await expect(page.locator('#nebula-status')).toContainText('The WebGPU device was lost');
+  else await expect(page.locator('#nebula-status')).toHaveText(/^(WebGPU is unavailable|No WebGPU adapter is available|The WebGPU device was lost)\./);
+  expect(await canvas.evaluate(node => node.getContext('2d') === window.nebulaSimulation.context)).toBe(true);
+  expect(await page.evaluate(() => window.nebulaSimulation.particles.length)).toBeGreaterThan(0);
+  if (!(await page.evaluate(() => window.nebulaSimulation.paused))) {
+    await page.getByRole('button', { name: 'Pause simulation' }).click();
+  }
+  await expect(page.getByRole('button', { name: 'Resume simulation' })).toHaveAttribute('aria-pressed', 'true');
+  await waitForNebulaFrames(page);
+  const pausedTime = await canvas.getAttribute('data-simulation-time');
+  const pausedImage = await canvas.evaluate(node => node.toDataURL());
   await page.locator('#vorticity').focus();
   await page.keyboard.press('End');
-  await page.evaluate(() => new Promise(resolve => {
-    let frames = 0;
-    const next = () => ++frames === 4 ? resolve() : requestAnimationFrame(next);
-    requestAnimationFrame(next);
-  }));
-  expect(await readParticleState()).toEqual(pausedState);
+  await waitForNebulaFrames(page);
+  await expect(canvas).toHaveAttribute('data-simulation-time', pausedTime);
+  expect(await canvas.evaluate(node => node.toDataURL())).toBe(pausedImage);
+  await page.getByRole('button', { name: 'Resume simulation' }).click();
+  await expect.poll(() => canvas.getAttribute('data-simulation-time')).not.toBe(pausedTime);
+  await expect.poll(() => canvas.evaluate(node => node.toDataURL())).not.toBe(pausedImage);
+  await waitForNebulaFrames(page);
+  expect(errors).toEqual([]);
+  test.info().annotations.push({ type: 'renderer-coverage', description: deviceLost
+    ? 'Validated Canvas 2D recovery after device loss, including static pause and moving resume; no completed GPU-state proof.'
+    : 'Validated Canvas 2D initialization, static pause and moving resume; no GPU-state proof.' });
+}
+
+async function readParticleState(page, destroyDuringReadback = false) {
+  return page.evaluate(async destroyDuringReadback => {
+    const simulation = window.nebulaSimulation;
+    if (simulation.mode !== 'webgpu') return { mode: simulation.mode };
+    const device = simulation.device;
+    let output;
+    try {
+      const size = 32 * 64;
+      output = device.createBuffer({ size, usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ });
+      const encoder = device.createCommandEncoder();
+      encoder.copyBufferToBuffer(simulation.particleBuffers[simulation.step], 0, output, 0, size);
+      device.queue.submit([encoder.finish()]);
+      const mapped = output.mapAsync(window.GPUMapMode.READ);
+      if (destroyDuringReadback) device.destroy();
+      await mapped;
+      return { mode: 'webgpu', state: Array.from(new Uint32Array(output.getMappedRange())) };
+    } catch (error) {
+      let timer;
+      const loss = await Promise.race([
+        device.lost.then(info => ({ reason: info.reason, message: info.message })),
+        new Promise(resolve => { timer = setTimeout(() => resolve(null), 1000); })
+      ]);
+      clearTimeout(timer);
+      // A readback error is recoverable here only when the real device confirms
+      // loss. Healthy-device validation/mapping errors must still fail the test.
+      if (!loss) throw error;
+      return { mode: 'device-lost', loss, readbackError: error.name };
+    } finally {
+      if (output?.mapState === 'mapped') output.unmap();
+      output?.destroy();
+    }
+  }, destroyDuringReadback);
+}
+
+test('WebGPU pause preserves particle state while controls change', async ({ page }) => {
+  const errors = await openNebula(page);
+  const canvas = page.locator('#nebula-canvas');
+  if (await canvas.getAttribute('data-renderer') !== 'webgpu') {
+    await verifyNebulaFallback(page, errors);
+    return;
+  }
+  await expect(page.getByRole('button', { name: 'Resume simulation' })).toBeVisible();
+  const pausedState = await readParticleState(page);
+  if (pausedState.mode !== 'webgpu') {
+    await verifyNebulaFallback(page, errors, { deviceLost: true });
+    return;
+  }
+  await page.locator('#vorticity').focus();
+  await page.keyboard.press('End');
+  await waitForNebulaFrames(page);
+  const changedControls = await readParticleState(page);
+  if (changedControls.mode !== 'webgpu') {
+    await verifyNebulaFallback(page, errors, { deviceLost: true });
+    return;
+  }
+  expect(changedControls.state).toEqual(pausedState.state);
   await expect(canvas).toHaveAttribute('data-simulation-time', '0.000');
   await page.getByRole('button', { name: 'Resume simulation' }).click();
   await expect.poll(() => canvas.getAttribute('data-simulation-time')).not.toBe('0.000');
-  expect(await readParticleState()).not.toEqual(pausedState);
+  const resumedState = await readParticleState(page);
+  if (resumedState.mode !== 'webgpu' || await canvas.getAttribute('data-renderer') !== 'webgpu') {
+    await verifyNebulaFallback(page, errors, { deviceLost: true });
+    return;
+  }
+  expect(resumedState.state).not.toEqual(pausedState.state);
+  expect(errors).toEqual([]);
+  test.info().annotations.push({ type: 'renderer-coverage', description: 'Validated bit-exact WebGPU pause across a control change and changed GPU state after resume.' });
+});
+
+test('WebGPU readback interrupted by device destruction recovers to a working Canvas study', async ({ page }) => {
+  const errors = await openNebula(page);
+  const canvas = page.locator('#nebula-canvas');
+  if (await canvas.getAttribute('data-renderer') !== 'webgpu') {
+    await verifyNebulaFallback(page, errors);
+    return;
+  }
+  const result = await readParticleState(page, true);
+  if (result.mode === 'device-lost') {
+    test.info().annotations.push({ type: 'device-loss-trigger', description: result.loss.reason === 'destroyed'
+      ? 'Destroyed the real WebGPU device with mapAsync pending.'
+      : `The real device reported ${result.loss.reason} loss before the explicit destruction completed.` });
+  } else {
+    // Hardware loss can precede the explicit destroy call on a shared runner.
+    expect(result.mode).toBe('canvas2d');
+  }
+  await verifyNebulaFallback(page, errors, { deviceLost: true });
+});
+
+test('WebGPU absence initializes an interactive Canvas fallback without skipping', async ({ page }) => {
+  await page.addInitScript(() => Object.defineProperty(navigator, 'gpu', { value: undefined, configurable: true }));
+  const errors = await openNebula(page);
+  await expect(page.locator('#nebula-status')).toContainText('WebGPU is unavailable');
+  await verifyNebulaFallback(page, errors);
 });
