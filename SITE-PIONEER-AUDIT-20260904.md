@@ -176,6 +176,13 @@ have separate final-effect assertions.
 - Functional Science Deck tests use an explicitly recorded software framebuffer
   profile on hosted runners. Production geometry, textures and rendering remain
   unchanged, and the independent advanced-graphics gate retains its own profile.
+- The second hosted gameplay run passed 146 assertions before its test colony
+  exhausted food and correctly emergency-paused an active probe. A deterministic
+  four-FPS-timestep reproduction confirmed that resupplying the same colony
+  completes that same probe. Exploration test provisioning and a pause/resupply
+  regression preserve production safety and graphics settings. The failed
+  artifact also exposed the chart's stale 10x indicator after emergency pause;
+  chart speed controls now synchronize with the actual simulation state.
 - GitHub's two open secret alerts point to historical commit `635b8df`: the
   Supabase token is absent from the current documentation and the Google Cloud
   service-account key file is absent from the current tree. Neither path exists

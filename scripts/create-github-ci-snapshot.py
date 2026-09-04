@@ -237,6 +237,7 @@ def main() -> int:
         "games-archive-index.json",
         "scripts/check-current-tree-secrets.mjs",
         "scripts/pioneer-playwright-workload.mjs",
+        "scripts/pioneer-workload-fixtures.mjs",
         "scripts/pioneer-advanced-rendering-smoke.mjs",
         "tests/e2e/smoke-ci.spec.js",
         "tests/e2e/site-overhaul.spec.js",

@@ -1660,7 +1660,7 @@ class UniverseManager {
                         <button class="ep-sys-btn" data-galaxy-action="sensor">📡 Sensor Ping · 50⚡</button>
                         <button class="ep-sys-btn" data-galaxy-action="survey">🧭 Survey Ring · 80⚡ 20📊</button>
                         <div class="ep-galaxy-speed" role="group" aria-label="Galaxy simulation speed">
-                            <span>SIM</span>
+                            <span id="ep-galaxy-speed-label" role="status">SIM</span>
                             <button class="ep-sys-btn" data-galaxy-action="speed" data-speed-index="1" title="Galaxy 1x Speed">1x</button>
                             <button class="ep-sys-btn" data-galaxy-action="speed" data-speed-index="3" title="Galaxy 5x Speed">5x</button>
                             <button class="ep-sys-btn" data-galaxy-action="speed" data-speed-index="4" title="Galaxy 10x Speed">10x</button>
@@ -1701,6 +1701,7 @@ class UniverseManager {
         modal.querySelectorAll('[data-galaxy-action="speed"]').forEach((speedButton) => {
             speedButton.classList.toggle('active', Number(speedButton.dataset.speedIndex) === Number(this.game?.timeSpeedIndex));
         });
+        this.game.updateGalaxySimulationControls?.();
         if (!this.galaxyViewState.selectedStarId) this.galaxyViewState.selectedStarId = this.getCurrentStar()?.id || null;
         requestAnimationFrame(() => this.renderGalaxyMap());
         this.renderGalaxyNavigation();

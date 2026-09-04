@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import fsp from 'node:fs/promises';
 import path from 'node:path';
 import { chromium } from 'playwright';
+import { provisionPioneerGalaxyExpansion } from './pioneer-workload-fixtures.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).map((arg) => {
     const [key, ...rest] = arg.replace(/^--/, '').split('=');
@@ -143,6 +144,8 @@ async function state(label) {
             structures,
             inventory: (g.inventory || []).map((x) => ({ type: x.type, count: x.count })),
             resources: { ...g.resources },
+            probes: (g.universe?.galacticMap?.probes || []).map(probe => ({ id: probe.id, targetId: probe.targetId, progress: probe.progress, speed: probe.speed })),
+            runtime: g.runtime?.getMetrics?.() || null,
             powerGrid: g.powerGrid ? { load: g.powerGrid.load, capacity: g.powerGrid.capacity, sourceCount: g.powerGrid.sources?.length || 0 } : null,
             tiles: g.tiles?.length || 0,
             sceneChildren: g.scene?.children?.length || 0,
@@ -181,6 +184,17 @@ async function clickTimeSpeed(title) {
     }
     log('interaction', { action: 'click-time-speed', title, expected, actual, safetyOverride });
     return { expected, actual, safetyOverride };
+}
+async function waitForLiveColonyTick(label) {
+    const revision = await page.evaluate(() => window.game.resourceRateSample?.revision || 0);
+    await page.waitForFunction(before => {
+        const g = window.game;
+        return (g.resourceRateSample?.revision || 0) > before || g.isPaused;
+    }, revision, { timeout: ciTimeout(5000) });
+    const tick = await page.evaluate(() => ({ revision: window.game.resourceRateSample?.revision || 0,
+        speed: window.game.timeScale, paused: window.game.isPaused, food: window.game.resources.food, oxygen: window.game.resources.oxygen }));
+    assert(tick.revision > revision, `${label}: a real colony tick advances before state sampling`, tick);
+    return tick;
 }
 async function getWindowRect(selector) {
     return page.locator(selector).evaluate((element) => {
@@ -537,6 +551,7 @@ try {
         '--disable-features=Translate',
         '--enable-unsafe-swiftshader'
     ];
+    if (args['force-swiftshader'] === true || args['force-swiftshader'] === 'true') chromiumArgs.push('--use-gl=angle', '--use-angle=swiftshader');
     if (headed) chromiumArgs.unshift('--window-size=1480,980');
     log('browser-launch', {
         headed,
@@ -673,7 +688,7 @@ try {
     await page.locator('#ep-colony-path-action').click();
     assert(await page.evaluate(() => window.game.selectedInventoryItem === 'solar'), 'objective CTA selects Solar Array');
     const solar = await placeSelectedStructure('solar', { preferNear: false });
-    await page.waitForTimeout(1150);
+    await waitForLiveColonyTick('Solar partial construction');
     const solarMid = await page.evaluate((tileId) => {
         const s = window.game.structures.find((x) => x.tileId === tileId);
         return { progress: s?.buildProgress, constructing: s?.isConstructing, capacity: window.game.powerGrid?.capacity ?? 0 };
@@ -719,10 +734,10 @@ try {
     await page.locator('#ep-colony-path-action').click();
     assert(await page.evaluate(() => window.game.selectedInventoryItem === 'hab'), 'objective CTA selects Habitat Dome');
     await placeSelectedStructure('hab');
-    await page.waitForTimeout(1100);
+    await waitForLiveColonyTick('Habitat partial construction');
     await clickTimeSpeed('10x Speed');
     await waitForConstruction('hab', 8000);
-    await page.waitForTimeout(1150);
+    await waitForLiveColonyTick('Habitat power connection');
     const habitatNetwork = await page.evaluate(() => {
         const g = window.game;
         const hab = g.structures.find((s) => s.type === 'hab');
@@ -742,7 +757,7 @@ try {
     assert(await page.evaluate(() => window.game.selectedInventoryItem === 'mine'), 'objective CTA selects Auto-Miner');
     const mine = await placeSelectedStructure('mine');
     const mineralsBefore = await page.evaluate(() => window.game.resources.minerals);
-    await page.waitForTimeout(1100);
+    await waitForLiveColonyTick('Auto-Miner partial construction');
     const mineMid = await page.evaluate(({ tileId, mineralsBefore }) => {
         const s = window.game.structures.find((x) => x.tileId === tileId);
         return { progress: s?.buildProgress, constructing: s?.isConstructing, mineralsBefore, mineralsNow: window.game.resources.minerals };
@@ -778,14 +793,14 @@ try {
     await page.locator('#ep-colony-path-action').click();
     assert(await page.evaluate(() => window.game.selectedInventoryItem === 'lab'), 'objective CTA selects manufactured Research Lab');
     await placeSelectedStructure('lab');
-    await page.waitForTimeout(1100);
+    await waitForLiveColonyTick('Research Lab partial construction');
     await clickTimeSpeed('10x Speed');
     await waitForConstruction('lab', 12000);
-    await page.waitForTimeout(250);
+    await page.waitForFunction(() => /Claim the system/i.test(document.getElementById('ep-colony-path-current')?.textContent || ''), null, { timeout: ciTimeout(3000) });
     const objectiveAfterLab = await page.locator('#ep-colony-path-current').textContent();
     assert(/Claim the system/i.test(objectiveAfterLab || ''), 'mission path reaches system claim after real research construction', { objectiveAfterLab });
     await page.waitForFunction(() => window.game.structures.every((s) => window.game.buildingMeshes?.[s.tileId]?.userData?.assetLoadState), null, { timeout: ciTimeout(8000) });
-    await page.waitForTimeout(1100);
+    await waitForLiveColonyTick('Research colony power connections');
     const matureColony = await page.evaluate(() => {
         const g = window.game;
         return {
@@ -805,6 +820,8 @@ try {
     await screenshot('research-complete');
 
     await setPhase('ui-workload');
+    const uiCrewSupplies = await page.evaluate(provisionPioneerGalaxyExpansion, { crewOnly: true });
+    log('fixture-provisioning', { phase, purpose: 'Crew endurance during sustained window and viewport exercises', ...uiCrewSupplies });
     await page.locator('#ep-btn-ops').click();
     assert(!(await page.locator('#ep-ops-drawer').getAttribute('hidden')), 'operations drawer opens under workload');
     await page.locator('#ep-btn-ops').click();
@@ -875,9 +892,14 @@ try {
 
     await setPhase('window-management-mobile');
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.waitForTimeout(180);
     await page.locator('#ep-btn-industry').click();
     await page.waitForFunction(() => getComputedStyle(document.getElementById('ep-industry-modal')).display !== 'none');
+    // The window manager clamps a previously dragged desktop window on its next layout frame.
+    // Wait for that actual responsive outcome rather than assuming it fits immediately after click.
+    await page.waitForFunction(selector => {
+        const rect = document.querySelector(selector)?.getBoundingClientRect();
+        return rect && rect.width > 0 && rect.left >= 0 && rect.top >= 0 && rect.right <= innerWidth && rect.bottom <= innerHeight;
+    }, industrySelector, { timeout: ciTimeout(3000) });
     const mobileBefore = await getWindowRect(industrySelector);
     assert(windowRectInsideViewport(mobileBefore, 390, 844), 'Industry window opens fully inside phone viewport', mobileBefore);
     await touchResizeManagedWindow(industrySelector, -64, -88);
@@ -922,14 +944,12 @@ try {
 
     await setPhase('galaxy-expansion');
     await page.setViewportSize({ width: 1440, height: 900 });
-    await page.evaluate(() => {
-        const g = window.game;
-        for (const key of ['energy', 'data', 'credits', 'alloys', 'circuits']) {
-            g.caps[key] = Math.max(Number(g.caps[key] || 0), 10000);
-            g.resources[key] = Math.max(Number(g.resources[key] || 0), 5000);
-        }
-        g.updateResourceUI();
-    });
+    // This phase tests exploration infrastructure, not an unprovisioned colony's endurance.
+    // Keep the production survival guard active and provision its living crew along with fuel.
+    const expeditionSupplies = await page.evaluate(provisionPioneerGalaxyExpansion);
+    log('fixture-provisioning', { phase, ...expeditionSupplies });
+    assert(expeditionSupplies.after.food >= 5000 && expeditionSupplies.after.oxygen >= 5000,
+        'galaxy-expansion expedition fixture provisions its living crew alongside drive resources', expeditionSupplies);
     await page.locator('#ep-btn-galaxy').click();
     await page.waitForFunction(() => getComputedStyle(document.getElementById('ep-galaxy-map-modal')).display === 'flex');
     await page.waitForFunction(() => document.querySelector('#ep-galaxy-map-modal > .ep-modal.ep-window-managed'));
@@ -983,8 +1003,25 @@ try {
         await galaxyTenX.click();
         await page.waitForTimeout(80);
     }
-    assert(await galaxyTenX.evaluate((el) => el.classList.contains('active')), 'Galactic Chart exposes an active real 10x simulation control after the documented safety override');
-    await page.waitForFunction((id) => window.game.universe.galacticMap.stars.find((s) => s.id === id)?.discovered === true, galaxyProbeTargetId, { timeout: ciTimeout(12000) });
+    const chartTenX = await page.evaluate(() => ({
+        actualSpeed: window.game.timeScale, paused: window.game.isPaused,
+        pressed: document.querySelector('[data-galaxy-action="speed"][data-speed-index="4"]')?.getAttribute('aria-pressed')
+    }));
+    assert(chartTenX.actualSpeed === 10 && !chartTenX.paused && chartTenX.pressed === 'true',
+        'Galactic Chart exposes an active real 10x simulation control after the documented safety override', chartTenX);
+    await page.waitForFunction((id) => {
+        const g = window.game;
+        return g.universe.galacticMap.stars.find(s => s.id === id)?.discovered === true || g.isPaused;
+    }, galaxyProbeTargetId, { timeout: ciTimeout(12000) });
+    const probeOutcome = await page.evaluate(id => {
+        const g = window.game;
+        const probe = g.universe.galacticMap.probes.find(p => p.targetId === id);
+        return { targetId: id, discovered: g.universe.galacticMap.stars.find(s => s.id === id)?.discovered === true,
+            probe: probe ? { progress: probe.progress, speed: probe.speed } : null,
+            paused: g.isPaused, timeScale: g.timeScale, food: g.resources.food, oxygen: g.resources.oxygen,
+            runtime: g.runtime?.getMetrics?.() || null };
+    }, galaxyProbeTargetId);
+    assert(probeOutcome.discovered, 'provisioned exploration completes through the real runtime without exhausting crew life support', probeOutcome);
     assert(await page.evaluate((id) => !window.game.universe.galacticMap.probes.some((p) => p.targetId === id), galaxyProbeTargetId), 'probe completes and retires after discovering its target');
 
     await page.locator('[data-galaxy-action="center"]').click();
@@ -1010,7 +1047,8 @@ try {
         };
     });
     assert(expansionAssets.relays === 1 && expansionAssets.refuel === 1 && expansionAssets.shipyards === 1 && expansionAssets.megaCount === 1, 'claimed system can deploy relay, refuel, shipyard and Dyson expansion assets', expansionAssets);
-    await page.waitForTimeout(900);
+    await page.waitForFunction(({ starId, previous }) => (window.game.universe.galacticMap.megastructures.find(m => m.starId === starId && m.type === 'dyson_swarm')?.completion || 0) > previous,
+        { starId: expansionAssets.currentStarId, previous: expansionAssets.megaProgress }, { timeout: ciTimeout(5000) });
     const megaProgressAfter = await page.evaluate((starId) => window.game.universe.galacticMap.megastructures.find((m) => m.starId === starId && m.type === 'dyson_swarm')?.completion || 0, expansionAssets.currentStarId);
     assert(megaProgressAfter > expansionAssets.megaProgress, 'megastructure construction advances under simulation time', { before: expansionAssets.megaProgress, after: megaProgressAfter });
     galaxyBeforeReload = await page.evaluate((targetId) => {
@@ -1156,7 +1194,7 @@ try {
     await waitForConstruction('solar', 8000);
     await waitForConstruction('helium_mine', 10000);
     const heliumBefore = await page.evaluate(() => window.game.resources.helium3);
-    await page.waitForTimeout(1200);
+    await waitForLiveColonyTick('Lunar extraction');
     const lunarProduction = await page.evaluate((before) => {
         const extractor = window.game.structures.find((s) => s.type === 'helium_mine');
         return {

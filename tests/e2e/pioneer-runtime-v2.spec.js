@@ -1,6 +1,7 @@
 /* global game, Storage, DOMException */
 import { test, expect } from '@playwright/test';
 import { installPioneerFunctionalProfile, applyPioneerFunctionalProfile, forceSwiftShader, swiftShaderLaunchOptions } from './helpers/pioneer-functional-profile.js';
+import { provisionPioneerGalaxyExpansion } from '../../scripts/pioneer-workload-fixtures.mjs';
 
 if (forceSwiftShader) test.use({ launchOptions: swiftShaderLaunchOptions });
 
@@ -125,6 +126,59 @@ test.describe('Pioneer engine v2 player outcomes', () => {
         });
         expect(result).toEqual({ first: true, rejected: false, unchanged: true });
         await expect(page.locator('#ep-notifications')).toContainText('Save could not be written');
+    });
+
+    test('a four-FPS timestep expedition pauses on exhausted life support and completes the same probe after crew provisioning', async ({ page }, testInfo) => {
+        await page.evaluate(() => {
+            game.runtime.suspend();
+            game.setTimeSpeed(0, { silent:true });
+            Object.assign(game.resources, { energy:1000, credits:1000, food:0.1, oxygen:0.1 });
+            const universe=game.universe;
+            const target=universe.galacticMap.stars.find(star=>!star.discovered&&!star.isNebula&&!star.hazards.length);
+            universe.galaxyViewState.selectedStarId=target.id;
+            window.__probeTarget=target.id;
+            universe.openGalaxyMap();
+        });
+        await page.locator('[data-galaxy-action="probe"]').click();
+        const speed=page.locator('[data-galaxy-action="speed"][data-speed-index="4"]');
+        await speed.click();
+        if(await page.evaluate(()=>game.timeScale!==10))await speed.click();
+        const exhausted=await page.evaluate(()=>{
+            const probe=game.universe.galacticMap.probes.find(p=>p.targetId===window.__probeTarget);
+            for(let frame=0;frame<20;frame++)game.runtime.advance(0.25);
+            const progress=probe.progress,steps=game.runtime.simulationSteps;
+            for(let frame=0;frame<12;frame++)game.runtime.advance(0.25);
+            return {paused:game.isPaused,speed:game.timeScale,food:game.resources.food,oxygen:game.resources.oxygen,
+                progress,progressAfterPausedFrames:probe.progress,steps,stepsAfterPausedFrames:game.runtime.simulationSteps,
+                discovered:game.universe.galacticMap.stars.find(s=>s.id===window.__probeTarget).discovered};
+        });
+        expect(exhausted.paused).toBe(true);expect(exhausted.speed).toBe(0);
+        expect(Math.min(exhausted.food,exhausted.oxygen)).toBe(0);
+        expect(exhausted.progress).toBeGreaterThan(0);expect(exhausted.progress).toBeLessThan(1);
+        expect(exhausted.progressAfterPausedFrames).toBe(exhausted.progress);
+        expect(exhausted.stepsAfterPausedFrames).toBe(exhausted.steps);
+        expect(exhausted.discovered).toBe(false);
+        await expect(page.locator('#ep-galaxy-speed-label')).toHaveText('PAUSED');
+        await expect(speed).toHaveAttribute('aria-pressed','false');
+        expect(await page.locator('[data-galaxy-action="speed"].active').count()).toBe(0);
+        const supplies=await page.evaluate(provisionPioneerGalaxyExpansion);
+        expect(supplies.paused).toBe(true);
+        expect(supplies.after.food).toBeGreaterThanOrEqual(5000);expect(supplies.after.oxygen).toBeGreaterThanOrEqual(5000);
+        await speed.click();
+        await expect(speed).toHaveAttribute('aria-pressed','true');
+        await expect(page.locator('#ep-galaxy-speed-label')).toHaveText('SIM 10x');
+        const completed=await page.evaluate(()=>{
+            const universe=game.universe,probe=universe.galacticMap.probes.find(p=>p.targetId===window.__probeTarget);
+            let frames=0;
+            while(universe.galacticMap.probes.includes(probe)&&frames<100){game.runtime.advance(0.25);frames++;}
+            return {frames,paused:game.isPaused,speed:game.timeScale,progress:probe.progress,
+                discovered:universe.galacticMap.stars.find(s=>s.id===window.__probeTarget).discovered,
+                pending:universe.galacticMap.probes.includes(probe),food:game.resources.food,oxygen:game.resources.oxygen};
+        });
+        expect(completed.frames).toBeLessThan(100);expect(completed.paused).toBe(false);expect(completed.speed).toBe(10);
+        expect(completed.progress).toBeGreaterThanOrEqual(1);expect(completed.discovered).toBe(true);expect(completed.pending).toBe(false);
+        expect(completed.food).toBeGreaterThan(0);expect(completed.oxygen).toBeGreaterThan(0);
+        await testInfo.attach('probe-survival-causality',{body:JSON.stringify({exhausted,supplies,completed},null,2),contentType:'application/json'});
     });
 
     test('idle observation is non-blocking and never claims unearned rewards', async ({ page }) => {

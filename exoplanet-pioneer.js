@@ -9365,7 +9365,19 @@ class ExoplanetPioneer {
         // Do not relabel the previous 10x sample as a 1x rate while waiting for a
         // fresh colony tick (particularly noticeable on slow renderers).
         this.updateResourceUI();
+        this.updateGalaxySimulationControls();
         if (this.isPaused && options?.silent !== true) this.notify('Simulation paused.', 'info');
+    }
+
+    updateGalaxySimulationControls() {
+        const paused = this.isPaused || this.timeScale === 0;
+        document.querySelectorAll('[data-galaxy-action="speed"]').forEach(button => {
+            const active = !paused && Number(button.dataset.speedIndex) === this.timeSpeedIndex;
+            button.classList.toggle('active', active);
+            button.setAttribute('aria-pressed', String(active));
+        });
+        const label = document.getElementById('ep-galaxy-speed-label');
+        if (label) label.textContent = paused ? 'PAUSED' : `SIM ${this.timeScale}x`;
     }
 
     animate() {

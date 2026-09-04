@@ -70,6 +70,7 @@ jobs:
           node --check scripts/update-exoplanet-atmospheres.mjs
           node --check scripts/build-exoplanet-appearance-index.mjs
           node --check scripts/pioneer-playwright-workload.mjs
+          node --check scripts/pioneer-workload-fixtures.mjs
           node --check scripts/pioneer-advanced-rendering-smoke.mjs
           node --check tests/e2e/smoke-functional.spec.js
           node --check tests/e2e/smoke-ci.spec.js
