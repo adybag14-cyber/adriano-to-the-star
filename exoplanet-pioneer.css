@@ -895,6 +895,8 @@
     min-width: 0;
 }
 
+.ep-ops-flight { display: none; }
+
 .ep-ops-label {
     color: #5f788f;
     font-size: 0.54rem;
@@ -1534,16 +1536,30 @@ body.ep-data-open #ep-notifications {
     .ep-resource-panel::-webkit-scrollbar { display: none; }
     .ep-res-item { flex: 0 0 auto; }
     .ep-command-primary .ep-sys-btn:not(#ep-btn-ops):not(#ep-btn-industry):not(#ep-btn-tech) { display: none; }
+    .ep-ops-flight { display: grid; grid-column: 1 / -1; grid-template-columns: 1fr 1fr; }
+    .ep-ops-flight .ep-ops-label { grid-column: 1 / -1; }
+    .ep-ops-flight .ep-command-text { display: inline; }
+    .ep-ops-flight .ep-sys-btn { min-height: 44px; }
     .ep-ops-grid { grid-template-columns: 1fr 1fr; }
     .ep-left-hud { top: 60px !important; }
     .ep-colony-path { display: none; }
     .ep-build-dock-header { display: none; }
-    .ep-build-menu { justify-content: flex-start; }
-    .ep-build-btn { min-width: 150px; }
-    .ep-placement-hint { bottom: 92px; grid-template-columns: 1fr auto; }
+    /* Separate inventory, camera, and navigation rows; no floating camera
+       control may cover a deploy target, including short landscape views. */
+    .ep-bottom-bar { position: absolute; left: 0; right: 0; bottom: calc(118px + env(safe-area-inset-bottom, 0px)); padding: 0 8px; }
+    .ep-build-dock { width: 100%; }
+    .ep-build-menu { justify-content: flex-start; flex-wrap: nowrap; padding: 6px; }
+    .ep-build-btn { min-width: 0; flex: 0 0 calc((100% - 14px) / 3); min-height: 78px; padding: 6px; grid-template-columns: 1fr auto; gap: 4px; }
+    .ep-build-icon { width: 28px; height: 28px; font-size: 1rem; }
+    .ep-build-copy { grid-column: 1 / -1; grid-row: 2; }
+    .ep-build-copy strong { white-space: normal; font-size: 0.66rem; line-height: 1.2; }
+    .ep-build-count { grid-column: 2; grid-row: 1; }
+    #ep-touch-controls { bottom: calc(60px + env(safe-area-inset-bottom, 0px)) !important; gap: 12px !important; }
+    .ep-placement-hint { bottom: calc(218px + env(safe-area-inset-bottom, 0px)); grid-template-columns: 1fr auto; }
+    #ep-placement-cancel { min-width: 44px; height: 44px; }
     .ep-placement-state { display: none; }
-    .ep-back-btn { bottom: 8px; left: 8px; }
-    .ep-cinematic-toggle { right: 8px; bottom: 8px; }
+    .ep-back-btn { bottom: calc(8px + env(safe-area-inset-bottom, 0px)); left: 8px; min-height: 44px; box-sizing: border-box; }
+    .ep-cinematic-toggle { right: 8px; bottom: calc(8px + env(safe-area-inset-bottom, 0px)); width: 44px; height: 44px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1558,6 +1574,24 @@ body.ep-data-open #ep-notifications {
     .ep-cinematic-toggle {
         transition: none !important;
     }
+}
+
+/* Touch controls persist after a mobile session rotates past the compact
+   breakpoint. Reserve their rows whenever that actual surface exists. */
+body:has(#ep-touch-controls) .ep-bottom-bar { position: absolute; left: 0; right: 0; bottom: calc(118px + env(safe-area-inset-bottom, 0px)); padding: 0 8px; }
+body:has(#ep-touch-controls) #ep-touch-controls { bottom: calc(60px + env(safe-area-inset-bottom, 0px)) !important; gap: 12px !important; }
+body:has(#ep-touch-controls) .ep-build-menu { flex-wrap: nowrap; }
+body:has(#ep-touch-controls) .ep-placement-hint { bottom: calc(238px + env(safe-area-inset-bottom, 0px)); }
+body:has(#ep-touch-controls) .ep-back-btn { bottom: calc(8px + env(safe-area-inset-bottom, 0px)); min-height: 44px; box-sizing: border-box; }
+body:has(#ep-touch-controls) .ep-cinematic-toggle { bottom: calc(8px + env(safe-area-inset-bottom, 0px)); width: 44px; height: 44px; }
+
+@media (min-width: 681px) and (max-height: 480px) {
+    body:has(#ep-touch-controls) .ep-left-hud { top: 62px !important; max-height: calc(100dvh - 286px); overflow: auto; pointer-events: auto; }
+    body:has(#ep-touch-controls) .ep-world-card { padding: 6px 8px; }
+    body:has(#ep-touch-controls) .ep-hud-status-row { grid-template-columns: auto minmax(0, 1fr); gap: 4px; margin-top: 4px; padding-top: 4px; }
+    body:has(#ep-touch-controls) .ep-placement-hint { top: 62px; bottom: auto; left: auto; right: 108px; transform: none; width: calc(100vw - 434px); }
+    body:has(#ep-touch-controls) #ep-placement-cancel { min-width: 44px; height: 44px; }
+    body:has(#ep-touch-controls) #ep-notifications { max-height: calc(100dvh - 292px); overflow: hidden; }
 }
 
 /* === Pioneer combat flight model, target acquisition and touch deck === */
@@ -1932,6 +1966,7 @@ body.ep-window-interacting {
 
 #ep-tutorial.ep-window-managed {
     min-height: min(130px, calc(100dvh - 16px));
+    padding-bottom: 40px;
 }
 
 #ep-tutorial .ep-tutorial-kicker.ep-window-drag-handle {
@@ -1967,6 +2002,10 @@ body.ep-window-interacting {
     #ep-tutorial.ep-window-managed {
         min-width: min(220px, calc(100vw - 12px));
         min-height: min(130px, calc(100dvh - 12px));
+        padding-bottom: 52px;
+        bottom: calc(218px + env(safe-area-inset-bottom, 0px));
+        max-height: calc(100dvh - 282px);
+        overflow: auto;
     }
 }
 

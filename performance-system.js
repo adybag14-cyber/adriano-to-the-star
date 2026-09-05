@@ -140,41 +140,33 @@ class PerformanceManager {
         touchUI.setAttribute('aria-label', 'Planet camera touch controls');
         touchUI.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:15px;z-index:1000;';
         touchUI.innerHTML = `
-            <button class="ep-touch-btn" aria-label="Rotate planet left" onclick="window.game.controls.rotateLeft()" style="width:50px;height:50px;font-size:1.5em;background:#1e293b;border:1px solid #38bdf8;border-radius:50%;color:#38bdf8;">◀</button>
-            <button class="ep-touch-btn" aria-label="Zoom planet camera in" onclick="window.game.controls.zoomIn()" style="width:50px;height:50px;font-size:1.5em;background:#1e293b;border:1px solid #38bdf8;border-radius:50%;color:#38bdf8;">+</button>
-            <button class="ep-touch-btn" aria-label="Zoom planet camera out" onclick="window.game.controls.zoomOut()" style="width:50px;height:50px;font-size:1.5em;background:#1e293b;border:1px solid #38bdf8;border-radius:50%;color:#38bdf8;">−</button>
-            <button class="ep-touch-btn" aria-label="Rotate planet right" onclick="window.game.controls.rotateRight()" style="width:50px;height:50px;font-size:1.5em;background:#1e293b;border:1px solid #38bdf8;border-radius:50%;color:#38bdf8;">▶</button>
+            <button type="button" class="ep-touch-btn" data-camera-action="left" aria-label="Rotate planet left" style="width:50px;height:50px;font-size:1.5em;background:#1e293b;border:1px solid #38bdf8;border-radius:50%;color:#38bdf8;">◀</button>
+            <button type="button" class="ep-touch-btn" data-camera-action="in" aria-label="Zoom planet camera in" style="width:50px;height:50px;font-size:1.5em;background:#1e293b;border:1px solid #38bdf8;border-radius:50%;color:#38bdf8;">+</button>
+            <button type="button" class="ep-touch-btn" data-camera-action="out" aria-label="Zoom planet camera out" style="width:50px;height:50px;font-size:1.5em;background:#1e293b;border:1px solid #38bdf8;border-radius:50%;color:#38bdf8;">−</button>
+            <button type="button" class="ep-touch-btn" data-camera-action="right" aria-label="Rotate planet right" style="width:50px;height:50px;font-size:1.5em;background:#1e293b;border:1px solid #38bdf8;border-radius:50%;color:#38bdf8;">▶</button>
         `;
+        touchUI.addEventListener('click', event => {
+            const action = event.target.closest('[data-camera-action]')?.dataset.cameraAction;
+            const { camera, controls } = this.game;
+            if (!action || !camera || !controls?.enabled || this.game.isCombatActive) return;
+            if (action === 'left') this.game.rotateLeft?.();
+            else if (action === 'right') this.game.rotateRight?.();
+            else {
+                // OrbitControls r128 keeps its dolly/zoom helpers private.
+                // Move the real camera about its target within the same limits.
+                const offset = camera.position.clone().sub(controls.target);
+                const minimum = Math.max(0.01, Number(controls.minDistance) || 0.01);
+                const maximum = Math.max(minimum, Number(controls.maxDistance) || Infinity);
+                const distance = Math.min(maximum, Math.max(minimum, offset.length() * (action === 'in' ? 0.88 : 1 / 0.88)));
+                offset.setLength(distance);
+                camera.position.copy(controls.target).add(offset);
+            }
+            controls.update();
+        });
         document.body.appendChild(touchUI);
 
-        // Pinch to zoom
-        let initialPinchDistance = 0;
-        document.addEventListener('touchstart', (e) => {
-            if (e.touches.length === 2) {
-                initialPinchDistance = this.getPinchDistance(e.touches);
-            }
-        });
-
-        document.addEventListener('touchmove', (e) => {
-            if (e.touches.length === 2 && this.game.controls) {
-                const currentDistance = this.getPinchDistance(e.touches);
-                const delta = currentDistance - initialPinchDistance;
-                if (delta > 10) {
-                    this.game.controls.dollyOut(1.1);
-                    initialPinchDistance = currentDistance;
-                } else if (delta < -10) {
-                    this.game.controls.dollyIn(1.1);
-                    initialPinchDistance = currentDistance;
-                }
-            }
-        });
-    }
-
-    getPinchDistance(touches) {
-        return Math.hypot(
-            touches[0].pageX - touches[1].pageX,
-            touches[0].pageY - touches[1].pageY
-        );
+        // Native OrbitControls already handles two-finger gestures on its canvas.
+        // Do not also zoom from document touch events while users operate the HUD.
     }
 
     // --- FPS Monitor ---

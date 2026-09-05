@@ -189,6 +189,19 @@ have separate final-effect assertions.
   The workload now maintains that same budget across renderer recreation,
   resizing and graphics-setting application, with explicit framebuffer and
   native-asset invariance checks. Production rendering is unchanged.
+- A final narrow-screen inspection found that the compact toolbar hid Combat,
+  Galaxy, Missions and Tutorial without alternatives. The same original buttons
+  now move into More > Flight commands below 680px and return to their desktop
+  positions above that breakpoint. Real 390px/320px click-through checks cover
+  each command, close/retreat behavior, visible focus return and resize round trips.
+  The newly exercised tutorial also has reserved resize-handle clearance so Next
+  is no longer obstructed on a phone.
+- Mobile inventory, camera and navigation controls now have separate rows,
+  including after rotation to 844x390. Camera buttons use actual orbit/zoom
+  actions within existing distance limits; native canvas pinch replaces broken
+  duplicate document handlers. The objective remains scrollable and actionable,
+  and placement cancellation stays clear of the DATA control. Real pointer,
+  camera-state and pinch tests cover 320x844, 390x844 and 568x518 plus rotation.
 - GitHub's two open secret alerts point to historical commit `635b8df`: the
   Supabase token is absent from the current documentation and the Google Cloud
   service-account key file is absent from the current tree. Neither path exists

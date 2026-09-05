@@ -1461,6 +1461,9 @@ class ExoplanetPioneer {
                     <div class="ep-command-overflow" id="ep-ops-drawer" hidden>
                         <div class="ep-ops-header"><span>OPERATIONS</span><span>Low-frequency systems</span></div>
                         <div class="ep-ops-grid">
+                            <section class="ep-ops-group ep-ops-flight" aria-label="Flight commands">
+                                <div class="ep-ops-label">FLIGHT COMMANDS</div>
+                            </section>
                             <section class="ep-ops-group">
                                 <div class="ep-ops-label">SESSION</div>
                                 <button class="ep-sys-btn" id="ep-btn-save" title="Save Game"><span>💾</span><span>Save</span></button>
@@ -1833,6 +1836,7 @@ class ExoplanetPioneer {
                 window.setTimeout(() => this.toggleOperationsMenu(false), 0);
             }
         });
+        this.initializeMobilePrimaryCommands();
         this.updatePlacementHint();
         this.toggleOperationsMenu(false);
         this.updateOrbitalControls();
@@ -1909,7 +1913,64 @@ class ExoplanetPioneer {
         if (panel) panel.hidden = true;
         try { localStorage.setItem(this.tutorialStorageKey, '1'); } catch { }
         if (!skipped) this.notify('Mission control online. Establish power to begin.', 'success');
-        this.container?.querySelector('#ep-btn-tutorial')?.focus();
+        const tutorialButton = this.container?.querySelector('#ep-btn-tutorial');
+        const returnButton = tutorialButton?.closest('.ep-ops-flight')
+            ? this.container?.querySelector('#ep-btn-ops') : tutorialButton;
+        returnButton?.focus({ preventScroll: true });
+    }
+
+    initializeMobilePrimaryCommands() {
+        this.mobileCommandsMedia?.removeEventListener('change', this.mobileCommandsLayout);
+        this.mobileCommandDialogObserver?.disconnect();
+        const primary = this.container.querySelector('.ep-command-primary');
+        const flight = this.container.querySelector('.ep-ops-flight');
+        const drawer = this.container.querySelector('#ep-ops-drawer');
+        const more = this.container.querySelector('#ep-btn-ops');
+        if (!primary || !flight || !drawer || !more) return;
+
+        // Relocate the original controls, retaining their existing IDs and handlers.
+        // Anchors preserve desktop order after any number of breakpoint changes.
+        const commands = Array.from(primary.querySelectorAll('.ep-command-combat, #ep-btn-galaxy, #ep-btn-missions, #ep-btn-tutorial'))
+            .map(button => {
+                const anchor = document.createComment('primary command position');
+                primary.insertBefore(anchor, button);
+                return { button, anchor };
+            });
+        this.mobileCommandsMedia = window.matchMedia('(max-width: 680px)');
+        this.mobileCommandsLayout = () => {
+            const focusedCommand = commands.some(({ button }) => button === document.activeElement);
+            commands.forEach(({ button, anchor }) => {
+                if (this.mobileCommandsMedia.matches) flight.appendChild(button);
+                else anchor.after(button);
+            });
+            if (focusedCommand && this.mobileCommandsMedia.matches && drawer.hidden) more.focus({ preventScroll: true });
+        };
+        this.mobileCommandsMedia.addEventListener('change', this.mobileCommandsLayout);
+        this.mobileCommandsLayout();
+
+        // Capture runs before the original command handler, so dialogs record a
+        // visible return target rather than a button in the now-closed drawer.
+        flight.addEventListener('click', event => {
+            const command = event.target.closest('button.ep-command-btn');
+            if (!command) return;
+            this.toggleOperationsMenu(false);
+            more.focus({ preventScroll: true });
+            if (command.classList.contains('ep-command-combat')) this.combatReturnFocus = more;
+            if (command.id === 'ep-btn-missions') {
+                queueMicrotask(() => {
+                    const modal = this.container.querySelector('#ep-missions-modal');
+                    if (!modal || getComputedStyle(modal).display === 'none') return;
+                    modal.querySelector('button')?.focus({ preventScroll: true });
+                    this.mobileCommandDialogObserver?.disconnect();
+                    this.mobileCommandDialogObserver = new MutationObserver(() => {
+                        if (getComputedStyle(modal).display !== 'none' && !modal.hidden) return;
+                        this.mobileCommandDialogObserver.disconnect();
+                        more.focus({ preventScroll: true });
+                    });
+                    this.mobileCommandDialogObserver.observe(modal, { attributes: true, attributeFilter: ['style', 'hidden', 'class'] });
+                });
+            }
+        }, true);
     }
 
     toggleOperationsMenu(force = null) {
@@ -11365,6 +11426,7 @@ class ExoplanetPioneer {
         } else {
             retreatBtn.style.display = 'inline-flex';
         }
+        if (this.combatReturnFocus) retreatBtn.focus({ preventScroll: true });
     }
 
     retreatFromCombat(result = null) {
@@ -11420,6 +11482,8 @@ class ExoplanetPioneer {
         if (retreatBtn) retreatBtn.style.display = 'none';
 
         if (this.controls) this.controls.enabled = true;
+        this.combatReturnFocus?.focus({ preventScroll: true });
+        this.combatReturnFocus = null;
     }
 
     updatePhysicsConstants(context) {

@@ -51,6 +51,7 @@ jobs:
           node --check pioneer-universe-streaming.js
           node --check universe-manager.js
           node --check space-combat.js
+          node --check performance-system.js
           node --check experimental/webgpu-galaxy/nebula-sim.js
           node --check scripts/minify-pioneer-pages.mjs
           node --check scripts/site-pages.mjs
@@ -85,6 +86,7 @@ jobs:
           node --check tests/e2e/site-shared-actions.spec.js
           node --check tests/e2e/pioneer-runtime-v2.spec.js
           node --check tests/e2e/pioneer-workload-render-profile.spec.js
+          node --check tests/e2e/pioneer-mobile-commands.spec.js
           node --check tests/e2e/pioneer-universe-streaming.spec.js
           node --check tests/e2e/pioneer-cinematic-combat.spec.js
           node --check tests/e2e/site-repair-review.spec.js
@@ -226,6 +228,7 @@ jobs:
             tests/e2e/site-shared-actions.spec.js \
             tests/e2e/pioneer-runtime-v2.spec.js \
             tests/e2e/pioneer-workload-render-profile.spec.js \
+            tests/e2e/pioneer-mobile-commands.spec.js \
             tests/e2e/pioneer-universe-streaming.spec.js \
             tests/e2e/pioneer-cinematic-combat.spec.js \
             tests/e2e/site-repair-review.spec.js \
