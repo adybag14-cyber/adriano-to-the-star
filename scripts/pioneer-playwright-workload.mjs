@@ -4,6 +4,7 @@ import fsp from 'node:fs/promises';
 import path from 'node:path';
 import { chromium } from 'playwright';
 import { provisionPioneerGalaxyExpansion } from './pioneer-workload-fixtures.mjs';
+import { installWorkloadRenderProfile, verifyWorkloadRenderProfile } from './pioneer-workload-render-profile.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).map((arg) => {
     const [key, ...rest] = arg.replace(/^--/, '').split('=');
@@ -163,7 +164,18 @@ async function state(label) {
 }
 async function waitForGame() {
     await page.waitForFunction(() => window.game?.planetMesh && window.game.tiles?.length === 1000 && window.game.renderer?.domElement, null, { timeout: ciTimeout(60000) });
+    await verifyCiFramebuffer(`game-ready:${phase}`);
     await page.waitForTimeout(1200);
+}
+async function verifyCiFramebuffer(label) {
+    if (ciRenderProfile !== 'low') return;
+    const evidence = await verifyWorkloadRenderProfile(page, label);
+    log('ci-framebuffer-lifecycle', evidence);
+}
+async function resizeWorkloadViewport(size) {
+    await page.setViewportSize(size);
+    await page.waitForFunction(({ width, height }) => innerWidth === width && innerHeight === height, size);
+    await verifyCiFramebuffer(`viewport:${size.width}x${size.height}:${phase}`);
 }
 async function clickTimeSpeed(title) {
     const button = page.locator(`#ep-time-controls button[title="${title}"]`);
@@ -508,7 +520,7 @@ async function responsiveSweep() {
     ];
     const results = [];
     for (const size of sizes) {
-        await page.setViewportSize(size);
+        await resizeWorkloadViewport(size);
         await page.waitForTimeout(180);
         const result = await page.evaluate(() => {
             const rect = (selector) => {
@@ -528,7 +540,7 @@ async function responsiveSweep() {
             assert(r && r.y >= -1 && r.bottom <= size.height + 1, `${key} remains vertically inside ${size.width}x${size.height} viewport`, { ...r, scrollY: result.scrollY });
         }
     }
-    await page.setViewportSize({ width: 1440, height: 900 });
+    await resizeWorkloadViewport({ width: 1440, height: 900 });
     log('responsive', { results });
     return results;
 }
@@ -563,6 +575,7 @@ try {
         args: chromiumArgs
     });
     context = await browser.newContext({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1 });
+    if (ciRenderProfile === 'low') await installWorkloadRenderProfile(context);
     await context.tracing.start({ screenshots: true, snapshots: true, sources: true });
     page = await context.newPage();
 
@@ -645,6 +658,7 @@ try {
             };
         });
         log('ci-render-profile', { profile: ciRenderProfile, state: ciRenderState });
+        await verifyCiFramebuffer('initial-low-graphics-apply');
         if (!ciRenderState.result?.ok || ciRenderState.meshSegments !== 80 || ciRenderState.terrainVersion !== 'catalog-informed-v4-geology'
             || !(ciRenderState.dpr <= 0.36) || ciRenderState.graphics?.shadowQuality !== 'off' || ciRenderState.shadowMapEnabled) {
             throw new Error(`CI low render profile failed to apply cleanly: ${JSON.stringify(ciRenderState)}`);
@@ -891,7 +905,7 @@ try {
     await page.locator('#ep-data-toggle').click();
 
     await setPhase('window-management-mobile');
-    await page.setViewportSize({ width: 390, height: 844 });
+    await resizeWorkloadViewport({ width: 390, height: 844 });
     await page.locator('#ep-btn-industry').click();
     await page.waitForFunction(() => getComputedStyle(document.getElementById('ep-industry-modal')).display !== 'none');
     // The window manager clamps a previously dragged desktop window on its next layout frame.
@@ -914,7 +928,7 @@ try {
     const mobileGrip = await page.locator(`${industrySelector} > .ep-window-resize-handle`).boundingBox();
     assert(mobileGrip && mobileGrip.width >= 40 && mobileGrip.height >= 40, 'mobile resize grip is finger-sized', mobileGrip || {});
     await page.locator('#ep-industry-modal .ep-modal-header button').click();
-    await page.setViewportSize({ width: 1440, height: 900 });
+    await resizeWorkloadViewport({ width: 1440, height: 900 });
     await page.waitForTimeout(180);
 
     await setPhase('ui-workload');
@@ -943,7 +957,7 @@ try {
     assert(dedupeCount === 1, 'duplicate urgent alerts collapse to one notification card', { dedupeCount });
 
     await setPhase('galaxy-expansion');
-    await page.setViewportSize({ width: 1440, height: 900 });
+    await resizeWorkloadViewport({ width: 1440, height: 900 });
     // This phase tests exploration infrastructure, not an unprovisioned colony's endurance.
     // Keep the production survival guard active and provision its living crew along with fuel.
     const expeditionSupplies = await page.evaluate(provisionPioneerGalaxyExpansion);
@@ -2088,7 +2102,7 @@ try {
     finalState = await state('final');
     const negativeResources = Object.entries(finalState.resources || {}).filter(([, value]) => Number(value) < -0.000001);
     assert(negativeResources.length === 0, 'resource stockpiles never cross below zero under accelerated workload', negativeResources);
-    await page.setViewportSize({ width: 1440, height: 900 });
+    await resizeWorkloadViewport({ width: 1440, height: 900 });
     await screenshot('final');
 
     assert(consoleErrors.length === 0, 'no application console errors across full workload', consoleErrors);

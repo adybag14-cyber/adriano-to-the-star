@@ -183,6 +183,12 @@ have separate final-effect assertions.
   regression preserve production safety and graphics settings. The failed
   artifact also exposed the chart's stale 10x indicator after emergency pause;
   chart speed controls now synchronize with the actual simulation state.
+- The third candidate passed all 152 hosted site tests, but the long gameplay
+  job reached its 30-minute limit. Evidence showed its test-only 0.35 DPR budget
+  reverted to 1 after reload, increasing software framebuffer area by 8.16x.
+  The workload now maintains that same budget across renderer recreation,
+  resizing and graphics-setting application, with explicit framebuffer and
+  native-asset invariance checks. Production rendering is unchanged.
 - GitHub's two open secret alerts point to historical commit `635b8df`: the
   Supabase token is absent from the current documentation and the Google Cloud
   service-account key file is absent from the current tree. Neither path exists

@@ -71,6 +71,7 @@ jobs:
           node --check scripts/build-exoplanet-appearance-index.mjs
           node --check scripts/pioneer-playwright-workload.mjs
           node --check scripts/pioneer-workload-fixtures.mjs
+          node --check scripts/pioneer-workload-render-profile.mjs
           node --check scripts/pioneer-advanced-rendering-smoke.mjs
           node --check tests/e2e/smoke-functional.spec.js
           node --check tests/e2e/smoke-ci.spec.js
@@ -83,6 +84,7 @@ jobs:
           node --check tests/e2e/site-action-contracts.spec.js
           node --check tests/e2e/site-shared-actions.spec.js
           node --check tests/e2e/pioneer-runtime-v2.spec.js
+          node --check tests/e2e/pioneer-workload-render-profile.spec.js
           node --check tests/e2e/pioneer-universe-streaming.spec.js
           node --check tests/e2e/pioneer-cinematic-combat.spec.js
           node --check tests/e2e/site-repair-review.spec.js
@@ -223,6 +225,7 @@ jobs:
             tests/e2e/site-action-contracts.spec.js \
             tests/e2e/site-shared-actions.spec.js \
             tests/e2e/pioneer-runtime-v2.spec.js \
+            tests/e2e/pioneer-workload-render-profile.spec.js \
             tests/e2e/pioneer-universe-streaming.spec.js \
             tests/e2e/pioneer-cinematic-combat.spec.js \
             tests/e2e/site-repair-review.spec.js \
