@@ -174,7 +174,13 @@ async function verifyCiFramebuffer(label) {
 }
 async function resizeWorkloadViewport(size) {
     await page.setViewportSize(size);
-    await page.waitForFunction(({ width, height }) => innerWidth === width && innerHeight === height, size);
+    await page.waitForFunction(({ width, height }) => {
+        const g = window.game;
+        const rendered = g.renderer.getSize(new window.THREE.Vector2());
+        return innerWidth === width && innerHeight === height
+            && rendered.x === Math.max(1, g.container.clientWidth)
+            && rendered.y === Math.max(1, g.container.clientHeight || 600);
+    }, size, { timeout: ciTimeout(5000), polling: 50 });
     await verifyCiFramebuffer(`viewport:${size.width}x${size.height}:${phase}`);
 }
 async function clickTimeSpeed(title) {

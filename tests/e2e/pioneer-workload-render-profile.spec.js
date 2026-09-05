@@ -13,7 +13,13 @@ test('workload framebuffer cap survives reload, resize and graphics reapply with
         await page.evaluate(() => window.game.setTimeSpeed(0));
         for (const size of [{ width: 390, height: 844 }, { width: 1440, height: 900 }]) {
             await page.setViewportSize(size);
-            await page.waitForFunction(({ width, height }) => innerWidth === width && innerHeight === height, size);
+            await page.waitForFunction(({ width, height }) => {
+                const g = window.game;
+                const rendered = g.renderer.getSize(new window.THREE.Vector2());
+                return innerWidth === width && innerHeight === height
+                    && rendered.x === Math.max(1, g.container.clientWidth)
+                    && rendered.y === Math.max(1, g.container.clientHeight || 600);
+            }, size, { timeout: 10000, polling: 50 });
             evidence.push(await verifyWorkloadRenderProfile(page, `load-${load}-resize-${size.width}`));
             const stable = await page.evaluate(() => {
                 const g = window.game;
