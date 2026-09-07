@@ -66,6 +66,12 @@ jobs:
           node --check interactive-star-maps.js
           node --check education-bootstrap.js
           node --check education-viewer.js
+          node --check education-software-renderer.js
+          node --check education-software-worker.js
+          node --check flight-field-worker.js
+          node --check experimental/webgpu-galaxy/galaxy-sim.js
+          node --check experimental/webgpu-galaxy/galaxy-software-worker.js
+          node --check tests/e2e/rendering-repair.spec.js
           node --check planetary-appearance-model.js
           node --check atmosphere-catalog.js
           node --check scripts/update-exoplanet-atmospheres.mjs
@@ -219,6 +225,7 @@ jobs:
           npx playwright test \
             tests/e2e/smoke-ci.spec.js \
             tests/e2e/site-overhaul.spec.js \
+            tests/e2e/rendering-repair.spec.js \
             tests/e2e/local-platform-remediation.spec.js \
             tests/e2e/privacy-tracker.spec.js \
             tests/e2e/pioneer-star-maps-advanced.spec.js \

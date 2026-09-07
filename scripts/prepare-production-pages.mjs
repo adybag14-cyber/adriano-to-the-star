@@ -201,7 +201,7 @@ async function transformPage(page) {
 await Promise.all(SITE_PAGES.map(transformPage));
 
 const experimentalPages = [
-  ['experimental/webgpu-galaxy/galaxy-sim.html', 'Browser-local WebGPU compute; no application backend.'],
+  ['experimental/webgpu-galaxy/galaxy-sim.html', 'Browser-local WebGPU or full-detail CPU worker rendering; no application backend.'],
   ['experimental/webgpu-galaxy/nebula-sim.html', 'Browser-local WebGPU nebula renderer; no application backend.'],
   ['experimental/procedural-planets/index.html', 'Browser-local WebGL scene with versioned external Three.js modules.'],
   ['experimental/fluid-nebula/index.html', 'Browser-local Canvas 2D particle simulation; no application backend.'],

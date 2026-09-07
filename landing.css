@@ -20,6 +20,18 @@
 .planet-texture{background:url("images/bg-large.jpg") center/cover no-repeat;filter:saturate(.72) contrast(1.1) brightness(.72);transform:scale(1.28)}
 .planet-glow{background:radial-gradient(circle at 68% 35%,transparent 0 14%,rgba(10,10,19,.24) 43%,#03040a 84%)}
 
+/* Cache unchanged artwork while moving it. Textures, filters, shadows and
+   framebuffer resolution are unchanged; only their compositing work is reused. */
+.planet,.planet-halo::before,.planet-halo::after,.signal-track{will-change:transform}
+[data-motion-offscreen],[data-motion-offscreen] *,
+[data-motion-offscreen]::before,[data-motion-offscreen]::after,
+[data-motion-offscreen] *::before,[data-motion-offscreen] *::after{animation-play-state:paused!important}
+/* Preserve both ends of the cue's motion without changing layout every frame. */
+.scroll-cue span{width:58px;margin-right:-22px;transform-origin:left;animation-name:cue-composite}
+.scroll-cue small{animation:cue-label 2s infinite}
+@keyframes cue-composite{0%,100%{transform:scaleX(.6206896552)}50%{transform:scaleX(1)}}
+@keyframes cue-label{0%,100%{transform:translateX(0)}50%{transform:translateX(22px)}}
+
 /* Quiet deep-space composition: one deterministic field, no generic shell FX. */
 :root{
   --landing-cta-ink:#eafcff;
@@ -68,19 +80,19 @@ body[data-release].ita-universe-enabled{
 
 /* The shared site layer recolours links cyan; primary landing CTAs retain a
    high-contrast mission-console treatment in every interaction state. */
-body[data-release].ita-site-refresh a.button.button-primary,
-body[data-release].ita-site-refresh a.button.button-primary:visited,
-body[data-release].ita-site-refresh a.button.button-primary:hover,
-body[data-release].ita-site-refresh a.button.button-primary:focus-visible{
+body.ita-site-refresh a.button.button-primary,
+body.ita-site-refresh a.button.button-primary:visited,
+body.ita-site-refresh a.button.button-primary:hover,
+body.ita-site-refresh a.button.button-primary:focus-visible{
   color:var(--landing-cta-ink)!important;
 }
-body[data-release] .button.button-primary{
+body.ita-site-refresh .button.button-primary{
   border-color:rgba(140,247,255,.62);
   background:linear-gradient(135deg,var(--landing-cta-start),var(--landing-cta-end));
   box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 14px 44px rgba(60,210,225,.14);
   transition:color 180ms ease,background 180ms ease,border-color 180ms ease,box-shadow 180ms ease,transform 180ms ease;
 }
-body[data-release] .button.button-primary:hover{
+body.ita-site-refresh .button.button-primary:hover{
   border-color:rgba(140,247,255,.86);
   background:linear-gradient(135deg,var(--landing-cta-hover-start),var(--landing-cta-hover-end));
   box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 16px 48px rgba(60,210,225,.2);

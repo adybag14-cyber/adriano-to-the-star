@@ -235,7 +235,12 @@ class PlanetViewer {
             alpha: true,
             powerPreference: 'high-performance'
         }) || educationCanvas.getContext('experimental-webgl', { antialias: true, alpha: true });
-        if (!educationContext) throw new Error('WebGL is unavailable for the Education 3D viewer.');
+        if (!educationContext) {
+            this.softwareRenderer = new window.EducationSoftwareRenderer(this);
+            this.container.dataset.renderer = 'cpu-textured';
+            return;
+        }
+        this.container.dataset.renderer = 'webgl';
         // WebGL permits a null info-log value. Three r128 assumes strings and calls trim()
         // during program diagnostics, which crashes after a transient context recovery in
         // current Chromium. Normalize only null/undefined logs; genuine compiler text passes
@@ -390,6 +395,14 @@ class PlanetViewer {
 
         clearTimeout(this.textureLoadTimer);
         this.textureLoadTimer = null;
+
+        if (this.softwareRenderer) {
+            this.softwareRenderer.load(config, resolvedName);
+            document.dispatchEvent(new CustomEvent('education-planet-change', {
+                detail: { name: resolvedName, config, model: config.planetaryModel || null }
+            }));
+            return;
+        }
 
         // Reuse one high-density sphere for the session. Texture maps stay in texture space;
         // baking them into vertex colours (the previous implementation) reduced a 5,400 px
@@ -662,12 +675,14 @@ class PlanetViewer {
     }
 
     onWindowResize() {
+        if (this.softwareRenderer) { this.softwareRenderer.resize(); return; }
         this.camera.aspect = window.innerWidth / window.innerHeight;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
     }
 
     animate() {
+        if (this.softwareRenderer) return;
         if (!this.active) {
             this.animationFrameId = null;
             return;

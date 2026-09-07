@@ -200,7 +200,14 @@ test.describe('production site overhaul', () => {
     expect(await page.locator('#ita-cosmic-field').evaluate(node => node.toDataURL())).not.toBe(firstFrame);
     const canvas = await page.evaluate(() => {
       const node = document.getElementById('ita-cosmic-field');
-      const pixels = node.getContext('2d').getImageData(0, 0, node.width, node.height).data;
+      // Reading a transferred canvas's context is invalid. Sample its actual
+      // displayed bitmap through a separate 2D canvas for either renderer.
+      const readback = document.createElement('canvas');
+      readback.width = node.width;
+      readback.height = node.height;
+      const context = readback.getContext('2d', { willReadFrequently: true });
+      context.drawImage(node, 0, 0);
+      const pixels = context.getImageData(0, 0, node.width, node.height).data;
       let paintedSamples = 0;
       for (let index = 3; index < pixels.length; index += 64) {
         if (pixels[index] > 0) paintedSamples += 1;
