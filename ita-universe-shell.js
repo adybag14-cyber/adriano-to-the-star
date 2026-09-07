@@ -197,6 +197,7 @@
     if (!canvas.transferControlToOffscreen || typeof Worker !== 'function') return false;
     let worker;
     let transferred = false;
+    let modeGeneration = 0;
     const abort = new AbortController();
     try {
       const url = new URL('flight-field-worker.js', shellSource);
@@ -227,7 +228,17 @@
       for (const query of [reducedMotionQuery, forcedColoursQuery, printQuery]) listen(query, 'change', sync);
       worker.onmessage = ({ data }) => {
         if (data.type === 'stats') {
-          canvas.dataset.renderMode = data.renderMode;
+          // A worker message can reach the main thread before its offscreen
+          // bitmap is committed. Announce a mode only across a presentation
+          // boundary, and invalidate stale acknowledgements on rapid toggles.
+          const generation = ++modeGeneration;
+          if (canvas.dataset.renderMode !== data.renderMode) {
+            requestAnimationFrame(() => requestAnimationFrame(() => {
+              if (!abort.signal.aborted && generation === modeGeneration) {
+                canvas.dataset.renderMode = data.renderMode;
+              }
+            }));
+          }
           canvas.dataset.starCount = String(data.count);
           canvas.dataset.frames = String(data.frames);
           canvas.dataset.frameP95 = String(data.p95);

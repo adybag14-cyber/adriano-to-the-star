@@ -222,6 +222,10 @@ jobs:
             cat /tmp/adriano-smoke-server.log
             exit 1
           fi
+          # Catch worker/presentation regressions first, without removing any
+          # of the complete production suite below.
+          npx playwright test tests/e2e/rendering-repair.spec.js --workers=1 --reporter=line
+          npx playwright test tests/e2e/site-overhaul.spec.js --grep 'reduced.motion' --workers=1 --reporter=line
           npx playwright test \
             tests/e2e/smoke-ci.spec.js \
             tests/e2e/site-overhaul.spec.js \
