@@ -1,17 +1,23 @@
 (() => {
   'use strict';
   const capabilities = {
-    webgpu: () => Boolean(navigator.gpu),
+    webgpu: async () => {
+      if (!navigator.gpu) return false;
+      try {
+        return Boolean(await navigator.gpu.requestAdapter({ powerPreference: 'high-performance' })
+          || await navigator.gpu.requestAdapter());
+      } catch { return false; }
+    },
     webxr: () => Boolean(navigator.xr),
     webrtc: () => Boolean(window.RTCPeerConnection && window.BroadcastChannel),
     filesystem: () => Boolean(window.showOpenFilePicker && window.showSaveFilePicker),
     webserial: () => Boolean(navigator.serial)
   };
 
-  function checkCapabilities() {
+  async function checkCapabilities() {
     let supported = 0;
     for (const [name, check] of Object.entries(capabilities)) {
-      const ready = check();
+      const ready = await check();
       supported += Number(ready);
       const item = document.querySelector(`[data-capability="${name}"]`);
       if (item) {
@@ -24,7 +30,10 @@
         const label = card.querySelector('[data-requirement-label]');
         if (label) {
           label.classList.toggle('is-ready', ready);
-          label.title = ready ? `${name} is exposed by this browser` : `${name} is not exposed by this browser`;
+          label.title = ready ? `${name} is usable in this browser` : `${name} is unavailable in this browser`;
+          if (name === 'webgpu' && card.dataset.cpuRenderer === 'true') {
+            label.textContent = ready ? 'WebGPU ready' : 'CPU renderer available';
+          }
         }
       });
     }

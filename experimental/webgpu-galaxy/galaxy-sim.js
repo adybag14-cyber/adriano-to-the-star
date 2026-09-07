@@ -1,7 +1,7 @@
 /**
- * WebGPU Galaxy N-Body Simulation
+ * WebGPU Galaxy Particle Simulation
  * 
- * Uses Compute Shaders to calculate gravitational N-Body interactions 
+ * Uses compute shaders for a softened galactic potential and pointer attraction
  * for up to 500,000 particles in real-time, with bounded spectral telemetry.
  */
 
@@ -61,23 +61,18 @@ fn main(@builtin(global_invocation_id) GlobalInvocationID : vec3<u32>) {
     let distToCenter = max(length(toCenter), 0.001);
     let dirToCenter = toCenter / distToCenter;
     
-    // Spiral Galaxy Force (Tangential)
-    let tangent = vec2<f32>(-dirToCenter.y, dirToCenter.x);
-    
-    // Force accumulation
-    var force = dirToCenter * (1000.0 / (distToCenter * distToCenter + 100.0)) * params.gravity;
-    
-    // Rotation force (makes it spiral)
-    if (distToCenter > 0.1) {
-        force = force + tangent * (50.0 / (distToCenter + 1.0)) * params.gravity;
-    }
+    // Softened galactic potential. Orbital velocity supplies rotation; adding
+    // continuous tangential acceleration ejects the disk out of the camera.
+    let softened = distToCenter * distToCenter + 0.16;
+    var force = toCenter * (3.0 / (softened * sqrt(softened))) * params.gravity;
 
     // 2. Mouse Interaction (Black Hole effect)
     if (params.mouseActive > 0u) {
         let toMouse = params.mousePos - p.pos;
         let distMouse = length(toMouse);
-        if (distMouse < 0.5) {
-            force = force + normalize(toMouse) * (5000.0 / (distMouse * distMouse + 0.01));
+        if (distMouse < 2.0 && distMouse > 0.000001) {
+            let mouseSoftened = distMouse * distMouse + 0.16;
+            force = force + toMouse * (8.0 / (mouseSoftened * sqrt(mouseSoftened)));
         }
     }
 
@@ -146,8 +141,8 @@ fn vs_main(
     // Aspect ratio correction
     let aspect = params.screenSize.x / params.screenSize.y;
     let finalPos = vec2<f32>(
-        p.pos.x + quadPos.x * particleSize / aspect, // X correction? No, usually divide Y by input aspect.
-        p.pos.y + quadPos.y * particleSize 
+        p.pos.x / 5.5 + quadPos.x * particleSize / aspect,
+        p.pos.y / 5.5 + quadPos.y * particleSize
     );
     
     // Fix Aspect Ratio: we want -1..1 logic.
@@ -167,7 +162,7 @@ fn vs_main(
 
     // Color based on velocity/distance
     let speed = length(p.vel);
-    let dist = length(p.pos);
+    let dist = length(p.pos) / 5.5;
     
     // Core color (warm/white) -> Edge color (blue/purple)
     var col = vec3<f32>(1.0, 0.8, 0.6); // Default core star
@@ -205,7 +200,7 @@ class GalaxySim {
         this.isPlaying = true;
         this.params = {
             gravity: 1.0,
-            damping: 0.99,
+            damping: 1.0,
             mouseActive: 0,
             mousePos: [0, 0],
             time: 0,
@@ -231,13 +226,10 @@ class GalaxySim {
     }
 
     async init() {
-        if (!navigator.gpu) {
-            document.getElementById('error-overlay').style.display = 'block';
-            return;
-        }
-
         try {
-            this.adapter = await navigator.gpu.requestAdapter({ powerPreference: 'high-performance' });
+            if (!navigator.gpu) throw new Error('WebGPU is not exposed by this browser');
+            this.adapter = await navigator.gpu.requestAdapter({ powerPreference: 'high-performance' })
+                || await navigator.gpu.requestAdapter();
             if (!this.adapter) throw new Error('No GPU adapter found');
 
             // Check for limits (optional, but good for heavy sims)
@@ -245,12 +237,7 @@ class GalaxySim {
 
             this.device = await this.adapter.requestDevice();
             this.device.lost.then(info => {
-                this.isPlaying = false;
-                const overlay = document.getElementById('error-overlay');
-                if (overlay) {
-                    overlay.style.display = 'block';
-                    overlay.querySelector('p').textContent = `GPU device lost: ${info.message || info.reason}`;
-                }
+                if (!this.softwareWorker) this.startSoftware(`GPU device lost: ${info.message || info.reason}`);
             });
 
             this.context = this.canvas.getContext('webgpu');
@@ -262,9 +249,14 @@ class GalaxySim {
             });
             this.resizeCanvas();
 
+            this.device.pushErrorScope('validation');
             this.initParticles();
             this.initPipelines(format);
+            const validationError = await this.device.popErrorScope();
+            if (validationError) throw new Error(validationError.message);
+            if (this.softwareWorker) return;
             this.setupUI();
+            this.canvas.dataset.renderer = 'webgpu';
 
             document.getElementById('gpu-status').textContent = 'ONLINE';
             document.getElementById('gpu-status').style.color = '#00ff00';
@@ -273,19 +265,65 @@ class GalaxySim {
             this.animate();
 
         } catch (e) {
-            console.info('WebGPU unavailable; showing the compatibility boundary.', e?.message || e);
-            document.getElementById('error-overlay').style.display = 'block';
-            document.getElementById('error-overlay').querySelector('p').textContent = e.message;
-            document.getElementById('gpu-status').textContent = 'UNAVAILABLE';
-            for (const id of ['pause-simulation', 'star-count-slider', 'gravity-slider', 'time-slider']) {
-                const control = document.getElementById(id);
-                if (control) { control.disabled = true; control.setAttribute('aria-disabled', 'true'); }
-            }
-            const alternative = document.createElement('a');
-            alternative.href = '../fluid-nebula/index.html';
-            alternative.textContent = 'Open the compatible Canvas particle lab';
-            alternative.style.cssText = 'display:block;margin-top:1rem;color:#a5f3fc;';
-            document.getElementById('error-overlay').append(alternative);
+            this.startSoftware(e?.message || String(e));
+        }
+    }
+
+    startSoftware(reason) {
+        if (this.softwareWorker) return;
+        cancelAnimationFrame(this.animationFrame);
+        // A canvas already configured for WebGPU cannot acquire a 2D context.
+        const replacement = this.canvas.cloneNode(false);
+        this.canvas.replaceWith(replacement);
+        this.canvas = replacement;
+        try {
+            const workerUrl = new URL('galaxy-software-worker.js', import.meta.url);
+            workerUrl.search = new URL(import.meta.url).search;
+            this.softwareWorker = new Worker(workerUrl);
+            const offscreen = this.canvas.transferControlToOffscreen();
+            this.softwareWorker.postMessage({ type: 'init', canvas: offscreen,
+                count: this.particleCount, params: this.params, playing: this.isPlaying }, [offscreen]);
+            this.particleBuffers.forEach(buffer => buffer?.destroy());
+            this.particleBuffers = [];
+            this.uniformBuffer?.destroy();
+            this.device?.destroy();
+            this.canvas.dataset.renderer = 'cpu-worker';
+            this.resizeCanvas();
+            this.setupUI();
+            const status = document.getElementById('gpu-status');
+            status.textContent = 'CPU ONLINE';
+            status.title = `${reason}. Same particle count and simulation, rendered in a dedicated CPU worker.`;
+            status.style.color = '#67e8f9';
+            status.style.background = 'rgba(103,232,249,.12)';
+            document.getElementById('error-overlay').style.display = 'none';
+            document.getElementById('renderer-label').textContent = 'CPU worker particles';
+            document.getElementById('renderer-work-label').textContent = 'CPU work';
+            this.canvas.setAttribute('aria-label', 'Interactive galaxy particle simulation using the CPU renderer');
+            this.softwareWorker.onmessage = ({ data }) => {
+                if (data.type !== 'telemetry') return;
+                this.params.time = data.time;
+                this.frameTimes = data.frameTimes;
+                document.getElementById('particle-count').textContent = data.count.toLocaleString();
+                document.getElementById('fps-counter').textContent = Math.round(data.fps).toString();
+                document.getElementById('compute-time').textContent = `${data.workMs.toFixed(2)}ms CPU`;
+                document.getElementById('sim-speed').textContent = `${this.params.timeScale.toFixed(1)}x`;
+                this.canvas.dataset.frames = String(data.frames);
+                this.renderSpectrum();
+            };
+            this.softwareWorker.onerror = () => this.showRendererError('The CPU renderer could not start. Please reload this page.');
+        } catch (error) {
+            this.showRendererError(`Neither GPU nor offscreen CPU rendering is available: ${error.message}`);
+        }
+    }
+
+    showRendererError(message) {
+        this.softwareWorker?.terminate();
+        this.softwareWorker = null;
+        document.getElementById('error-overlay').style.display = 'block';
+        document.getElementById('error-overlay').querySelector('p').textContent = message;
+        document.getElementById('gpu-status').textContent = 'UNAVAILABLE';
+        for (const id of ['pause-simulation', 'star-count-slider', 'gravity-slider', 'time-slider']) {
+            document.getElementById(id).disabled = true;
         }
     }
 
@@ -318,15 +356,15 @@ class GalaxySim {
 
             // Actually, simpler spiral:
             // angle = dist * factor
-            const spiralAngle = dist * 10.0 + (i % 3) * (Math.PI * 2 / 3);
+            const spiralAngle = dist * 10.0 + (i % 3) * (Math.PI * 2 / 3) + (Math.random() - .5) * .28;
 
             const r = dist * 5.0; // Spread particles across larger radius
             data[idx] = Math.cos(spiralAngle) * r; // x
-            data[idx + 1] = Math.sin(spiralAngle) * r * 0.5; // y (flatter) but logic fixes aspect
+            data[idx + 1] = Math.sin(spiralAngle) * r;
 
             // Velocity: Tangential for orbit
             // v = sqrt(GM/r) roughly
-            const speed = 0.5 / (Math.sqrt(r) + 0.1);
+            const speed = Math.sqrt(3 * r * r / Math.pow(r * r + .16, 1.5));
             data[idx + 2] = -Math.sin(spiralAngle) * speed; // vx
             data[idx + 3] = Math.cos(spiralAngle) * speed; // vy
 
@@ -389,8 +427,9 @@ class GalaxySim {
         // Let's verify strict WGSL layout rules.
         // float, float, float -> 12 bytes.
         // vec2 requires 8-byte alignment. So next available is 16. Correct.
-        view.setFloat32(16, (this.params.mousePos[0] / Math.max(1, this.canvas.clientWidth)) * 2 - 1, true);
-        view.setFloat32(20, -(this.params.mousePos[1] / Math.max(1, this.canvas.clientHeight)) * 2 + 1, true); // Flip Y
+        const pointerScale = Math.min(this.canvas.clientWidth, this.canvas.clientHeight) / 2;
+        view.setFloat32(16, (this.params.mousePos[0] - this.canvas.clientWidth / 2) / Math.max(1, pointerScale) * 5.5, true);
+        view.setFloat32(20, (this.canvas.clientHeight / 2 - this.params.mousePos[1]) / Math.max(1, pointerScale) * 5.5, true);
 
         // mouseActive (offset 24)
         view.setUint32(24, this.params.mouseActive, true);
@@ -485,37 +524,46 @@ class GalaxySim {
     }
 
     setupUI() {
+        // The worker takeover may follow device loss; remove old canvas and UI listeners.
+        this.uiAbort?.abort();
+        this.uiAbort = new AbortController();
+        const listen = (target, name, handler) => target?.addEventListener(name, handler, { signal: this.uiAbort.signal });
         // Sliders
         const gravitySlider = document.getElementById('gravity-slider');
         const gravityLabel = document.getElementById('gravity-label');
 
         if (gravitySlider && gravityLabel) {
-            gravitySlider.addEventListener('input', (e) => {
+            listen(gravitySlider, 'input', (e) => {
                 this.params.gravity = parseFloat(e.target.value);
                 gravityLabel.textContent = this.params.gravity.toFixed(1);
+                this.softwareWorker?.postMessage({ type: 'params', params: this.params });
             });
         }
 
         // Star Count (Requires Reset)
         const starCountSlider = document.getElementById('star-count-slider');
         const starCountLabel = document.getElementById('star-count-label');
-        starCountSlider.addEventListener('change', (e) => {
+        listen(starCountSlider, 'change', (e) => {
             const val = Math.min(CONFIG.maxParticleCount, parseInt(e.target.value, 10));
             starCountLabel.textContent = val.toLocaleString();
             this.particleCount = val;
+            if (this.softwareWorker) {
+                this.softwareWorker.postMessage({ type: 'count', count: val });
+                return;
+            }
             this.initParticles(); // Re-init
             // Re-create bind groups because particleBuffers changed
             const format = navigator.gpu.getPreferredCanvasFormat();
             this.initPipelines(format);
         });
-        starCountSlider.addEventListener('input', (e) => {
+        listen(starCountSlider, 'input', (e) => {
             starCountLabel.textContent = parseInt(e.target.value, 10).toLocaleString();
         });
 
         // Time Dilation
         const timeSlider = document.getElementById('time-slider');
         const timeLabel = document.getElementById('time-label');
-        timeSlider.addEventListener('input', (e) => {
+        listen(timeSlider, 'input', (e) => {
             // We pass deltaTime to shader via uniforms. 
             // We can just scale dt in animate() or send a timeScale uniform.
             // Shader has 'deltaTime', let's scale what we send to updateUniforms.
@@ -523,36 +571,62 @@ class GalaxySim {
             // So we'll store timeScale in params.
             this.params.timeScale = parseFloat(e.target.value);
             timeLabel.textContent = this.params.timeScale.toFixed(1);
+            this.softwareWorker?.postMessage({ type: 'params', params: this.params });
         });
 
         const pauseButton = document.getElementById('pause-simulation');
-        pauseButton?.addEventListener('click', () => {
+        listen(pauseButton, 'click', () => {
             this.isPlaying = !this.isPlaying;
             pauseButton.setAttribute('aria-pressed', String(!this.isPlaying));
             pauseButton.textContent = this.isPlaying ? 'Pause simulation' : 'Resume simulation';
+            this.lastFrameAt = performance.now();
+            this.softwareWorker?.postMessage({ type: 'playing', playing: this.isPlaying });
         });
 
         // Pointer interaction is scoped to the simulation canvas.
-        this.canvas.addEventListener('pointermove', (e) => {
+        listen(this.canvas, 'pointermove', (e) => {
             const rect = this.canvas.getBoundingClientRect();
             this.params.mousePos = [e.clientX - rect.left, e.clientY - rect.top];
+            this.syncSoftwarePointer();
         });
-        this.canvas.addEventListener('pointerdown', () => { this.params.mouseActive = 1; });
-        window.addEventListener('pointerup', () => { this.params.mouseActive = 0; });
+        listen(this.canvas, 'pointerdown', e => {
+            const rect = this.canvas.getBoundingClientRect();
+            this.params.mousePos = [e.clientX - rect.left, e.clientY - rect.top];
+            this.params.mouseActive = 1;
+            this.canvas.setPointerCapture(e.pointerId);
+            this.syncSoftwarePointer();
+        });
+        listen(window, 'pointerup', () => { this.params.mouseActive = 0; this.syncSoftwarePointer(); });
+        listen(window, 'pointercancel', () => { this.params.mouseActive = 0; this.syncSoftwarePointer(); });
 
         // Resize
-        window.addEventListener('resize', () => {
+        listen(window, 'resize', () => {
             this.resizeCanvas();
         });
-        document.addEventListener('visibilitychange', () => {
+        listen(document, 'visibilitychange', () => {
             this.lastFrameAt = performance.now();
+            this.softwareWorker?.postMessage({ type: 'visibility', hidden: document.hidden });
         });
+        listen(window, 'pagehide', () => this.softwareWorker?.postMessage({ type: 'visibility', hidden: true }));
+        listen(window, 'pageshow', () => this.softwareWorker?.postMessage({ type: 'visibility', hidden: document.hidden }));
+    }
+
+    syncSoftwarePointer() {
+        const scale = Math.min(this.canvas.clientWidth, this.canvas.clientHeight) / 2;
+        this.softwareWorker?.postMessage({ type: 'pointer', active: this.params.mouseActive,
+            x: (this.params.mousePos[0] - this.canvas.clientWidth / 2) / Math.max(1, scale) * 5.5,
+            y: (this.canvas.clientHeight / 2 - this.params.mousePos[1]) / Math.max(1, scale) * 5.5 });
     }
 
     resizeCanvas() {
         const dpr = Math.min(window.devicePixelRatio || 1, 2);
         const width = Math.max(1, Math.floor(this.canvas.clientWidth * dpr));
         const height = Math.max(1, Math.floor(this.canvas.clientHeight * dpr));
+        if (this.softwareWorker) {
+            this.softwareWorker.postMessage({ type: 'resize', width, height });
+            this.params.screenSize = [width, height];
+            return;
+        }
         if (this.canvas.width !== width || this.canvas.height !== height) {
             this.canvas.width = width;
             this.canvas.height = height;
@@ -664,4 +738,4 @@ class GalaxySim {
 }
 
 // Start
-new GalaxySim();
+window.galaxySim = new GalaxySim();

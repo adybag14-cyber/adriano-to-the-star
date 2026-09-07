@@ -108,6 +108,7 @@
       await window.__planetaryPresentationPromise;
       await load('three.min.js');
       await load('OrbitControls-r128.js');
+      await load('education-software-renderer.js');
       await load('education-viewer.js');
       window.ExoplanetAtmosphereCatalog?.refreshEducation?.();
     } catch (error) {

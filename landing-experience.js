@@ -5,7 +5,7 @@
   const safe = fn => { try { fn(); } catch (error) { console.warn('[ITA experience]', error); } };
   function initHeaderAndProgress() {
     const header = document.querySelector('.site-header'); const progress = document.querySelector('.site-progress span'); let ticking = false;
-    const update = () => { const y = scrollY; header?.classList.toggle('is-scrolled', y > 24); if (progress) { const range = Math.max(1, document.documentElement.scrollHeight - innerHeight); progress.style.transform = `scaleX(${Math.min(1, y / range)})`; } ticking = false; };
+    const update = () => { const y = scrollY; const range = Math.max(1, document.documentElement.scrollHeight - innerHeight); header?.classList.toggle('is-scrolled', y > 24); if (progress) progress.style.transform = `scaleX(${Math.min(1, y / range)})`; ticking = false; };
     addEventListener('scroll', () => { if (!ticking) { requestAnimationFrame(update); ticking = true; } }, { passive: true }); update();
   }
   function initReveal() {
@@ -71,6 +71,16 @@
     addEventListener('ita:musicstate', event => body.classList.toggle('music-playing', Boolean(event.detail?.playing)));
   }
   function initYear() { document.querySelectorAll('[data-current-year]').forEach(node => { node.textContent = String(new Date().getFullYear()); }); }
-  [initHeaderAndProgress,initReveal,initParallax,initMagneticButtons,initCardLight,initPageTransitions,initMusicLaunchers,initYear].forEach(fn=>safe(fn));
+  function initVisibleMotion() {
+    if (!('IntersectionObserver' in window)) return;
+    // Invisible CSS animations (including the flight-console's layout animation)
+    // used to invalidate the document even while the hero was the only visible area.
+    // Resume before a section enters view; no visible effect or detail is removed.
+    const observer = new IntersectionObserver(entries => {
+      for (const entry of entries) entry.target.toggleAttribute('data-motion-offscreen', !entry.isIntersecting);
+    }, { rootMargin: '100px' });
+    document.querySelectorAll('.hero-stage,.signal-strip,.passage-section,.mission-console,.route-card').forEach(node => observer.observe(node));
+  }
+  [initHeaderAndProgress,initReveal,initParallax,initMagneticButtons,initCardLight,initPageTransitions,initMusicLaunchers,initYear,initVisibleMotion].forEach(fn=>safe(fn));
   reduceMotion.addEventListener?.('change',()=>location.reload());
 })();

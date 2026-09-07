@@ -66,6 +66,12 @@ jobs:
           node --check interactive-star-maps.js
           node --check education-bootstrap.js
           node --check education-viewer.js
+          node --check education-software-renderer.js
+          node --check education-software-worker.js
+          node --check flight-field-worker.js
+          node --check experimental/webgpu-galaxy/galaxy-sim.js
+          node --check experimental/webgpu-galaxy/galaxy-software-worker.js
+          node --check tests/e2e/rendering-repair.spec.js
           node --check planetary-appearance-model.js
           node --check atmosphere-catalog.js
           node --check scripts/update-exoplanet-atmospheres.mjs
@@ -216,9 +222,14 @@ jobs:
             cat /tmp/adriano-smoke-server.log
             exit 1
           fi
+          # Catch worker/presentation regressions first, without removing any
+          # of the complete production suite below.
+          npx playwright test tests/e2e/rendering-repair.spec.js --workers=1 --reporter=line
+          npx playwright test tests/e2e/site-overhaul.spec.js --grep 'reduced.motion' --workers=1 --reporter=line
           npx playwright test \
             tests/e2e/smoke-ci.spec.js \
             tests/e2e/site-overhaul.spec.js \
+            tests/e2e/rendering-repair.spec.js \
             tests/e2e/local-platform-remediation.spec.js \
             tests/e2e/privacy-tracker.spec.js \
             tests/e2e/pioneer-star-maps-advanced.spec.js \

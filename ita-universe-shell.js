@@ -8,6 +8,7 @@
   const printQuery = window.matchMedia?.('print');
   let reducedMotion = Boolean(reducedMotionQuery?.matches);
   const coarsePointer = window.matchMedia?.('(pointer: coarse)').matches;
+  const shellSource = new URL(document.currentScript?.src || 'ita-universe-shell.js', location.href);
 
   function addAtmosphere() {
     document.body?.classList.add('ita-universe-enabled');
@@ -27,9 +28,11 @@
     }
   }
 
-  function runStarField(canvas) {
+  function runStarField(canvas, mainThreadOnly = false) {
+    if (!mainThreadOnly && startFlightWorker(canvas)) return;
     const context = canvas.getContext('2d', { alpha: true });
     if (!context) return;
+    canvas.dataset.renderer = 'main-thread';
     let width = 0;
     let height = 0;
     let dpr = 1;
@@ -42,7 +45,10 @@
     let pointerX = .5;
     let pointerY = .5;
     let random = () => .5;
+    // Preserve the original 30 Hz (25 Hz touch) animation rate, but retain its
+    // phase rather than losing a refresh to rounded rAF timestamps each frame.
     const frameInterval = coarsePointer ? 40 : 1000 / 30;
+    let nextFrameAt = 0;
 
     const seededRandom = seed => {
       let state = seed >>> 0;
@@ -101,7 +107,7 @@
         }
         const x = centreX + (star.x / star.z) * projection;
         const y = centreY + (star.y / star.z) * projection;
-        const trailZ = star.z + (star.previousZ - star.z) * 3.2;
+        const trailZ = star.z + .00008 * star.speed * (1000 / 30) * 3.2;
         const previousX = centreX + (star.x / trailZ) * projection;
         const previousY = centreY + (star.y / trailZ) * projection;
         if (x < -90 || x > width + 90 || y < -90 || y > height + 90) {
@@ -129,15 +135,16 @@
       raf = 0;
       if (hidden || suspended) return;
       const dt = Math.min(64, Math.max(1, time - last || frameInterval));
-      if (time - last >= frameInterval) {
-        last = time;
-        drawFrame(time, dt, true);
-      }
+      if (time + .5 < nextFrameAt) { raf = requestAnimationFrame(draw); return; }
+      last = time;
+      nextFrameAt += frameInterval * (Math.floor(Math.max(0, time - nextFrameAt) / frameInterval) + 1);
+      drawFrame(time, dt, true);
       raf = requestAnimationFrame(draw);
     };
     const start = () => {
       if (reducedMotion || presentationSuppressed || hidden || suspended || raf) return;
       last = performance.now();
+      nextFrameAt = last;
       raf = requestAnimationFrame(draw);
     };
     const stop = () => {
@@ -184,6 +191,78 @@
     listen(printQuery, syncPresentationMode);
     syncPresentationMode();
     start();
+  }
+
+  function startFlightWorker(canvas) {
+    if (!canvas.transferControlToOffscreen || typeof Worker !== 'function') return false;
+    let worker;
+    let transferred = false;
+    let modeGeneration = 0;
+    const abort = new AbortController();
+    try {
+      const url = new URL('flight-field-worker.js', shellSource);
+      url.search = shellSource.search;
+      worker = new Worker(url);
+      const offscreen = canvas.transferControlToOffscreen();
+      transferred = true;
+      const dimensions = () => ({ width: innerWidth, height: innerHeight,
+        dpr: Math.min(devicePixelRatio || 1, innerWidth <= 760 ? 1.25 : 1.5) });
+      worker.postMessage({ type: 'init', canvas: offscreen, ...dimensions(),
+        reduced: reducedMotion, hidden: document.hidden, interval: coarsePointer ? 40 : 1000 / 30,
+        suppressed: Boolean(forcedColoursQuery?.matches || printQuery?.matches) }, [offscreen]);
+      canvas.dataset.renderer = 'offscreen-worker';
+      canvas.dataset.motion = 'forward-z';
+      const sync = () => {
+        const suppressed = Boolean(forcedColoursQuery?.matches || printQuery?.matches);
+        canvas.dataset.presentation = suppressed ? 'suppressed' : 'screen';
+        worker.postMessage({ type: 'state', reduced: Boolean(reducedMotionQuery?.matches),
+          hidden: document.hidden, suppressed });
+      };
+      const listen = (target, name, fn) => target?.addEventListener?.(name, fn, { passive: true, signal: abort.signal });
+      listen(window, 'resize', () => worker.postMessage({ type: 'resize', ...dimensions() }));
+      if (!coarsePointer) listen(window, 'pointermove', e => worker.postMessage({ type: 'pointer',
+        x: e.clientX / Math.max(1, innerWidth), y: e.clientY / Math.max(1, innerHeight) }));
+      listen(document, 'visibilitychange', sync);
+      listen(window, 'pagehide', () => worker.postMessage({ type: 'state', hidden: true }));
+      listen(window, 'pageshow', sync);
+      for (const query of [reducedMotionQuery, forcedColoursQuery, printQuery]) listen(query, 'change', sync);
+      worker.onmessage = ({ data }) => {
+        if (data.type === 'stats') {
+          // A worker message can reach the main thread before its offscreen
+          // bitmap is committed. Announce a mode only across a presentation
+          // boundary, and invalidate stale acknowledgements on rapid toggles.
+          const generation = ++modeGeneration;
+          if (canvas.dataset.renderMode !== data.renderMode) {
+            requestAnimationFrame(() => requestAnimationFrame(() => {
+              if (!abort.signal.aborted && generation === modeGeneration) {
+                canvas.dataset.renderMode = data.renderMode;
+              }
+            }));
+          }
+          canvas.dataset.starCount = String(data.count);
+          canvas.dataset.frames = String(data.frames);
+          canvas.dataset.frameP95 = String(data.p95);
+          canvas.dataset.frameStats = JSON.stringify({ fps: data.fps, p50: data.p50, p95: data.p95, p99: data.p99, jitter95: data.jitter95 });
+        }
+      };
+      worker.onerror = () => {
+        abort.abort(); worker.terminate();
+        const replacement = canvas.cloneNode(false);
+        canvas.replaceWith(replacement);
+        runStarField(replacement, true);
+      };
+      sync();
+      return true;
+    } catch {
+      abort.abort(); worker?.terminate();
+      if (transferred) {
+        const replacement = canvas.cloneNode(false);
+        canvas.replaceWith(replacement);
+        runStarField(replacement, true);
+        return true;
+      }
+      return false;
+    }
   }
 
   function addRevealMotion() {
