@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { FLIGHT_EXEMPT_PAGES, SITE_PAGES, canonicalUrl } from './site-pages.mjs';
+import { FLIGHT_EXEMPT_PAGES, INDEXABLE_LABS, SITE_PAGES, canonicalUrl } from './site-pages.mjs';
+import { HEADER_EXEMPTIONS } from './shared-site-header.mjs';
 
 const publicRoot = path.resolve(process.argv[2] || 'public');
 const failures = [];
@@ -32,6 +33,7 @@ for (const page of SITE_PAGES) {
     [count(html, /<meta\b[^>]*name="description"/gi) === 1, 'must have one description'],
     [count(html, /<meta\b[^>]*name="robots"/gi) === 1, 'must have one robots directive'],
     [count(html, /<link\b[^>]*rel="canonical"/gi) === 1, 'must have one canonical'],
+    [count(html, /<link\b[^>]*rel="icon"/gi) === 1 && html.includes('type="image/png" sizes="192x192"'), 'must use the correctly encoded square PNG favicon'],
     [new RegExp(`<link rel="canonical" href="${expectedCanonical}">`, 'i').test(html), 'canonical is incorrect'],
     [count(html, /<meta\b[^>]*name="keywords"/gi) === 0, 'obsolete meta keywords remain'],
     [count(html, /<nav\b[^>]*class="[^"]*\bita-breadcrumb\b[^"]*"/gi) === 1, 'must have one visible breadcrumb'],
@@ -47,6 +49,8 @@ for (const page of SITE_PAGES) {
     [!/<script\b[^>]*src="(?!https?:|\/\/|data:)[^"]+\.js/i.test(html) || html.includes('data-cfasync="false"'), 'local scripts are not protected from Rocket Loader reordering']
   ];
   for (const [valid, message] of checks) if (!valid) fail(`${page.path}: ${message}`);
+  const headerCount = count(html, /data-shared-site-header="home-v1"/g);
+  if (HEADER_EXEMPTIONS.has(page.path) ? headerCount !== 0 : headerCount !== 1) fail(`${page.path}: shared header does not match its route policy`);
   for (const match of html.matchAll(/<h1\b[^>]*>([\s\S]*?)<\/h1>/gi)) {
     const text = match[1].replace(/<[^>]+>/g, '');
     if (/[\u2600-\u27BF\u{1F300}-\u{1FAFF}]/u.test(text)) fail(`${page.path}: primary h1 contains a decorative emoji`);
@@ -87,12 +91,14 @@ for (const { path: relativePath } of FLIGHT_EXEMPT_PAGES) {
 
 const sitemapText = await fs.readFile(path.join(publicRoot, 'sitemap.xml'), 'utf8');
 const sitemapUrls = [...sitemapText.matchAll(/<loc>(.*?)<\/loc>/g)].map(match => match[1]);
-const expectedUrls = SITE_PAGES.filter(page => page.indexable).map(canonicalUrl);
+const expectedUrls = [...SITE_PAGES.filter(page => page.indexable), ...INDEXABLE_LABS].map(canonicalUrl);
 if (JSON.stringify(sitemapUrls) !== JSON.stringify(expectedUrls)) fail(`sitemap.xml: expected the exact ordered set of ${expectedUrls.length} indexable canonical URLs`);
 if (count(sitemapText, /<lastmod>\d{4}-\d{2}-\d{2}<\/lastmod>/g) !== expectedUrls.length) fail('sitemap.xml: every URL needs a valid release lastmod date');
 if (new Set(sitemapUrls).size !== sitemapUrls.length) fail('sitemap.xml: duplicate URLs');
 
 const robots = await fs.readFile(path.join(publicRoot, 'robots.txt'), 'utf8');
+const favicon = await fs.readFile(path.join(publicRoot, 'images/icon-192x192.png'));
+if (favicon.subarray(0, 8).toString('hex') !== '89504e470d0a1a0a' || favicon.readUInt32BE(16) !== 192 || favicon.readUInt32BE(20) !== 192) fail('favicon: expected a real square 192px PNG, not a mislabeled JPEG');
 if (!/^Sitemap: https:\/\/adrianotothestar\.com\/sitemap\.xml\s*$/mi.test(robots)) fail('robots.txt: canonical Sitemap directive is missing');
 const indexNowVerificationName = '70cf5dbdf5fa4e0f9e4f847c624468fe';
 try {
@@ -109,7 +115,8 @@ for (const match of projects.matchAll(/href="(experimental\/[^"]+\.html)"/g)) {
     const target = await fs.readFile(path.join(publicRoot, ...match[1].split('/')), 'utf8');
     if (!target.includes('ita-lab-disclosure')) fail(`projects.html: ${match[1]} lacks a runtime-boundary disclosure`);
     if (!target.includes('experimental-lab.css?v=')) fail(`projects.html: ${match[1]} lacks versioned lab UI`);
-    if (!/<meta name="robots" content="noindex,follow,max-image-preview:large">/i.test(target)) fail(`projects.html: ${match[1]} is not noindex,follow`);
+    const indexable = INDEXABLE_LABS.some(page => page.path === match[1]);
+    if (!target.includes(`<meta name="robots" content="${indexable ? 'index' : 'noindex'},follow,max-image-preview:large">`)) fail(`projects.html: ${match[1]} has the wrong indexing policy`);
     if (!target.includes(`<link rel="canonical" href="https://adrianotothestar.com/${match[1]}">`)) fail(`projects.html: ${match[1]} lacks its canonical URL`);
     if (/src=["']\/(?:universal-simulation-hub|void-warfare-engine|planetary-environment-engine|galactic-governance-engine|mining-resource-engine|xeno-intelligence-engine|quantum-propulsion-engine|intelligence-shadow-engine|fleet-command-mega-engine|deep-space-industry-engine|procedural-content-engine|galactic-commerce-engine|metaphysics-apotheosis-engine)\.js/i.test(target)) fail(`projects.html: ${match[1]} still loads unrelated mega-engine code`);
   } catch { fail(`projects.html: missing launch target ${match[1]}`); }

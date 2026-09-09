@@ -5,10 +5,10 @@
   try { history.scrollRestoration = 'manual'; } catch {}
   if (!location.hash) requestAnimationFrame(() => scrollTo({ top: 0, left: 0, behavior: 'instant' }));
 
-  const header = document.querySelector('.ita-db-header');
+  const header = document.querySelector('[data-shared-site-header]') || document.querySelector('.ita-db-header');
 
   function integrateCommunityAuth() {
-    const actions = document.querySelector('.ita-db-actions');
+    const actions = document.querySelector('.site-header .nav-actions') || document.querySelector('.ita-db-actions');
     const authControls = document.getElementById('auth-controls');
     if (!actions || !authControls) return false;
     if (authControls.parentElement !== actions) actions.prepend(authControls);

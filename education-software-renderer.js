@@ -92,9 +92,16 @@
           [surface, clouds] = await Promise.all([bitmap(surfaceUrl), config.clouds ? bitmap(config.clouds) : null]);
         }
         if (generation !== this.generation) { surface.close(); clouds?.close(); return; }
+        if (surface.width !== surface.height * 2) {
+          surface.close(); clouds?.close();
+          throw new Error('Planet textures must be complete 2:1 equirectangular maps, not disk photographs.');
+        }
         this.worker.postMessage({ type: 'planet', generation, surface, clouds,
           speed: this.viewer.prefersReducedMotion ? 0 : config.speed * 60,
           atmosphere: name === 'Earth' || (model?.appearance?.atmosphereOpacity || 0) > .01,
+          cloudOpacity: model?.appearance?.cloudOpacity ?? .78,
+          cloudAlpha: Boolean(model), atmosphereOpacity: model?.appearance?.atmosphereOpacity ?? .28,
+          atmosphereColour: model?.appearance?.atmosphereColour ?? [41, 122, 235], day: Boolean(config.day),
           yaw: this.yaw, pitch: this.pitch }, [surface, ...(clouds ? [clouds] : [])]);
       } catch (error) {
         if (generation !== this.generation) return;

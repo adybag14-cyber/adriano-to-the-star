@@ -509,6 +509,7 @@ test.describe('production site overhaul', () => {
 
   test('all ten project labs load with explicit runtime boundaries and no missing local assets', async ({ page }) => {
     test.setTimeout(4 * 60 * 1000);
+    await page.emulateMedia({ reducedMotion: 'reduce' });
     for (const target of PROJECT_TARGETS) {
       const localProblems = [];
       const onResponse = response => {

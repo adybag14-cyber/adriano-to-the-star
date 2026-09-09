@@ -14,7 +14,7 @@ const PAGES = [
     {
         name: 'database',
         path: '/database.html',
-        required: ['body.database-page', '.ita-db-header', '#nasa-data-container', '[data-atlas-trigger]']
+        required: ['body.database-page', '[data-shared-site-header="home-v1"]', '#nasa-data-container', '[data-atlas-trigger]']
     },
     {
         name: 'dashboard',

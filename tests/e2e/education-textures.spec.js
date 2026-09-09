@@ -3,14 +3,14 @@ import { test, expect } from '@playwright/test';
 const BASE_URL = process.env.BASE_URL || 'http://localhost:8080';
 
 const PLANETS = [
-    ['Mercury', 'images/textures/mercury.jpg'],
-    ['Venus', 'images/textures/venus.jpg'],
+    ['Mercury', 'images/textures/mercury-equirectangular-8k.jpg'],
+    ['Venus', 'images/textures/venus-equirectangular-4k.jpg'],
     ['Earth', 'images/textures/earth-blue-marble-2048.jpg'],
-    ['Mars', 'images/textures/mars.jpg'],
-    ['Jupiter', 'images/textures/jupiter.jpg'],
-    ['Saturn', 'images/textures/saturn.jpg'],
-    ['Uranus', 'images/textures/uranus.jpg'],
-    ['Neptune', 'images/textures/neptune.jpg']
+    ['Mars', 'images/textures/mars-equirectangular-8k.jpg'],
+    ['Jupiter', 'images/textures/jupiter-equirectangular-4k.jpg'],
+    ['Saturn', 'images/textures/saturn-equirectangular-4k.jpg'],
+    ['Uranus', 'images/textures/uranus-equirectangular-2k.jpg'],
+    ['Neptune', 'images/textures/neptune-equirectangular-2k.jpg']
 ];
 
 test.describe('Education planet surface regression', () => {
@@ -82,6 +82,7 @@ test.describe('Education planet surface regression', () => {
             expect(state.source).toContain(expectedSource);
             expect(state.sourceWidth).toBeGreaterThan(64);
             expect(state.sourceHeight).toBeGreaterThan(64);
+            expect(state.sourceWidth).toBe(state.sourceHeight * 2);
             expect(state.nativeTexture).toBe(true);
             expect(state.hasTextureMap).toBe(true);
             expect(state.anisotropy).toBeGreaterThan(0);

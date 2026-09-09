@@ -7,7 +7,7 @@
     const NASA_ARCHIVE = 'https://exoplanetarchive.ipac.caltech.edu/';
     const SPECTRA_DOCS = 'https://exoplanetarchive.ipac.caltech.edu/docs/atmospheres/atmospheres_columns.html';
     const COMPOSITE_DOCS = 'https://exoplanetarchive.ipac.caltech.edu/docs/pscp_calc.html';
-    const MAX_DATABASE_CARDS = 60;
+    const MAX_DATABASE_CARDS = 12;
 
     let catalog = null;
     let appearanceModel = null;
@@ -347,6 +347,15 @@
         const article = document.createElement('article');
         article.className = 'atmosphere-model-card';
         article.dataset.evidence = spectra > 0 ? 'spectra' : 'parameters';
+        const preview = document.createElement('div');
+        preview.className = 'atmosphere-model-preview ita-planet-visual';
+        preview.dataset.previewTarget = planet.name;
+        preview.setAttribute('role', 'img');
+        preview.setAttribute('aria-label', `${planet.name}: generic placeholder while the appearance model loads`);
+        const generic = document.createElement('span');
+        generic.className = 'ita-planet-sphere';
+        generic.setAttribute('aria-hidden', 'true');
+        preview.append(generic);
 
         const header = document.createElement('header');
         const title = document.createElement('h3');
@@ -386,7 +395,7 @@
             makeLink('NASA record', `${NASA_ARCHIVE}overview/${encodeURIComponent(planet.name)}`)
         );
 
-        article.append(header, badge, metadata, disclosure, actions);
+        article.append(preview, header, badge, metadata, disclosure, actions);
         return article;
     };
 
@@ -427,6 +436,7 @@
         const total = catalog.statistics?.planets ?? flattenPlanets(catalog).length;
         const spectraTotal = catalog.statistics?.planetsWithSpectraMetadata ?? flattenPlanets(catalog).filter(entry => countSpectra(entry.planet) > 0).length;
         setText('atmosphere-catalog-summary', `${catalog.systems.length} systems · ${total} planets · ${spectraTotal} with published spectrum metadata`);
+        setText('atmosphere-registry-count', `${total} worlds · ${spectraTotal} spectrum-linked models`);
         const generated = catalog.generatedAt ? new Date(catalog.generatedAt).toLocaleString() : 'unknown build time';
         setText('atmosphere-catalog-status', catalog.loadError
             ? `Catalogue unavailable: ${catalog.loadError}`
@@ -486,6 +496,7 @@
             wrapEducationSelection();
             refreshEducation();
             refreshDatabase();
+            if (location.hash === '#atmosphere-catalog-panel') document.getElementById('atmosphere-catalog-panel')?.setAttribute('open', '');
         } catch (error) {
             showLoadFailure(error);
         }

@@ -36,8 +36,8 @@ class PlanetViewer {
         // Planet Data
         this.planets = {
             'Mercury': {
-                texture: 'images/textures/mercury.jpg',
-                textureHd: 'images/textures/mercury.jpg',
+                texture: 'images/textures/mercury-equirectangular-8k.jpg',
+                textureHd: 'images/textures/mercury-equirectangular-8k.jpg',
                 color: 0x94a3b8,
                 size: 0.38,
                 speed: 0.004,
@@ -50,8 +50,8 @@ class PlanetViewer {
                 }
             },
             'Venus': {
-                texture: 'images/textures/venus.jpg',
-                textureHd: 'images/textures/venus.jpg',
+                texture: 'images/textures/venus-equirectangular-4k.jpg',
+                textureHd: 'images/textures/venus-equirectangular-4k.jpg',
                 color: 0xeab308,
                 size: 0.95,
                 speed: 0.0002,
@@ -79,8 +79,8 @@ class PlanetViewer {
                 }
             },
             'Mars': {
-                texture: 'images/textures/mars.jpg',
-                textureHd: 'images/textures/mars.jpg',
+                texture: 'images/textures/mars-equirectangular-8k.jpg',
+                textureHd: 'images/textures/mars-equirectangular-8k.jpg',
                 color: 0xef4444,
                 size: 0.53,
                 speed: 0.0008,
@@ -93,8 +93,8 @@ class PlanetViewer {
                 }
             },
             'Jupiter': {
-                texture: 'images/textures/jupiter.jpg',
-                textureHd: 'images/textures/jupiter.jpg',
+                texture: 'images/textures/jupiter-equirectangular-4k.jpg',
+                textureHd: 'images/textures/jupiter-equirectangular-4k.jpg',
                 color: 0xd97706,
                 size: 11.2,
                 speed: 0.002,
@@ -107,8 +107,8 @@ class PlanetViewer {
                 }
             },
             'Saturn': {
-                texture: 'images/textures/saturn.jpg',
-                textureHd: 'images/textures/saturn.jpg',
+                texture: 'images/textures/saturn-equirectangular-4k.jpg',
+                textureHd: 'images/textures/saturn-equirectangular-4k.jpg',
                 color: 0xfde047,
                 size: 9.45,
                 speed: 0.0018,
@@ -121,7 +121,7 @@ class PlanetViewer {
                 }
             },
             'Uranus': {
-                texture: 'images/textures/uranus.jpg',
+                texture: 'images/textures/uranus-equirectangular-2k.jpg',
                 color: 0x60a5fa,
                 size: 4.0,
                 speed: 0.001,
@@ -134,7 +134,7 @@ class PlanetViewer {
                 }
             },
             'Neptune': {
-                texture: 'images/textures/neptune.jpg', // Was already correct, verifying
+                texture: 'images/textures/neptune-equirectangular-2k.jpg',
                 color: 0x3b82f6,
                 size: 3.88,
                 speed: 0.0012,
@@ -385,6 +385,8 @@ class PlanetViewer {
         const generation = ++this.loadGeneration;
         if (resolvedName !== 'Earth') this.container?.classList.add('education-renderer-ready');
         this.updateDataOverlay(config.data);
+        const textureCredit = document.getElementById('solar-texture-credit');
+        if (textureCredit) textureCredit.hidden = resolvedName === 'Earth' || Boolean(config.planetaryModel);
         document.querySelectorAll('[data-education-planet]').forEach(button => {
             const selected = button.dataset.educationPlanet === resolvedName;
             button.setAttribute('aria-pressed', String(selected));
@@ -447,11 +449,17 @@ class PlanetViewer {
         });
 
         const configureTexture = (texture) => {
+            const image = texture.image || {};
+            const width = image.naturalWidth || image.width || 0;
+            const height = image.naturalHeight || image.height || 0;
+            const powerOfTwo = value => value > 0 && (value & (value - 1)) === 0;
+            const mipmaps = this.renderer.capabilities.isWebGL2 || (powerOfTwo(width) && powerOfTwo(height));
             texture.encoding = THREE.sRGBEncoding;
             texture.anisotropy = Math.min(16, this.renderer.capabilities.getMaxAnisotropy());
-            texture.minFilter = THREE.LinearMipmapLinearFilter;
+            // WebGL1 otherwise asks Three to shrink the 5.4K map to 4K.
+            texture.minFilter = mipmaps ? THREE.LinearMipmapLinearFilter : THREE.LinearFilter;
             texture.magFilter = THREE.LinearFilter;
-            texture.generateMipmaps = true;
+            texture.generateMipmaps = mipmaps;
             texture.needsUpdate = true;
             return texture;
         };
@@ -508,6 +516,11 @@ class PlanetViewer {
 
         const applySurface = (texture, sourceUrl) => {
             if (generation !== this.loadGeneration || this.currentPlanet !== resolvedName || this.planetMesh !== mesh) return;
+            const sourceImage = texture.image;
+            if (sourceImage && sourceImage.width !== sourceImage.height * 2) {
+                texture.dispose();
+                throw new Error(`Invalid planet map projection for ${resolvedName}: expected a complete 2:1 equirectangular map.`);
+            }
             configureTexture(texture);
             mesh.material.map?.dispose?.();
             mesh.material.map = texture;

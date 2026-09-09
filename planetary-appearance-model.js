@@ -305,11 +305,11 @@
       };
     }
 
-    createSurfaceTexture(THREE, model, options = {}) {
-      if (!THREE || !model) return null;
+    createSurfaceCanvas(model, options = {}) {
+      if (!model) return null;
       const width = Math.max(512, Number(options.width) || 1024);
       const height = Math.max(256, Number(options.height) || Math.round(width / 2));
-      const canvas = document.createElement('canvas');
+      const canvas = typeof document === 'undefined' ? new OffscreenCanvas(width, height) : document.createElement('canvas');
       canvas.width = width;
       canvas.height = height;
       const context = canvas.getContext('2d', { alpha: false });
@@ -319,6 +319,7 @@
       const random = seededRandom(model.seed);
       const phase = random() * Math.PI * 2;
       const palette = model.appearance.palette;
+      const terrainScale = clamp(Number(model.appearance.terrainScale) || 1, 0.25, 4);
       const craters = Array.from({ length: Math.round(4 + model.appearance.craterStrength * 7) }, () => {
         const z = random() * 2 - 1;
         const angle = random() * Math.PI * 2;
@@ -342,8 +343,8 @@
           wx /= warpedLength;
           wy /= warpedLength;
           wz /= warpedLength;
-          const broad = fractalNoise3(wx * 1.85, wy * 1.85, wz * 1.85, model.seed + 73, 3);
-          const ridgeSample = fractalNoise3(wx * 5.4, wy * 5.4, wz * 5.4, model.seed + 137, 2);
+          const broad = fractalNoise3(wx * 1.85 * terrainScale, wy * 1.85 * terrainScale, wz * 1.85 * terrainScale, model.seed + 73, 3);
+          const ridgeSample = fractalNoise3(wx * 5.4 * terrainScale, wy * 5.4 * terrainScale, wz * 5.4 * terrainScale, model.seed + 137, 2);
           const ridge = 1 - Math.abs(ridgeSample);
           let value = clamp(0.42 + broad * 0.42 + ridge * 0.22, 0, 1);
           if (model.appearance.banding) {
@@ -371,6 +372,13 @@
         }
       }
       context.putImageData(image, 0, 0);
+      return canvas;
+    }
+
+    createSurfaceTexture(THREE, model, options = {}) {
+      if (!THREE || !model) return null;
+      const canvas = this.createSurfaceCanvas(model, options);
+      if (!canvas) return null;
       const texture = new THREE.CanvasTexture(canvas);
       texture.name = `${MODEL_VERSION}:${model.planetId}:surface`;
       texture.userData = {
@@ -383,11 +391,11 @@
       return texture;
     }
 
-    createCloudTexture(THREE, model, options = {}) {
-      if (!THREE || !model || model.appearance.cloudOpacity <= 0.01) return null;
+    createCloudCanvas(model, options = {}) {
+      if (!model || model.appearance.cloudOpacity <= 0.01) return null;
       const width = Math.max(512, Number(options.width) || 1024);
       const height = Math.max(256, Number(options.height) || Math.round(width / 2));
-      const canvas = document.createElement('canvas');
+      const canvas = typeof document === 'undefined' ? new OffscreenCanvas(width, height) : document.createElement('canvas');
       canvas.width = width;
       canvas.height = height;
       const context = canvas.getContext('2d');
@@ -415,6 +423,13 @@
         }
       }
       context.putImageData(image, 0, 0);
+      return canvas;
+    }
+
+    createCloudTexture(THREE, model, options = {}) {
+      if (!THREE || !model) return null;
+      const canvas = this.createCloudCanvas(model, options);
+      if (!canvas) return null;
       const texture = new THREE.CanvasTexture(canvas);
       texture.name = `${MODEL_VERSION}:${model.planetId}:clouds`;
       return texture;
@@ -440,4 +455,4 @@
 
   PlanetaryAppearanceModel.MODEL_VERSION = MODEL_VERSION;
   global.PlanetaryAppearanceModel = PlanetaryAppearanceModel;
-})(window);
+})(typeof window !== 'undefined' ? window : self);

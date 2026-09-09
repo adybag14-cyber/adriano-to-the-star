@@ -135,7 +135,8 @@
                     <p><a href="https://exoplanetarchive.ipac.caltech.edu/" target="_blank" rel="noopener noreferrer">NASA Exoplanet Archive</a> · <a href="https://www.cosmos.esa.int/web/gaia" target="_blank" rel="noopener noreferrer">ESA Gaia</a></p>
                 </aside>
 
-                <section id="atmosphere-catalog-panel" class="atmosphere-catalog-panel" aria-labelledby="atmosphere-catalog-title">
+                <details id="atmosphere-catalog-panel" class="atmosphere-catalog-panel" aria-labelledby="atmosphere-catalog-title">
+                    <summary class="atmosphere-catalog-toggle">Atmosphere models and spectral evidence <span id="atmosphere-registry-count">Open the research registry</span></summary>
                     <header class="atmosphere-catalog-header">
                         <div>
                             <p class="atmosphere-catalog-kicker">Nearby atmosphere model registry</p>
@@ -170,7 +171,7 @@
                         <button id="atmosphere-catalog-next" type="button" disabled>Next worlds</button>
                     </nav>
                     <noscript><p class="atmosphere-catalog-status">JavaScript is required to inspect the local atmosphere-model snapshot.</p></noscript>
-                </section>
+                </details>
 
                 <div id="data-visualization" style="margin-top: 2rem;"></div>
 
@@ -367,6 +368,7 @@
     <script src="database-local-tools.js" defer></script>
     <script src="planetary-appearance-model.js" defer></script>
     <script src="atmosphere-catalog.js" defer></script>
+    <script src="database-previews.js" defer></script>
 
     <style>
         .feature-card {
