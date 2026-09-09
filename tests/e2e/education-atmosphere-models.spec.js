@@ -92,6 +92,8 @@ test.describe('NASA-backed Planetary OS appearance models', () => {
     });
     await page.goto('/database.html', { waitUntil: 'domcontentloaded' });
     await expect(page.locator('#atmosphere-catalog-panel')).toBeVisible();
+    await expect(page.locator('#atmosphere-catalog-panel')).not.toHaveAttribute('open');
+    await page.locator('.atmosphere-catalog-toggle').click();
     await expect(page.locator('#atmosphere-catalog-list .atmosphere-model-card').first()).toBeVisible({ timeout: 30_000 });
     await expect(page.locator('#atmosphere-catalog-summary')).toContainText(/systems.*planets/i);
     const registryLayout = await page.evaluate(() => {

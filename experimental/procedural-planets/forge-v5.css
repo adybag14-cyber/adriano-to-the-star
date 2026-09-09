@@ -1,0 +1,215 @@
+@font-face {
+    font-family: Raleway;
+    src: url('../../fonts/Raleway-Regular.ttf') format('truetype');
+    font-display: swap;
+}
+* {
+    box-sizing: border-box;
+}
+html,
+body {
+    margin: 0;
+    background: #010309;
+    color: #e7f4fc;
+    font-family: Raleway, system-ui, sans-serif;
+    overflow: hidden;
+}
+#canvas-container {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100dvh;
+    background: #010309;
+}
+#canvas-container canvas {
+    display: block;
+    touch-action: none;
+}
+.forge-controls {
+    position: fixed;
+    left: 20px;
+    top: 20px;
+    width: 302px;
+    max-height: calc(100dvh - 40px);
+    overflow: auto;
+    padding: 23px;
+    border: 1px solid #325365;
+    border-radius: 17px;
+    background: rgba(4, 11, 20, 0.94);
+    backdrop-filter: blur(14px);
+    scrollbar-width: thin;
+    scrollbar-color: #3c6174 #07101b;
+}
+.back-link {
+    font-size: 12px;
+    color: #9eb9c9;
+    text-decoration: none;
+}
+h1 {
+    font-size: 20px;
+    margin: 18px 0 8px;
+    font-weight: 750;
+    letter-spacing: -0.03em;
+}
+h1 span {
+    font:
+        700 11px/1 ui-monospace,
+        monospace;
+    background: #163c4f;
+    color: #7de5ee;
+    padding: 5px 7px;
+    border-radius: 5px;
+    vertical-align: middle;
+}
+.forge-intro {
+    font-size: 12px;
+    line-height: 1.6;
+    color: #a2bbc9;
+    margin: 0 0 18px;
+}
+.forge-controls > label {
+    display: block;
+    font-size: 12px;
+    color: #c2d2dc;
+    margin: 16px 0 7px;
+}
+.forge-controls output {
+    float: right;
+    color: #89e3ed;
+    font-family: ui-monospace, monospace;
+}
+select {
+    width: 100%;
+    background: #0b1b29;
+    border: 1px solid #355368;
+    border-radius: 7px;
+    padding: 10px;
+    color: #f0f7ff;
+    font: inherit;
+    font-size: 13px;
+}
+input[type='range'] {
+    width: 100%;
+    accent-color: #77ddea;
+    cursor: pointer;
+}
+input[type='checkbox'] {
+    accent-color: #77ddea;
+}
+.forge-controls .check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 9px 0;
+    font-size: 12px;
+}
+button {
+    min-height: 40px;
+    width: 100%;
+    padding: 9px;
+    border: 1px solid #39738c;
+    border-radius: 8px;
+    background: linear-gradient(120deg, #174058, #283355);
+    color: #e9faff;
+    font: 600 12px/1.3 inherit;
+    cursor: pointer;
+    margin-top: 13px;
+}
+.secondary-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+}
+.secondary-actions button,
+.quiet {
+    background: #0a1b2b;
+    color: #c9eaf6;
+}
+.quiet {
+    margin-top: 7px;
+}
+button:hover {
+    border-color: #80dbea;
+    background: #19445b;
+}
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+summary:focus-visible,
+a:focus-visible {
+    outline: 2px solid #93eff8;
+    outline-offset: 3px;
+}
+#forge-status {
+    font:
+        11px/1.65 ui-monospace,
+        monospace;
+    color: #97cfdb;
+    margin: 16px 0 0;
+}
+details {
+    font-size: 11px;
+    color: #9db4c5;
+    line-height: 1.65;
+    margin-top: 16px;
+}
+summary {
+    cursor: pointer;
+    color: #c9e7f2;
+}
+#forge-telemetry {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 14px;
+    border: 1px solid #213d50;
+    background: rgba(3, 9, 17, 0.8);
+    border-radius: 8px;
+    color: #a7c4d8;
+    font:
+        11px/1.5 ui-monospace,
+        monospace;
+    pointer-events: none;
+}
+#loading {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font:
+        14px/1.5 ui-monospace,
+        monospace;
+    color: #b0e5f2;
+}
+#loading[hidden] {
+    display: none;
+}
+@media (max-width: 700px) {
+    .forge-controls {
+        left: 10px;
+        top: 10px;
+        width: calc(100% - 20px);
+        max-height: 35dvh;
+        padding: 16px;
+        background: rgba(4, 11, 20, 0.96);
+    }
+    h1 {
+        margin-top: 12px;
+    }
+    .forge-intro {
+        margin-bottom: 8px;
+    }
+    #forge-telemetry {
+        bottom: 12px;
+        left: 12px;
+        right: 12px;
+        font-size: 10px;
+        text-align: center;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    * {
+        scroll-behavior: auto !important;
+        transition: none !important;
+    }
+}

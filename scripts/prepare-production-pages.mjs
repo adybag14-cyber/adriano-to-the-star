@@ -1,9 +1,12 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
-import { FLIGHT_EXEMPT_PAGES, SITE_ORIGIN, SITE_PAGES, canonicalUrl } from './site-pages.mjs';
+import { FLIGHT_EXEMPT_PAGES, INDEXABLE_LABS, SITE_ORIGIN, SITE_PAGES, canonicalUrl } from './site-pages.mjs';
+import { extractHomeHeader, applySharedHeader } from './shared-site-header.mjs';
 
 const publicRoot = path.resolve(process.argv[2] || 'public');
+const homeHeader = extractHomeHeader(await fs.readFile(path.join(publicRoot, 'index.html'), 'utf8'));
+const atmosphereSnapshot = JSON.parse(await fs.readFile(path.join(publicRoot, 'data/exoplanet-atmospheres.json'), 'utf8'));
 const legacyMegaEnginePattern = /\s*(?:<!--\s*MASTER MEGA-ENGINE ARCHITECTURE\s*-->)?\s*<script\b[^>]*src=["']\/?(?:universal-simulation-hub|void-warfare-engine|planetary-environment-engine|galactic-governance-engine|mining-resource-engine|xeno-intelligence-engine|quantum-propulsion-engine|intelligence-shadow-engine|fleet-command-mega-engine|deep-space-industry-engine|procedural-content-engine|galactic-commerce-engine|metaphysics-apotheosis-engine)\.js(?:\?[^"']*)?["'][^>]*><\/script>/gi;
 const retiredSupabaseScriptPattern = /\s*<script\b[^>]*src=["'][^"']*(?:@supabase\/supabase-js|supabase-config\.js|auth-supabase\.js|supabase-integration\.js)[^"']*["'][^>]*><\/script>/gi;
 const googleFontPattern = /\s*<(?:link|style)\b[^>]*(?:fonts\.googleapis\.com|fonts\.gstatic\.com)[^>]*>(?:<\/style>)?/gi;
@@ -62,12 +65,13 @@ function headMetadata(page) {
   const prefix = page.path.includes('/') ? '../' : '';
   const robots = page.indexable ? 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1' : 'noindex,follow';
   const metadata = [
-    '<meta name="ita-production-metadata" content="2026-08-30">',
+    '<meta name="ita-production-metadata" content="2026-09-09">',
     `<meta name="description" content="${escapeHtml(page.description)}">`,
     `<meta name="robots" content="${robots}">`,
     '<meta name="googlebot" content="max-image-preview:large,max-snippet:-1,max-video-preview:-1">',
     '<meta name="theme-color" content="#050814">',
     '<meta name="color-scheme" content="dark">',
+    `<link rel="icon" type="image/png" sizes="192x192" href="${prefix}images/icon-192x192.png">`,
     `<link rel="canonical" href="${url}">`,
     `<meta property="og:title" content="${escapeHtml(page.title)}">`,
     `<meta property="og:description" content="${escapeHtml(page.description)}">`,
@@ -93,6 +97,21 @@ function headMetadata(page) {
   // the simulation's systems payload.
   if (page.path !== 'exoplanet-pioneer.html') {
     metadata.push(`<script src="${prefix}ita-universe-shell.js" defer data-ita-universe-shell></script>`);
+  }
+  if (page.path === 'database.html') {
+    const dataset = {
+      '@context': 'https://schema.org', '@type': 'Dataset', '@id': `${url}#atmosphere-dataset`,
+      name: 'Nearby exoplanet atmosphere metadata and physical parameters',
+      description: 'A normalized NASA Exoplanet Archive research snapshot linking nearby planetary systems, published physical parameters, measurement provenance and planetary spectroscopy metadata. Model-generated geography is not an observation and is not included as measured data.',
+      url: `${url}#atmosphere-catalog-panel`, dateModified: atmosphereSnapshot.generatedAt,
+      creator: { '@type': 'Organization', name: 'NASA Exoplanet Archive', url: 'https://exoplanetarchive.ipac.caltech.edu/' },
+      publisher: { '@type': 'Organization', name: 'Adriano To The Star', url: SITE_ORIGIN },
+      isAccessibleForFree: true, keywords: ['exoplanets', 'planetary atmospheres', 'spectroscopy', 'astronomy'],
+      isBasedOn: ['https://doi.org/10.26133/NEA12','https://doi.org/10.26133/NEA13','https://doi.org/10.26133/NEA36'],
+      variableMeasured: ['Planet radius', 'Planet mass', 'Equilibrium temperature', 'Planetary spectrum metadata availability'],
+      distribution: { '@type': 'DataDownload', encodingFormat: 'application/json', contentUrl: `${SITE_ORIGIN}/data/exoplanet-atmospheres.json` }
+    };
+    metadata.push(`<script id="ita-dataset-structured-data" type="application/ld+json">${escapeJsonForHtml(dataset)}</script>`);
   }
   return metadata.join('\n    ');
 }
@@ -153,6 +172,7 @@ function ensurePolicyLink(html, page) {
 async function transformPage(page) {
   const file = path.join(publicRoot, ...page.path.split('/'));
   let html = await fs.readFile(file, 'utf8');
+  html = removeHeadTag(html, /\s*<link\b[^>]*rel=["'](?:shortcut\s+)?icon["'][^>]*>/gi);
   html = html.replace(legacyMegaEnginePattern, '');
   html = html.replace(retiredSupabaseScriptPattern, '');
   html = html.replace(googleFontPattern, '');
@@ -183,6 +203,7 @@ async function transformPage(page) {
   const mainId = html.match(/<main\b[^>]*\bid=["']([^"']+)["']/i)?.[1] || 'main-content';
   const skip = hasMain ? `<a class="ita-skip-link" href="#${mainId}">Skip to main content</a>\n` : '';
   html = html.replace(/<body\b[^>]*>/i, match => `${match}\n${skip}${breadcrumb.visible}`);
+  html = applySharedHeader(html, page, homeHeader);
   const selfContainedRuntime = new Set(['exoplanet-pioneer.html', 'starsector.html']);
   if (!selfContainedRuntime.has(page.path) && !/(?:src=["'](?:\.\.\/)?i18n\.js(?:\?|["']))/i.test(html)) {
     const prefix = page.path.includes('/') ? '../' : '';
@@ -203,8 +224,8 @@ await Promise.all(SITE_PAGES.map(transformPage));
 const experimentalPages = [
   ['experimental/webgpu-galaxy/galaxy-sim.html', 'Browser-local WebGPU or full-detail CPU worker rendering; no application backend.'],
   ['experimental/webgpu-galaxy/nebula-sim.html', 'Browser-local WebGPU nebula renderer; no application backend.'],
-  ['experimental/procedural-planets/index.html', 'Browser-local WebGL scene with versioned external Three.js modules.'],
-  ['experimental/fluid-nebula/index.html', 'Browser-local Canvas 2D particle simulation; no application backend.'],
+  ['experimental/procedural-planets/index.html', 'Browser-local v5 adaptive terrain and volumetric rendering. Generated geography is fictional; WebGL2 enables the advanced renderer, with a labelled CPU preview when unavailable.'],
+  ['experimental/fluid-nebula/index.html', 'Browser-local pressure-projected fluid simulation with a volumetric reconstruction. This is not an observed nebula or a full astrophysical MHD calculation.'],
   ['experimental/sentient-browser/hal-interface.html', 'WebGPU or network-assisted AI experiment; remote inference is operated separately from this website release.'],
   ['experimental/holographic-xr/surface-explorer.html', 'Device-specific WebXR experiment with external Three.js modules.'],
   ['experimental/holographic-xr/ar-star-chart.html', 'Device-specific immersive-AR experiment with external Three.js modules.'],
@@ -221,7 +242,17 @@ await Promise.all(experimentalPages.map(async ([relativePath, disclosure]) => {
   html = removeHeadTag(html, /\s*<link\b[^>]*rel=["']canonical["'][^>]*>/gi);
   html = removeHeadTag(html, /\s*<meta\b[^>]*(?:property=["']og:(?:url|site_name|image|image:alt)["']|name=["']twitter:(?:card|image|image:alt)["'])[^>]*>/gi);
   const canonical = `${SITE_ORIGIN}/${relativePath}`;
-  const labMetadata = `<meta name="robots" content="noindex,follow,max-image-preview:large"><meta name="googlebot" content="noindex,follow"><link rel="canonical" href="${canonical}"><meta property="og:url" content="${canonical}"><meta property="og:site_name" content="Adriano To The Star"><meta property="og:image" content="${SITE_ORIGIN}/images/bg-large.jpg"><meta property="og:image:alt" content="Adriano To The Star experimental browser lab"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="${SITE_ORIGIN}/images/bg-large.jpg"><meta name="twitter:image:alt" content="Adriano To The Star experimental browser lab">`;
+  const published = INDEXABLE_LABS.find(page => page.path === relativePath);
+  const robots = published ? 'index,follow,max-image-preview:large' : 'noindex,follow,max-image-preview:large';
+  let labMetadata = `<meta name="robots" content="${robots}"><meta name="googlebot" content="${robots}"><link rel="canonical" href="${canonical}"><meta property="og:url" content="${canonical}"><meta property="og:site_name" content="Adriano To The Star"><meta property="og:image" content="${SITE_ORIGIN}/images/bg-large.jpg"><meta property="og:image:alt" content="Adriano To The Star experimental browser lab"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="${SITE_ORIGIN}/images/bg-large.jpg"><meta name="twitter:image:alt" content="Adriano To The Star experimental browser lab">`;
+  html = removeHeadTag(html, /\s*<link\b[^>]*rel=["'](?:shortcut\s+)?icon["'][^>]*>/gi);
+  labMetadata += '<link rel="icon" type="image/png" sizes="192x192" href="../../images/icon-192x192.png">';
+  if (published) {
+    html = replaceTitle(html, published.title);
+    html = removeHeadTag(html, /\s*<meta\b[^>]*name=["']description["'][^>]*>/gi);
+    labMetadata += `<meta name="description" content="${escapeHtml(published.description)}"><meta property="og:title" content="${escapeHtml(published.title)}"><meta property="og:description" content="${escapeHtml(published.description)}">`;
+    labMetadata += `<script type="application/ld+json">${escapeJsonForHtml({ '@context': 'https://schema.org', '@type': 'WebApplication', name: published.title.split('|')[0].trim(), url: canonical, description: published.description, applicationCategory: 'EducationalApplication', operatingSystem: 'Web browser', browserRequirements: 'WebGL2 for advanced rendering; current browser with worker support for compatibility rendering', isAccessibleForFree: true, softwareVersion: '5' })}</script>`;
+  }
   html = html.replace(/<\/head>/i, `  ${labMetadata}\n</head>`);
   if (!html.includes('experimental-lab.css')) html = html.replace(/<\/head>/i, '  <link rel="stylesheet" href="../../experimental-lab.css">\n</head>');
   html = html.replace(/\s*<details\b[^>]*class=["'][^"']*\bita-lab-disclosure\b[^"']*["'][^>]*>[\s\S]*?<\/details>/gi, '');
@@ -239,7 +270,7 @@ await Promise.all(FLIGHT_EXEMPT_PAGES.map(async ({ path: relativePath, reason })
 }));
 
 const lastmod = releaseDate();
-const sitemapPages = SITE_PAGES.filter(page => page.indexable);
+const sitemapPages = [...SITE_PAGES.filter(page => page.indexable), ...INDEXABLE_LABS];
 function gitLastModified(page) {
   const candidates = [page.path, 'scripts/site-pages.mjs', 'scripts/prepare-production-pages.mjs'];
   try {

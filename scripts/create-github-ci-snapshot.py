@@ -22,6 +22,8 @@ OVERSIZE_PRODUCTION_PREFIXES = (
     "audio/",  # build-pages.ps1 publishes the complete production soundtrack
 )
 OVERSIZE_PRODUCTION_PATHS = {
+    "images/textures/mercury-equirectangular-8k.jpg",
+    "images/textures/mars-equirectangular-8k.jpg",
     "assets/models/ships/viper.glb",
     "assets/models/defense/missile_battery.glb",
 }
@@ -237,6 +239,22 @@ def main() -> int:
         "performance-system.js",
         "games-archive-index.json",
         "scripts/check-current-tree-secrets.mjs",
+        "scripts/shared-site-header.mjs",
+        "site-header.css",
+        "site-header.js",
+        "database-previews.js",
+        "planet-preview-worker.js",
+        "data/planet-texture-provenance.json",
+        "images/textures/mercury-equirectangular-8k.jpg",
+        "images/textures/mars-equirectangular-8k.jpg",
+        "experimental/procedural-planets/forge-v5.js",
+        "experimental/procedural-planets/forge-terrain.js",
+        "experimental/procedural-planets/forge-shaders.js",
+        "experimental/fluid-nebula/nebula-v5.js",
+        "experimental/fluid-nebula/nebula-shaders.js",
+        "experimental/fluid-nebula/nebula-cpu-worker.js",
+        "tests/forge-v5.test.js",
+        "tests/e2e/forge-v5.spec.js",
         "scripts/pioneer-playwright-workload.mjs",
         "scripts/pioneer-workload-fixtures.mjs",
         "scripts/pioneer-workload-render-profile.mjs",

@@ -1,0 +1,61 @@
+{
+    "schemaVersion": 1,
+    "projection": "equirectangular",
+    "attribution": "Solar System Scope",
+    "publisher": "https://www.solarsystemscope.com/textures/",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "limitations": "Observation-informed illustrative composites. The publisher describes enhanced colours and fictional gap filling. Gas-giant maps depict atmospheric appearance, not a solid surface; they are not contemporary calibrated observations.",
+    "modifications": "Unmodified source JPEGs; spherical projection, lighting and display rendering are applied by the viewer.",
+    "maps": {
+        "Mercury": {
+            "file": "images/textures/mercury-equirectangular-8k.jpg",
+            "width": 8192,
+            "height": 4096,
+            "source": "https://commons.wikimedia.org/wiki/File:Solarsystemscope_texture_8k_mercury.jpg",
+            "sha256": "5c8bd885ae3571c6ba2cd34b3446b9c6d767e314bf0ee8c1d5c147cadd388fc3"
+        },
+        "Venus": {
+            "file": "images/textures/venus-equirectangular-4k.jpg",
+            "width": 4096,
+            "height": 2048,
+            "source": "https://commons.wikimedia.org/wiki/File:Solarsystemscope_texture_4k_venus_atmosphere.jpg",
+            "sha256": "a14aeba3c6ad7a56f989bb32008dec548077aeded420495b34df98f2dc14ba91"
+        },
+        "Mars": {
+            "file": "images/textures/mars-equirectangular-8k.jpg",
+            "width": 8192,
+            "height": 4096,
+            "source": "https://commons.wikimedia.org/wiki/File:Solarsystemscope_texture_8k_mars.jpg",
+            "sha256": "4cc52149924abc6ae507d63032f994e1d42a55cb82c09e002d1a567ff66c23ee"
+        },
+        "Jupiter": {
+            "file": "images/textures/jupiter-equirectangular-4k.jpg",
+            "width": 4096,
+            "height": 2048,
+            "source": "https://commons.wikimedia.org/wiki/File:Solarsystemscope_texture_8k_jupiter.jpg",
+            "sha256": "0bd844bf20822c4e3e80882b077859833c0dac44c7e4e1e0cd63d1b1b6d43085"
+        },
+        "Saturn": {
+            "file": "images/textures/saturn-equirectangular-4k.jpg",
+            "width": 4096,
+            "height": 2048,
+            "source": "https://commons.wikimedia.org/wiki/File:Solarsystemscope_texture_8k_saturn.jpg",
+            "sha256": "0d39a4a490c87c3edabe00a3881a29bb3418364178c79c534fe0986e97e09853"
+        },
+        "Uranus": {
+            "file": "images/textures/uranus-equirectangular-2k.jpg",
+            "width": 2048,
+            "height": 1024,
+            "source": "https://commons.wikimedia.org/wiki/File:Solarsystemscope_texture_2k_uranus.jpg",
+            "sha256": "d15239d46f82d3ea13d2b260b5b29b2a382f42f2916dae0694d0387b1204a09d"
+        },
+        "Neptune": {
+            "file": "images/textures/neptune-equirectangular-2k.jpg",
+            "width": 2048,
+            "height": 1024,
+            "source": "https://commons.wikimedia.org/wiki/File:Solarsystemscope_texture_2k_neptune.jpg",
+            "sha256": "cb42ea82709741d28b0af44d8b283cbc6dbd0c521a7f0e1e1e010ade00977df6"
+        }
+    }
+}

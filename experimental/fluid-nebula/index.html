@@ -1,136 +1,58 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fluid Nebula | Experimental</title>
-    <style>
-        body {
-            margin: 0;
-            background: #000;
-            overflow: hidden;
-        }
-
-        canvas {
-            width: 100vw;
-            height: 100vh;
-            display: block;
-        }
-
-        .overlay {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            color: white;
-            font-family: monospace;
-            pointer-events: none;
-        }
-
-        h1 {
-            margin: 0;
-            color: #ba944f;
-        }
-    </style>
-    <!-- MASTER MEGA-ENGINE ARCHITECTURE -->
-    <script src="/universal-simulation-hub.js"></script>
-    <script src="/void-warfare-engine.js"></script>
-    <script src="/planetary-environment-engine.js"></script>
-    <script src="/galactic-governance-engine.js"></script>
-    <script src="/mining-resource-engine.js"></script>
-    <script src="/xeno-intelligence-engine.js"></script>
-    <script src="/quantum-propulsion-engine.js"></script>
-    <script src="/intelligence-shadow-engine.js"></script>
-    <script src="/fleet-command-mega-engine.js"></script>
-    <script src="/deep-space-industry-engine.js"></script>
-    <script src="/procedural-content-engine.js"></script>
-    <script src="/galactic-commerce-engine.js"></script>
-    <script src="/metaphysics-apotheosis-engine.js"></script>
-</head>
-
-<body>
-    <div class="overlay">
-        <a href="../../projects.html" style="color: #aaa; text-decoration: none; pointer-events: auto;">← BACK</a>
-        <h1>FLUID NEBULA SIMULATION</h1>
-        <p>Move mouse to interact with cosmic dust.</p>
-    </div>
-    <canvas id="nebula"></canvas>
-
-    <script>
-        // Simple Particle Fluid Sim
-        const canvas = document.getElementById('nebula');
-        const ctx = canvas.getContext('2d');
-
-        let width, height;
-        const particles = [];
-
-        function resize() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resize);
-        resize();
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.vx = 0;
-                this.vy = 0;
-                this.color = `hsl(${Math.random() * 60 + 200}, 70%, 50%)`;
-                this.size = Math.random() * 2 + 1;
-            }
-
-            update(mx, my) {
-                // Mouse gravity
-                const dx = mx - this.x;
-                const dy = my - this.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-
-                if (dist < 200) {
-                    this.vx += dx * 0.001;
-                    this.vy += dy * 0.001;
-                }
-
-                this.x += this.vx;
-                this.y += this.vy;
-
-                this.vx *= 0.95; // Friction
-                this.vy *= 0.95;
-
-                // Wrap
-                if (this.x < 0) this.x = width;
-                if (this.x > width) this.x = 0;
-                if (this.y < 0) this.y = height;
-                if (this.y > height) this.y = 0;
-            }
-
-            draw() {
-                ctx.fillStyle = this.color;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
-        for (let i = 0; i < 500; i++) particles.push(new Particle());
-
-        let mx = -1000, my = -1000;
-        window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-
-        function loop() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-            ctx.fillRect(0, 0, width, height);
-
-            particles.forEach(p => {
-                p.update(mx, my);
-                p.draw();
-            });
-
-            requestAnimationFrame(loop);
-        }
-        loop();
-    </script>
-</body>
-
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>Fluid Nebula v5 | Volumetric Gas and Dust</title>
+        <link rel="stylesheet" href="nebula-v5.css" />
+    </head>
+    <body>
+        <main>
+            <canvas id="nebula" aria-label="Interactive nebula gas and dust simulation"></canvas>
+        </main>
+        <aside class="nebula-controls" aria-labelledby="nebula-title">
+            <a href="../../projects.html">← Back to Projects</a>
+            <h1 id="nebula-title">Fluid Nebula <span>V5</span></h1>
+            <p>Drag through the cloud to stir gas and dust.</p>
+            <label for="quality">Simulation detail</label
+            ><select id="quality">
+                <option value="balanced">Balanced · 384 grid</option>
+                <option value="high" selected>High · 512 grid</option>
+                <option value="ultra">Ultra · 768 grid</option>
+            </select>
+            <label for="turbulence">Turbulence <output id="turbulence-value">1.4</output></label
+            ><input id="turbulence" type="range" min="0" max="4" step="0.1" value="1.4" />
+            <label for="density">Optical density <output id="density-value">1.4</output></label
+            ><input id="density" type="range" min="0.2" max="3" step="0.1" value="1.4" />
+            <label for="exposure">Exposure <output id="exposure-value">1.6</output></label
+            ><input id="exposure" type="range" min="0.3" max="3" step="0.1" value="1.6" />
+            <label for="time-scale">Time scale <output id="time-scale-value">1.0</output></label
+            ><input id="time-scale" type="range" min="0.1" max="3" step="0.1" value="1" />
+            <label for="palette">Emission palette</label
+            ><select id="palette">
+                <option value="0">Hydrogen / oxygen visualization</option>
+                <option value="1" selected>Narrowband false colour</option>
+            </select>
+            <button id="pause-nebula" type="button" aria-pressed="false">Pause simulation</button>
+            <div class="actions">
+                <button id="reset-nebula" type="button">Reset field</button
+                ><button id="new-nebula" type="button">New nebula</button>
+            </div>
+            <p id="nebula-status" role="status" aria-live="polite">Preparing the fluid solver…</p>
+            <details>
+                <summary>Model and rendering</summary>
+                <p>
+                    A pressure-projected 2D fluid field drives a volumetric reconstruction with
+                    emission, scattering and dust extinction. This is a synthetic visual study, not
+                    an observed nebula or a full astrophysical magnetohydrodynamics simulation.
+                </p>
+                <p>
+                    High and Ultra increase solver resolution, pressure iterations and ray
+                    integration samples. Changing resolution restarts the same seed.
+                </p>
+            </details>
+        </aside>
+        <div id="nebula-telemetry" aria-live="off"></div>
+        <script type="module" src="nebula-v5.js"></script>
+    </body>
 </html>

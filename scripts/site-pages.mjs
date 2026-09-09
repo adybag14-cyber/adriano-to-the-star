@@ -1,5 +1,11 @@
 export const SITE_ORIGIN = 'https://adrianotothestar.com';
 
+// Released tools are discoverable while retaining their full-screen controls.
+export const INDEXABLE_LABS = [
+  { path: 'experimental/procedural-planets/index.html', title: 'Planetary Forge v5 | Realistic Procedural Worlds', description: 'Create fictional exoplanets with adaptive terrain, reflective oceans, volumetric clouds and optical atmospheric rendering in a browser-based planetary visualization tool.' },
+  { path: 'experimental/fluid-nebula/index.html', title: 'Fluid Nebula v5 | Volumetric Gas and Dust', description: 'Explore an interactive pressure-solved fluid field with volumetric emission and dust rendering. This browser study is a synthetic visualization, not an observed nebula.' }
+];
+
 // Standalone renderers and zero-duration redirects intentionally do not run the
 // shared flight animation. Each owns its full viewport or immediately hands off;
 // a second background RAF would add work without becoming visible.

@@ -72,6 +72,17 @@ jobs:
           node --check experimental/webgpu-galaxy/galaxy-sim.js
           node --check experimental/webgpu-galaxy/galaxy-software-worker.js
           node --check tests/e2e/rendering-repair.spec.js
+          node --check experimental/procedural-planets/forge-v5.js
+          node --check experimental/procedural-planets/forge-terrain.js
+          node --check experimental/procedural-planets/forge-shaders.js
+          node --check experimental/fluid-nebula/nebula-v5.js
+          node --check experimental/fluid-nebula/nebula-cpu-worker.js
+          node --check experimental/fluid-nebula/nebula-shaders.js
+          node --check database-previews.js
+          node --check planet-preview-worker.js
+          node --check site-header.js
+          node --check scripts/shared-site-header.mjs
+          node --check tests/e2e/forge-v5.spec.js
           node --check planetary-appearance-model.js
           node --check atmosphere-catalog.js
           node --check scripts/update-exoplanet-atmospheres.mjs
@@ -230,6 +241,9 @@ jobs:
             tests/e2e/smoke-ci.spec.js \
             tests/e2e/site-overhaul.spec.js \
             tests/e2e/rendering-repair.spec.js \
+            tests/e2e/forge-v5.spec.js \
+            tests/e2e/education-textures.spec.js \
+            tests/e2e/education-hd-toggle.spec.js \
             tests/e2e/local-platform-remediation.spec.js \
             tests/e2e/privacy-tracker.spec.js \
             tests/e2e/pioneer-star-maps-advanced.spec.js \

@@ -2,6 +2,7 @@
    Bilinear texture sampling preserves the complete 2K/5.4K source maps. */
 let canvas, context, frame, surface, clouds, points;
 let yaw = -.72, pitch = .05, speed = .06, atmosphere = true;
+let cloudOpacity = .78, cloudAlpha = false, atmosphereOpacity = .28, atmosphereColour = [41, 122, 235], day = false;
 let generation = 0, hidden = false, timer = null, previous = 0, dirty = true;
 let reportedGeneration = -1;
 const TAU = Math.PI * 2;
@@ -42,7 +43,7 @@ function project() {
     points[i + 7] = .5 - Math.asin(Math.max(-1, Math.min(1, ry))) / Math.PI;
   }
 }
-const sampled = new Float32Array(3);
+const sampled = new Float32Array(4);
 function sample(texture, u, v, out) {
   const tx = ((u % 1 + 1) % 1) * texture.width;
   const ty = Math.max(0, Math.min(texture.height - 1, v * (texture.height - 1)));
@@ -51,7 +52,7 @@ function sample(texture, u, v, out) {
   const b = (y * texture.width + (x + 1) % texture.width) * 4;
   const c = (Math.min(y + 1, texture.height - 1) * texture.width + x) * 4;
   const d = (Math.min(y + 1, texture.height - 1) * texture.width + (x + 1) % texture.width) * 4;
-  for (let channel = 0; channel < 3; channel++) {
+  for (let channel = 0; channel < 4; channel++) {
     out[channel] = (texture.data[a + channel] * (1 - fx) + texture.data[b + channel] * fx) * (1 - fy)
       + (texture.data[c + channel] * (1 - fx) + texture.data[d + channel] * fx) * fy;
   }
@@ -59,7 +60,7 @@ function sample(texture, u, v, out) {
 function paint() {
   if (!surface || !frame || !points) return;
   const pixels = frame.data;
-  const cloudSample = new Float32Array(3);
+  const cloudSample = new Float32Array(4);
   for (let i = 0; i < points.length; i += 9) {
     const offset = points[i];
     const u = points[i + 6] + yaw / TAU, v = points[i + 7];
@@ -67,12 +68,12 @@ function paint() {
     let cloud = 0;
     if (clouds) {
       sample(clouds, u + yaw * .04 / TAU, v, cloudSample);
-      cloud = Math.max(cloudSample[0], cloudSample[1], cloudSample[2]) / 255 * .78;
+      cloud = (cloudAlpha ? cloudSample[3] : Math.max(cloudSample[0], cloudSample[1], cloudSample[2])) / 255 * cloudOpacity;
     }
-    const rim = atmosphere ? points[i + 8] : 0;
-    const light = points[i + 4];
+    const rim = atmosphere ? Math.min(.9, points[i + 8] * atmosphereOpacity / .28) : 0;
+    const light = day ? .1 + .9 * points[i + 3] : points[i + 4];
     for (let channel = 0; channel < 3; channel++) {
-      const sky = channel === 0 ? 41 : channel === 1 ? 122 : 235;
+      const sky = atmosphereColour[channel];
       pixels[offset + channel] = Math.min(255, (sampled[channel] * (1 - cloud) + 245 * cloud) * light * (1 - rim) + sky * rim);
     }
     pixels[offset + 3] = Math.round(points[i + 5] * 255);
@@ -101,6 +102,8 @@ self.onmessage = ({ data }) => {
   if (data.type === 'planet') {
     surface = unpack(data.surface); clouds = unpack(data.clouds); generation = data.generation;
     speed = data.speed; atmosphere = data.atmosphere; yaw = data.yaw; pitch = data.pitch; project(); dirty = true;
+    cloudOpacity = data.cloudOpacity ?? .78; cloudAlpha = Boolean(data.cloudAlpha);
+    atmosphereOpacity = data.atmosphereOpacity ?? .28; atmosphereColour = data.atmosphereColour ?? [41, 122, 235]; day = Boolean(data.day);
   }
   if (data.type === 'view') { yaw = data.yaw; pitch = data.pitch; project(); dirty = true; }
   if (data.type === 'visibility') { hidden = data.hidden; previous = 0; }
