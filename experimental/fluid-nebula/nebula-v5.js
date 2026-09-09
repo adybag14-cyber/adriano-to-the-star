@@ -1,4 +1,5 @@
 import { vertex, shaders } from './nebula-shaders.js';
+import { isSoftwareWebGL } from '../../renderer-capabilities.js';
 const QUALITY = {
     balanced: { size: 384, iterations: 18, steps: 24 },
     high: { size: 512, iterations: 28, steps: 32 },
@@ -100,6 +101,7 @@ class FluidNebulaV5 {
             powerPreference: 'high-performance',
         });
         const g = this.gl;
+        if (g && isSoftwareWebGL(g)) throw new Error('WebGL2 is software-rendered in this browser');
         if (
             !g ||
             !g.getExtension('EXT_color_buffer_float') ||
@@ -466,6 +468,7 @@ class FluidNebulaV5 {
         );
         this.resize();
         this.status.textContent = `CPU fluid compatibility mode · ${error.message}. Volumetric GPU reconstruction is unavailable.`;
+        document.getElementById('nebula-telemetry').textContent = 'CPU worker · pressure-solved fluid compatibility mode';
         this.worker.onmessage = ({ data }) => {
             if (data.type === 'stats') {
                 this.time = data.time;

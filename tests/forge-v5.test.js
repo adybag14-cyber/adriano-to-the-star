@@ -7,6 +7,43 @@ const THREE = require('three');
 const root = path.join(__dirname, '..');
 const source = (name) => fs.readFileSync(path.join(root, name), 'utf8');
 
+test('software graphics detection does not confuse hardware or privacy-redacted adapters', () => {
+    const scope = vm.createContext({});
+    vm.runInContext(
+        source('renderer-capabilities.js').replace('export function ', 'function '),
+        scope
+    );
+    for (const name of [
+        'ANGLE (SwiftShader Device)',
+        'llvmpipe (LLVM 20)',
+        'Microsoft Basic Render Driver',
+    ]) {
+        expect(
+            scope.isSoftwareWebGL({
+                RENDERER: 1,
+                getExtension: () => ({ UNMASKED_RENDERER_WEBGL: 2 }),
+                getParameter: () => name,
+            })
+        ).toBe(true);
+    }
+    for (const name of ['ANGLE (NVIDIA GeForce RTX 4090)', 'ANGLE (Apple M3)', 'WebKit WebGL']) {
+        expect(
+            scope.isSoftwareWebGL({
+                RENDERER: 1,
+                getExtension: () => null,
+                getParameter: () => name,
+            })
+        ).toBe(false);
+    }
+    expect(
+        scope.isSoftwareWebGL({
+            getExtension: () => {
+                throw new Error('privacy restricted');
+            },
+        })
+    ).toBe(false);
+});
+
 function jpegSize(bytes) {
     let offset = 2;
     while (offset < bytes.length) {

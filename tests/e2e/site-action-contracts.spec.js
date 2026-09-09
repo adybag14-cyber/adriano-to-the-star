@@ -3,8 +3,11 @@ import { test, expect } from '@playwright/test';
 test.describe('catalogue action final effects', () => {
   test('every atmospheric world is reachable through pagination and search', async ({ page }) => {
     await page.goto('/database.html', { waitUntil: 'domcontentloaded' });
+    await page.locator('.atmosphere-catalog-toggle').click();
     const cards = page.locator('.atmosphere-model-card');
-    await expect(cards).toHaveCount(60, { timeout: 20_000 });
+    await expect(cards).toHaveCount(12, { timeout: 20_000 });
+    const total = await page.evaluate(() => window.__exoplanetAtmosphereCatalog.systems.reduce((n, system) => n + system.planets.length, 0));
+    const expectedPages = Math.ceil(total / 12);
     const names = new Set();
     let pages = 0;
     do {
@@ -14,8 +17,8 @@ test.describe('catalogue action final effects', () => {
       if (await next.isDisabled()) break;
       await next.click();
       await expect(page.locator('#atmosphere-catalog-page')).toContainText(`Page ${pages + 1}`);
-    } while (pages < 20);
-    const total = await page.evaluate(() => window.__exoplanetAtmosphereCatalog.systems.reduce((n, system) => n + system.planets.length, 0));
+    } while (pages <= expectedPages);
+    expect(pages).toBe(expectedPages);
     expect(names.size).toBe(total);
     await page.locator('#atmosphere-catalog-search').fill('TRAPPIST-1');
     await expect(cards).toHaveCount(7);

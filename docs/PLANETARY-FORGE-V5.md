@@ -31,6 +31,11 @@ level, continental scale, cloud/atmosphere opacity, daylight, rotation and camer
 interaction. It does not pretend to provide the GPU terrain or volumetric effects;
 unsupported settlement lights are disabled.
 
+Known software WebGL backends (including SwiftShader and llvmpipe) select the CPU
+compatibility path before expensive shader compilation. A WebGL2 API is not proof
+of hardware acceleration. Unknown or privacy-redacted adapters are not rejected,
+and renderer identity is never sent to a server.
+
 Fluid Nebula solves a pressure-projected **2D** velocity and dye field, then
 reconstructs depth for a **3D volume rendering**. It is not a full 3D fluid solver,
 magnetohydrodynamics calculation, observed nebula, or calibrated spectral retrieval.
@@ -103,6 +108,10 @@ and cloud-alpha/daylight behavior. `tests/e2e/forge-v5.spec.js` exercises real G
 compilation, CPU fallbacks, controls, previews, navigation, search metadata and
 rendered accessibility. GPU functional tests use a bounded software-rasterizer
 viewport; native-resolution visual and frame-pacing checks are separate evidence.
+On the CPU-only hosted runner, the dedicated lab suite uses a declared DPR 0.25
+framebuffer and an adapter-name fixture to exercise the full WebGL2 branch. It
+does not change shader sources, disable effects, skip LOD assertions, or alter
+production rendering quality. Software-backend auto-fallback is tested separately.
 
 The existing full production, Education HD, all-page desktop/mobile and
 accessibility suites remain enabled. The release also raises the Vitest patch

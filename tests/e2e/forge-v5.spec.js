@@ -1,5 +1,8 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { labFunctionalDpr, exerciseWebGLPipeline } from './helpers/lab-functional-profile.js';
+
+test.use({ deviceScaleFactor: labFunctionalDpr });
 
 const forceCPU = (page) =>
     page.addInitScript(() => {
@@ -25,10 +28,21 @@ test('Forge V5 compiles its GPU pipeline and refines close views without shader 
     // remain enabled. Native-resolution visual/performance QA is independent.
     await page.setViewportSize({ width: 600, height: 360 });
     await page.emulateMedia({ reducedMotion: 'reduce' });
+    await exerciseWebGLPipeline(page);
     const failures = errors(page);
     await page.goto('/experimental/procedural-planets/index.html');
     await page.waitForFunction(() => window.planetForgeV5?.frames > 0);
     expect(await page.evaluate(() => window.planetForgeV5.mode)).toBe('webgl2');
+    const framebuffer = await page.evaluate(() => {
+        const gl = window.planetForgeV5.renderer.getContext();
+        return {
+            width: gl.drawingBufferWidth,
+            expected: Math.round(innerWidth * devicePixelRatio),
+            calls: window.planetForgeV5.renderer.info.render.calls,
+        };
+    });
+    expect(framebuffer.width).toBe(framebuffer.expected);
+    expect(framebuffer.calls).toBeGreaterThan(0);
     await expect(page.getByRole('button', { name: 'Resume rotation', exact: true })).toBeVisible();
     const orbital = await page.evaluate(() => window.planetForgeV5.terrain.stats.maxLevel);
     await page.evaluate(() => {
@@ -88,6 +102,7 @@ test('Forge compatibility controls respond and respect reduced motion', async ({
 test('Nebula uses persistent 32-bit fields, functional quality settings and pause', async ({
     page,
 }) => {
+    await exerciseWebGLPipeline(page);
     await page.setViewportSize({ width: 600, height: 360 });
     const failures = errors(page);
     await page.goto('/experimental/fluid-nebula/index.html');
@@ -146,12 +161,10 @@ test('registry previews distinguish spectrum-linked models from explicit unknown
     expect(
         await measured.locator('img').evaluate((image) => image.complete && image.naturalWidth > 0)
     ).toBe(true);
-    const layout = await page
-        .locator('#atmosphere-catalog-panel')
-        .evaluate((node) => ({
-            maxHeight: getComputedStyle(node).maxHeight,
-            overflow: getComputedStyle(node).overflowY,
-        }));
+    const layout = await page.locator('#atmosphere-catalog-panel').evaluate((node) => ({
+        maxHeight: getComputedStyle(node).maxHeight,
+        overflow: getComputedStyle(node).overflowY,
+    }));
     expect(layout).toEqual({ maxHeight: 'none', overflow: 'visible' });
     expect(failures).toEqual([]);
 });
@@ -159,6 +172,7 @@ test('registry previews distinguish spectrum-linked models from explicit unknown
 test('content pages keep the homepage navigation on desktop and phone, immersive tools stay exempt', async ({
     page,
 }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
     for (const route of ['/', '/database.html', '/projects.html', '/about.html', '/privacy.html']) {
         await page.goto(route);
         const header = page.locator('[data-shared-site-header="home-v1"]');
@@ -227,6 +241,7 @@ test('indexable V5 labs and the database publish appropriate search metadata', a
 
 test('V5 lab controls pass desktop and mobile accessibility audits', async ({ page }) => {
     test.setTimeout(120_000);
+    await exerciseWebGLPipeline(page);
     await page.emulateMedia({ reducedMotion: 'reduce' });
     for (const viewport of [
         { width: 960, height: 720 },
@@ -247,4 +262,32 @@ test('V5 lab controls pass desktop and mobile accessibility audits', async ({ pa
             ).toBe(true);
         }
     }
+});
+
+test('software WebGL backends select responsive, explicitly labelled CPU renderers', async ({
+    page,
+}) => {
+    await page.addInitScript(() => {
+        const getParameter = window.WebGL2RenderingContext.prototype.getParameter;
+        window.WebGL2RenderingContext.prototype.getParameter = function (parameter) {
+            if (parameter === this.RENDERER || parameter === 0x9246)
+                return 'ANGLE (SwiftShader Device)';
+            return getParameter.call(this, parameter);
+        };
+    });
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto('/experimental/procedural-planets/index.html');
+    await expect(page.locator('#canvas-container')).toHaveAttribute(
+        'data-renderer',
+        'cpu-preview-v5'
+    );
+    await expect(page.locator('#canvas-container')).toHaveAttribute('data-surface-ready', 'true');
+    await expect(page.locator('#forge-status')).toContainText('software-rendered');
+    await expect(page.locator('#forge-telemetry')).toContainText('CPU preview');
+    await page.goto('/experimental/fluid-nebula/index.html');
+    await expect(page.locator('#nebula')).toHaveAttribute('data-renderer', 'cpu-fluid-v5');
+    await expect(page.locator('#nebula-status')).toContainText('software-rendered');
+    await expect(page.locator('#nebula-telemetry')).toContainText('CPU worker');
+    await page.getByRole('button', { name: 'Resume simulation' }).click();
+    await expect.poll(() => page.evaluate(() => window.fluidNebulaV5.time)).toBeGreaterThan(0.1);
 });

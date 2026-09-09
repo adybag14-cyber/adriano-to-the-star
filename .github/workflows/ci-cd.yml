@@ -83,6 +83,8 @@ jobs:
           node --check site-header.js
           node --check scripts/shared-site-header.mjs
           node --check tests/e2e/forge-v5.spec.js
+          node --check renderer-capabilities.js
+          node --check tests/e2e/helpers/lab-functional-profile.js
           node --check planetary-appearance-model.js
           node --check atmosphere-catalog.js
           node --check scripts/update-exoplanet-atmospheres.mjs
@@ -217,6 +219,10 @@ jobs:
           # Functional hit-testing uses a real, bounded software framebuffer.
           # The independent advanced-graphics gate retains the full render profile.
           PIONEER_FUNCTIONAL_RENDER_PROFILE: software
+          # All V5 effects still execute. Only the dedicated lab test's physical
+          # framebuffer is bounded for CPU-only SwiftShader. Native GPU output
+          # has independent full-resolution evidence.
+          LAB_FUNCTIONAL_DPR: '0.25'
         run: |
           python3 -m http.server 8095 --bind 127.0.0.1 --directory public > /tmp/adriano-smoke-server.log 2>&1 &
           server_pid=$!
@@ -237,6 +243,9 @@ jobs:
           # of the complete production suite below.
           npx playwright test tests/e2e/rendering-repair.spec.js --workers=1 --reporter=line
           npx playwright test tests/e2e/site-overhaul.spec.js --grep 'reduced.motion' --workers=1 --reporter=line
+          npx playwright test tests/e2e/forge-v5.spec.js tests/e2e/smoke-ci.spec.js --workers=1 --reporter=line
+          npx playwright test tests/e2e/site-action-contracts.spec.js --grep 'every atmospheric world' --workers=1 --reporter=line
+          npx playwright test tests/e2e/site-overhaul.spec.js --grep 'all ten project labs' --workers=1 --reporter=line
           npx playwright test \
             tests/e2e/smoke-ci.spec.js \
             tests/e2e/site-overhaul.spec.js \

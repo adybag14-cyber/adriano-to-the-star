@@ -1,4 +1,5 @@
 import { AdaptiveTerrain } from './forge-terrain.js';
+import { isSoftwareWebGL } from '../../renderer-capabilities.js';
 import {
     terrainVertex,
     terrainFragment,
@@ -59,6 +60,10 @@ class PlanetaryForgeV5 {
             powerPreference: 'high-performance',
         });
         if (!context) throw new Error('WebGL2 is unavailable');
+        if (isSoftwareWebGL(context)) {
+            context.getExtension('WEBGL_lose_context')?.loseContext();
+            throw new Error('WebGL2 is software-rendered in this browser');
+        }
         this.renderer = new T.WebGLRenderer({ canvas, context, antialias: true, alpha: false });
         this.renderer.outputEncoding = T.LinearEncoding;
         this.renderer.toneMapping = T.NoToneMapping;
@@ -227,7 +232,8 @@ class PlanetaryForgeV5 {
         this.mode = 'cpu';
         this.container.dataset.renderer = 'cpu-preview-v5';
         this.container.dataset.engineVersion = '5';
-        this.status.textContent = `CPU preview · ${error.message}. Detailed terrain and volumetric GPU effects require WebGL2.`;
+        this.status.textContent = `CPU preview · ${error.message}. Detailed terrain and volumetric effects require hardware-accelerated WebGL2.`;
+        document.getElementById('forge-telemetry').textContent = 'V5 CPU preview · textured sphere · GPU terrain and volumes unavailable';
         document.getElementById('loading').hidden = true;
         const lights = document.getElementById('enable-city-lights');
         lights.checked = false;

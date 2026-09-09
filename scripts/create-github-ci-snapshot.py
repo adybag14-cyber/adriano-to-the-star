@@ -240,6 +240,8 @@ def main() -> int:
         "games-archive-index.json",
         "scripts/check-current-tree-secrets.mjs",
         "scripts/shared-site-header.mjs",
+        "renderer-capabilities.js",
+        "tests/e2e/helpers/lab-functional-profile.js",
         "site-header.css",
         "site-header.js",
         "database-previews.js",
