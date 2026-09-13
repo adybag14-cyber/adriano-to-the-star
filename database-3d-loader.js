@@ -3,6 +3,7 @@
   const source = document.currentScript?.src || new URL('database-3d-loader.js', location.href).href;
   const base = new URL('.', source);
   const revision = new URL(source).searchParams.get('v');
+  const evidenceEngine = document.currentScript?.dataset.evidenceEngine === '1';
   // Assemble lazy asset names so the production build's static-string versioner
   // does not add a query twice; this loader propagates its own revision below.
   const assets = {
@@ -87,6 +88,23 @@
   });
 
   window.ensureDatabase3D = function () {
+    if (evidenceEngine) {
+      if (!loading) {
+        const moduleURL = new URL(['exoplanet-engine/entry', 'js'].join('.'), base);
+        if (revision) moduleURL.searchParams.set('v', revision);
+        const attempt = attempts.get('evidence-viewer') || 0;
+        if (attempt) moduleURL.searchParams.set('retry', String(attempt));
+        attempts.set('evidence-viewer', attempt + 1);
+        progress('exoplanet-viewer', 'loading', 'Loading the evidence viewer…');
+        loading = import(moduleURL.href).then(async module => {
+          const Viewer = await module.resolveViewer();
+          window.Planet3DViewer = Viewer;
+          progress('exoplanet-viewer', 'loaded', 'Evidence viewer ready.');
+          return Viewer;
+        }).catch(error => { loading = null; throw error; });
+      }
+      return loading;
+    }
     if (window.THREE?.OrbitControls && window.Planet3DViewer) return Promise.resolve(window.Planet3DViewer);
     if (!loading) {
       loading = (async () => {

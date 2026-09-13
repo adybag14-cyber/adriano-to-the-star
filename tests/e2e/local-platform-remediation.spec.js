@@ -122,7 +122,8 @@ test.describe('browser-local platform remediation', () => {
     await view3DButton.click();
     await expect(page.locator('#planet-3d-modal')).toBeVisible({ timeout: 10_000 });
     await expect(page.locator('#planet-3d-title')).toHaveText('Kepler-227 b');
-    expect(database3DRequests).toEqual(['three.min.js', 'OrbitControls-r128.js', 'planet-3d-viewer.js']);
+    // The evidence-first database path does not allocate the legacy GPU viewer.
+    expect(database3DRequests).toEqual([]);
     await page.locator('#close-3d-btn').click();
     await expect(page.locator('#planet-3d-modal')).toHaveCount(0);
   });

@@ -1,0 +1,29 @@
+name: Exoplanet source review proposal
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 5 * * 1'
+permissions:
+  contents: read
+concurrency:
+  group: exoplanet-source-review
+  cancel-in-progress: false
+jobs:
+  propose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Fetch bounded public sources without publishing
+        run: python scripts/fetch-engine-sources.py --output .artifacts/source-proposal
+      - name: Retain the proposed snapshot and review changes
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: exoplanet-source-proposal-${{ github.run_id }}
+          path: .artifacts/source-proposal
+          if-no-files-found: error
+          retention-days: 30

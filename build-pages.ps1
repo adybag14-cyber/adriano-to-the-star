@@ -135,10 +135,25 @@ $Directories = @(
     "forms",
     ".well-known",
     "wasm"
+    "exoplanet-engine"
+    "schemas"
 )
 foreach ($directory in $Directories) {
     Copy-DirectorySafely $directory "public\$directory"
 }
+
+# The reconstruction engine is built against reviewed immutable source packets.
+# Browser backends are vendored separately from the legacy r128 site globals.
+& node scripts/vendor-engine.mjs "--output=public/vendor/exoplanet/0.186.0"
+if ($LASTEXITCODE -ne 0) { throw "Engine backend vendoring failed." }
+& node scripts/validate-engine-release.mjs "--artifact=public"
+if ($LASTEXITCODE -ne 0) { throw "Exoplanet evidence release validation failed." }
+$EnginePointer = Get-Content -LiteralPath "data\exoplanet-engine\current.json" -Raw | ConvertFrom-Json
+$EngineDatabasePath = Join-Path $PagesOutput "database.html"
+$EngineDatabaseHtml = [System.IO.File]::ReadAllText($EngineDatabasePath)
+$EngineAttributes = 'data-evidence-engine="1" data-evidence-release="' + $EnginePointer.releaseId + '" data-evidence-manifest-sha256="' + $EnginePointer.manifest.sha256 + '"'
+$EngineDatabaseHtml = $EngineDatabaseHtml.Replace('data-evidence-engine="1"', $EngineAttributes)
+[System.IO.File]::WriteAllText($EngineDatabasePath, $EngineDatabaseHtml, [System.Text.UTF8Encoding]::new($false))
 
 # Vendor the exact React runtime used by tracker.html. The production browser never
 # depends on a third-party CDN for the core tracker UI.
@@ -174,7 +189,7 @@ foreach ($entry in $BitGpuVendorFiles.GetEnumerator()) {
 # is non-destructive: the checked-in, already-copied same-origin snapshot remains.
 $TrackerFeedUpdater = "scripts\update-tracker-data.mjs"
 $TrackerFeedSnapshot = "public\data\tracker\stellar-neighborhood.json"
-if (Test-Path -LiteralPath $TrackerFeedUpdater) {
+if ($env:REFRESH_PUBLIC_DATA -eq "true" -and (Test-Path -LiteralPath $TrackerFeedUpdater)) {
     try {
         & node $TrackerFeedUpdater "--output=$TrackerFeedSnapshot"
         if ($LASTEXITCODE -ne 0) { throw "tracker updater exited with code $LASTEXITCODE" }
@@ -196,7 +211,7 @@ elseif (-not (Test-Path -LiteralPath $TrackerFeedSnapshot)) {
 # unavailable, retain the checked-in snapshot that was copied above.
 $AtmosphereUpdater = "scripts\update-exoplanet-atmospheres.mjs"
 $AtmosphereSnapshot = "public\data\exoplanet-atmospheres.json"
-if (Test-Path -LiteralPath $AtmosphereUpdater) {
+if ($env:REFRESH_PUBLIC_DATA -eq "true" -and (Test-Path -LiteralPath $AtmosphereUpdater)) {
     try {
         & node $AtmosphereUpdater "--output=$AtmosphereSnapshot"
         if ($LASTEXITCODE -ne 0) { throw "exoplanet atmosphere updater exited with code $LASTEXITCODE" }
@@ -404,7 +419,7 @@ foreach ($HtmlFile in Get-ChildItem "public" -Recurse -File -Filter "*.html") {
 $LocalAssetStringPattern = '(?i)(?<quote>["''])(?<path>(?!https?:|//|data:|#|mailto:)[^"''?#\r\n]+?\.(?:css|js|json))(?<query>\?[^"'']*)?\k<quote>'
 $VersionedJavaScriptReferenceCount = 0
 foreach ($JavaScriptFile in Get-ChildItem "public" -Recurse -File -Filter "*.js" |
-    Where-Object { $_.FullName -notlike "*\public\vendor\*" }) {
+    Where-Object { $_.FullName -notlike "*\public\vendor\*" -and $_.FullName -notlike "*\public\data\exoplanet-engine\releases\*" }) {
     $JavaScriptContent = [System.IO.File]::ReadAllText($JavaScriptFile.FullName)
     $UpdatedJavaScriptContent = [regex]::Replace(
         $JavaScriptContent,

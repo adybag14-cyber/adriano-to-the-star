@@ -13,7 +13,7 @@ async function openCatalogue(page) {
 test('a delayed viewer has visible progress and closing it prevents a late modal', async ({ page }) => {
   let releaseViewer;
   const viewerReady = new Promise(resolve => { releaseViewer = resolve; });
-  await page.route('**/planet-3d-viewer.js*', async route => { await viewerReady; await route.continue(); });
+  await page.route('**/exoplanet-engine/entry.js*', async route => { await viewerReady; await route.continue(); });
   try {
     await openCatalogue(page);
     const open = page.locator('.planet-card[data-record-id="K00752.02"]').getByRole('button', { name: 'View in 3D' });
@@ -36,12 +36,12 @@ test('a delayed viewer has visible progress and closing it prevents a late modal
 
 test('a visible script error can be retried into a real viewer without reloading the page', async ({ page }) => {
   let requests = 0;
-  await page.route('**/three.min.js*', route => ++requests === 1 ? route.abort('failed') : route.continue());
+  await page.route('**/exoplanet-engine/entry.js*', route => ++requests === 1 ? route.abort('failed') : route.continue());
   await openCatalogue(page);
   const card = page.locator('.planet-card[data-record-id="K00752.01"]');
   await card.getByRole('button', { name: 'View in 3D' }).click();
   await expect(page.locator('#database-3d-loading-status')).toHaveAttribute('data-state', 'error');
-  await expect(page.locator('#database-3d-loading-status')).toContainText('three.min.js');
+  await expect(page.locator('#database-3d-loading-status')).toContainText('entry.js');
   await page.getByRole('button', { name: 'Retry 3D viewer' }).click();
   await expect(page.locator('#planet-3d-title')).toHaveText('Kepler-227 b');
   expect(requests).toBe(2);

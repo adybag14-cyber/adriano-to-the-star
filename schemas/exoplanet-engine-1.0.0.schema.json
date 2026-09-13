@@ -1,0 +1,228 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://adrianotothestar.com/schemas/exoplanet-engine-1.0.0.schema.json",
+    "title": "Exoplanet evidence and render envelope, version 1.0.0",
+    "$comment": "Production structure. exoplanet-engine/contracts.js additionally enforces reference resolution, dimensional/physical domains, accepted claims, cycles and the appearance-policy contract.",
+    "type": "object",
+    "required": ["schemaVersion", "releaseId", "evidence", "packet"],
+    "properties": {
+        "schemaVersion": { "const": "1.0.0" },
+        "releaseId": { "type": "string" },
+        "evidence": { "$ref": "#/$defs/evidence" },
+        "packet": { "$ref": "#/$defs/packet" }
+    },
+    "$defs": {
+        "ids": { "type": "array", "items": { "type": "string" }, "maxItems": 512 },
+        "nullableNumber": { "type": ["number", "null"] },
+        "constraint": {
+            "type": "object",
+            "required": ["kind"],
+            "properties": {
+                "kind": {
+                    "enum": ["estimate", "interval", "upper_limit", "lower_limit", "distribution"]
+                },
+                "value": { "type": "number" },
+                "lower": { "type": "number" },
+                "upper": { "type": "number" },
+                "errorMinus": { "$ref": "#/$defs/nullableNumber" },
+                "errorPlus": { "$ref": "#/$defs/nullableNumber" },
+                "uncertainty": { "type": ["object", "null"] }
+            },
+            "allOf": [
+                {
+                    "if": {
+                        "properties": {
+                            "kind": { "enum": ["estimate", "upper_limit", "lower_limit"] }
+                        }
+                    },
+                    "then": { "required": ["value"] }
+                },
+                {
+                    "if": { "properties": { "kind": { "const": "interval" } } },
+                    "then": { "required": ["lower", "upper"] }
+                },
+                {
+                    "if": { "properties": { "kind": { "const": "distribution" } } },
+                    "then": { "required": ["assetId", "uncertainty"] }
+                }
+            ]
+        },
+        "quantity": {
+            "type": "object",
+            "required": ["id", "objectId", "key", "unit", "definition", "state", "constraint"],
+            "properties": {
+                "id": { "type": "string" },
+                "objectId": { "type": "string" },
+                "key": { "type": "string" },
+                "unit": { "type": "string" },
+                "definition": { "type": "string", "minLength": 1 },
+                "state": { "enum": ["known", "unknown"] },
+                "constraint": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/constraint" }] },
+                "epistemicKind": { "enum": ["observed", "derived", "inferred"] },
+                "evidenceClaimIds": { "$ref": "#/$defs/ids" },
+                "inputQuantityIds": { "$ref": "#/$defs/ids" }
+            },
+            "allOf": [
+                {
+                    "if": { "properties": { "state": { "const": "unknown" } } },
+                    "then": {
+                        "required": ["reason"],
+                        "properties": {
+                            "constraint": { "type": "null" },
+                            "reason": {
+                                "enum": [
+                                    "not_reported",
+                                    "not_ingested",
+                                    "not_applicable",
+                                    "conflicting_unresolved",
+                                    "invalid_source_value"
+                                ]
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": { "properties": { "state": { "const": "known" } } },
+                    "then": {
+                        "required": [
+                            "epistemicKind",
+                            "evidenceClaimIds",
+                            "inputQuantityIds",
+                            "assumptionIds"
+                        ],
+                        "properties": { "constraint": { "$ref": "#/$defs/constraint" } }
+                    }
+                }
+            ]
+        },
+        "citation": {
+            "type": "object",
+            "required": [
+                "id",
+                "title",
+                "url",
+                "authors",
+                "publisher",
+                "publicationDate",
+                "sourceType",
+                "retrievedAt",
+                "lastVerifiedAt",
+                "snapshotHash"
+            ],
+            "properties": {
+                "id": { "type": "string" },
+                "title": { "type": "string", "minLength": 1 },
+                "url": { "type": "string", "pattern": "^https://" },
+                "authors": { "type": "array", "items": { "type": "string" } },
+                "sourceType": { "enum": ["paper", "catalogue", "official_page", "dataset"] },
+                "testOnly": { "const": false }
+            }
+        },
+        "evidence": {
+            "type": "object",
+            "required": [
+                "schemaVersion",
+                "releaseId",
+                "object",
+                "citations",
+                "claims",
+                "quantities",
+                "parameterSets",
+                "adoptedParameterSetId",
+                "modelRuns"
+            ],
+            "properties": {
+                "schemaVersion": { "const": "1.0.0" },
+                "testOnly": { "const": false },
+                "object": {
+                    "type": "object",
+                    "required": [
+                        "id",
+                        "canonicalName",
+                        "aliases",
+                        "existence",
+                        "evidenceReleaseId"
+                    ],
+                    "properties": {
+                        "existence": {
+                            "type": "object",
+                            "required": ["status", "evidenceClaimIds", "reviewedAt", "rationale"],
+                            "properties": {
+                                "status": {
+                                    "enum": [
+                                        "confirmed",
+                                        "candidate",
+                                        "disputed",
+                                        "retracted",
+                                        "unverified",
+                                        "false_positive"
+                                    ]
+                                },
+                                "evidenceClaimIds": { "$ref": "#/$defs/ids" }
+                            }
+                        }
+                    }
+                },
+                "citations": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/citation" },
+                    "maxItems": 256
+                },
+                "claims": { "type": "array", "maxItems": 256 },
+                "quantities": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/quantity" },
+                    "maxItems": 256
+                },
+                "modelRuns": { "type": "array", "maxItems": 128 },
+                "parameterSets": { "type": "array", "minItems": 1 }
+            }
+        },
+        "packet": {
+            "type": "object",
+            "required": [
+                "schemaVersion",
+                "id",
+                "objectId",
+                "evidenceReleaseId",
+                "recipeId",
+                "decision",
+                "physicalRadiusMetres",
+                "radiusProvenanceIds",
+                "schematicScale",
+                "packetHash"
+            ],
+            "properties": {
+                "schemaVersion": { "const": "1.0.0" },
+                "physicalRadiusMetres": { "$ref": "#/$defs/nullableNumber" },
+                "recipeId": { "type": ["string", "null"] },
+                "decision": {
+                    "type": "object",
+                    "required": [
+                        "mode",
+                        "policyVersion",
+                        "featureDecisions",
+                        "requiredDisclosures",
+                        "reasonCodes"
+                    ],
+                    "properties": {
+                        "mode": {
+                            "enum": [
+                                "identity_placeholder",
+                                "partially_constrained",
+                                "observation_constrained",
+                                "speculative_sandbox"
+                            ]
+                        },
+                        "requiredDisclosures": {
+                            "type": "array",
+                            "minItems": 1,
+                            "items": { "type": "string", "minLength": 1 }
+                        }
+                    }
+                },
+                "packetHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+            }
+        }
+    }
+}

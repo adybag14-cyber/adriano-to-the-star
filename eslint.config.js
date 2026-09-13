@@ -8,6 +8,8 @@ export default [
     {
         ignores: [
             ".artifacts/**",
+            "data/exoplanet-engine/releases/**",
+            "vendor/exoplanet/**",
             "**/node_modules/**",
             "node_modules/",
             "**/dist/**",

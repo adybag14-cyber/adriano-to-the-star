@@ -124,6 +124,11 @@ jobs:
       - name: Jest regression suite with coverage
         run: npm run test:coverage -- --runInBand
 
+      - name: Blocking exoplanet science and provenance gates
+        run: |
+          npm run test:engine
+          npm run validate:engine
+
       - name: Upload Jest coverage
         if: always()
         uses: actions/upload-artifact@v7
@@ -242,6 +247,8 @@ jobs:
           # Catch worker/presentation regressions first, without removing any
           # of the complete production suite below.
           npx playwright test tests/e2e/rendering-repair.spec.js --workers=1 --reporter=line
+          npx playwright test tests/e2e/exoplanet-engine.spec.js --workers=1 --reporter=line
+          npx playwright test tests/e2e/exoplanet-loading-budget.spec.js --workers=1 --reporter=line
           npx playwright test tests/e2e/site-overhaul.spec.js --grep 'reduced.motion' --workers=1 --reporter=line
           npx playwright test tests/e2e/forge-v5.spec.js tests/e2e/smoke-ci.spec.js --workers=1 --reporter=line
           npx playwright test tests/e2e/site-action-contracts.spec.js --grep 'every atmospheric world' --workers=1 --reporter=line
