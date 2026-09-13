@@ -25,6 +25,9 @@
     "data:tracker": "node scripts/update-tracker-data.mjs",
     "data:exoplanet-atmospheres": "node scripts/update-exoplanet-atmospheres.mjs",
     "data:exoplanet-appearance": "node scripts/build-exoplanet-appearance-index.mjs",
+    "test:engine": "node --test tests/exoplanet-engine/*.test.mjs",
+    "data:engine": "node scripts/build-engine-release.mjs",
+    "validate:engine": "node scripts/validate-engine-release.mjs",
     "build:pages": "powershell -ExecutionPolicy Bypass -File build-pages.ps1"
   },
   "devDependencies": {
@@ -60,7 +63,8 @@
     "bitgpu": "0.19.1",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "three": "^0.160.0"
+    "three": "^0.160.0",
+    "three-engine": "npm:three@0.186.0"
   },
   "engines": {
     "node": ">=18.0.0",

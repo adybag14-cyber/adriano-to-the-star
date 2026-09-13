@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "1.0.0",
+  "sources": [
+    {
+      "id": "koi",
+      "url": "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+kepid%2Ckepoi_name%2Ckepler_name%2Ckoi_disposition%2Ckoi_pdisposition%2Ckoi_score%2Ckoi_disp_prov%2Ckoi_vet_date%2Ckoi_trans_mod%2Ckoi_sparprov%2Ckoi_prad%2Ckoi_prad_err1%2Ckoi_prad_err2%2Ckoi_period%2Ckoi_period_err1%2Ckoi_period_err2%2Ckoi_teq%2Ckoi_teq_err1%2Ckoi_teq_err2%2Ckoi_steff%2Ckoi_steff_err1%2Ckoi_steff_err2%2Ckoi_srad%2Ckoi_srad_err1%2Ckoi_srad_err2%2Ckoi_smass%2Ckoi_smass_err1%2Ckoi_smass_err2%2Ckoi_sma%2Ckoi_sma_err1%2Ckoi_sma_err2%2Ckoi_depth%2Ckoi_depth_err1%2Ckoi_depth_err2%2Ckoi_ror%2Ckoi_ror_err1%2Ckoi_ror_err2+from+cumulative+order+by+kepoi_name&format=json",
+      "query": "select kepid,kepoi_name,kepler_name,koi_disposition,koi_pdisposition,koi_score,koi_disp_prov,koi_vet_date,koi_trans_mod,koi_sparprov,koi_prad,koi_prad_err1,koi_prad_err2,koi_period,koi_period_err1,koi_period_err2,koi_teq,koi_teq_err1,koi_teq_err2,koi_steff,koi_steff_err1,koi_steff_err2,koi_srad,koi_srad_err1,koi_srad_err2,koi_smass,koi_smass_err1,koi_smass_err2,koi_sma,koi_sma_err1,koi_sma_err2,koi_depth,koi_depth_err1,koi_depth_err2,koi_ror,koi_ror_err1,koi_ror_err2 from cumulative order by kepoi_name",
+      "path": "koi.json.gz",
+      "sha256": "f8a103bc9b98849b11ea03339edd16c56d628c76dffe425129a35bbcc36b8fae",
+      "retrievedAt": "2026-09-13T14:23:16.672595+00:00",
+      "rows": 9564,
+      "bytes": 9256855,
+      "adapterVersion": "nasa-tap-engine-1",
+      "review": "accepted",
+      "compressedSha256": "97f8f354304bb446b142f076577e473ecacbadf861e999209dd43aff995815cc",
+      "compressedBytes": 905785,
+      "reviewedAt": "2026-09-13T14:32:49.801770+00:00",
+      "reviewBasis": "Official table schema, exact identifiers, units, model provenance and source statuses compared against the previous snapshot. No composite measurements substituted."
+    },
+    {
+      "id": "ps",
+      "url": "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+pl_name%2Chostname%2Cdefault_flag%2Cpl_refname%2Cst_refname%2Csy_refname%2Cdisc_refname%2Cdisc_year%2Cdiscoverymethod%2Cpl_bmassprov%2Cpl_controv_flag%2Csy_snum%2Csy_pnum%2Crowupdate%2Cpl_pubdate%2Creleasedate%2Ctran_flag%2Crv_flag%2Cpl_rade%2Cpl_radeerr1%2Cpl_radeerr2%2Cpl_radelim%2Cpl_bmasse%2Cpl_bmasseerr1%2Cpl_bmasseerr2%2Cpl_bmasselim%2Cpl_orbper%2Cpl_orbpererr1%2Cpl_orbpererr2%2Cpl_orbperlim%2Cpl_orbsmax%2Cpl_orbsmaxerr1%2Cpl_orbsmaxerr2%2Cpl_orbsmaxlim%2Cpl_orbeccen%2Cpl_orbeccenerr1%2Cpl_orbeccenerr2%2Cpl_orbeccenlim%2Cpl_eqt%2Cpl_eqterr1%2Cpl_eqterr2%2Cpl_eqtlim%2Cst_teff%2Cst_tefferr1%2Cst_tefferr2%2Cst_tefflim%2Cst_rad%2Cst_raderr1%2Cst_raderr2%2Cst_radlim%2Cst_mass%2Cst_masserr1%2Cst_masserr2%2Cst_masslim%2Cst_lum%2Cst_lumerr1%2Cst_lumerr2%2Cst_lumlim%2Cpl_trandep%2Cpl_trandeperr1%2Cpl_trandeperr2%2Cpl_trandeplim%2Csy_dist%2Csy_disterr1%2Csy_disterr2+from+ps+where+pl_name+like+%27Kepler-%25%27+or+hostname+in+%28%27TRAPPIST-1%27%2C%27WASP-39%27%2C%27HD+189733%27%2C%2755+Cnc%27%2C%27LHS+3844%27%2C%27GJ+1214%27%2C%27TOI-700%27%29+order+by+pl_name%2Cdefault_flag+desc%2Cpl_pubdate&format=json",
+      "query": "select pl_name,hostname,default_flag,pl_refname,st_refname,sy_refname,disc_refname,disc_year,discoverymethod,pl_bmassprov,pl_controv_flag,sy_snum,sy_pnum,rowupdate,pl_pubdate,releasedate,tran_flag,rv_flag,pl_rade,pl_radeerr1,pl_radeerr2,pl_radelim,pl_bmasse,pl_bmasseerr1,pl_bmasseerr2,pl_bmasselim,pl_orbper,pl_orbpererr1,pl_orbpererr2,pl_orbperlim,pl_orbsmax,pl_orbsmaxerr1,pl_orbsmaxerr2,pl_orbsmaxlim,pl_orbeccen,pl_orbeccenerr1,pl_orbeccenerr2,pl_orbeccenlim,pl_eqt,pl_eqterr1,pl_eqterr2,pl_eqtlim,st_teff,st_tefferr1,st_tefferr2,st_tefflim,st_rad,st_raderr1,st_raderr2,st_radlim,st_mass,st_masserr1,st_masserr2,st_masslim,st_lum,st_lumerr1,st_lumerr2,st_lumlim,pl_trandep,pl_trandeperr1,pl_trandeperr2,pl_trandeplim,sy_dist,sy_disterr1,sy_disterr2 from ps where pl_name like 'Kepler-%' or hostname in ('TRAPPIST-1','WASP-39','HD 189733','55 Cnc','LHS 3844','GJ 1214','TOI-700') order by pl_name,default_flag desc,pl_pubdate",
+      "path": "ps.json.gz",
+      "sha256": "d53b9cc4b67ebe73e3b957e16deec94aa8e281fa9a28507f669fdbeab118eb3a",
+      "retrievedAt": "2026-09-13T14:23:50.781264+00:00",
+      "rows": 28424,
+      "bytes": 55623775,
+      "adapterVersion": "nasa-tap-engine-1",
+      "review": "accepted",
+      "compressedSha256": "a41b6e9b514e00b50859dbf5a17f095c6f0fd96dad1ae564787e0824c627987f",
+      "compressedBytes": 1736501,
+      "reviewedAt": "2026-09-13T14:32:49.801770+00:00",
+      "reviewBasis": "Official table schema, exact identifiers, units, model provenance and source statuses compared against the previous snapshot. No composite measurements substituted."
+    },
+    {
+      "id": "spectra",
+      "url": "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+%2A+from+spectra+where+pl_name+in+%28%27WASP-39+b%27%2C%27HD+189733+b%27%2C%27GJ+1214+b%27%2C%2755+Cnc+e%27%2C%27TRAPPIST-1+b%27%2C%27TRAPPIST-1+c%27%29+order+by+pl_name%2Cbibcode%2Cspec_type&format=json",
+      "query": "select * from spectra where pl_name in ('WASP-39 b','HD 189733 b','GJ 1214 b','55 Cnc e','TRAPPIST-1 b','TRAPPIST-1 c') order by pl_name,bibcode,spec_type",
+      "path": "spectra.json.gz",
+      "sha256": "7b5d7cf0435501407cc45a55621bf8027e07703eec30629364686071213ed378",
+      "retrievedAt": "2026-09-13T14:22:58.629297+00:00",
+      "rows": 154,
+      "bytes": 67069,
+      "adapterVersion": "nasa-tap-engine-1",
+      "review": "accepted",
+      "compressedSha256": "0086e447c5ca8ca7f664bbc4de4e287a0269a991f02564b3b00679d6b3adc240",
+      "compressedBytes": 7669,
+      "reviewedAt": "2026-09-13T14:32:49.801770+00:00",
+      "reviewBasis": "Official table schema, exact identifiers, units, model provenance and source statuses compared against the previous snapshot. No composite measurements substituted."
+    }
+  ],
+  "statusChangesReviewed": [
+    {
+      "id": "K00972.01",
+      "before": "candidate",
+      "after": "confirmed"
+    },
+    {
+      "id": "K00319.01",
+      "before": "candidate",
+      "after": "confirmed"
+    }
+  ],
+  "reviewLimit": "Engineering review of imported catalogue semantics and provenance. This is not an independent reanalysis of observations."
+}

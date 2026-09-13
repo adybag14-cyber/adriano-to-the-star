@@ -1,0 +1,8 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Exoplanet development harness</title></head><body><script type="module">
+// Development-only shader iteration; the Pages build excludes test-* HTML.
+// Release acceptance still uses the original database button and built artifact.
+import { ReconstructionViewer } from './exoplanet-engine/viewer.js';
+const id=new URLSearchParams(location.search).get('engine')||'K00752.01';
+window.planet3DViewer=new ReconstructionViewer();
+await window.planet3DViewer.showPlanet({record_id:id});
+</script></body></html>

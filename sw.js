@@ -15,7 +15,7 @@ self.addEventListener('install', event => {
 self.addEventListener('activate', event => {
   event.waitUntil((async () => {
     const names = await caches.keys();
-    await Promise.all(names.filter(name => name !== CACHE_VERSION).map(name => caches.delete(name)));
+    await Promise.all(names.filter(name => name.startsWith('ita-shell-') && name !== CACHE_VERSION).map(name => caches.delete(name)));
     await self.clients.claim();
   })());
 });
@@ -39,7 +39,8 @@ self.addEventListener('fetch', event => {
       }
       return response;
     } catch {
-      const cached = await caches.match(request, { ignoreSearch: true });
+      const versionStrict = url.pathname.includes('/exoplanet-engine/') || url.pathname.includes('/vendor/exoplanet/');
+      const cached = await caches.match(request, { ignoreSearch: !versionStrict });
       if (cached) return cached;
       if (request.mode === 'navigate') return (await caches.match(OFFLINE_URL)) || Response.error();
       return Response.error();

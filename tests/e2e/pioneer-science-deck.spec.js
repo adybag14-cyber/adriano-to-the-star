@@ -131,22 +131,20 @@ test('secondary controls change real states, cancel calibration and stop panel r
     await page.keyboard.press('Escape');
 });
 
-test('database shared viewer gates unavailable modules and preserves reset, focus and failure feedback',async({page},testInfo)=>{
+test('database evidence viewer preserves physical navigation gates, reset, focus and fullscreen failure feedback',async({page},testInfo)=>{
     test.setTimeout(90000);const errors=[];page.on('pageerror',e=>errors.push(e.message));
     await page.goto('/database.html',{waitUntil:'domcontentloaded'});
     const trigger=page.locator('.view-3d-btn').first();await expect(trigger).toBeVisible({timeout:60000});await trigger.click();
     const modal=page.locator('#planet-3d-modal');await expect(modal).toBeVisible();await expect(modal).toHaveAttribute('role','dialog');
-    await expect(page.locator('#ar-mode-btn')).toBeDisabled();await expect(page.locator('#ar-mode-btn')).toHaveText('AR unavailable');
-    const states=await page.evaluate(()=>[['surface-view-btn','planetSurfaceViz','visualizePlanet'],['orbital-view-btn','orbitalMechanics','addPlanet'],['governance-btn','colonyGovernanceSystem','showGovernanceUI'],['combat-btn','tacticalCombatSystem','startBattle']].map(([id,key,method])=>({available:typeof window[key]?.[method]==='function',disabled:document.getElementById(id).disabled})));
-    states.forEach(state=>expect(state.disabled).toBe(!state.available));
+    await expect(page.locator('#engine-mode')).toHaveText('Partially constrained view');
+    await expect(modal.getByRole('button',{name:'Near surface',exact:true})).toBeDisabled();
     const close=page.locator('#close-3d-btn');await expect(close).toBeFocused();
     await page.keyboard.press('Shift+Tab');await page.keyboard.press('Tab');await expect(close).toBeFocused();
-    await page.evaluate(()=>window.planet3DViewer.camera.position.set(3,2,7));await page.locator('#reset-view-btn').click();
-    const position=await page.evaluate(()=>window.planet3DViewer.camera.position.toArray());position.forEach((value,index)=>expect(value).toBeCloseTo([0,0,5][index],8));
-    await page.evaluate(()=>{document.getElementById('canvas-container').requestFullscreen=()=>Promise.reject(new Error('Declined'));});
-    const fullscreen=page.locator('#cardboard-btn');
-    if(await fullscreen.isEnabled()){await fullscreen.click();await expect(page.locator('#xr-support-banner')).toContainText('unavailable or was declined');}
+    await page.locator('#canvas-container').focus();await page.keyboard.press('ArrowLeft');await page.locator('#reset-view-btn').click();
+    const position=await page.evaluate(()=>window.planet3DViewer.viewSettings);expect(position.range).toBe(4);expect(position.azimuth).toBe(.4);
+    await page.evaluate(()=>{document.getElementById('planet-3d-modal').requestFullscreen=()=>Promise.reject(new Error('Declined'));});
+    await page.locator('#engine-fullscreen').click();await expect(page.locator('#engine-disclosure-text')).toContainText('unavailable or was declined');
     const hit=await close.evaluate(button=>{const r=button.getBoundingClientRect();return button.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));});expect(hit).toBe(true);
-    await page.screenshot({path:testInfo.outputPath('database-viewer.png')});
+    await page.screenshot({path:testInfo.outputPath('database-evidence-viewer.png')});
     await page.keyboard.press('Escape');await expect(modal).toBeHidden();await expect(trigger).toBeFocused();expect(errors).toEqual([]);
 });

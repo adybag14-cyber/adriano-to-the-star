@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "1.0.0",
+  "repository": "https://github.com/afeinstein20/wasp39b_niriss_paper",
+  "commit": "0608071e1e70ec7ff12707774ea03ace4b52ea85",
+  "retrievedAt": "2026-09-13T15:44:12.131591+00:00",
+  "reviewedAt": "2026-09-13T15:44:12.131591+00:00",
+  "license": "MIT; copyright 2022 Adina Feinstein",
+  "files": {
+    "figure2-reference.py": "53962ec017e52172969584bbc4c01d0af60007c08cac09b03aa34864b6309838",
+    "LICENSE": "a47cd8cac052a038c26e4b580b6f45968103bbe3ee85473725b9eebd12073d45",
+    "published-model.txt": "3702e22ba96bff3ad9e41bd8d263c00e641fc16e69a865d518b8daccf92cf9eb",
+    "README.md": "696f5cc37704b70dd5f5f455c3e1d7ed179367f25c0554a98f0de48065f70d68",
+    "source-commit.txt": "859a9e6a3750542c4eb956321bf47a690315eb7373298882dba810929c776df2",
+    "transmission.csv": "dcd3115fa6e023a4fa975a3ce54b6a03f0fd318ef923f226adf576738d9ee669"
+  },
+  "selection": "Published R300 CSV; order=1, quality=0, wavelength>0.87 micron. Other pipeline orders and quality-flagged rows retained in raw source but not plotted.",
+  "rows": 331,
+  "acceptedRows": 263,
+  "modelRows": 5272,
+  "comparison": {
+    "method": "Linear interpolation at published band centres; spectral response not convolved. Diagnostic residuals assume independent published errors; no fit probability is claimed.",
+    "normalizedResidualRMS": 1.7349774519208307,
+    "samples": 263
+  }
+}

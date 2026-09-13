@@ -2206,7 +2206,7 @@ class OptimizedDatabase {
                         </div>
 
                         <div class="ita-card-telemetry">
-                            <div><span>Confidence</span><strong>${(planet.score * 100).toFixed(0)}%</strong></div>
+                            <div title="Kepler Robovetter disposition score; this does not measure reconstruction accuracy."><span>Robovetter score</span><strong>${(planet.score * 100).toFixed(0)}%</strong></div>
                             <div><span>Discovered</span><strong>${discoveryText}</strong></div>
                         </div>
 

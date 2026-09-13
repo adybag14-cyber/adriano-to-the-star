@@ -138,7 +138,8 @@ function Invoke-ProductionHealthCheck {
                 }
             }
 
-            Write-Host "Production website checks passed: homepage, forward-flight background, emoji-free shared control markers, landing contrast, privacy-safe About page, commit-stamped asset probes, PWA manifest, database, projects, breadcrumbs, sitemap, Rocket Loader exclusions, and stale-content gate verified."
+            Invoke-CheckedCommand node scripts/check-engine-production.mjs
+            Write-Host "Production website checks passed: homepage, forward-flight background, emoji-free shared control markers, landing contrast, privacy-safe About page, commit-stamped asset probes, PWA manifest, database, projects, breadcrumbs, sitemap, Rocket Loader exclusions, immutable exoplanet runtime/data hashes, and stale-content gate verified."
             return
         }
         catch {
@@ -215,6 +216,8 @@ try {
             }
             if (Test-Path "package.json") {
                 Invoke-CheckedCommand npm run test:coverage
+                Invoke-CheckedCommand npm run test:engine
+                Invoke-CheckedCommand npm run validate:engine
             }
         }
         "build" {

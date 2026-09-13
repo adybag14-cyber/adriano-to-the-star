@@ -1,0 +1,20 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>Exoplanet backend audit</title><style>body{margin:0;background:#03070c;color:white;font:16px system-ui}canvas{width:960px;height:540px}pre{white-space:pre-wrap}</style><body><button id="run">Compare Three.js backends</button><pre id="result">Audit only; no scientific claims.</pre><script type="module">
+import * as T from './node_modules/three-engine/build/three.webgpu.js';
+document.querySelector('#run').onclick=async()=>{
+ const results=[];
+ for(const forceWebGL of [false,true]){
+  let r;
+  try{
+   const t=performance.now();r=new T.WebGPURenderer({forceWebGL,antialias:true});r.setSize(960,540);await r.init();document.body.append(r.domElement);
+   const s=new T.Scene(),c=new T.PerspectiveCamera(45,960/540,.01,100);c.position.z=5;
+   const geometry=new T.SphereGeometry(1.5,64,64),material=new T.MeshStandardNodeMaterial({color:0x899cab,roughness:.8});const mesh=new T.Mesh(geometry,material);s.add(mesh);
+   const sun=new T.DirectionalLight(0xffffff,2);sun.position.set(5,3,5);s.add(sun);await r.compileAsync(s,c);
+   const initMs=performance.now()-t,frames=[];let prev=performance.now();
+   for(let i=0;i<210;i++){await new Promise(requestAnimationFrame);mesh.rotation.y+=.003;r.render(s,c);const now=performance.now();if(i>30)frames.push(now-prev);prev=now;}
+   frames.sort((a,b)=>a-b);results.push({requested:forceWebGL?'WebGL2':'WebGPU',actual:r.backend.isWebGPUBackend?'WebGPU':'WebGL2',revision:T.REVISION,initMs,p50:frames[Math.floor(frames.length*.5)],p95:frames[Math.floor(frames.length*.95)],p99:frames[Math.floor(frames.length*.99)],triangles:r.info.render.triangles,dimensions:[960,540],frames:frames.length});
+   geometry.dispose();material.dispose();r.domElement.remove();r.dispose();
+  }catch(e){results.push({forceWebGL,error:String(e)});r?.dispose();}
+ }
+ document.querySelector('#result').textContent=JSON.stringify({ua:navigator.userAgent,results},null,2);
+};
+</script></body></html>
