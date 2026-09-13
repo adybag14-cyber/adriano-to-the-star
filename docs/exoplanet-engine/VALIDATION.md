@@ -11,7 +11,7 @@ The deployed source SHA is stamped by the real Pages build and is mapped by
 
 | Gate | Recorded result |
 |---|---|
-| Existing Jest regression | 10 suites, 80/80 tests passed. |
+| Existing Jest regression | 11 suites, 82/82 tests passed, including worker-mode acknowledgement starvation and rapid-toggle coverage. |
 | Engine science/source/numerical tests | 30/30 passed, including synthetic F01–F22 semantics, real sparse evidence, competing publication solutions, units, limits, missing values, CIE integrals, geometry/picking and balanced transition interpolation. |
 | Immutable release validation | 9,584 objects, 28,292 alternate solutions, all indexed hashes/policy/source/runtime dependencies checked. Largest compressed object packet 24,773 bytes. |
 | Pages build and artifact authority | 15,197 items, 537.96 MiB. Production audit covers 47 shared-flight pages, 17 classified exemptions and 47 sitemap URLs. Local release/hash/MIME probe passed. |
@@ -67,6 +67,15 @@ existing Jest/lint/security gates, npm run build:pages, and Playwright against
 the resulting public/ directory using BASE_URL. Hosted CI runs these engine
 gates in addition to the complete existing production and Pioneer workloads.
 Accepted source/runtime bytes are protected from Git line-ending conversion.
+
+The automatic post-merge run exposed a latent shared-background acknowledgement
+race on the Pioneer page: same-mode worker statistics invalidated an acknowledgement
+waiting for two foreground presentation frames. A deterministic test reproduced
+the missing marker; advancing its generation only on actual mode changes fixes
+the starvation while preserving stale-toggle rejection. The full local 47-page
+sweep and both reduced-motion checks pass. A desktop-only host CSS adjustment
+also separates the explanatory notice from the schematic canvas caption.
+Neither correction changes the immutable scientific runtime/data release above.
 
 Only five authorized apex CAA records were added. The 132 original Cloudflare
 records compared exactly unchanged; both authoritative nameservers publish the

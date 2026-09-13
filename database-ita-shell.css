@@ -97,6 +97,8 @@ body.database-page .atmosphere-catalog-list{grid-template-columns:repeat(3,minma
 [data-preview-kind="spectrum-linked"] .ita-planet-sphere,[data-preview-kind="spectrum-linked"] .ita-planet-orbit{display:none!important}
 .planet-preview-label{position:absolute;left:0;right:0;top:100%;font:10px/1.3 ui-monospace,monospace;color:#a5cbd3;text-align:center;white-space:nowrap}
 .ita-card-visual:has([data-preview-kind="spectrum-linked"]){margin-bottom:20px}
+/* Separate the desktop explanation from the schematic canvas caption. */
+@media(min-width:721px){body.database-page #planet-3d-modal .engine-viewport-notice{bottom:8%}}
 /* Keep the fixed audio controls outside the research reading column. */
 @media(min-width:1200px){body.database-page #atmosphere-catalog-panel{width:calc(100% - 230px)!important}}
 @media(min-width:901px) and (max-width:1400px){body.database-page .atmosphere-catalog-list{grid-template-columns:repeat(2,minmax(0,1fr))!important}}

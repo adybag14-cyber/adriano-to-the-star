@@ -198,6 +198,7 @@
     let worker;
     let transferred = false;
     let modeGeneration = 0;
+    let reportedMode;
     const abort = new AbortController();
     try {
       const url = new URL('flight-field-worker.js', shellSource);
@@ -231,8 +232,11 @@
           // A worker message can reach the main thread before its offscreen
           // bitmap is committed. Announce a mode only across a presentation
           // boundary, and invalidate stale acknowledgements on rapid toggles.
-          const generation = ++modeGeneration;
-          if (canvas.dataset.renderMode !== data.renderMode) {
+          // Periodic statistics for the same mode must not invalidate an
+          // acknowledgement still waiting for a loaded main thread to present.
+          if (reportedMode !== data.renderMode) {
+            reportedMode = data.renderMode;
+            const generation = ++modeGeneration;
             requestAnimationFrame(() => requestAnimationFrame(() => {
               if (!abort.signal.aborted && generation === modeGeneration) {
                 canvas.dataset.renderMode = data.renderMode;
