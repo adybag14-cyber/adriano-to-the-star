@@ -294,6 +294,7 @@ def main() -> int:
         "assets/models/defense/missile_battery.glb",
     }
     required.update({
+        "scripts/check-observatory-production.mjs",
         ".github/workflows/observatory-production.yml",
         "observatory-catalog.js", "observatory-experience.js", "observatory-experience.css",
         "education-sky.js", "sky-math.js", "playwright.observatory.config.mjs",

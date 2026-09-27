@@ -55,7 +55,11 @@
     if (pending) return pending;
     pending = (async () => {
       await prioritizeOpenEvidence();
-      const pointer = await read(new URL('current.json',root));
+      // Mutable pointers need the same cache key as the deployed script.
+      // Browser no-cache does not override a CDN-cached predeployment 404.
+      const pointerUrl = new URL('current.json',root);
+      pointerUrl.search = source.search;
+      const pointer = await read(pointerUrl);
       if (pointer.schemaVersion !== 1 || !validPath(pointer.manifest?.path)) throw new Error('Unrecognized catalogue pointer');
       const manifestUrl = new URL(pointer.manifest.path,root);
       const manifest = await read(manifestUrl,pointer.manifest.sha256);
