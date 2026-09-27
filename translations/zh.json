@@ -40,7 +40,7 @@
   },
   "database": {
     "title": "系外行星数据库",
-    "subtitle": "探索开普勒档案中的9,564多个天体",
+    "subtitle": "一部星图，多家天文台，明确呈现每项不确定性。",
     "searchPlaceholder": "搜索行星...",
     "filterBy": "筛选条件",
     "planetType": "行星类型",

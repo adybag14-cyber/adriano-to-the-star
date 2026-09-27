@@ -6,12 +6,14 @@
   const reducedMotionQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)');
   const forcedColoursQuery = window.matchMedia?.('(forced-colors: active)');
   const printQuery = window.matchMedia?.('print');
-  let reducedMotion = Boolean(reducedMotionQuery?.matches);
+  const motionPaused = () => Boolean(reducedMotionQuery?.matches || window.__itaMotionPaused);
+  let reducedMotion = motionPaused();
   const coarsePointer = window.matchMedia?.('(pointer: coarse)').matches;
   const shellSource = new URL(document.currentScript?.src || 'ita-universe-shell.js', location.href);
 
   function addAtmosphere() {
     document.body?.classList.add('ita-universe-enabled');
+    if (document.getElementById('viewer-container')) return; // Retain shared control layout, but never create decorative stars over the catalogue sky.
     if (!document.querySelector('.ita-universe-fx')) {
       const fx = document.createElement('div');
       fx.className = 'ita-universe-fx';
@@ -170,8 +172,8 @@
       if (query?.addEventListener) query.addEventListener('change', handler);
       else query?.addListener?.(handler);
     };
-    listen(reducedMotionQuery, event => {
-      reducedMotion = event.matches;
+    const syncMotionPreference = () => {
+      reducedMotion = motionPaused();
       canvas.dataset.renderMode = reducedMotion ? 'static-starfield' : 'forward-flight';
       if (reducedMotion) {
         stop();
@@ -179,7 +181,9 @@
       } else {
         start();
       }
-    });
+    };
+    listen(reducedMotionQuery, syncMotionPreference);
+    window.addEventListener('ita:motion-preference', syncMotionPreference);
     const syncPresentationMode = () => {
       presentationSuppressed = Boolean(forcedColoursQuery?.matches || printQuery?.matches);
       canvas.dataset.presentation = presentationSuppressed ? 'suppressed' : 'screen';
@@ -216,7 +220,7 @@
       const sync = () => {
         const suppressed = Boolean(forcedColoursQuery?.matches || printQuery?.matches);
         canvas.dataset.presentation = suppressed ? 'suppressed' : 'screen';
-        worker.postMessage({ type: 'state', reduced: Boolean(reducedMotionQuery?.matches),
+        worker.postMessage({ type: 'state', reduced: motionPaused(),
           hidden: document.hidden, suppressed });
       };
       const listen = (target, name, fn) => target?.addEventListener?.(name, fn, { passive: true, signal: abort.signal });
@@ -224,6 +228,7 @@
       if (!coarsePointer) listen(window, 'pointermove', e => worker.postMessage({ type: 'pointer',
         x: e.clientX / Math.max(1, innerWidth), y: e.clientY / Math.max(1, innerHeight) }));
       listen(document, 'visibilitychange', sync);
+      listen(window, 'ita:motion-preference', sync);
       listen(window, 'pagehide', () => worker.postMessage({ type: 'state', hidden: true }));
       listen(window, 'pageshow', sync);
       for (const query of [reducedMotionQuery, forcedColoursQuery, printQuery]) listen(query, 'change', sync);

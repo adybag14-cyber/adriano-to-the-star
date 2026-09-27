@@ -73,11 +73,10 @@
       this.pendingAutoplay = false;
       this.lastSavedSecond = -1;
 
-      const route = location.pathname.replace(/\/+$/, '').toLowerCase();
-      const homepage = route === '' || route === '/' || route.endsWith('/index.html');
-      const compactViewport = matchMedia('(max-width: 760px)').matches;
       const savedMinimized = localStorage.getItem(STORAGE.minimized);
-      this.isMinimized = savedMinimized == null ? (!homepage || compactViewport) : savedMinimized === 'true';
+      // Start compact so a first-time visitor sees the world, not an expanded
+      // playlist over it. An explicitly saved preference always wins.
+      this.isMinimized = savedMinimized == null ? true : savedMinimized === 'true';
 
       this.restoreSession();
       this.ensureStylesheet();

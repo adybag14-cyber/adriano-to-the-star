@@ -23,10 +23,10 @@ for (const { width, height } of [{ width: 390, height: 844 }, { width: 320, heig
             const targets = await page.locator(bottomTargets).evaluateAll(nodes => nodes.map(node => {
                 const box = node.getBoundingClientRect();
                 return { name: node.getAttribute('aria-label') || node.textContent.trim(), x: box.x, y: box.y, right: box.right, bottom: box.bottom, width: box.width, height: box.height,
-                    hit: node.contains(document.elementFromPoint(box.x + box.width / 2, box.y + box.height / 2)) };
+                    hit: node.contains(document.elementFromPoint(box.x + box.width / 2, box.y + box.height / 2)), blockers: document.elementsFromPoint(box.x + box.width / 2, box.y + box.height / 2).slice(0,4).map(el => ({tag:el.tagName,id:el.id,class:el.className,position:getComputedStyle(el).position,z:getComputedStyle(el).zIndex})) };
             }));
             for (const target of targets) {
-                expect(target.hit, `${target.name} accepts its real center pointer`).toBe(true);
+                expect(target.hit, `${target.name} accepts its real center pointer: ${JSON.stringify(target)}`).toBe(true);
                 expect(target.width, target.name).toBeGreaterThanOrEqual(44);
                 expect(target.height, target.name).toBeGreaterThanOrEqual(44);
                 expect(target.x, target.name).toBeGreaterThanOrEqual(0);
@@ -43,6 +43,10 @@ for (const { width, height } of [{ width: 390, height: 844 }, { width: 320, heig
             }
         };
         await assertBottomTargets();
+        // The site-level motion preference must never steal the game's edge
+        // controls. It remains available in the optional tools panel instead.
+        await expect(page.locator('#ep-data-body #observatory-motion')).toHaveCount(1);
+        await expect(page.locator('#observatory-motion')).toBeHidden();
         for (const [type, name] of [['solar', 'Solar Array'], ['hab', 'Habitat Dome'], ['mine', 'Auto-Miner']]) {
             const button = page.locator(`#ep-build-menu [data-building-type="${type}"]`);
             await button.click();

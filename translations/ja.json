@@ -40,7 +40,7 @@
   },
   "database": {
     "title": "太陽系外惑星データベース",
-    "subtitle": "ケプラーアーカイブから9,564以上の天体を探索",
+    "subtitle": "ひとつの星図、多くの観測機関。不確かさも明示。",
     "searchPlaceholder": "惑星を検索...",
     "filterBy": "フィルター",
     "planetType": "惑星タイプ",

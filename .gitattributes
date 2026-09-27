@@ -8,3 +8,8 @@ data/exoplanet-engine/releases/*/manifest.json diff
 data/exoplanet-engine/assets/** -diff
 data/exoplanet-engine/*.csv -diff
 data/exoplanet-engine/sources/**/*.csv -diff
+
+# Observatory integrity manifests hash exact committed bytes on every platform.
+data/observatory/** -text
+data/sky/** -text
+tests/observatory/fixtures/** -text

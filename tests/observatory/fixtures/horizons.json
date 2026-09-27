@@ -1,0 +1,421 @@
+{
+  "schemaVersion": 1,
+  "source": "NASA/JPL Horizons API",
+  "retrievedAt": "2026-09-27T15:18:12.141643+00:00",
+  "coordinateFrame": "ICRF equatorial",
+  "origin": "Sun centre 500@10",
+  "units": "AU and AU/day",
+  "timeScale": "TDB",
+  "corrections": "NONE; geometric",
+  "earthDefinition": "Earth\u2013Moon barycentre (3), matching JPL approximate elements, not Earth centre (399)",
+  "records": [
+    {
+      "name": "Mercury",
+      "targetId": "199",
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&OBJ_DATA=%27NO%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%4010%27&REF_PLANE=%27FRAME%27&REF_SYSTEM=%27ICRF%27&OUT_UNITS=%27AU-D%27&VEC_TABLE=%272%27&VEC_CORR=%27NONE%27&CSV_FORMAT=%27YES%27&TIME_TYPE=%27TDB%27&TLIST_TYPE=%27JD%27&TLIST=%272415020.5%27+%272451545.0%27+%272461311.0%27&COMMAND=%27199%27",
+      "path": "horizons/mercury.json",
+      "sha256": "f50951a3d38628487fceff4a4761ed37f63a9b90d86550a910363d214d9fe64f",
+      "rows": [
+        {
+          "jdTdb": 2415020.5,
+          "dateTdb": "A.D. 1900-Jan-01 00:00:00.0000",
+          "positionAU": [
+            -0.3873786086579065,
+            -0.1581390182999799,
+            -0.04415772887769986
+          ],
+          "velocityAUPerDay": [
+            0.005080088572356584,
+            -0.02167698098218109,
+            -0.01210368173841527
+          ]
+        },
+        {
+          "jdTdb": 2451545.0,
+          "dateTdb": "A.D. 2000-Jan-01 12:00:00.0000",
+          "positionAU": [
+            -0.1300936053754522,
+            -0.4005937216423254,
+            -0.200489302016726
+          ],
+          "velocityAUPerDay": [
+            0.02136639566801616,
+            -0.004926299692875428,
+            -0.004847433077772866
+          ]
+        },
+        {
+          "jdTdb": 2461311.0,
+          "dateTdb": "A.D. 2026-Sep-27 12:00:00.0000",
+          "positionAU": [
+            -0.09944026718046908,
+            -0.4063929493232027,
+            -0.206791396237336
+          ],
+          "velocityAUPerDay": [
+            0.02183967108965702,
+            -0.003263256033714377,
+            -0.00400665568196131
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Venus",
+      "targetId": "299",
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&OBJ_DATA=%27NO%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%4010%27&REF_PLANE=%27FRAME%27&REF_SYSTEM=%27ICRF%27&OUT_UNITS=%27AU-D%27&VEC_TABLE=%272%27&VEC_CORR=%27NONE%27&CSV_FORMAT=%27YES%27&TIME_TYPE=%27TDB%27&TLIST_TYPE=%27JD%27&TLIST=%272415020.5%27+%272451545.0%27+%272461311.0%27&COMMAND=%27299%27",
+      "path": "horizons/venus.json",
+      "sha256": "5c4599e90424898ca25ae2f2d8a06cd7909019c38217a45967daa0b4a6583583",
+      "rows": [
+        {
+          "jdTdb": 2415020.5,
+          "dateTdb": "A.D. 1900-Jan-01 00:00:00.0000",
+          "positionAU": [
+            0.6998542285711752,
+            -0.1605752580060074,
+            -0.1165365881967233
+          ],
+          "velocityAUPerDay": [
+            0.005288666830610453,
+            0.01782088288421846,
+            0.007676257064326592
+          ]
+        },
+        {
+          "jdTdb": 2451545.0,
+          "dateTdb": "A.D. 2000-Jan-01 12:00:00.0000",
+          "positionAU": [
+            -0.718302296345389,
+            -0.04627424670211335,
+            0.02464063845542861
+          ],
+          "velocityAUPerDay": [
+            0.0007981175157753219,
+            -0.01849183748106241,
+            -0.008369735338020125
+          ]
+        },
+        {
+          "jdTdb": 2461311.0,
+          "dateTdb": "A.D. 2026-Sep-27 12:00:00.0000",
+          "positionAU": [
+            0.7099325095636593,
+            -0.1221933640344101,
+            -0.09989736503094797
+          ],
+          "velocityAUPerDay": [
+            0.004129844999743517,
+            0.0180506063775914,
+            0.007861016283462587
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Earth",
+      "targetId": "3",
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&OBJ_DATA=%27NO%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%4010%27&REF_PLANE=%27FRAME%27&REF_SYSTEM=%27ICRF%27&OUT_UNITS=%27AU-D%27&VEC_TABLE=%272%27&VEC_CORR=%27NONE%27&CSV_FORMAT=%27YES%27&TIME_TYPE=%27TDB%27&TLIST_TYPE=%27JD%27&TLIST=%272415020.5%27+%272451545.0%27+%272461311.0%27&COMMAND=%273%27",
+      "path": "horizons/earth.json",
+      "sha256": "795923f9c89aeea396aa1ffe81eb756443da95589f6b697900f38761a8854f82",
+      "rows": [
+        {
+          "jdTdb": 2415020.5,
+          "dateTdb": "A.D. 1900-Jan-01 00:00:00.0000",
+          "positionAU": [
+            -0.1968855472576664,
+            0.8837457891609398,
+            0.3833844991750003
+          ],
+          "velocityAUPerDay": [
+            -0.01713761634631061,
+            -0.003217964764045154,
+            -0.001396411018191475
+          ]
+        },
+        {
+          "jdTdb": 2451545.0,
+          "dateTdb": "A.D. 2000-Jan-01 12:00:00.0000",
+          "positionAU": [
+            -0.1771587841839055,
+            0.8874068591468631,
+            0.3847367179193813
+          ],
+          "velocityAUPerDay": [
+            -0.01720310905522688,
+            -0.002902842020988324,
+            -0.001258509620289415
+          ]
+        },
+        {
+          "jdTdb": 2461311.0,
+          "dateTdb": "A.D. 2026-Sep-27 12:00:00.0000",
+          "positionAU": [
+            0.9998554266045969,
+            0.06467638106182128,
+            0.02802938440603227
+          ],
+          "velocityAUPerDay": [
+            -0.001488943329475291,
+            0.01568683819515384,
+            0.006799956526720208
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Mars",
+      "targetId": "499",
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&OBJ_DATA=%27NO%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%4010%27&REF_PLANE=%27FRAME%27&REF_SYSTEM=%27ICRF%27&OUT_UNITS=%27AU-D%27&VEC_TABLE=%272%27&VEC_CORR=%27NONE%27&CSV_FORMAT=%27YES%27&TIME_TYPE=%27TDB%27&TLIST_TYPE=%27JD%27&TLIST=%272415020.5%27+%272451545.0%27+%272461311.0%27&COMMAND=%27499%27",
+      "path": "horizons/mars.json",
+      "sha256": "7f988e05dd21083d94aa3f0e9b7c515a6ccd4e53a3c66591d2f2a3e157ee3eb5",
+      "rows": [
+        {
+          "jdTdb": 2415020.5,
+          "dateTdb": "A.D. 1900-Jan-01 00:00:00.0000",
+          "positionAU": [
+            0.4353672637661962,
+            -1.225360138887019,
+            -0.5738531779562993
+          ],
+          "velocityAUPerDay": [
+            0.0138579568085947,
+            0.005121397516176828,
+            0.001970857889969998
+          ]
+        },
+        {
+          "jdTdb": 2451545.0,
+          "dateTdb": "A.D. 2000-Jan-01 12:00:00.0000",
+          "positionAU": [
+            1.390715921746351,
+            0.001401217628018087,
+            -0.03696016719545011
+          ],
+          "velocityAUPerDay": [
+            0.000671499502067378,
+            0.01381403751493152,
+            0.006317900443275652
+          ]
+        },
+        {
+          "jdTdb": 2461311.0,
+          "dateTdb": "A.D. 2026-Sep-27 12:00:00.0000",
+          "positionAU": [
+            0.1741500446739087,
+            1.405307682848751,
+            0.6398851017901643
+          ],
+          "velocityAUPerDay": [
+            -0.01337522878309012,
+            0.002376213464983729,
+            0.001450651520291754
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Jupiter",
+      "targetId": "599",
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&OBJ_DATA=%27NO%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%4010%27&REF_PLANE=%27FRAME%27&REF_SYSTEM=%27ICRF%27&OUT_UNITS=%27AU-D%27&VEC_TABLE=%272%27&VEC_CORR=%27NONE%27&CSV_FORMAT=%27YES%27&TIME_TYPE=%27TDB%27&TLIST_TYPE=%27JD%27&TLIST=%272415020.5%27+%272451545.0%27+%272461311.0%27&COMMAND=%27599%27",
+      "path": "horizons/jupiter.json",
+      "sha256": "ede99c736a14d45306433e59f6220647be91319abd2f249494c66315bbe90292",
+      "rows": [
+        {
+          "jdTdb": 2415020.5,
+          "dateTdb": "A.D. 1900-Jan-01 00:00:00.0000",
+          "positionAU": [
+            -3.016039428434643,
+            -4.126277988552982,
+            -1.695438766522865
+          ],
+          "velocityAUPerDay": [
+            0.006167568460130928,
+            -0.003505773528817372,
+            -0.001653567935938186
+          ]
+        },
+        {
+          "jdTdb": 2451545.0,
+          "dateTdb": "A.D. 2000-Jan-01 12:00:00.0000",
+          "positionAU": [
+            4.001177435589426,
+            2.736578429014779,
+            1.075512145491845
+          ],
+          "velocityAUPerDay": [
+            -0.004568326581426814,
+            0.005881506177851378,
+            0.002632324004332237
+          ]
+        },
+        {
+          "jdTdb": 2461311.0,
+          "dateTdb": "A.D. 2026-Sep-27 12:00:00.0000",
+          "positionAU": [
+            -3.470184527499291,
+            3.657784390844238,
+            1.652297092082207
+          ],
+          "velocityAUPerDay": [
+            -0.005800523055894231,
+            -0.004267659557353749,
+            -0.001688001720941378
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Saturn",
+      "targetId": "699",
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&OBJ_DATA=%27NO%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%4010%27&REF_PLANE=%27FRAME%27&REF_SYSTEM=%27ICRF%27&OUT_UNITS=%27AU-D%27&VEC_TABLE=%272%27&VEC_CORR=%27NONE%27&CSV_FORMAT=%27YES%27&TIME_TYPE=%27TDB%27&TLIST_TYPE=%27JD%27&TLIST=%272415020.5%27+%272451545.0%27+%272461311.0%27&COMMAND=%27699%27",
+      "path": "horizons/saturn.json",
+      "sha256": "f650710fb9149cd24fdb4b7f58f9f5ec9a296e3637333d96ee3c6dbb6a9cbe01",
+      "rows": [
+        {
+          "jdTdb": 2415020.5,
+          "dateTdb": "A.D. 1900-Jan-01 00:00:00.0000",
+          "positionAU": [
+            -0.3669668301916346,
+            -9.304564897979818,
+            -3.825207683726771
+          ],
+          "velocityAUPerDay": [
+            0.005273178648010184,
+            -0.000127526998093672,
+            -0.000278636044522338
+          ]
+        },
+        {
+          "jdTdb": 2451545.0,
+          "dateTdb": "A.D. 2000-Jan-01 12:00:00.0000",
+          "positionAU": [
+            6.406410428378656,
+            6.174656543706226,
+            2.274770736147758
+          ],
+          "velocityAUPerDay": [
+            -0.004291884614620154,
+            0.00352890825640413,
+            0.001641853945794188
+          ]
+        },
+        {
+          "jdTdb": 2461311.0,
+          "dateTdb": "A.D. 2026-Sep-27 12:00:00.0000",
+          "positionAU": [
+            9.263877186292884,
+            1.762154472151139,
+            0.3288897123402623
+          ],
+          "velocityAUPerDay": [
+            -0.001344252520723583,
+            0.005033030278592478,
+            0.002136845376337799
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Uranus",
+      "targetId": "799",
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&OBJ_DATA=%27NO%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%4010%27&REF_PLANE=%27FRAME%27&REF_SYSTEM=%27ICRF%27&OUT_UNITS=%27AU-D%27&VEC_TABLE=%272%27&VEC_CORR=%27NONE%27&CSV_FORMAT=%27YES%27&TIME_TYPE=%27TDB%27&TLIST_TYPE=%27JD%27&TLIST=%272415020.5%27+%272451545.0%27+%272461311.0%27&COMMAND=%27799%27",
+      "path": "horizons/uranus.json",
+      "sha256": "dcb1b411ca3d00f8eee298511ec96136f361ddc3cda7eb4f2b9be75236431d01",
+      "rows": [
+        {
+          "jdTdb": 2415020.5,
+          "dateTdb": "A.D. 1900-Jan-01 00:00:00.0000",
+          "positionAU": [
+            -6.479284811082752,
+            -16.38726980639943,
+            -7.085389140538573
+          ],
+          "velocityAUPerDay": [
+            0.003674237186266362,
+            -0.001381029942772117,
+            -0.0006571240476591747
+          ]
+        },
+        {
+          "jdTdb": 2451545.0,
+          "dateTdb": "A.D. 2000-Jan-01 12:00:00.0000",
+          "positionAU": [
+            14.43185527592405,
+            -12.5062680012222,
+            -5.681690901312141
+          ],
+          "velocityAUPerDay": [
+            0.002678248748170153,
+            0.002461979769718252,
+            0.001040379858150834
+          ]
+        },
+        {
+          "jdTdb": 2461311.0,
+          "dateTdb": "A.D. 2026-Sep-27 12:00:00.0000",
+          "positionAU": [
+            8.943080246447986,
+            15.85898628795689,
+            6.819204301530581
+          ],
+          "velocityAUPerDay": [
+            -0.003527346964797114,
+            0.001469022455719833,
+            0.0006934934784341408
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Neptune",
+      "targetId": "899",
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&OBJ_DATA=%27NO%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%4010%27&REF_PLANE=%27FRAME%27&REF_SYSTEM=%27ICRF%27&OUT_UNITS=%27AU-D%27&VEC_TABLE=%272%27&VEC_CORR=%27NONE%27&CSV_FORMAT=%27YES%27&TIME_TYPE=%27TDB%27&TLIST_TYPE=%27JD%27&TLIST=%272415020.5%27+%272451545.0%27+%272461311.0%27&COMMAND=%27899%27",
+      "path": "horizons/neptune.json",
+      "sha256": "93dc3dd4319e9dcca4660bec478ff657299cf30fb8729a980e2b549e4023b3e2",
+      "rows": [
+        {
+          "jdTdb": 2415020.5,
+          "dateTdb": "A.D. 1900-Jan-01 00:00:00.0000",
+          "positionAU": [
+            1.514870538411453,
+            27.62263225642609,
+            11.26838123718069
+          ],
+          "velocityAUPerDay": [
+            -0.003146263948411968,
+            0.0001340500748711823,
+            0.000132891452324937
+          ]
+        },
+        {
+          "jdTdb": 2451545.0,
+          "dateTdb": "A.D. 2000-Jan-01 12:00:00.0000",
+          "positionAU": [
+            16.81204760586415,
+            -22.98010069273434,
+            -9.824428136008825
+          ],
+          "velocityAUPerDay": [
+            0.002578912307546227,
+            0.001668124917693581,
+            0.0006185683431605827
+          ]
+        },
+        {
+          "jdTdb": 2461311.0,
+          "dateTdb": "A.D. 2026-Sep-27 12:00:00.0000",
+          "positionAU": [
+            29.83816746007414,
+            1.540875209615703,
+            -0.1121336887728014
+          ],
+          "velocityAUPerDay": [
+            -0.0001698273322509125,
+            0.002916131507899093,
+            0.001197306444637758
+          ]
+        }
+      ]
+    }
+  ]
+}

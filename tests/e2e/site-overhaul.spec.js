@@ -59,7 +59,7 @@ test.describe('production site overhaul', () => {
     await expect(page.getByRole('link', { name: 'Privacy notice', exact: true })).toHaveAttribute('href', 'privacy.html');
   });
 
-  test('all 47 public pages load, expose one shared flight field, metadata and breadcrumbs, and scroll without layout overflow', async ({ page }) => {
+  test('all public pages load with their declared star-field policy, metadata and breadcrumbs, and scroll without layout overflow', async ({ page }) => {
     test.setTimeout(10 * 60 * 1000);
     for (const entry of SITE_PAGES) {
       const response = await page.goto(`/${entry.path}`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
@@ -72,22 +72,33 @@ test.describe('production site overhaul', () => {
       await expect(page.locator('script[data-ita-universe-shell][src*="ita-universe-shell.js?v="]')).toHaveCount(1);
       await page.waitForFunction(() => window.__itaUniverseShellLoaded === true);
       const flightField = page.locator('[data-ita-flight-field]');
-      await expect(flightField, `${entry.path} shared flight canvas`).toHaveCount(1);
-      await expect(flightField).toHaveAttribute('data-render-mode', 'forward-flight');
-      await expect(flightField).toHaveAttribute('data-motion', 'forward-z');
-      const flightMetrics = await flightField.evaluate(node => ({
-        position: getComputedStyle(node).position,
-        pointerEvents: getComputedStyle(node).pointerEvents,
-        width: node.width,
-        height: node.height,
-        stars: Number(node.dataset.starCount)
-      }));
-      expect(flightMetrics.position, `${entry.path} flight canvas position`).toBe('fixed');
-      expect(flightMetrics.pointerEvents, `${entry.path} flight canvas input isolation`).toBe('none');
-      expect(flightMetrics.width, `${entry.path} flight canvas width`).toBeGreaterThan(0);
-      expect(flightMetrics.height, `${entry.path} flight canvas height`).toBeGreaterThan(0);
-      expect(flightMetrics.stars, `${entry.path} flight star count`).toBeGreaterThanOrEqual(72);
-      expect(flightMetrics.stars, `${entry.path} flight star count`).toBeLessThanOrEqual(196);
+      if (entry.background === 'catalogue-sky') {
+        await expect(flightField, 'No illustrative flight stars over the measured Education sky').toHaveCount(0);
+        const sky=page.locator('#education-sky');
+        await expect(sky).toHaveAttribute('data-ready','true');
+        await expect(sky).toHaveAttribute('data-model','solar');
+        await expect(sky).toHaveAttribute('data-observer','Earth');
+        const metrics=await sky.evaluate(node=>({width:node.width,height:node.height,stars:Number(node.dataset.starCount),pointerEvents:getComputedStyle(node).pointerEvents}));
+        expect(metrics.width).toBeGreaterThan(0);expect(metrics.height).toBeGreaterThan(0);
+        expect(metrics.stars).toBeGreaterThan(3000);expect(metrics.pointerEvents).toBe('none');
+      } else {
+        await expect(flightField, `${entry.path} shared flight canvas`).toHaveCount(1);
+        await expect(flightField).toHaveAttribute('data-render-mode', 'forward-flight');
+        await expect(flightField).toHaveAttribute('data-motion', 'forward-z');
+        const flightMetrics = await flightField.evaluate(node => ({
+          position: getComputedStyle(node).position,
+          pointerEvents: getComputedStyle(node).pointerEvents,
+          width: node.width,
+          height: node.height,
+          stars: Number(node.dataset.starCount)
+        }));
+        expect(flightMetrics.position, `${entry.path} flight canvas position`).toBe('fixed');
+        expect(flightMetrics.pointerEvents, `${entry.path} flight canvas input isolation`).toBe('none');
+        expect(flightMetrics.width, `${entry.path} flight canvas width`).toBeGreaterThan(0);
+        expect(flightMetrics.height, `${entry.path} flight canvas height`).toBeGreaterThan(0);
+        expect(flightMetrics.stars, `${entry.path} flight star count`).toBeGreaterThanOrEqual(72);
+        expect(flightMetrics.stars, `${entry.path} flight star count`).toBeLessThanOrEqual(196);
+      }
       await page.evaluate(() => scrollTo(0, Math.floor(document.documentElement.scrollHeight / 2)));
       await page.waitForTimeout(25);
       await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight));

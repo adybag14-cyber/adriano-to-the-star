@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "fullSuiteFiles": [
+    "tests/e2e/smoke-ci.spec.js",
+    "tests/e2e/site-overhaul.spec.js",
+    "tests/e2e/rendering-repair.spec.js",
+    "tests/e2e/forge-v5.spec.js",
+    "tests/e2e/education-textures.spec.js",
+    "tests/e2e/education-hd-toggle.spec.js",
+    "tests/e2e/local-platform-remediation.spec.js",
+    "tests/e2e/privacy-tracker.spec.js",
+    "tests/e2e/pioneer-star-maps-advanced.spec.js",
+    "tests/e2e/education-atmosphere-models.spec.js",
+    "tests/e2e/accessibility-all-pages.spec.js",
+    "tests/e2e/site-action-contracts.spec.js",
+    "tests/e2e/site-shared-actions.spec.js",
+    "tests/e2e/pioneer-runtime-v2.spec.js",
+    "tests/e2e/pioneer-workload-render-profile.spec.js",
+    "tests/e2e/pioneer-mobile-commands.spec.js",
+    "tests/e2e/pioneer-universe-streaming.spec.js",
+    "tests/e2e/pioneer-cinematic-combat.spec.js",
+    "tests/e2e/site-repair-review.spec.js",
+    "tests/e2e/bonsai-loader.spec.js",
+    "tests/e2e/games-archive-contracts.spec.js",
+    "tests/e2e/pioneer-science-deck.spec.js",
+    "tests/e2e/database-lazy-loader.spec.js"
+  ],
+  "retainedCases": 173,
+  "shardCaseCounts": [
+    62,
+    59,
+    52
+  ],
+  "unionMatchesUnsharded": true,
+  "duplicateCases": 0,
+  "preflight": "Existing explicit preflight commands retained on shard1 before its full-suite partition.",
+  "caseSetSha256": "0c32644d0a745e3f77300cbd6bf3308a9096ffa22cfec70ae9f2587a2d293c44"
+}

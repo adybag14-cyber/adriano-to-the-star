@@ -33,12 +33,16 @@
     const databaseConsole = contentSection?.querySelector('.content-container.database-console');
     const catalogue = document.getElementById('nasa-data-container');
     const atmosphereRegistry = document.getElementById('atmosphere-catalog-panel');
+    const observatory = document.getElementById('observatory-catalogue-controls');
 
     if (main && contentSection && trends && (trends.compareDocumentPosition(contentSection) & Node.DOCUMENT_POSITION_FOLLOWING)) {
       main.insertBefore(contentSection, trends);
     }
-    if (databaseConsole && atmosphereRegistry && databaseConsole.firstElementChild !== atmosphereRegistry) {
-      databaseConsole.insertBefore(atmosphereRegistry, databaseConsole.firstElementChild);
+    if (databaseConsole && observatory && databaseConsole.firstElementChild !== observatory) {
+      databaseConsole.insertBefore(observatory, databaseConsole.firstElementChild);
+    }
+    if (databaseConsole && atmosphereRegistry && (observatory ? observatory.nextElementSibling !== atmosphereRegistry : databaseConsole.firstElementChild !== atmosphereRegistry)) {
+      databaseConsole.insertBefore(atmosphereRegistry, observatory ? observatory.nextElementSibling : databaseConsole.firstElementChild);
     }
     if (databaseConsole && catalogue && atmosphereRegistry?.nextElementSibling !== catalogue) {
       databaseConsole.insertBefore(catalogue, atmosphereRegistry.nextElementSibling);
@@ -74,8 +78,15 @@
   if (hero && !hero.querySelector('.db-hero-status')) {
     const status = document.createElement('div');
     status.className = 'db-hero-status';
-    status.innerHTML = '<span class="db-status-chip"><i></i> Research snapshot</span><span class="db-status-chip">9,564 indexed objects</span><span class="db-status-chip">Browser-local tools</span>';
+    status.innerHTML = '<span class="db-status-chip"><i></i> Research snapshot</span><span class="db-status-chip" data-observatory-hero-count>Verifying catalogue</span><span class="db-status-chip">Browser-local tools</span>';
     hero.appendChild(status);
+    window.ObservatoryCatalogue?.load().then(meta => {
+      const count = status.querySelector('[data-observatory-hero-count]');
+      if (count) count.textContent = `${meta.manifest.statistics.objects.toLocaleString()} indexed objects`;
+    }).catch(() => {
+      const count = status.querySelector('[data-observatory-hero-count]');
+      if (count) count.textContent = 'Limited Kepler snapshot';
+    });
   }
 
   // The legacy player forces itself expanded on every page. On the information-dense

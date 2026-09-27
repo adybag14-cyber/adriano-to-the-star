@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-09-27T15:02:00Z",
+  "scope": "An individually checked candidate entry supplements the confirmed-only Paris CSV export; this is not a complete Paris candidate/retraction census.",
+  "records": [
+    {
+      "source": "exoplanet-eu-candidate",
+      "name": "PA-99-N2 b",
+      "aliases": [],
+      "host": "PA-99-N2",
+      "status": "CANDIDATE",
+      "facility": null,
+      "method": "Pixel-lensing candidate (reanalysis)",
+      "year": 2009,
+      "ra": 10.5,
+      "dec": 41.266666666666666,
+      "updated": "2021-09-01",
+      "reference": {"label": "Ingrosso et al. 2009, Pixel-lensing as a way to detect extrasolar planets in M31; parameters and candidate status as catalogued by Paris Observatory", "url": "https://exoplanet.eu/catalog/pa_99_n2_b--556/"},
+      "url": "https://exoplanet.eu/catalog/pa_99_n2_b--556/",
+      "quantities": {
+        "mass": {"value": 6.34, "unit": "M_jupiter", "kind": "candidate lens model; not a direct mass measurement", "plus": null, "minus": null, "limit": null},
+        "radius": {"value": null, "unit": "R_jupiter", "kind": "not-reported"},
+        "distance": {"value": 670000, "unit": "pc", "kind": "catalogued host distance; depth unresolved", "plus": null, "minus": null, "limit": null},
+        "period": {"value": null, "unit": "day", "kind": "not-reported"}
+      },
+      "score": null,
+      "koi": null,
+      "kepid": null,
+      "limitations": ["Candidate, not a confirmed extragalactic planet.", "Host coordinates are coarse; local M31 stellar positions and line-of-sight depths are not supplied.", "No radius, orbital phase, surface map, or atmospheric composition is established by this entry."]
+    }
+  ]
+}

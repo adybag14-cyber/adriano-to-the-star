@@ -28,7 +28,11 @@
     "test:engine": "node --test tests/exoplanet-engine/*.test.mjs",
     "data:engine": "node scripts/build-engine-release.mjs",
     "validate:engine": "node scripts/validate-engine-release.mjs",
-    "build:pages": "powershell -ExecutionPolicy Bypass -File build-pages.ps1"
+    "build:pages": "powershell -ExecutionPolicy Bypass -File build-pages.ps1",
+    "validate:observatory": "python scripts/validate-observatory-data.py",
+    "test:observatory:science": "python scripts/validate-observatory-data.py && python -m unittest discover -s tests/observatory -p test_*.py -v && node --test tests/observatory/*.test.mjs",
+    "test:observatory:browser": "playwright test --config playwright.observatory.config.mjs",
+    "capture:observatory": "node scripts/capture-observatory.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",

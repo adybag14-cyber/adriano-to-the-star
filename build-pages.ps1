@@ -5,6 +5,10 @@ Set-Location -LiteralPath $PSScriptRoot
 
 Write-Host "Starting GitLab Pages build..."
 
+# Catalogue and sky releases are immutable inputs: fail before publication on drift.
+& python scripts/validate-observatory-data.py
+if ($LASTEXITCODE -ne 0) { throw "Observatory source verification failed" }
+
 $PagesOutput = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot "public"))
 if ((Split-Path -Parent $PagesOutput) -ne [System.IO.Path]::GetFullPath($PSScriptRoot)) {
     throw "Refusing to clean an output path outside this repository."
@@ -521,6 +525,15 @@ $RequiredFiles = @(
     "database-ita-shell.css",
     "database-experience.js",
     "education.html",
+    "observatory-experience.js",
+    "observatory-experience.css",
+    "observatory-catalog.js",
+    "sky-math.js",
+    "education-sky.js",
+    "data\observatory\current.json",
+    "data\sky\bright-nearby-v1.json",
+    "data\sky\observers.json",
+    "data\sky\NOTICE.md",
     "education-bootstrap.js",
     "education-viewer.js",
     "planetary-appearance-model.js",
