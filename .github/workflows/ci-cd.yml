@@ -200,10 +200,14 @@ jobs:
           retention-days: 2
 
   site-production-smoke:
-    name: Linux Chromium production artifact smoke
+    name: Linux Chromium production artifact smoke (${{ matrix.shard }}/3)
     needs: pioneer-build
     runs-on: ubuntu-latest
     timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
 
     steps:
       - name: Check out GitHub mirror
@@ -256,15 +260,17 @@ jobs:
             cat /tmp/adriano-smoke-server.log
             exit 1
           fi
-          # Catch worker/presentation regressions first, without removing any
-          # of the complete production suite below.
-          npx playwright test tests/e2e/rendering-repair.spec.js --workers=1 --reporter=line
-          npx playwright test tests/e2e/exoplanet-engine.spec.js --workers=1 --reporter=line
-          npx playwright test tests/e2e/exoplanet-loading-budget.spec.js --workers=1 --reporter=line
-          npx playwright test tests/e2e/site-overhaul.spec.js --grep 'reduced.motion' --workers=1 --reporter=line
-          npx playwright test tests/e2e/forge-v5.spec.js tests/e2e/smoke-ci.spec.js --workers=1 --reporter=line
-          npx playwright test tests/e2e/site-action-contracts.spec.js --grep 'every atmospheric world' --workers=1 --reporter=line
-          npx playwright test tests/e2e/site-overhaul.spec.js --grep 'all ten project labs' --workers=1 --reporter=line
+          # Keep all existing preflight gates once; distribute the unchanged
+          # complete suite across independent runners, never skip test files.
+          if [ "${{ matrix.shard }}" = "1" ]; then
+            npx playwright test tests/e2e/rendering-repair.spec.js --workers=1 --reporter=line
+            npx playwright test tests/e2e/exoplanet-engine.spec.js --workers=1 --reporter=line
+            npx playwright test tests/e2e/exoplanet-loading-budget.spec.js --workers=1 --reporter=line
+            npx playwright test tests/e2e/site-overhaul.spec.js --grep 'reduced.motion' --workers=1 --reporter=line
+            npx playwright test tests/e2e/forge-v5.spec.js tests/e2e/smoke-ci.spec.js --workers=1 --reporter=line
+            npx playwright test tests/e2e/site-action-contracts.spec.js --grep 'every atmospheric world' --workers=1 --reporter=line
+            npx playwright test tests/e2e/site-overhaul.spec.js --grep 'all ten project labs' --workers=1 --reporter=line
+          fi
           npx playwright test \
             tests/e2e/smoke-ci.spec.js \
             tests/e2e/site-overhaul.spec.js \
@@ -290,18 +296,32 @@ jobs:
             tests/e2e/pioneer-science-deck.spec.js \
             tests/e2e/database-lazy-loader.spec.js \
             --workers=1 \
-            --reporter=line
+            --shard=${{ matrix.shard }}/3 \
+            --reporter=line,blob
 
       - name: Upload production artifact smoke evidence
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: production-artifact-smoke-${{ github.run_id }}
+          name: production-artifact-smoke-${{ github.run_id }}-${{ matrix.shard }}
           path: |
             test-results/
             playwright-report/
+            blob-report/
           if-no-files-found: warn
           retention-days: 14
+
+  site-production-smoke-gate:
+    name: Linux Chromium production artifact smoke
+    needs: site-production-smoke
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Require every retained-suite shard
+        env:
+          SHARD_RESULT: ${{ needs.site-production-smoke.result }}
+        run: test "$SHARD_RESULT" = success
 
   pioneer-browser:
     name: Linux Chromium gameplay workload

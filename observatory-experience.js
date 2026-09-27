@@ -24,7 +24,17 @@
   const craft='<path d="M-12 0L-26 23H-21L-9 12H9L21 23H26L12 0Z"/><ellipse cy="-2" rx="19" ry="10"/><path d="M-26 5V29M26 5V29M-4 8V26H4V8"/><path class="observatory-engine-light" d="M-26 26V34M26 26V34"/>';
   function boot(){
     document.body.classList.add('observatory-experience');
-    const button=document.createElement('button');button.type='button';button.id='observatory-motion';button.className='observatory-motion';button.addEventListener('click',()=>{savedPause=!savedPause;try{localStorage.setItem('ita-motion-paused',String(savedPause));}catch{}apply();});document.body.append(button);apply();
+    const button=document.createElement('button');button.type='button';button.id='observatory-motion';button.className='observatory-motion';button.addEventListener('click',()=>{savedPause=!savedPause;try{localStorage.setItem('ita-motion-paused',String(savedPause));}catch{}apply();});
+    const pioneerPanel=document.getElementById('ep-data-body');
+    if(pioneerPanel){
+      // Immersive game HUD owns the viewport edges. Keep the site preference in
+      // its existing optional tools panel instead of covering Return to Hub.
+      const section=document.createElement('section');section.className='observatory-pioneer-motion';
+      section.setAttribute('aria-label','Site visual motion');
+      const note=document.createElement('p');note.textContent='Site decorative motion preference. This does not pause the colony simulation.';
+      section.append(note,button);pioneerPanel.append(section);
+    }else document.body.append(button);
+    apply();
     const stage=document.querySelector('.hero-stage .stage-frame');
     if(stage){
       const image=svg('observatory-orbital-frame',`<g class="observatory-orbit-guides"><ellipse cx="500" cy="510" rx="370" ry="190" transform="rotate(-26 500 510)"/><ellipse cx="500" cy="510" rx="414" ry="278" transform="rotate(31 500 510)"/><path d="M65 310V190H185M815 190H935V310M65 720V835H185M815 835H935V720"/><path d="M480 94H520M500 74V114M480 925H520M500 905V945"/></g><g class="observatory-radial-ticks" transform="translate(500 510)">${Array.from({length:48},(_,i)=>`<path d="M0 -415V-${i%4===0?430:421}" transform="rotate(${i*7.5})"/>`).join('')}</g><g class="observatory-craft observatory-craft-a"><g transform="translate(740 230) rotate(38)">${craft}</g></g><g class="observatory-craft observatory-craft-b"><g transform="translate(230 735) rotate(-122) scale(.65)">${craft}</g></g><g class="observatory-orbit-signal"><circle cx="500" cy="510" r="362" stroke-dasharray="18 2255"/></g>`);

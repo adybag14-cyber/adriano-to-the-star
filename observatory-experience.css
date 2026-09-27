@@ -132,3 +132,9 @@ body.ita-universe-enabled:has(#education-sky)>.ita-language-switcher { left:480p
   body:has(#education-sky):has(#ui-sidebar.active) #observatory-motion,
   body.ita-universe-enabled:has(#education-sky):has(#ui-sidebar.active)>.ita-language-switcher { visibility:hidden;pointer-events:none; }
 }
+
+/* Full-screen Pioneer owns its HUD edges; expose the site preference inside its
+   existing optional data-tools panel, not on top of Return to Hub or touch UI. */
+#ep-data-body .observatory-pioneer-motion { padding:12px;border:1px solid #33586b;border-radius:9px;background:#081522;color:#adc9d9; }
+#ep-data-body .observatory-pioneer-motion p { margin:0 0 10px;font:12px/1.6 system-ui,sans-serif; }
+#ep-data-body #observatory-motion { position:static;left:auto;right:auto;top:auto;bottom:auto;width:100%;min-height:44px;margin:0;box-shadow:none; }

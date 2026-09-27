@@ -105,3 +105,9 @@ Numeric designators are matched as complete tokens, so a search for Kepler-227 d
 The filtered GitHub snapshot validates every published catalogue and sky hash after copying Git objects, and exact-byte data attributes protect those hashes from platform newline conversion.
 
 Final hosted-image review also moves the Education floating preferences outside the desktop sidebar. On phones the planet-evidence panel starts compact and can be expanded with an explicit, keyboard-accessible button; all original facts, source links and disclosure IDs remain intact. The open mobile controls drawer hides the external floating preferences to prevent overlap. Desktop evidence remains expanded. Both viewport contracts have browser regressions.
+
+The full hosted suite also checks real center-point hits for Pioneer mobile HUD commands. Its site motion preference is mounted inside the existing optional data-tools panel rather than overlaying Return to Hub or touch controls. The note explicitly distinguishes decorative motion from pausing the colony simulation; existing hit-target tests remain unchanged and additional placement assertions were added.
+
+The retained 23-file production browser suite is distributed across three independent GitHub runners with `fail-fast: false`, keeping every test file and the same assertions. Existing preflight gates run once on shard 1. Each shard uploads separately named failure evidence and a Playwright blob report, avoiding artifact-name collisions and making a slow or failing section visible without cancelling other coverage.
+
+The stable aggregate check named Linux Chromium production artifact smoke requires every shard to succeed, preserving a single approval gate rather than allowing partial shard success.
