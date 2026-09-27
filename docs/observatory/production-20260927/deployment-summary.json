@@ -1,0 +1,213 @@
+{
+  "finishedAt": "2026-09-27T20:00:12.665721+00:00",
+  "status": "deployed-and-validated",
+  "canonicalCommit": "3cc18b8ea47ca04ad345e8845531f080b5562f9b",
+  "githubMerge": "f334de213038eb9e7f5e2f6800c6f69f26444fdd",
+  "githubPRs": [
+    6,
+    7
+  ],
+  "gitlabPipeline": 2887380041,
+  "gitlabUrl": "https://gitlab.com/adybag14-group/starisdons/-/pipelines/2887380041",
+  "gitlabJobsPassed": 7,
+  "hostedCorrectiveRun": 36341160457,
+  "hostedJobsPassed": 8,
+  "htmlDocuments": 64,
+  "addressableUrls": 67,
+  "desktopMobileViews": 134,
+  "rawViewsPassed": 133,
+  "knownBaselineControlFailures": 1,
+  "newBlockingFindings": [],
+  "assetsChecked": 218,
+  "exactByteHashMatches": 217,
+  "equivalentManifestWhitespace": 0,
+  "refreshedFeedCount": 1,
+  "browserTests": {
+    "startTime": "2026-09-27T19:56:35.973Z",
+    "duration": 120750.027,
+    "expected": 32,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "returningVisitor": "The old service worker remained active; its network-first path loaded the new page assets and full catalogue while preserving all local preference sentinels.",
+  "initialDeploymentRegression": "Live audit found a Cloudflare-cached unversioned pointer404. Corrected loader keys the pointer to its deployed script; new39-asset health gate blocks silent fallback. Failed-attempt evidence is retained.",
+  "baselineExceptions": [
+    "Tracker mobile language toggle is offscreen in old baseline and final release, not a new regression.",
+    "The unchanged generated choropleth lacks title and HTML language; retained accessibility findings."
+  ],
+  "liveProductionGallery": {
+    "workflowRun": 36345655558,
+    "artifactId": 10940706115,
+    "archiveSha256": "50bbc2a4a32e38979657f5edeaf71f51fa7038f0004b642ae26c194312481b49",
+    "kind": "production-read-only",
+    "baseURL": "https://adrianotothestar.com/",
+    "commit": "f334de213038eb9e7f5e2f6800c6f69f26444fdd",
+    "startedAt": "2026-09-27T19:48:45.624Z",
+    "finishedAt": "2026-09-27T19:51:39.067Z",
+    "views": 52,
+    "gifs": 2,
+    "failures": [],
+    "catalogueCounts": {
+      "database-desktop": 16180,
+      "database-html-mobile": 16180
+    },
+    "imageHashesVerified": true,
+    "gifFrames": {
+      "home-desktop": 24,
+      "education-desktop": 24
+    },
+    "earlyMixedVersionObservation": {
+      "view": "home-desktop",
+      "assetVersions": [
+        "3cc18b8e",
+        "eeecf077"
+      ],
+      "subsequentHomepageVersions": [
+        "3cc18b8e"
+      ],
+      "followUp": "Two fresh live homepage contexts at 19:55:58Z and 19:56:00Z showed only 3cc18b8e across all script/style URLs and associated versioned requests; full live audit delivered runtime/data hashes matched. The cause of the earlier mixed tag observation is not established. Raw gallery metadata is preserved."
+    },
+    "visualReview": "Actual live Education phone/desktop, home and database PNGs inspected. Images are browser captures, not generated designs. GIF playback at5fps is presentation, not measured rendering FPS."
+  },
+  "artifactComparison": {
+    "canonicalCommit": "3cc18b8ea47ca04ad345e8845531f080b5562f9b",
+    "certifiedRun": 36341160457,
+    "certifiedFiles": 15108,
+    "canonicalFiles": 15111,
+    "byteIdenticalFiles": 15106,
+    "missingFiles": [],
+    "extraCanonicalFiles": [
+      ".nojekyll",
+      ".well-known/security.txt",
+      "audio/.gitkeep"
+    ],
+    "differences": [
+      {
+        "path": "data/space-feeds.json",
+        "expectedBytes": 4732,
+        "actualBytes": 7178,
+        "expectedSha256": "1570e99f01f67be1806009d6fd7417f87d0c009500e862475663981b464d17be",
+        "actualSha256": "80c855a98f37a2f0ad8e69e9d7fae09868fbb00ab1a5c55f78ce844f3c18b50f",
+        "reason": "refreshed build-time space feed",
+        "accepted": true
+      },
+      {
+        "path": "manifest.json",
+        "expectedBytes": 3106,
+        "actualBytes": 5485,
+        "expectedSha256": "f6e7e03ee4676a2513a83c5a3ccf70e02bfd7b8ec28f48293a0c608dd0d2be50",
+        "actualSha256": "fa0a15f4ff78ecbe0cbfaa2a393a41062a14045a9e9d627be02eda07580944cd",
+        "reason": "identical parsed PWA JSON; serializer whitespace only",
+        "accepted": true
+      }
+    ],
+    "crcVerified": true,
+    "status": "passed"
+  },
+  "publicationRecovery": {
+    "canonicalCommit": "3cc18b8ea47ca04ad345e8845531f080b5562f9b",
+    "pipeline": 2887380041,
+    "initialPagesJob": 16765403598,
+    "initialHealthJob": 16765403599,
+    "initialHealthResult": "failed: all 18 unchanged release-marker probes still returned the prior deployed release",
+    "evidence": {
+      "acceptedPagesArtifactVersion": "3cc18b8e",
+      "thenLiveVersion": "eeecf077",
+      "thenActivePagesDeploymentCreatedAt": "2026-09-27T18:10:54.535Z"
+    },
+    "observedReplacementPagesJob": 16765492848,
+    "replacementPagesCreatedAt": "2026-09-27T19:44:13.641Z",
+    "replacementPagesResult": "success",
+    "activePagesDeploymentAfterRetry": "2026-09-27T19:45:52.357Z",
+    "verifiedLiveVersionAfterRetry": "3cc18b8e",
+    "replacementHealthJob": 16765510671,
+    "retryResponseReconciliation": "Each CLI retry call reported an HTTP 403 not-retryable response, but a subsequent live job-list read confirmed a new attempt of the same job and exact commit. No additional duplicate retry was sent after observing it.",
+    "policy": "No source change, gate weakening or forced branch update. The same verified Pages artifact was republished and the original health check was rerun. Acceptance remains conditional on final pipeline and live audit results."
+  },
+  "hostedExecutedCases": {
+    "run": 36341160457,
+    "url": "https://github.com/adybag14-cyber/adriano-to-the-star/actions/runs/36341160457",
+    "headSha": "2f4989da0db6b71456f0d49b82b79e0e4bfae74d",
+    "status": "success",
+    "jobs": [
+      {
+        "name": "Windows Pages build + unit gates",
+        "databaseId": 108681388948,
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Linux Chromium advanced graphics smoke",
+        "databaseId": 108682152942,
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Linux Chromium production artifact smoke (2/3)",
+        "databaseId": 108682152978,
+        "status": "completed",
+        "conclusion": "success",
+        "testSummaryLines": [
+          "2026-09-27T18:47:54.4036730Z   59 passed (7.9m)"
+        ],
+        "lastPassedCount": 59
+      },
+      {
+        "name": "Linux Chromium production artifact smoke (1/3)",
+        "databaseId": 108682152983,
+        "status": "completed",
+        "conclusion": "success",
+        "testSummaryLines": [
+          "2026-09-27T18:40:29.7891351Z   5 passed (10.6s)",
+          "2026-09-27T18:41:04.9918946Z   12 passed (34.2s)",
+          "2026-09-27T18:41:29.8681198Z   1 passed (23.9s)",
+          "2026-09-27T18:41:35.1873638Z   2 passed (4.4s)",
+          "2026-09-27T18:43:06.3575067Z   10 passed (1.5m)",
+          "2026-09-27T18:43:22.3620541Z   1 passed (15.0s)",
+          "2026-09-27T18:43:28.7893848Z   1 passed (5.5s)",
+          "2026-09-27T18:51:10.1095573Z   62 passed (7.7m)"
+        ],
+        "lastPassedCount": 62
+      },
+      {
+        "name": "Linux Chromium production artifact smoke (3/3)",
+        "databaseId": 108682152994,
+        "status": "completed",
+        "conclusion": "success",
+        "testSummaryLines": [
+          "2026-09-27T18:42:58.4387919Z   52 passed (3.0m)"
+        ],
+        "lastPassedCount": 52
+      },
+      {
+        "name": "Linux Chromium gameplay workload",
+        "databaseId": 108682152998,
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Observatory desktop/mobile + PNG/GIF gallery",
+        "databaseId": 108682153003,
+        "status": "completed",
+        "conclusion": "success",
+        "testSummaryLines": [
+          "2026-09-27T18:43:45.1059963Z   32 passed (3.3m)"
+        ],
+        "lastPassedCount": 32
+      },
+      {
+        "name": "Linux Chromium production artifact smoke",
+        "databaseId": 108684286679,
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ],
+    "retainedBrowserCasesPassed": 173,
+    "observatoryBrowserCasesPassed": 32,
+    "gateJobsPassed": 8
+  },
+  "rollbackRef": "safety/pre-observatory-20260927",
+  "rollbackCommit": "4d925d158543f231589ce608c7409fcaecbcf7cf",
+  "scope": "Fresh unauthenticated production contexts, read-only network methods, no submitted application forms or account writes."
+}
