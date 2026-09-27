@@ -111,3 +111,8 @@ The full hosted suite also checks real center-point hits for Pioneer mobile HUD 
 The retained 23-file production browser suite is distributed across three independent GitHub runners with `fail-fast: false`, keeping every test file and the same assertions. Existing preflight gates run once on shard 1. Each shard uploads separately named failure evidence and a Playwright blob report, avoiding artifact-name collisions and making a slow or failing section visible without cancelling other coverage.
 
 The stable aggregate check named Linux Chromium production artifact smoke requires every shard to succeed, preserving a single approval gate rather than allowing partial shard success.
+
+
+### Production cache-key regression
+
+The deployment audit found a cached 404 for the previously nonexistent, unversioned `data/observatory/current.json`: Cloudflare reported `HIT`, an age older than the deployment, and a seven-day TTL. A release-query request returned the exact expected pointer. The loader now applies its own deployed script query to the mutable pointer; immutable release paths retain their reusable hash-verified identities. A browser regression poisons only the bare pointer URL and requires the full catalogue via the matching release key. The canonical post-deployment health check also verifies the visitor-facing release-keyed pointer and every immutable catalogue/evidence shard, so an older fallback cannot be counted as a successful observatory deployment.

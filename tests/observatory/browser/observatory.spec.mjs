@@ -215,3 +215,16 @@ test('planet evidence and floating preferences do not obscure the mobile world o
   expect(motion.x+motion.width<=language.x || language.x+language.width<=motion.x).toBe(true);
   await noOverflow(page);
 });
+
+
+test('catalogue pointer follows the deployed release despite a cached bare-URL 404',async({page})=>{
+  const pointers=[];
+  page.on('request',request=>{const url=new URL(request.url());if(url.pathname.endsWith('/data/observatory/current.json'))pointers.push(url.href);});
+  await page.route('**/data/observatory/current.json',route=>route.fulfill({status:404,headers:{'cache-control':'max-age=604800'},body:'Previously cached missing pointer'}));
+  await database(page);
+  const scriptVersion=await page.locator('script[src*="observatory-catalog.js"]').evaluate(element=>new URL(element.src).searchParams.get('v'));
+  expect(scriptVersion).toBeTruthy();expect(pointers.length).toBeGreaterThan(0);
+  expect(pointers.every(url=>new URL(url).searchParams.get('v')===scriptVersion)).toBe(true);
+  expect(await page.evaluate(()=>window.databaseInstance.allData.length)).toBe(16180);
+  await expect(page.locator('#observatory-catalogue-controls')).toContainText('16,180');
+});

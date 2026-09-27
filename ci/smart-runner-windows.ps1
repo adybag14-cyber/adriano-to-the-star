@@ -139,6 +139,7 @@ function Invoke-ProductionHealthCheck {
             }
 
             Invoke-CheckedCommand node scripts/check-engine-production.mjs
+            Invoke-CheckedCommand node scripts/check-observatory-production.mjs --base $BaseUrl --version $ReleaseMarker
             Write-Host "Production website checks passed: homepage, forward-flight background, emoji-free shared control markers, landing contrast, privacy-safe About page, commit-stamped asset probes, PWA manifest, database, projects, breadcrumbs, sitemap, Rocket Loader exclusions, immutable exoplanet runtime/data hashes, and stale-content gate verified."
             return
         }
