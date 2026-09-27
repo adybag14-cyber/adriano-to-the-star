@@ -115,3 +115,20 @@ body:has(#observatory-catalogue-controls) .db-hero-status { margin-top:18px; }
 body:has(#observatory-catalogue-controls) main>section.content-section:first-of-type { margin-top:24px!important; }
 #observatory-catalogue-controls { order:-2;margin-bottom:20px;scroll-margin-top:100px; }
 @media(max-width:760px) { body:has(#observatory-catalogue-controls) .page-hero { padding:28px 16px 18px!important; } }
+
+/* Final hosted-image review: controls must not cover the sidebar, and mobile
+   evidence should be available on demand rather than obscure the whole planet. */
+body:has(#education-sky) #observatory-motion { left:330px;bottom:20px; }
+body.ita-universe-enabled:has(#education-sky)>.ita-language-switcher { left:480px;bottom:20px; }
+.education-details-toggle { display:block;width:100%;min-height:38px;margin-top:14px;padding:9px 12px;border:1px solid #426c7e;border-radius:7px;background:#102332;color:#ccecf4;text-align:left;font:600 12px/1.4 system-ui,sans-serif;cursor:pointer; }
+.education-details-toggle::after { content:'+';float:right;font-size:17px;line-height:15px; }
+.education-details-toggle[aria-expanded="true"]::after { content:'−'; }
+.education-details-toggle[hidden],#education-planet-details[hidden] { display:none!important; }
+@media(max-width:760px) {
+  body:has(#education-sky) #observatory-motion { left:98px;bottom:112px;min-height:39px; }
+  body.ita-universe-enabled:has(#education-sky)>.ita-language-switcher { left:12px;bottom:112px; }
+  body:has(#education-sky) #data-overlay[data-details-expanded="false"] { max-height:none; }
+  body:has(#education-sky) #data-overlay[data-details-expanded="true"] { max-height:calc(100dvh - 320px); }
+  body:has(#education-sky):has(#ui-sidebar.active) #observatory-motion,
+  body.ita-universe-enabled:has(#education-sky):has(#ui-sidebar.active)>.ita-language-switcher { visibility:hidden;pointer-events:none; }
+}

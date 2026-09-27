@@ -31,6 +31,7 @@
       this.statusHeading=node('strong','CATALOGUE SKY');this.statusText=node('span','Loading measured star positions…');this.statusText.setAttribute('role','status');
       this.status.append(this.statusHeading,this.statusText);document.body.append(this.status);
       this.makeControls();
+      this.makePlanetEvidencePanel();
       this.limitPanel=node('section',null,'education-sky-limit');this.limitPanel.hidden=true;this.limitPanel.setAttribute('aria-labelledby','education-sky-limit-title');
       const title=node('h2','ANDROMEDA · EVIDENCE LIMIT');title.id='education-sky-limit-title';
       this.limitPanel.append(node('p','PA-99-N2 b / CANDIDATE HOST LOCATION','observatory-kicker'),title,
@@ -44,6 +45,24 @@
       window.addEventListener('pagehide',()=>{if(this.raf!=null)cancelAnimationFrame(this.raf);this.raf=null;});
       window.addEventListener('pageshow',()=>this.requestDraw());
       this.resize();this.ready=this.load();
+    }
+    makePlanetEvidencePanel() {
+      const panel=document.getElementById('data-overlay');
+      if(!panel || document.getElementById('education-planet-details'))return;
+      const content=node('div');content.id='education-planet-details';
+      for(const child of [...panel.children])if(!['planet-name','planet-context-label'].includes(child.id))content.append(child);
+      const button=node('button','Show planet evidence','education-details-toggle');button.id='education-details-toggle';button.type='button';button.setAttribute('aria-controls',content.id);
+      panel.append(button,content);
+      const narrow=matchMedia('(max-width:760px)');let expanded=false;
+      const sync=()=>{
+        const open=!narrow.matches || expanded;
+        button.hidden=!narrow.matches;content.hidden=!open;
+        button.textContent=expanded?'Hide planet evidence':'Show planet evidence';
+        button.setAttribute('aria-expanded',String(open));
+        panel.dataset.detailsExpanded=String(open);
+      };
+      button.addEventListener('click',()=>{expanded=!expanded;sync();});
+      narrow.addEventListener('change',sync);sync();
     }
     makeControls() {
       const sidebar=document.getElementById('ui-sidebar');if(!sidebar)return;

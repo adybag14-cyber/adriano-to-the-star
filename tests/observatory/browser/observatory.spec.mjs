@@ -190,3 +190,28 @@ test('numeric planet designators do not match unrelated longer KOI aliases',asyn
   await expect(page.locator('#observatory-evidence-dialog')).toHaveCount(0);
   await expect(page).not.toHaveURL(/planet=/);
 });
+
+
+test('planet evidence and floating preferences do not obscure the mobile world or desktop sidebar',async({page})=>{
+  await education(page);
+  const narrow=page.viewportSize().width<=760;
+  const button=page.locator('#education-details-toggle');
+  if(narrow){
+    await expect(button).toBeVisible();await expect(button).toHaveAttribute('aria-expanded','false');
+    await expect(page.locator('#education-planet-details')).toBeHidden();
+    const collapsed=await page.locator('#data-overlay').boundingBox();expect(collapsed.height).toBeLessThan(180);
+    await button.click();await expect(page.locator('#planet-desc')).toBeVisible();
+    await expect(button).toHaveAttribute('aria-expanded','true');await button.click();
+    await sidebar(page);await expect(page.locator('#observatory-motion')).toBeHidden();
+    await page.locator('#education-menu-toggle').click();await expect(page.locator('#observatory-motion')).toBeVisible();
+  }else{
+    await expect(button).toBeHidden();await expect(page.locator('#planet-desc')).toBeVisible();
+    const controls=await page.locator('#ui-sidebar').boundingBox(),motion=await page.locator('#observatory-motion').boundingBox(),language=await page.locator('.ita-language-switcher').boundingBox();
+    expect(motion.x).toBeGreaterThanOrEqual(controls.x+controls.width+8);
+    expect(language.x).toBeGreaterThanOrEqual(motion.x+motion.width+8);
+  }
+  const motion=await page.locator('#observatory-motion').boundingBox(),language=await page.locator('.ita-language-switcher').boundingBox();
+  expect(motion.y).toBeGreaterThanOrEqual(0);expect(motion.y+motion.height).toBeLessThanOrEqual(page.viewportSize().height);
+  expect(motion.x+motion.width<=language.x || language.x+language.width<=motion.x).toBe(true);
+  await noOverflow(page);
+});

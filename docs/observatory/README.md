@@ -103,3 +103,5 @@ The Starsector menu route intentionally hands off to the separately hosted Stars
 Numeric designators are matched as complete tokens, so a search for Kepler-227 does not pick unrelated KOI-2271 aliases. The source-evidence dialog preserves the selected object in the URL and restores focus/clears the selection on close. Both desktop and phone tests cover this path.
 
 The filtered GitHub snapshot validates every published catalogue and sky hash after copying Git objects, and exact-byte data attributes protect those hashes from platform newline conversion.
+
+Final hosted-image review also moves the Education floating preferences outside the desktop sidebar. On phones the planet-evidence panel starts compact and can be expanded with an explicit, keyboard-accessible button; all original facts, source links and disclosure IDs remain intact. The open mobile controls drawer hides the external floating preferences to prevent overlap. Desktop evidence remains expanded. Both viewport contracts have browser regressions.
