@@ -1,0 +1,45 @@
+name: Publish verified rollout evidence
+
+on:
+  push:
+    branches: [evidence/observatory-production-20260927]
+    paths: [.github/workflows/observatory-rollout-evidence.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validated-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - name: Verify the exact safe evidence bundle
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib, json, zipfile
+          root = Path('docs/observatory/production-20260927')
+          archive = root / 'observatory-production-validation.zip'
+          assert hashlib.sha256(archive.read_bytes()).hexdigest() == '70853ac31fc85171b686e15ea8eee692b0a73cd56681685556d52cdc9c347725'
+          with zipfile.ZipFile(archive) as z:
+              assert z.testzip() is None
+              assert all(Path(n).suffix.lower() in {'.html','.json','.md','.png'} for n in z.namelist())
+              report = json.loads(z.read('deployment-summary.json'))
+              assert report['status'] == 'deployed-and-validated'
+              assert report['canonicalCommit'] == '3cc18b8ea47ca04ad345e8845531f080b5562f9b'
+              assert report['browserTests']['expected'] == 32 and report['browserTests']['unexpected'] == 0
+          print('Exact verified rollout evidence; no application runtime, fonts or browser profiles packaged.')
+          PY
+      - name: Upload verified production audit and report
+        uses: actions/upload-artifact@v7
+        with:
+          name: verified-production-rollout-20260927
+          path: |
+            docs/observatory/production-20260927/observatory-production-validation.zip
+            docs/observatory/production-20260927/DEPLOYMENT-REPORT.md
+            docs/observatory/production-20260927/deployment-summary.json
+          if-no-files-found: error
+          retention-days: 30
