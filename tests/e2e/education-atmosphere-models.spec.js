@@ -142,7 +142,10 @@ test.describe('NASA-backed Planetary OS appearance models', () => {
     await page.locator('#education-menu-toggle').click();
     await expect(page.locator('#ui-sidebar')).toHaveClass(/active/);
     await page.locator('#education-world-select').scrollIntoViewIfNeeded();
-    await expect(page.locator('#education-world-select')).toBeInViewport();
+    // The drawer animates into view. Partial intersection can be true while
+    // its left edge is still offscreen; require full visibility before testing
+    // the unchanged geometric bounds below.
+    await expect(page.locator('#education-world-select')).toBeInViewport({ ratio: 1 });
     const geometry = await page.evaluate(() => {
       const overlay = document.getElementById('data-overlay').getBoundingClientRect();
       const select = document.getElementById('education-world-select').getBoundingClientRect();
