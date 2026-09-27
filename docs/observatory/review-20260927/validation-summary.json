@@ -1,0 +1,48 @@
+{
+  "canonicalCommit": "98f8fed0b75eee764a88f74b665c68a34f4a0668",
+  "githubSourceCommit": "79c02d13e110029d744281db647ea8683f0e7419",
+  "pullRequest": "https://github.com/adybag14-cyber/adriano-to-the-star/pull/6",
+  "initialCIRun": "https://github.com/adybag14-cyber/adriano-to-the-star/actions/runs/36333129232",
+  "packagedAt": "2026-09-27T16:30:24.236982+00:00",
+  "productionDeployed": false,
+  "gitlabPushed": false,
+  "validation": {
+    "cataloguePython": 15,
+    "astrometryNode": 14,
+    "actualSearchNode": 4,
+    "newBrowserCases": {
+      "startTime": "2026-09-27T16:24:13.227Z",
+      "duration": 52718.939,
+      "expected": 28,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "retainedBrowserCases": {
+      "passed": 54,
+      "failed": 0
+    },
+    "earlierExistingJest": {
+      "passed": 82,
+      "suites": 11
+    },
+    "priorColdEvidenceP95ms": 2029
+  },
+  "visualRuns": {
+    "candidate": {
+      "startedAt": "2026-09-27T16:28:40.959Z",
+      "finishedAt": "2026-09-27T16:30:24.033Z",
+      "views": 52,
+      "gifs": 2,
+      "failures": []
+    },
+    "production": {
+      "startedAt": "2026-09-27T16:20:05.387Z",
+      "finishedAt": "2026-09-27T16:22:22.627Z",
+      "views": 52,
+      "gifs": 2,
+      "failures": []
+    }
+  },
+  "measurementLimits": "These are independent candidate-local and live-production runs. Network and workload differ; do not interpret them as a controlled performance delta. RAF cadence is not GPU FPS. GIF playback rate is presentation only."
+}
