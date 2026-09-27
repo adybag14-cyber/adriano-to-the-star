@@ -40,7 +40,7 @@
   },
   "database": {
     "title": "BASE DE DONNÉES D'EXOPLANÈTES",
-    "subtitle": "Explorez plus de 9,564 Corps Célestes de l'Archive Kepler",
+    "subtitle": "Un atlas. De nombreux observatoires. Des incertitudes explicites.",
     "searchPlaceholder": "Rechercher des planètes...",
     "filterBy": "Filtrer par",
     "planetType": "Type de Planète",

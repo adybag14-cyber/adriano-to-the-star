@@ -293,6 +293,18 @@ def main() -> int:
         "assets/models/ships/viper.glb",
         "assets/models/defense/missile_battery.glb",
     }
+    required.update({
+        ".github/workflows/observatory-production.yml",
+        "observatory-catalog.js", "observatory-experience.js", "observatory-experience.css",
+        "education-sky.js", "sky-math.js", "playwright.observatory.config.mjs",
+        "scripts/capture-observatory.mjs", "scripts/observatory_data.py",
+        "scripts/update-observatory-data.py", "scripts/validate-observatory-data.py",
+        "data/observatory/current.json", "data/observatory/supplements.json",
+        "data/sky/manifest.json", "data/sky/bright-nearby-v1.json",
+        "data/sky/observers.json", "data/sky/NOTICE.md", "docs/observatory/README.md",
+        "tests/observatory/sky-math.test.mjs", "tests/observatory/test_catalogue.py",
+        "tests/observatory/browser/observatory.spec.mjs", "tests/observatory/fixtures/horizons.json",
+    })
     included_paths = {entry["path"] for entry in included}
     missing = sorted(required - included_paths)
     if missing:
@@ -322,6 +334,13 @@ def main() -> int:
             batch.stdin.close()
         batch.terminate()
         batch.wait(timeout=10)
+
+    # Hashes in the source manifest cover every catalogue/evidence/sky shard and
+    # reference response. A filtered mirror must not silently omit any of them.
+    subprocess.run(
+        [sys.executable, str(output / "scripts/validate-observatory-data.py"), "--root", str(output)],
+        cwd=output, check=True,
+    )
 
     manifest = {
         "schema": 1,

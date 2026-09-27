@@ -107,5 +107,6 @@ self.onmessage = ({ data }) => {
   }
   if (data.type === 'view') { yaw = data.yaw; pitch = data.pitch; project(); dirty = true; }
   if (data.type === 'visibility') { hidden = data.hidden; previous = 0; }
+  if (data.type === 'motion') { speed = Number.isFinite(data.speed) ? data.speed : 0; previous = 0; dirty = true; }
   schedule();
 };

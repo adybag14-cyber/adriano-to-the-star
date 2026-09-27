@@ -5,7 +5,7 @@ const fixturePath = '/__database-lazy-loader-contract.html';
 
 async function openCatalogue(page) {
   await page.goto('/database.html?q=Kepler-227', { waitUntil: 'domcontentloaded' });
-  await page.waitForFunction(() => window.databaseInstance?.allData.length === 9564 && window.databaseVisualizationFeatures && window.databaseAdvancedFeatures);
+  await page.waitForFunction(() => window.databaseInstance?.allData.length === window.databaseInstance?.observatoryMeta?.manifest.statistics.objects && window.databaseVisualizationFeatures && window.databaseAdvancedFeatures);
   await expect(page.locator('#view-3d-btn')).toHaveCount(1);
   await expect(page.locator('#view-3d-btn')).toBeDisabled();
 }

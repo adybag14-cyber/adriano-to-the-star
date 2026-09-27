@@ -7,6 +7,8 @@ import { extractHomeHeader, applySharedHeader } from './shared-site-header.mjs';
 const publicRoot = path.resolve(process.argv[2] || 'public');
 const homeHeader = extractHomeHeader(await fs.readFile(path.join(publicRoot, 'index.html'), 'utf8'));
 const atmosphereSnapshot = JSON.parse(await fs.readFile(path.join(publicRoot, 'data/exoplanet-atmospheres.json'), 'utf8'));
+const observatoryPointer = JSON.parse(await fs.readFile(path.join(publicRoot, 'data/observatory/current.json'), 'utf8'));
+const observatoryManifest = JSON.parse(await fs.readFile(path.join(publicRoot, 'data/observatory', observatoryPointer.manifest.path), 'utf8'));
 const legacyMegaEnginePattern = /\s*(?:<!--\s*MASTER MEGA-ENGINE ARCHITECTURE\s*-->)?\s*<script\b[^>]*src=["']\/?(?:universal-simulation-hub|void-warfare-engine|planetary-environment-engine|galactic-governance-engine|mining-resource-engine|xeno-intelligence-engine|quantum-propulsion-engine|intelligence-shadow-engine|fleet-command-mega-engine|deep-space-industry-engine|procedural-content-engine|galactic-commerce-engine|metaphysics-apotheosis-engine)\.js(?:\?[^"']*)?["'][^>]*><\/script>/gi;
 const retiredSupabaseScriptPattern = /\s*<script\b[^>]*src=["'][^"']*(?:@supabase\/supabase-js|supabase-config\.js|auth-supabase\.js|supabase-integration\.js)[^"']*["'][^>]*><\/script>/gi;
 const googleFontPattern = /\s*<(?:link|style)\b[^>]*(?:fonts\.googleapis\.com|fonts\.gstatic\.com)[^>]*>(?:<\/style>)?/gi;
@@ -90,7 +92,9 @@ function headMetadata(page) {
     `<link rel="stylesheet" href="${prefix}site-experience.css">`,
     `<link rel="stylesheet" href="${prefix}i18n-styles.css">`,
     `<link rel="stylesheet" href="${prefix}ita-music-player.css">`,
-    `<link rel="stylesheet" href="${prefix}ita-universe-shell.css" data-ita-universe-shell>`
+    `<link rel="stylesheet" href="${prefix}ita-universe-shell.css" data-ita-universe-shell>`,
+    `<link rel="stylesheet" href="${prefix}observatory-experience.css">`,
+    `<script src="${prefix}observatory-experience.js" defer></script>`
   ];
   // Pioneer consolidates its own ordered startup graph. Keep the shared visual
   // shell independent and load it after that graph instead of bundling it into
@@ -184,11 +188,13 @@ async function transformPage(page) {
   html = removeHeadTag(html, /\s*<meta\b[^>]*name=["']twitter:(?:card|title|description|image)["'][^>]*>/gi);
   html = removeHeadTag(html, /\s*<meta\b[^>]*name=["'](?:theme-color|color-scheme)["'][^>]*>/gi);
   html = removeHeadTag(html, /\s*<link\b[^>]*rel=["']canonical["'][^>]*>/gi);
-  html = removeHeadTag(html, /\s*<link\b[^>]*href=["'](?:\.\.\/)?(?:site-experience|i18n-styles|ita-music-player|ita-universe-shell)\.css(?:\?[^"']*)?["'][^>]*>/gi);
-  html = removeHeadTag(html, /\s*<script\b[^>]*src=["'](?:\.\.\/)?ita-universe-shell\.js(?:\?[^"']*)?["'][^>]*><\/script>/gi);
+  html = removeHeadTag(html, /\s*<link\b[^>]*href=["'](?:\.\.\/)?(?:site-experience|i18n-styles|ita-music-player|ita-universe-shell|observatory-experience)\.css(?:\?[^"']*)?["'][^>]*>/gi);
+  html = removeHeadTag(html, /\s*<script\b[^>]*src=["'](?:\.\.\/)?(?:ita-universe-shell|observatory-experience)\.js(?:\?[^"']*)?["'][^>]*><\/script>/gi);
   html = removeHeadTag(html, /\s*<meta\b[^>]*name=["']ita-production-metadata["'][^>]*>/gi);
   html = html.replace(/<\/head>/i, `    ${headMetadata(page)}\n</head>`);
   html = refreshBodyClass(html, page);
+  if (page.path === 'index.html') html = html.replace(/(<dl class="hero-stats"[^>]*><div><dt>)[^<]+/, (_, prefix) => prefix + observatoryManifest.statistics.objects.toLocaleString('en-US'));
+
   html = ensureMainTarget(html);
   html = ensurePolicyLink(html, page);
   html = html.replace(/\s*<nav\b[^>]*class=["'][^"']*\bita-breadcrumb\b[^"']*["'][^>]*>[\s\S]*?<\/nav>/gi, '');

@@ -104,7 +104,7 @@ class OptimizedDatabase {
     // KEPID identifies the host star. A KOI identifier identifies one object in
     // that system, so card actions and links must preserve it end to end.
     recordKey(planet) {
-        return String(planet.kepoi_name || planet.kepler_name || planet.kepid);
+        return String(planet.record_id || planet.kepoi_name || planet.kepler_name || planet.kepid);
     }
 
     findPlanet(reference) {
@@ -381,67 +381,35 @@ class OptimizedDatabase {
      * @returns {Promise<void>}
      */
     async loadData() {
-        console.log('🚀 Loading Kepler database...');
-
-        // Keep skeleton loader while data loads (better UX)
-        // Skeleton loader already shown in init()
-
-        // Re-acquire the main container here so we can safely clear the skeleton
-        // once data is ready, without depending on variables from init().
-        const container = document.getElementById('nasa-data-container');
-
-        let keplerData = [];
-        // Check both global variable and window property
-        const db = (typeof KEPLER_DATABASE !== 'undefined') ? KEPLER_DATABASE : window.KEPLER_DATABASE;
-
-        if (db) {
-            const allKeplerPlanets = db.allPlanets || db.highQuality || [];
-            keplerData = allKeplerPlanets.map(planet => ({
-                kepid: planet.kepid,
-                kepoi_name: planet.kepoi_name || `KOI-${planet.kepid}`,
-                kepler_name: planet.kepler_name || null,
-                status: planet.status,
-                score: planet.score || 0,
-                radius: this.estimateRadius(planet),
-                mass: this.estimateMass(planet),
-                distance: this.estimateDistance(planet.kepid),
-                disc_year: this.estimateDiscoveryYear(planet),
-                type: this.classifyPlanet(this.estimateRadius(planet)),
-                availability: 'available',
-                source: 'kepler'
-            }));
-            console.log(`✅ Loaded ${keplerData.length} exoplanets from Kepler database`);
-        } else {
+        let catalogue = null;
+        try {
+            if (!window.ObservatoryCatalogue) throw new Error('The multi-archive loader is unavailable');
+            catalogue = await window.ObservatoryCatalogue.load();
+            this.allData = catalogue.records;
+        } catch (error) {
+            // A degraded catalogue must be visible, not mistaken for a complete result.
+            console.warn('Multi-archive catalogue unavailable; using the checked-in Kepler snapshot:', error.message);
             await this.loadLargeDataset();
-            keplerData = this.largeDatasetLoader?.largeDataset || [];
-            if (!keplerData.length) throw new Error('The checked-in Kepler JSONL snapshot could not be loaded.');
-            console.info(`Loaded ${keplerData.length.toLocaleString()} rows from the same-origin Kepler snapshot.`);
+            this.allData = this.largeDatasetLoader?.largeDataset || [];
+            if (!this.allData.length) throw new Error('Neither catalogue snapshot could be loaded.');
+            const status = document.getElementById('observatory-catalogue-controls');
+            if (status) {
+                status.textContent = `Limited catalogue: only the older Kepler snapshot is available. Multi-institution data could not be verified (${error.message}).`;
+                status.classList.add('observatory-warning');
+                status.setAttribute('role', 'status');
+            }
         }
-
-        this.allData = [...keplerData];
         this.buildSearchIndex();
-
         this.filteredData = [...this.allData];
         this.calculateStatistics();
-
-        // Update statistics display after data is loaded
         this.createStatsSection();
         this.renderPlanetOfDayCard();
-
-        // Update UI
-        if (!document.getElementById('results-container')) {
-            this.createSearchBar();
-        }
+        if (!document.getElementById('results-container')) this.createSearchBar();
         this.createFilterButtons();
-
-        // Apply any state encoded in the URL (search, filters, page) and then render
+        if (catalogue) window.ObservatoryCatalogue.mount(this, catalogue);
         this.applyStateFromURL();
         this.applyLastSearchFromHistoryIfNeeded();
-
-        // Load user claims asynchronously (non-blocking)
-        this.loadUserClaims().catch(error => {
-            console.log('⚠️ Could not load user claims:', error.message);
-        });
+        this.loadUserClaims().catch(error => console.info('Local teaching claims unavailable:', error.message));
     }
 
     /**
@@ -625,6 +593,11 @@ class OptimizedDatabase {
 
         addTermsFromValue(planet.kepler_name);
         addTermsFromValue(planet.kepoi_name);
+        addTermsFromValue(planet.host);
+        addTermsFromValue(planet.facility);
+        addTermsFromValue(planet.discovery_method);
+        for (const alias of planet.aliases || []) addTermsFromValue(alias);
+        for (const source of planet.sources || []) addTermsFromValue(window.ObservatoryCatalogue?.labels[source] || source);
 
         if (planet.kepid !== undefined && planet.kepid !== null) {
             terms.push(String(planet.kepid).toLowerCase());
@@ -673,7 +646,10 @@ class OptimizedDatabase {
             // token must describe the same object. Unioning query tokens made
             // "Kepler-227" match every object containing the word "Kepler".
             for (const [indexedTerm, bucket] of this.searchIndex) {
-                if (!indexedTerm.startsWith(term)) continue;
+                // Numeric designators are complete tokens: 227 must not match
+                // KOI-2271 just because another alias says Kepler. Alphabetic
+                // prefixes still support discovery queries such as 'Kepl'.
+                if (/^\d+$/.test(term) ? indexedTerm !== term : !indexedTerm.startsWith(term)) continue;
                 bucket.forEach((idx) => {
                     if (idx >= 0 && idx < this.allData.length) {
                         tokenMatches.add(idx);
@@ -690,7 +666,19 @@ class OptimizedDatabase {
             return [];
         }
 
-        return Array.from(resultIndexes).map((idx) => this.allData[idx]);
+        const matches = Array.from(resultIndexes).map((idx) => this.allData[idx]);
+        // Prefer names, host identifiers and published aliases over institution
+        // labels. Otherwise typing 'Kepl' returns every KOI simply because its
+        // source is the Kepler archive, including records with no Kepler name.
+        const identities = matches.filter(planet => [
+            planet.kepler_name, planet.kepoi_name, planet.host, planet.kepid,
+            ...(planet.aliases || [])
+        ].some(value => {
+            if (value === null || value === undefined) return false;
+            const words = String(value).toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
+            return tokens.every(term => words.some(word => /^\d+$/.test(term) ? word === term : word.startsWith(term)));
+        }));
+        return identities.length ? identities : matches;
     }
 
     showAutocompleteSuggestions() {
@@ -907,13 +895,13 @@ class OptimizedDatabase {
                 <div class="stat-card" data-entrance="fadeIn" data-hover="lift" style="background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(20, 20, 30, 0.8)); border: 2px solid rgba(186, 148, 79, 0.3); border-radius: 15px; padding: 1.5rem; text-align: center;">
                     <div class="stat-icon" style="font-size: 2.5rem; margin-bottom: 0.5rem;">🌍</div>
                     <div class="stat-value" style="font-size: 2rem; font-weight: bold; color: #ba944f;">${this.stats.total.toLocaleString()}</div>
-                    <div class="stat-label" style="color: rgba(255, 255, 255, 0.7); margin-top: 0.5rem;">Total Exoplanets</div>
+                    <div class="stat-label" style="color: rgba(255, 255, 255, 0.7); margin-top: 0.5rem;">Catalogue entries</div>
                 </div>
                 
                 <div class="stat-card" data-entrance="fadeIn" data-hover="lift" style="background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(20, 20, 30, 0.8)); border: 2px solid rgba(186, 148, 79, 0.3); border-radius: 15px; padding: 1.5rem; text-align: center;">
                     <div class="stat-icon" style="font-size: 2.5rem; margin-bottom: 0.5rem;">✅</div>
                     <div class="stat-value" style="font-size: 2rem; font-weight: bold; color: #4ade80;">${this.stats.confirmed.toLocaleString()}</div>
-                    <div class="stat-label" style="color: rgba(255, 255, 255, 0.7); margin-top: 0.5rem;">Confirmed Planets</div>
+                    <div class="stat-label" style="color: rgba(255, 255, 255, 0.7); margin-top: 0.5rem;">Confirmed entries</div>
                 </div>
                 
                 <div class="stat-card" data-entrance="fadeIn" data-hover="lift" style="background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(20, 20, 30, 0.8)); border: 2px solid rgba(186, 148, 79, 0.3); border-radius: 15px; padding: 1.5rem; text-align: center;">
@@ -925,7 +913,7 @@ class OptimizedDatabase {
                 <div class="stat-card" data-entrance="fadeIn" data-hover="lift" style="background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(20, 20, 30, 0.8)); border: 2px solid rgba(186, 148, 79, 0.3); border-radius: 15px; padding: 1.5rem; text-align: center;">
                     <div class="stat-icon" style="font-size: 2.5rem; margin-bottom: 0.5rem;">🌎</div>
                     <div class="stat-value" style="font-size: 2rem; font-weight: bold; color: #22d3ee;">${this.stats.earthLike.toLocaleString()}</div>
-                    <div class="stat-label" style="color: rgba(255, 255, 255, 0.7); margin-top: 0.5rem;">Earth-like Planets</div>
+                    <div class="stat-label" style="color: rgba(255, 255, 255, 0.7); margin-top: 0.5rem;">Earth-sized entries</div>
                 </div>
                 
                 <div class="stat-card" data-entrance="fadeIn" data-hover="lift" style="background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(20, 20, 30, 0.8)); border: 2px solid rgba(186, 148, 79, 0.3); border-radius: 15px; padding: 1.5rem; text-align: center;">
@@ -1254,7 +1242,7 @@ class OptimizedDatabase {
                     <label style="display: block; margin-bottom: 0.5rem; color: #ba944f; font-weight: 600;">Type:</label>
                     <select id="filter-type" class="filter-select" aria-label="Filter planets by size class" style="width: 100%; padding: 0.75rem; background: rgba(0, 0, 0, 0.7); border: 2px solid rgba(186, 148, 79, 0.3); border-radius: 10px; color: white;">
                         <option value="all">All Types</option>
-                        <option value="Earth-like">Earth-like (${this.stats.earthLike})</option>
+                        <option value="Earth-like">Earth-sized (${this.stats.earthLike})</option>
                         <option value="Super-Earth">Super-Earths (${this.stats.superEarths})</option>
                         <option value="Gas Giant">Gas Giants (${this.stats.gasGiants})</option>
                         <option value="Mini-Neptune">Mini-Neptunes (${this.stats.miniNeptunes})</option>
@@ -1332,7 +1320,7 @@ class OptimizedDatabase {
             const superEarthOption = filterType.querySelector('option[value="Super-Earth"]');
             const gasGiantOption = filterType.querySelector('option[value="Gas Giant"]');
             const miniNeptuneOption = filterType.querySelector('option[value="Mini-Neptune"]');
-            if (earthLikeOption) earthLikeOption.textContent = `Earth-like (${earthLikeCount})`;
+            if (earthLikeOption) earthLikeOption.textContent = `Earth-sized (${earthLikeCount})`;
             if (superEarthOption) superEarthOption.textContent = `Super-Earths (${superEarthCount})`;
             if (gasGiantOption) gasGiantOption.textContent = `Gas Giants (${gasGiantCount})`;
             if (miniNeptuneOption) miniNeptuneOption.textContent = `Mini-Neptunes (${miniNeptuneCount})`;
@@ -1374,6 +1362,7 @@ class OptimizedDatabase {
             resetFiltersBtn.addEventListener('click', () => {
                 this.searchTerm = '';
                 this.activeFilters = { status: 'all', type: 'all', availability: 'all' };
+                window.ObservatoryCatalogue?.reset(this);
                 const searchInput = document.getElementById('planet-search');
                 if (searchInput) searchInput.value = '';
                 if (filterStatus) filterStatus.value = 'all';
@@ -1527,6 +1516,7 @@ class OptimizedDatabase {
         const yearMax = typeof ranges.yearMax === 'number' && !isNaN(ranges.yearMax) ? ranges.yearMax : null;
 
         this.filteredData = dataToFilter.filter(planet => {
+            if (window.ObservatoryCatalogue && !window.ObservatoryCatalogue.matches(this, planet)) return false;
 
             // Status filter - handle 'CONFIRMED', 'Confirmed Planet', 'CANDIDATE', etc.
             if (this.activeFilters.status !== 'all') {
@@ -1704,6 +1694,7 @@ class OptimizedDatabase {
             }
 
             const params = new URLSearchParams(window.location.search || '');
+            window.ObservatoryCatalogue?.sync(this, params);
             const rawQuery = this.searchTerm || '';
             const status = this.activeFilters && this.activeFilters.status ? this.activeFilters.status : 'all';
             const type = this.activeFilters && this.activeFilters.type ? this.activeFilters.type : 'all';
@@ -2171,7 +2162,12 @@ class OptimizedDatabase {
                 const visualVariant = visualSeed % 6;
                 const radiusValue = Math.max(Number(planet.radius) || 1, 0.25);
                 const planetScale = Math.min(1.08, Math.max(0.88, 0.88 + Math.log2(radiusValue + 1) * 0.075)).toFixed(3);
-                const planetName = planet.kepler_name || planet.kepoi_name;
+                const escaped = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+                const planetName = escaped(planet.kepler_name || planet.kepoi_name);
+                const catalogueLabel = planet.observatory ? escaped(window.ObservatoryCatalogue.labels[planet.source] || planet.source) : 'KEPLER';
+                const sourceBadges = (planet.sources || ['nasa-koi']).map(source => `<span class="observatory-source-badge">${escaped(window.ObservatoryCatalogue?.labels[source] || source)}</span>`).join('');
+                const classificationLabel = planet.type === 'Earth-like' ? 'Earth-sized' : planet.type;
+                const evidenceOnly = planet.observatory && !planet.engine_id;
                 const formatMeasurement = (value, digits, suffix) => value != null && value !== '' && Number.isFinite(Number(value))
                     ? `${Number(value).toFixed(digits)} ${suffix}`
                     : 'Not reported';
@@ -2181,9 +2177,9 @@ class OptimizedDatabase {
                 const discoveryText = planet.disc_year != null && planet.disc_year !== '' && Number.isFinite(Number(planet.disc_year)) ? String(planet.disc_year) : 'Not reported';
 
                 htmlChunk += `
-                    <article class="planet-card ita-planet-card" data-entrance="slideUp" data-kepid="${planet.kepid}" data-record-id="${this.recordKey(planet)}" data-name="${planetName}" data-radius="${planet.radius}" data-mass="${planet.mass}" data-distance="${planet.distance}" data-planet-type="${typeClass}" data-status="${statusClass}" style="--card-index:${cardIndex};--planet-shift:${hueShift}deg;--planet-tilt:${orbitTilt}deg;--planet-scale:${planetScale}">
+                    <article class="planet-card ita-planet-card" data-entrance="slideUp" data-kepid="${planet.kepid}" data-record-id="${escaped(this.recordKey(planet))}" data-name="${planetName}" data-radius="${planet.radius}" data-mass="${planet.mass}" data-distance="${planet.distance}" data-planet-type="${typeClass}" data-status="${statusClass}" style="--card-index:${cardIndex};--planet-shift:${hueShift}deg;--planet-tilt:${orbitTilt}deg;--planet-scale:${planetScale}">
                         <div class="ita-card-visual">
-                            <div class="ita-planet-visual ita-planet--${typeClass} ita-planet-v${visualVariant}" role="img" aria-label="${planetName}, ${planet.type} visual representation">
+                            <div class="ita-planet-visual ita-planet--${typeClass} ita-planet-v${visualVariant}" role="img" aria-label="${planetName}: illustrative size-class symbol, not an observed surface">
                                 <span class="ita-planet-orbit" aria-hidden="true"></span>
                                 <span class="ita-planet-sphere" aria-hidden="true"></span>
                             </div>
@@ -2194,24 +2190,28 @@ class OptimizedDatabase {
                         </div>
 
                         <div class="ita-card-heading">
-                            <p class="ita-card-eyebrow">KEPLER // ${planet.kepler_name ? planet.kepoi_name : `ID ${planet.kepid}`}</p>
+                            <p class="ita-card-eyebrow">${catalogueLabel}</p>
+                            <div class="observatory-card-sources">${sourceBadges}</div>
                             <h3 class="planet-name">${planetName}</h3>
+                            <p class="observatory-facility">${escaped(planet.facility || 'Discovery facility not supplied')}</p>
+                            ${planet.status_conflict ? '<p class="observatory-card-warning">Source dispositions disagree</p>' : ''}
+                            ${planet.high_mass_entry ? '<p class="observatory-card-warning">High-mass substellar entry</p>' : ''}
                         </div>
 
                         <div class="ita-card-metrics" aria-label="Planet telemetry">
-                            <div class="ita-metric"><span>Class</span><strong>${planet.type}</strong></div>
+                            <div class="ita-metric"><span>Size class</span><strong>${escaped(classificationLabel)}</strong></div>
                             <div class="ita-metric"><span>Radius</span><strong>${radiusText}</strong></div>
-                            <div class="ita-metric"><span>Mass</span><strong>${massText}</strong></div>
+                            <div class="ita-metric"><span>${/sin/i.test(planet.mass_kind || '') ? 'Minimum mass' : 'Mass'}</span><strong>${massText}</strong></div>
                             <div class="ita-metric"><span>Range</span><strong>${distanceText}</strong></div>
                         </div>
 
                         <div class="ita-card-telemetry">
-                            <div title="Kepler Robovetter disposition score; this does not measure reconstruction accuracy."><span>Robovetter score</span><strong>${(planet.score * 100).toFixed(0)}%</strong></div>
+                            <div title="Kepler Robovetter disposition score; this does not measure reconstruction accuracy."><span>Robovetter score</span><strong>${planet.score == null ? 'Not reported' : (planet.score * 100).toFixed(0) + '%'}</strong></div>
                             <div><span>Discovered</span><strong>${discoveryText}</strong></div>
                         </div>
 
                         <div class="ita-card-actions">
-                            <button class="view-3d-btn ita-card-primary" data-kepid="${planet.kepid}" type="button">View in 3D <span aria-hidden="true">&nearr;</span></button>
+                            <button class="view-3d-btn ita-card-primary" data-kepid="${planet.kepid}" type="button">${evidenceOnly ? 'View evidence' : 'View in 3D'} <span aria-hidden="true">&nearr;</span></button>
                             <button class="details-btn ita-card-action" data-kepid="${planet.kepid}" type="button">Details</button>
                             <button class="habitability-btn ita-card-action" data-kepid="${planet.kepid}" type="button">Habitability</button>
                         </div>
@@ -3066,6 +3066,11 @@ window.claimPlanet = claimPlanet;
 // for it so the 9,564-row catalogue remains the sole heavy initial workload.
 let database3DOpenRequest = 0;
 async function viewPlanet3D(kepid, returnFocusElement = document.activeElement) {
+    const catalogueObject = window.databaseInstance?.findPlanet(kepid);
+    if (catalogueObject?.observatory && !catalogueObject.engine_id) {
+        return window.ObservatoryCatalogue.showDetails(catalogueObject);
+    }
+
     let planet = null;
     if (window.databaseInstance && window.databaseInstance.allData) {
         planet = window.databaseInstance.findPlanet(kepid);
@@ -3268,6 +3273,9 @@ function addToComparison(kepid, planetData) {
 }
 
 function showPlanetDetails(kepid) {
+    const catalogueObject = window.databaseInstance?.findPlanet(kepid);
+    if (catalogueObject?.observatory) return window.ObservatoryCatalogue.showDetails(catalogueObject);
+
     try {
         const db = window.databaseInstance;
         if (!db || !Array.isArray(db.allData)) {
@@ -3453,6 +3461,7 @@ function showPlanetDetails(kepid) {
 
 function closePlanetDetails() {
     try {
+        document.getElementById('observatory-evidence-dialog')?.close();
         const modal = document.getElementById('planet-details-modal');
         if (modal) {
             modal.remove();

@@ -1,4 +1,8 @@
 import { test, expect } from '@playwright/test';
+import { readFileSync } from 'node:fs';
+const catalogueRoot = new URL('../../data/observatory/', import.meta.url);
+const cataloguePointer = JSON.parse(readFileSync(new URL('current.json', catalogueRoot), 'utf8'));
+const EXPECTED_CATALOGUE_OBJECTS = JSON.parse(readFileSync(new URL(cataloguePointer.manifest.path, catalogueRoot), 'utf8')).statistics.objects;
 
 const EXPECTED_ORIGIN = new URL(process.env.BASE_URL || 'http://127.0.0.1:8095').origin;
 
@@ -86,7 +90,7 @@ test.describe('browser-local platform remediation', () => {
     await expect(page.locator('#database-analytics-status')).toHaveText('Analysis complete.');
   });
 
-  test('main database streams one same-origin 9,564-row catalogue and searches it', async ({ page }) => {
+  test('main database loads the versioned same-origin multi-institution catalogue and searches it', async ({ page }) => {
     const externalRequests = [];
     const duplicateCatalogueRequests = [];
     const database3DRequests = [];
@@ -99,8 +103,8 @@ test.describe('browser-local platform remediation', () => {
       }
     });
     await page.goto('/database.html', { waitUntil: 'domcontentloaded' });
-    await page.waitForFunction(() => window.databaseInstance?.allData?.length === 9564, null, { timeout: 20_000 });
-    expect(await page.evaluate(() => window.databaseInstance.allData.length)).toBe(9564);
+    await page.waitForFunction(() => window.databaseInstance?.allData?.length === window.databaseInstance?.observatoryMeta?.manifest.statistics.objects, null, { timeout: 20_000 });
+    expect(await page.evaluate(() => window.databaseInstance.allData.length)).toBe(EXPECTED_CATALOGUE_OBJECTS);
     expect(duplicateCatalogueRequests).toEqual([]);
     expect(externalRequests).toEqual([]);
     expect(database3DRequests).toEqual([]);

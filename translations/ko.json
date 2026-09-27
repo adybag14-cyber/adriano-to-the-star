@@ -40,7 +40,7 @@
   },
   "database": {
     "title": "외계 행성 데이터베이스",
-    "subtitle": "케플러 아카이브에서 9,564개 이상의 천체 탐색",
+    "subtitle": "하나의 지도, 여러 천문대. 모든 불확실성을 명확하게.",
     "searchPlaceholder": "행성 검색...",
     "filterBy": "필터",
     "planetType": "행성 유형",

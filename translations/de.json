@@ -40,7 +40,7 @@
   },
   "database": {
     "title": "EXOPLANETEN-DATENBANK",
-    "subtitle": "Erkunden Sie über 9,564 Himmelskörper aus dem Kepler-Archiv",
+    "subtitle": "Ein Atlas. Viele Observatorien. Jede Unsicherheit sichtbar.",
     "searchPlaceholder": "Planeten suchen...",
     "filterBy": "Filtern nach",
     "planetType": "Planetentyp",

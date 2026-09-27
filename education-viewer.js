@@ -21,7 +21,10 @@ class PlanetViewer {
         this.contextRecoveryTimer = null;
         this.loadGeneration = 0;
         this.textureLoadTimer = null;
-        this.prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true;
+        this.motionQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+        this.prefersReducedMotion = Boolean(this.motionQuery?.matches || window.__itaMotionPaused);
+        this.lastAnimationTime = null;
+        this.renderedFrames = 0;
         this.appearanceModel = window.__planetaryAppearanceModel
             || (typeof window.PlanetaryAppearanceModel === 'function'
                 ? new window.PlanetaryAppearanceModel(window.__exoplanetAtmosphereCatalog)
@@ -199,6 +202,17 @@ class PlanetViewer {
             });
         }
         this.init();
+        const syncMotion = () => {
+            this.prefersReducedMotion = Boolean(this.motionQuery?.matches || window.__itaMotionPaused);
+            if (this.controls) this.controls.enableDamping = !this.prefersReducedMotion;
+            const config = this.planets[this.currentPlanet];
+            this.softwareRenderer?.worker?.postMessage({type:'motion', speed:this.prefersReducedMotion ? 0 : (config?.speed || 0) * 60});
+            this.lastAnimationTime = null;
+            this.requestRender();
+        };
+        this.motionQuery?.addEventListener?.('change', syncMotion);
+        window.addEventListener('ita:motion-preference', syncMotion);
+        this.controls?.addEventListener('change', () => this.requestRender());
         this.animate();
 
         const requestedTarget = window.__pendingEducationPlanet || new URLSearchParams(window.location.search).get('target');
@@ -307,7 +321,7 @@ class PlanetViewer {
 
         // Controls
         this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
-        this.controls.enableDamping = true;
+        this.controls.enableDamping = !this.prefersReducedMotion;
         this.controls.dampingFactor = 0.05;
         this.controls.minDistance = 2;
         this.controls.maxDistance = 20;
@@ -380,7 +394,9 @@ class PlanetViewer {
             this.showUnavailableTarget(name);
             return;
         }
+        this.skyOnly = false;
         this.currentPlanet = resolvedName;
+        this.requestRender();
         const config = this.planets[resolvedName];
         const generation = ++this.loadGeneration;
         if (resolvedName !== 'Earth') this.container?.classList.add('education-renderer-ready');
@@ -478,6 +494,7 @@ class PlanetViewer {
                 }
                 mesh.material.color.setHex(0xffffff);
                 mesh.material.needsUpdate = true;
+            this.requestRender();
                 const image = texture.image || {};
                 mesh.userData.surfaceImage = {
                     src: `generated://${model.planetId}/${model.modelVersion}`,
@@ -530,6 +547,7 @@ class PlanetViewer {
                 mesh.material.bumpScale = 0.002;
             }
             mesh.material.needsUpdate = true;
+            this.requestRender();
             const image = texture.image || {};
             mesh.userData.surfaceImage = {
                 src: sourceUrl,
@@ -607,6 +625,7 @@ class PlanetViewer {
         this.atmosphereMesh.userData.geometricThicknessExaggerated = Boolean(model);
         this.atmosphereMesh.scale.setScalar(model ? 1.022 + opacity * 0.025 : 1.018);
         this.scene.add(this.atmosphereMesh);
+        this.requestRender();
     }
 
     createProceduralCloudLayer(texture, model, generation, sourceGeometry) {
@@ -635,6 +654,7 @@ class PlanetViewer {
         this.cloudMesh.scale.setScalar(1.009);
         this.cloudMesh.rotation.copy(this.planetMesh.rotation);
         this.scene.add(this.cloudMesh);
+        this.requestRender();
     }
 
     loadCloudLayer(url, generation, sourceGeometry) {
@@ -659,6 +679,7 @@ class PlanetViewer {
             this.cloudMesh.scale.setScalar(1.012);
             this.cloudMesh.rotation.copy(this.planetMesh.rotation);
             this.scene.add(this.cloudMesh);
+        this.requestRender();
         }, undefined, () => console.info('Cloud texture unavailable; Earth surface and atmosphere remain active.'));
     }
 
@@ -692,43 +713,38 @@ class PlanetViewer {
         this.camera.aspect = window.innerWidth / window.innerHeight;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.requestRender();
     }
 
-    animate() {
-        if (this.softwareRenderer) return;
-        if (!this.active) {
-            this.animationFrameId = null;
-            return;
-        }
+    requestRender() {
+        if (this.softwareRenderer || !this.active || document.hidden || this.skyOnly || this.animationFrameId !== null) return;
+        this.animationFrameId = requestAnimationFrame(time => this.animate(time));
+    }
 
-        this.animationFrameId = requestAnimationFrame(() => this.animate());
-
+    animate(time = performance.now()) {
+        this.animationFrameId = null;
+        if (this.softwareRenderer || !this.active || document.hidden || this.skyOnly) return;
         try {
+            const dt = this.lastAnimationTime === null ? 0 : Math.max(0, Math.min(.05, (time - this.lastAnimationTime) / 1000));
+            this.lastAnimationTime = time;
             const config = this.planets[this.currentPlanet];
-
-            if (this.planetMesh && config && !this.prefersReducedMotion) {
-                this.planetMesh.rotation.y += config.speed;
-            }
-
-            if (this.cloudMesh && config && !this.prefersReducedMotion) {
-                this.cloudMesh.rotation.y += config.speed * 1.2; // Clouds move faster
-            }
-
-            if (this.stars) {
-                this.stars.rotation.y -= 0.0001;
-            }
-
-            if (this.controls) this.controls.update();
+            // Preserve the old 60 Hz apparent spin rate without making rotation depend on FPS.
+            if (this.planetMesh && config && !this.prefersReducedMotion) this.planetMesh.rotation.y += config.speed * dt * 60;
+            if (this.cloudMesh && config && !this.prefersReducedMotion) this.cloudMesh.rotation.y += config.speed * dt * 72;
+            this.controls?.update();
             if (this.renderer && this.scene && this.camera) {
                 this.renderer.render(this.scene, this.camera);
+                this.renderedFrames++;
             }
-        } catch (e) {
-            console.error('Education Viewer Animation Error:', e);
-            this.active = false; // Stop loop to prevent browser freeze
+            if (!this.prefersReducedMotion) this.requestRender();
+        } catch (error) {
+            console.error('Education Viewer Animation Error:', error);
+            this.active = false;
             if (this.animationFrameId !== null) cancelAnimationFrame(this.animationFrameId);
             this.animationFrameId = null;
         }
     }
+
 }
 
 const educationExtraLoads = new Map();

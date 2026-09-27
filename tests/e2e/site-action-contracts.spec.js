@@ -35,7 +35,7 @@ test.describe('catalogue action final effects', () => {
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
     await page.goto('/database.html', { waitUntil: 'domcontentloaded' });
-    await page.waitForFunction(() => window.databaseInstance?.allData?.length === 9564 && window.databaseAdvancedFeatures);
+    await page.waitForFunction(() => window.databaseInstance?.allData?.length === window.databaseInstance?.observatoryMeta?.manifest.statistics.objects && window.databaseAdvancedFeatures);
     await page.locator('#planet-search').fill('Kepler-227');
     const b = page.locator('.planet-card[data-record-id="K00752.01"]');
     const c = page.locator('.planet-card[data-record-id="K00752.02"]');
@@ -60,7 +60,7 @@ test.describe('catalogue action final effects', () => {
     await expect(c.locator('.ita-card-metrics')).not.toContainText('0.00');
     await expect(c.locator('.ita-card-telemetry')).not.toContainText('null');
     await c.getByRole('button', { name: 'Details', exact: true }).click();
-    await expect(page.locator('#planet-details-modal')).toContainText('Kepler-227 c');
+    await expect(page.locator('#observatory-evidence-dialog')).toContainText('Kepler-227 c');
     await expect(page).toHaveURL(/planet=K00752.02/);
     await page.evaluate(() => window.closePlanetDetails());
 
@@ -101,8 +101,8 @@ test.describe('catalogue action final effects', () => {
     await expect(page.locator('#planet-3d-modal')).toContainText('Kepler-227 c', { timeout: 15_000 });
     await page.locator('#close-3d-btn').click();
     await page.reload({ waitUntil: 'domcontentloaded' });
-    await page.waitForFunction(() => window.databaseInstance?.allData?.length === 9564);
-    if (await page.locator('#planet-details-modal').count()) await page.evaluate(() => window.closePlanetDetails());
+    await page.waitForFunction(() => window.databaseInstance?.allData?.length === window.databaseInstance?.observatoryMeta?.manifest.statistics.objects);
+    if (await page.locator('#observatory-evidence-dialog').count()) await page.evaluate(() => window.closePlanetDetails());
     await expect(b.getByRole('button', { name: 'Claim world', exact: true })).toBeEnabled();
     await expect(c.getByRole('button', { name: 'Claimed', exact: true })).toBeDisabled();
     expect(errors).toEqual([]);

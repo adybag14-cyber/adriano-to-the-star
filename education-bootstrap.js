@@ -109,7 +109,10 @@
       await load('three.min.js');
       await load('OrbitControls-r128.js');
       await load('education-software-renderer.js');
+      await load('sky-math.js');
+      await load('education-sky.js');
       await load('education-viewer.js');
+      if (window.EducationSky && window.viewer) window.educationSky = new window.EducationSky(window.viewer);
       window.ExoplanetAtmosphereCatalog?.refreshEducation?.();
     } catch (error) {
       const viewer = document.getElementById('viewer-container');

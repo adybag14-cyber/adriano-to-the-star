@@ -50,9 +50,9 @@
         this.zoom = Math.max(.25, Math.min(1.8, this.zoom * Math.exp(-e.deltaY * .001)));
         this.resize();
       }, { passive: false });
-      document.addEventListener('visibilitychange', () => this.worker.postMessage({ type: 'visibility', hidden: document.hidden }));
+      document.addEventListener('visibilitychange', () => this.worker.postMessage({ type: 'visibility', hidden: document.hidden || this.viewer.skyOnly }));
       addEventListener('pagehide', () => this.worker.postMessage({ type: 'visibility', hidden: true }));
-      addEventListener('pageshow', () => this.worker.postMessage({ type: 'visibility', hidden: document.hidden }));
+      addEventListener('pageshow', () => this.worker.postMessage({ type: 'visibility', hidden: document.hidden || this.viewer.skyOnly }));
       this.resize();
     }
     resize() {

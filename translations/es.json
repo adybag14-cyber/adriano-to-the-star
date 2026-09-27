@@ -55,7 +55,7 @@
   },
   "database": {
     "title": "BASE DE DATOS DE EXOPLANETAS",
-    "subtitle": "Explora más de 9,564 Cuerpos Celestes del Archivo Kepler",
+    "subtitle": "Un atlas. Muchos observatorios. Todas las incertidumbres visibles.",
     "searchPlaceholder": "Buscar planetas...",
     "filterBy": "Filtrar por",
     "planetType": "Tipo de Planeta",

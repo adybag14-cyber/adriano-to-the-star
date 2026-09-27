@@ -10,7 +10,7 @@ test('legacy favorites can be removed without losing unknown saved references', 
     ]));
   });
   await page.goto('/database.html', { waitUntil: 'domcontentloaded' });
-  await page.waitForFunction(() => window.databaseInstance?.allData.length === 9564 && window.databaseAdvancedFeatures);
+  await page.waitForFunction(() => window.databaseInstance?.allData.length === window.databaseInstance?.observatoryMeta?.manifest.statistics.objects && window.databaseAdvancedFeatures);
   await page.locator('#planet-search').fill('Kepler-227');
   const card = page.locator('.planet-card[data-record-id="K00752.01"]');
   await card.getByRole('button', { name: 'Saved', exact: true }).click();
@@ -26,7 +26,7 @@ test('legacy favorites can be removed without losing unknown saved references', 
 test('shared comparison restores after a delayed catalogue and does not reopen', async ({ page }) => {
   let releaseCatalogue;
   const catalogueReady = new Promise(resolve => { releaseCatalogue = resolve; });
-  await page.route('**/data/exoplanets.jsonl', async route => {
+  await page.route('**/data/observatory/current.json*', async route => {
     await catalogueReady;
     await route.continue();
   });
